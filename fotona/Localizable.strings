@@ -1,0 +1,40 @@
+/* 
+  Localizable.strings
+  fotona
+
+  Created by Janos on 17/04/15.
+  Copyright (c) 2015 4egenus. All rights reserved.
+*/
+
+
+"ABOUTSHORT" = "Fotona’s decades-long experience in the laser industry began 50 years ago in 1964, producing frontline laser devices for defense, optical communications, industrial, dental and medical applications throughout this time. Fotona today is a world-leading medical laser company recognized for its innovative, award-winning laser systems for applications in aesthetics & dermatology, dentistry, surgery and gynecology.";
+"ABOUTLONG" = "<p>Fotona’s decades-long experience in the laser industry began 50 years ago in 1964, producing frontline laser devices for defense, optical communications, industrial, dental and medical applications throughout this time.</p><br><p>Fotona today is a world-leading medical laser company recognized for its innovative, award-winning laser systems for applications in aesthetics & dermatology, dentistry, surgery and gynecology. Based in the US and EU, with corporate headquarters in San Clemente, California and Ljubljana, Slovenia, Fotona’s business philosophy is to continuously choose perfection to meet the needs of a highly demanding marketplace.</p><br><p>The company has one of the most highly educated workforces in the industry, with an exceptionally high number of PhDs specializing in laser and medical technology. Strong R&D capabilities have always been a key competitive advantage of the company, resulting in many patented solutions, including the OPTOflex® articulated arm, QSP (Quantum Square Pulse) and VSP (Variable Square Pulse) technologies, SMOOTH mode, Vacuum Cell technology, and many more.</p><br><p>In addition to its direct presence in the US and EU, Fotona’s global distribution network spans across more than 60 countries, ensuring comprehensive support and service for Fotona laser users, including clinical training, workshops and practical hands-on demonstrations. By establishing the Laser and Health Academy*, Fotona has partnered with world-leading clinical experts to provide medical practitioners with a platform for continuing their professional growth. Fotona customers receive access to professional workshops, individual training sessions, hands-on demonstrations, as well as participation in international clinical studies and international scientific symposiums. Fotona is also a founding member of the EU Competency Center for Biomedical Engineering and the EU technology platform Fotonika21.</p><br><p>The company manufactures and tests all of its laser systems in-house, ensuring that each system is of the highest quality, reliability, ease-of-use and durability, in compliance with all applicable international standards. When you choose Fotona, you choose a company committed to designing, manufacturing and delivering:</p>";
+"BUBBLECASE1" = "Add item to bookmarks and enable it for offline use.";
+"BUBBLECASE2" = "Here you can see all the content you have bookmarked for offline use.";
+"BUBBLEFOTONA1" = "Swipe left to add item to bookmarks and enable it for offline use.";
+"BUBBLEFOTONA2" = "Here you can see all the content you have bookmarked for offline use.";
+"HOWTOUSE" = "You can save Fotona articles, clinical cases and video content for offline viewing. In the Casebook tab, select &#34Add to bookmarks&#34. In the Fotona tab, swipe left over the article name and select &#34Add to bookmarks&#34. Video content can be saved for offline viewing by selecting &#34Add to bookmarks&#34.<br><br>All offline items will be available in the Bookmarks tab.";
+"FILEDOWNLOAD" = "File download in process. Try again in a minute.";
+"EMPTYCATEGORY" = "The category is empty";
+"EMPTYCASECATEGORY" = "The category is empty";
+"REMOVEBOOKMARKS" = "Item removed from Bookmarks.";
+"ADDBOOKMARKS" = "Items added to Bookmarks.";
+"NOCONNECTION" = "No internet connection. Please check you internet connection.";
+"NOCONNECTIONBOOKMARK" = "No internet connection. Please check you internet connection before Bookmarking items.";
+"LOADINGWEBPAGE" = "Loading web page";
+"LOADINGWEBPAGEERROR" = "An error has occurred while opening the web page";
+"DOWNLOADPROGRESS" = "You can check download progress in settings";
+"CHECKUNBOOKMARK" = "Are you sure you want to remove all bookmarks?";
+"CHECKWIFIONLY" = "Wi-Fi only option.";
+"CHECKWIFIONLYBTN" = "Enable \"Wi-Fi only\" option";
+
+"REMOVEDBULKBOOKMARKS" = "All bookmarks removed";
+
+"STARTDISCLAIMER" = "<h>Fotona disclaimer:</h></br></br><p6>Purpose and Contents</p6></br></br> <p>The intent of the Fotona app is to facilitate an exchange of information, research results, and clinical experiences with Fotona lasers within the medical laser community. The contents of the Fotona app casebook, videos, lectures and other practitioner presentations are the sole responsibility of the authors and may not in any circumstances be regarded as official product information by Fotona.</p></br><p6>Terms of Use and Legal Liability</p6> </br></br><p>Any person seeking to apply or consult the Fotona app’s guidance must first consult the relevant Fotona laser system’s Applications and Operator manuals, and also use their independent clinical judgment and skills in the context of individual circumstances, or seek the supervision of a qualified clinical specialist. The Fotona app is provided “as is” with no warranties whatsoever. Fotona makes no representation or warranties of any kind whatsoever regarding the content or use of the Fotona app and disclaims any responsibility for the application or its use in any way. Fotona may, in its sole discretion and to the maximum extent permitted, modify, discontinue or suspend your ability to use any version of the Fotona app that is already accessed or installed without any notice to you for the repair, improvement, and/or upgrade of the underlying technology or for any other justifiable reason.</p> </br><p6>IMPORTANT: Check for Local Regulatory Approval</p6> </br></br><p>Please check with your local Fotona distributor or your national regulatory body to find out whether a specific product or application has been approved or cleared to be marketed and sold in your country. All Fotona medical lasers are CE marked and approved to be sold in the EU. For indications that have been cleared in the EU, see the Fotona website (www.fotona.com/en) and the applicable Fotona laser system’s manuals. For countries where specific national approvals are required (for example, 510(k) clearance by the FDA in the United States), some of the products and/or applications may not have been approved or cleared yet. Fotona refers to Fotona d.o.o., a Slovenian (EU) company, the owner of the “Fotona” application. Fotona app refers to the Fotona application for the iOS and Android. </p>";
+
+"STARTDISCLAIMERCLOSE" = "Fotona app will now close.";
+
+//videogallery cell
+"BTNBOOKMARKADD" = "Add to Bookmarks";
+"BTNBOOKMARKPROCESSING" = "Geting content from web";
+"BTNBOOKMARKREMOVE" = "Remove from Bookmarks";

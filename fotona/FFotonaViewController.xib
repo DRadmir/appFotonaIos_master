@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FFotonaViewController">
+            <connections>
+                <outlet property="cDescription" destination="3oT-2p-auA" id="yfW-n6-5Dk"/>
+                <outlet property="cTitleLbl" destination="PJ0-fK-C4F" id="JZb-J7-AFN"/>
+                <outlet property="containerView" destination="9T4-yi-iRl" id="gm3-Y9-6Fh"/>
+                <outlet property="contentModeScrollView" destination="Ekj-VN-a5W" id="SIG-yp-F3g"/>
+                <outlet property="contentModeView" destination="Bac-0B-OM0" id="rpw-P9-P8F"/>
+                <outlet property="contentVideModeScrollView" destination="dmV-wP-Ilc" id="PFQ-EZ-gV3"/>
+                <outlet property="contentVideoModeView" destination="3cF-aI-2ve" id="MJe-DY-5UX"/>
+                <outlet property="contentsVideoModeCollectionView" destination="SSb-Ov-L74" id="INU-2q-9aD"/>
+                <outlet property="customToolbar" destination="mBr-oj-w3T" id="f65-uE-66E"/>
+                <outlet property="cvDescriptionLbl" destination="fOV-zw-1c2" id="mJg-oF-Bqp"/>
+                <outlet property="cvTitleLbl" destination="9eh-iy-WcN" id="l79-2E-6Sx"/>
+                <outlet property="feedbackBtn" destination="7qu-4e-12r" id="4bC-FH-wLY"/>
+                <outlet property="fotonaImg" destination="i0S-w6-mz6" id="q8A-JC-6Gh"/>
+                <outlet property="menuBtn" destination="mrZ-pB-ll8" id="Sq5-xM-WS8"/>
+                <outlet property="popupCloseBtn" destination="fsm-Jd-n6w" id="5l5-Iv-AHX"/>
+                <outlet property="settingsBtn" destination="O8j-G0-lfZ" id="BVc-20-F1S"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="webContentView" destination="eWi-ye-Pgz" id="AgK-rT-fHs"/>
+                <outlet property="webView" destination="Y5X-97-vyH" id="bBg-Gf-0GN"/>
+                <outlet property="webViewToolbar" destination="Nxu-VT-W33" id="dYO-Jz-A9C"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" id="mBr-oj-w3T">
+                    <rect key="frame" x="0.0" y="0.0" width="768" height="65"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="O8j-G0-lfZ" userLabel="Settings">
+                            <rect key="frame" x="566" y="27" width="36" height="28"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="settings2x.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="openSettings:" destination="-1" eventType="touchUpInside" id="vfv-Yz-wKv"/>
+                            </connections>
+                        </button>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fsm-Jd-n6w">
+                            <rect key="frame" x="6" y="27" width="71" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                            <state key="normal" title=" Back" image="menu_arrow_red.png">
+                                <color key="titleColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="closeSettings:" destination="-1" eventType="touchUpInside" id="U1j-gG-LQJ"/>
+                            </connections>
+                        </button>
+                        <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fotona" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Tca-Qx-30Y">
+                            <rect key="frame" x="326" y="20" width="117" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view alpha="0.94999999999999996" contentMode="scaleToFill" id="0dX-mY-Cbw">
+                            <rect key="frame" x="0.0" y="64" width="768" height="1"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
+                        <searchBar contentMode="redraw" searchBarStyle="minimal" id="NWU-6M-s2g">
+                            <rect key="frame" x="602" y="19" width="167" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="4Ar-mr-DA5"/>
+                            </connections>
+                        </searchBar>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7qu-4e-12r">
+                            <rect key="frame" x="508" y="13" width="50" height="56"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="feedback.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="mrZ-pB-ll8">
+                            <rect key="frame" x="0.0" y="14" width="70" height="50"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="menu.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="openMenu:" destination="-1" eventType="touchUpInside" id="5LB-wA-JXs"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view clipsSubviews="YES" contentMode="scaleToFill" id="9T4-yi-iRl">
+                    <rect key="frame" x="0.0" y="65" width="768" height="910"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                </view>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_fotona.png" id="i0S-w6-mz6">
+                    <rect key="frame" x="234" y="365" width="300" height="300"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+        </view>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="Bac-0B-OM0">
+            <rect key="frame" x="0.0" y="0.0" width="768" height="909"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" id="Ekj-VN-a5W">
+                    <rect key="frame" x="0.0" y="0.0" width="768" height="909"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="content" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PJ0-fK-C4F" customClass="FDLabelView">
+                            <rect key="frame" x="50" y="25" width="668" height="41"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="32"/>
+                            <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <webView contentMode="scaleToFill" id="3oT-2p-auA">
+                            <rect key="frame" x="50" y="98" width="668" height="774"/>
+                            <autoresizingMask key="autoresizingMask" heightSizable="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </webView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                </scrollView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="eWi-ye-Pgz">
+            <rect key="frame" x="0.0" y="0.0" width="768" height="909"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+            <subviews>
+                <toolbar opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Nxu-VT-W33">
+                    <rect key="frame" x="0.0" y="-1" width="768" height="44"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <items>
+                        <barButtonItem image="menu_arrow_red.png" id="bea-Nm-A9m">
+                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="goBack" destination="Y5X-97-vyH" id="jeM-4r-xU1"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem width="21" style="plain" systemItem="fixedSpace" id="SxL-CA-s2M"/>
+                        <barButtonItem image="menu_arrow_red_forward.png" id="Ksv-vX-wRJ">
+                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="goForward" destination="Y5X-97-vyH" id="jtt-0Q-sAb"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem width="21" style="plain" systemItem="fixedSpace" id="g5r-pH-hRe"/>
+                        <barButtonItem systemItem="stop" id="Xax-wO-uVb">
+                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="stopLoading" destination="Y5X-97-vyH" id="Z8V-IR-GY6"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem width="21" style="plain" systemItem="fixedSpace" id="Wz0-sz-Acf"/>
+                        <barButtonItem systemItem="refresh" id="nNJ-Kq-cPu">
+                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="reload" destination="Y5X-97-vyH" id="gRA-ps-K30"/>
+                            </connections>
+                        </barButtonItem>
+                    </items>
+                </toolbar>
+                <webView contentMode="scaleToFill" scalesPageToFit="YES" id="Y5X-97-vyH">
+                    <rect key="frame" x="0.0" y="43" width="768" height="866"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="iVx-kV-aeW"/>
+                    </connections>
+                </webView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="3cF-aI-2ve">
+            <rect key="frame" x="0.0" y="0.0" width="768" height="909"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" scrollEnabled="NO" id="dmV-wP-Ilc">
+                    <rect key="frame" x="0.0" y="0.0" width="768" height="909"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <subviews>
+                        <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" id="SSb-Ov-L74">
+                            <rect key="frame" x="8" y="100" width="752" height="764"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="1pw-dL-wif">
+                                <size key="itemSize" width="50" height="50"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="35" minY="0.0" maxX="35" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                            <connections>
+                                <outlet property="dataSource" destination="-1" id="qXy-pH-8XM"/>
+                                <outlet property="delegate" destination="-1" id="LK7-FD-1df"/>
+                            </connections>
+                        </collectionView>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="content" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9eh-iy-WcN" customClass="FDLabelView">
+                            <rect key="frame" x="50" y="25" width="692" height="41"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="35"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FDLabel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fOV-zw-1c2" customClass="FDLabelView">
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </scrollView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="feedback.png" width="36" height="28"/>
+        <image name="logo_fotona.png" width="597" height="285"/>
+        <image name="menu.png" width="19" height="16"/>
+        <image name="menu_arrow_red.png" width="10" height="16"/>
+        <image name="menu_arrow_red_forward.png" width="10" height="16"/>
+        <image name="settings2x.png" width="72" height="57"/>
+    </resources>
+</document>

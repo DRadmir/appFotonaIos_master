@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FEventViewController">
+            <connections>
+                <outlet property="customCell" destination="KGk-i7-Jjw" id="Zo2-dU-q2f"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleAspectFit" restorationIdentifier="FEventViewCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="SimpleTableItem" rowHeight="85" id="KGk-i7-Jjw" customClass="FEventViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="85"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="FEventViewCellIdentifier" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="600" height="85"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H0u-kl-6hX">
+                        <rect key="frame" x="37" y="10" width="555" height="20"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
+                        <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="50R-So-o3l">
+                        <rect key="frame" x="10" y="35" width="582" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="489" id="WBk-HB-nrK"/>
+                            <constraint firstAttribute="height" constant="21" id="gkh-mo-cPJ"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
+                        <color key="textColor" red="0.4431372549" green="0.4431372549" blue="0.4431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="WBk-HB-nrK"/>
+                                <exclude reference="gkh-mo-cPJ"/>
+                            </mask>
+                        </variation>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DGD-RH-qh7">
+                        <rect key="frame" x="10" y="56" width="582" height="16"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="13"/>
+                        <color key="textColor" red="0.4431372549" green="0.4431372549" blue="0.4431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="s3t-gG-7S7">
+                        <rect key="frame" x="10" y="12" width="15" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="15" id="feD-P6-KpN"/>
+                            <constraint firstAttribute="height" constant="15" id="nsW-UV-eNc"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="DGD-RH-qh7" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="13A-4W-gHl"/>
+                    <constraint firstItem="DGD-RH-qh7" firstAttribute="top" secondItem="50R-So-o3l" secondAttribute="bottom" constant="-3" id="5nL-kc-VhN"/>
+                    <constraint firstItem="50R-So-o3l" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="68Y-Sz-jru"/>
+                    <constraint firstItem="H0u-kl-6hX" firstAttribute="leading" secondItem="s3t-gG-7S7" secondAttribute="trailing" constant="7" id="9us-7R-F3l"/>
+                    <constraint firstItem="s3t-gG-7S7" firstAttribute="leading" secondItem="50R-So-o3l" secondAttribute="leading" id="A0x-5M-rKV"/>
+                    <constraint firstItem="H0u-kl-6hX" firstAttribute="leading" secondItem="s3t-gG-7S7" secondAttribute="trailing" constant="12" id="DV6-B1-SJD"/>
+                    <constraint firstAttribute="bottom" secondItem="DGD-RH-qh7" secondAttribute="bottom" constant="13" id="IPG-cb-1JM"/>
+                    <constraint firstItem="50R-So-o3l" firstAttribute="top" secondItem="H0u-kl-6hX" secondAttribute="bottom" constant="5" id="Pjl-he-xCu"/>
+                    <constraint firstAttribute="trailing" secondItem="50R-So-o3l" secondAttribute="trailing" constant="8" id="QRF-Xx-bdJ"/>
+                    <constraint firstItem="H0u-kl-6hX" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="24" id="Qkk-p5-DBR"/>
+                    <constraint firstItem="s3t-gG-7S7" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="2" id="XU8-Hw-5RM"/>
+                    <constraint firstItem="H0u-kl-6hX" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="b5c-9u-RtX"/>
+                    <constraint firstItem="H0u-kl-6hX" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-1" id="cOz-Mb-HJE"/>
+                    <constraint firstAttribute="trailing" secondItem="H0u-kl-6hX" secondAttribute="trailing" constant="8" id="eTP-Kr-wK1"/>
+                    <constraint firstItem="DGD-RH-qh7" firstAttribute="trailing" secondItem="50R-So-o3l" secondAttribute="trailing" id="fOM-oj-1pk"/>
+                    <constraint firstItem="s3t-gG-7S7" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="gn8-vl-cgB"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="DGD-RH-qh7" secondAttribute="bottom" constant="5" id="gwV-kb-ipZ"/>
+                    <constraint firstItem="50R-So-o3l" firstAttribute="top" secondItem="s3t-gG-7S7" secondAttribute="bottom" constant="7" id="icO-Jh-B91"/>
+                    <constraint firstItem="s3t-gG-7S7" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="2" id="kF4-yk-ulx"/>
+                    <constraint firstItem="s3t-gG-7S7" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="12" id="oOT-Lc-vuY"/>
+                    <constraint firstAttribute="trailing" secondItem="DGD-RH-qh7" secondAttribute="trailing" constant="8" id="q0G-uM-ppW"/>
+                    <constraint firstItem="50R-So-o3l" firstAttribute="top" secondItem="H0u-kl-6hX" secondAttribute="bottom" constant="4" id="sbO-71-lbv"/>
+                    <constraint firstItem="DGD-RH-qh7" firstAttribute="top" secondItem="50R-So-o3l" secondAttribute="bottom" constant="3" id="t09-na-wDT"/>
+                    <constraint firstItem="DGD-RH-qh7" firstAttribute="leading" secondItem="50R-So-o3l" secondAttribute="leading" id="zgw-Lg-ahZ"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="A0x-5M-rKV"/>
+                        <exclude reference="XU8-Hw-5RM"/>
+                        <exclude reference="kF4-yk-ulx"/>
+                        <exclude reference="icO-Jh-B91"/>
+                        <exclude reference="sbO-71-lbv"/>
+                        <exclude reference="9us-7R-F3l"/>
+                        <exclude reference="Qkk-p5-DBR"/>
+                        <exclude reference="cOz-Mb-HJE"/>
+                        <exclude reference="5nL-kc-VhN"/>
+                        <exclude reference="fOM-oj-1pk"/>
+                        <exclude reference="gwV-kb-ipZ"/>
+                        <exclude reference="zgw-Lg-ahZ"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="date" destination="50R-So-o3l" id="eXn-EI-N05"/>
+                <outlet property="dotImg" destination="s3t-gG-7S7" id="UNh-oT-m4m"/>
+                <outlet property="place" destination="DGD-RH-qh7" id="RSP-oK-OPj"/>
+                <outlet property="title" destination="H0u-kl-6hX" id="Ovd-Ju-v7B"/>
+            </connections>
+            <point key="canvasLocation" x="482" y="321.5"/>
+        </tableViewCell>
+    </objects>
+</document>

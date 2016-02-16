@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FICarousel">
+            <connections>
+                <outlet property="carouselBackground" destination="txK-Ag-qiX" id="7at-Pl-0ty"/>
+                <outlet property="carouselCaseTitle" destination="0Ap-JJ-15F" id="Jyd-81-daU"/>
+                <outlet property="carouselDate" destination="NXD-J9-bzz" id="y12-Xe-wz5"/>
+                <outlet property="carouselDoctorImage" destination="Raw-NS-hmT" id="cjj-M6-EtQ"/>
+                <outlet property="carouselDoctorName" destination="QIz-FE-6hM" id="sQv-6W-poQ"/>
+                <outlet property="carouselType" destination="faM-FK-8DA" id="2Nd-0W-pfQ"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="440" height="193"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="card1.png" translatesAutoresizingMaskIntoConstraints="NO" id="txK-Ag-qiX" userLabel="background">
+                    <rect key="frame" x="0.0" y="0.0" width="440" height="193"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Ap-JJ-15F" userLabel="title">
+                    <rect key="frame" x="14" y="72" width="292" height="72"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-LightItalic" family="Helvetica Neue" pointSize="20"/>
+                    <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="faM-FK-8DA" userLabel="type">
+                    <rect key="frame" x="310" y="19" width="130" height="38"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="130" id="DBt-Ey-aJh"/>
+                        <constraint firstAttribute="height" constant="38" id="F5w-cK-Hah"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NXD-J9-bzz" userLabel="date">
+                    <rect key="frame" x="14" y="152" width="117" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="117" id="eJM-mT-JDy"/>
+                        <constraint firstAttribute="height" constant="21" id="olG-KZ-P7g"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
+                    <color key="textColor" red="0.4431372549" green="0.4431372549" blue="0.4431372549" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Raw-NS-hmT" userLabel="doctorImage">
+                    <rect key="frame" x="14" y="14" width="50" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Raw-NS-hmT" secondAttribute="height" multiplier="1:1" id="3kj-GG-48O"/>
+                        <constraint firstAttribute="width" constant="50" id="7d3-pU-J12"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="7d3-pU-J12"/>
+                        </mask>
+                    </variation>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QIz-FE-6hM" userLabel="doctorName">
+                    <rect key="frame" x="72" y="28" width="234" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="cvt-eW-0Io"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
+                    <color key="textColor" red="0.4431372549" green="0.4431372549" blue="0.4431372549" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="NXD-J9-bzz" secondAttribute="bottom" constant="20" id="0V2-3z-wv5"/>
+                <constraint firstItem="Raw-NS-hmT" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="14" id="2Y0-oc-Cxy"/>
+                <constraint firstAttribute="bottom" secondItem="txK-Ag-qiX" secondAttribute="bottom" id="3Cy-Z7-N7K"/>
+                <constraint firstAttribute="trailing" secondItem="0Ap-JJ-15F" secondAttribute="trailing" constant="134" id="48M-mb-2av"/>
+                <constraint firstItem="QIz-FE-6hM" firstAttribute="leading" secondItem="Raw-NS-hmT" secondAttribute="trailing" constant="8" id="9Bt-TZ-67d"/>
+                <constraint firstItem="txK-Ag-qiX" firstAttribute="height" secondItem="Raw-NS-hmT" secondAttribute="height" multiplier="193:50" id="BN3-hE-XFk"/>
+                <constraint firstItem="NXD-J9-bzz" firstAttribute="top" secondItem="0Ap-JJ-15F" secondAttribute="bottom" constant="8" id="Gv3-kW-zfA"/>
+                <constraint firstItem="0Ap-JJ-15F" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="14" id="IP0-aa-ASg"/>
+                <constraint firstItem="0Ap-JJ-15F" firstAttribute="top" secondItem="Raw-NS-hmT" secondAttribute="bottom" constant="8" id="Sty-9z-00T"/>
+                <constraint firstAttribute="trailing" secondItem="txK-Ag-qiX" secondAttribute="trailing" id="ZGg-l5-mDZ"/>
+                <constraint firstItem="faM-FK-8DA" firstAttribute="leading" secondItem="QIz-FE-6hM" secondAttribute="trailing" constant="4" id="aeC-eh-ehf"/>
+                <constraint firstItem="NXD-J9-bzz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="14" id="gkH-Lh-7kG"/>
+                <constraint firstItem="txK-Ag-qiX" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="hMI-EE-D8J"/>
+                <constraint firstAttribute="trailing" secondItem="faM-FK-8DA" secondAttribute="trailing" id="ihX-T4-pEo"/>
+                <constraint firstItem="Raw-NS-hmT" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="14" id="nDP-BN-bGS"/>
+                <constraint firstItem="faM-FK-8DA" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="19" id="tNQ-gs-gC9"/>
+                <constraint firstItem="QIz-FE-6hM" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="28" id="xG6-0s-Bnv"/>
+                <constraint firstItem="txK-Ag-qiX" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="zRr-AA-Yo8"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="752" y="301.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="card1.png" width="370" height="162"/>
+    </resources>
+</document>
