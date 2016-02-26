@@ -14,6 +14,8 @@
 #import "FImage.h"
 #import "FVideo.h"
 #import "FDownloadManager.h"
+#import "FCommon.h"
+
 
 @implementation FDB
 
@@ -65,25 +67,35 @@
     return returnCases;
 }
 
-+(NSData *)getAuthorImage:(NSString *)authID
++(UIImage *)getAuthorImage:(NSString *)authID
 {
-    NSData *data=nil;
+    UIImage *image=nil;
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT image,imageLocal FROM Author where authorID=%@",authID]];
     while([results next]) {
-        NSString *localImg=[results stringForColumn:@"imageLocal"];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:localImg]) {
-            data=[NSData dataWithContentsOfURL:[NSURL URLWithString:[results stringForColumn:@"image"]]];
+        NSString *imgOnline=[results stringForColumn:@"image"];
+        NSArray *pathComp=[imgOnline pathComponents];
+        NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Authors",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[imgOnline lastPathComponent] stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:downloadFilename]) {
+            //image=[NSData dataWithContentsOfURL:[NSURL URLWithString:[results stringForColumn:@"image"]]];
+             NSMutableArray *authorsImgs = [[NSMutableArray alloc] init];
+            if ([APP_DELEGATE connectedToInternet]) {
+                [authorsImgs addObject:[imgOnline stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
+            }
+            if (authorsImgs.count != 0) {
+                [[FDownloadManager shared] downloadAuthorsImage:authorsImgs];
+            }
         }else{
-            data=[NSData dataWithContentsOfFile:[results stringForColumn:@"imageLocal"]];
+            //data=[NSData dataWithContentsOfURL:[NSURL URLWithString:downloadFilename]];
+            image = [UIImage imageWithContentsOfFile:downloadFilename];
         }
         
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     
-    return data;
+    return image;
 }
 
 +(FAuthor *)getAuthorWithID:(NSString *)authID
@@ -111,22 +123,36 @@
 
 +(NSMutableArray *)getAuthors{
     NSMutableArray *authors=[[NSMutableArray alloc] init];
+    NSMutableArray *authorsImgs = [[NSMutableArray alloc] init];
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Author where active=1"]];
+    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Author where active=1 ORDER BY name"]];
     while([results next]) {
         FAuthor *f=[[FAuthor alloc] init];
         [f setAuthorID:[results stringForColumn:@"authorID"]];
         [f setName:[results stringForColumn:@"name"]];
         [f setImage:[results stringForColumn:@"image"]];
-        [f setImageLocal:[results stringForColumn:@"imageLocal"]];
+        if ([results stringForColumn:@"imageLocal"] && ![[results stringForColumn:@"imageLocal"] isEqualToString:@""])
+        {
+            NSArray *pathComp=[f.image pathComponents];
+            NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Authors",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[f.image lastPathComponent] stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
+            [f setImageLocal:downloadFilename];
+        } else
+        {
+            if ([APP_DELEGATE connectedToInternet]) {
+                 [authorsImgs addObject:[f.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
+            }
+        }
         [f setCv:[results stringForColumn:@"cv"]];
         [f setActive:[results stringForColumn:@"active"]];
         [authors addObject:f];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    
+    if (authorsImgs.count != 0) {
+        [[FDownloadManager shared] downloadAuthorsImage:authorsImgs];
+    }
+
     return authors;
 }
 

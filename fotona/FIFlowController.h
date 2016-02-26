@@ -34,13 +34,16 @@
 
 @property (strong, nonatomic, readwrite) FIFotonaViewController *fotonaTab;
 @property (strong, nonatomic, readwrite) FIFotonaMenuViewController *fotonaMenu;
+@property (strong, nonatomic, readwrite) NSMutableArray *fotonaMenuArray;
 @property (strong, nonatomic, readwrite) FICasebookContainerViewController *caseTab;
 @property (strong, nonatomic, readwrite) FICasebookMenuViewController *caseMenu;
+@property (strong, nonatomic, readwrite) NSMutableArray *caseMenuArray;
 @property (strong, nonatomic, readwrite) FIEventViewController *eventTab;
 @property (strong, nonatomic, readwrite) FIFeaturedViewController *newsTab;
 @property (strong, nonatomic, readwrite) FISettingsViewController *fotonaSettings;
 @property (strong, nonatomic, readwrite) FIBookmarkMenuViewController *bookmarkMenu;
 @property (strong, nonatomic, readwrite) FIBookmarkViewController *bookmarkTab;
+@property (strong, nonatomic, readwrite) NSMutableArray *bookmarkMenuArray;
 
 @property (strong, nonatomic, readwrite) FICaseViewController *caseView;
 @property (strong, nonatomic, readwrite) FIVideoGalleryViewController *videoView;
@@ -56,6 +59,8 @@
 @property (nonatomic) BOOL showMenu;
 
 @property (nonatomic) BOOL fromSearch;
+@property (nonatomic) BOOL videoSearch;
+
 @property(strong, nonatomic) NSString* videoGal;
 @property(strong, nonatomic) FVideo* vidToOpen;
 

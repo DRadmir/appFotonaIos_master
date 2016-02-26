@@ -31,6 +31,7 @@
 
 
 -(void)fillNews;
+-(void)reloadView;
 
 
 @end

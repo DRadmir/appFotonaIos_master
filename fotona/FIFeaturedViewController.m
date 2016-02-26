@@ -15,6 +15,8 @@
 #import "MBProgressHUD.h"
 #import "FIFlowController.h"
 #import "FINewsContainerViewController.h"
+#import "UIWindow+Fotona.h"
+#import "FINewsViewController.h"
 
 
 #define ABOUT_CELL_VIEW_START_TAG 600
@@ -82,6 +84,8 @@
     if (eventsBool) {
         [self createEventCell];
     }
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.showMenu = true;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -263,14 +267,14 @@
     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 2), ^{
         //code to be executed in the background
         NSLog(@"author id %@",[(FCase *)items[index] authorID]);
-        NSData *imgData=[FDB getAuthorImage:[(FCase *)items[index] authorID]];//[self getAuthorImage:[(FCase *)items[index] authorID]];
+        //NSData *imgData=[FDB getAuthorImage:[(FCase *)items[index] authorID]];//[self getAuthorImage:[(FCase *)items[index] authorID]];
         dispatch_async(dispatch_get_main_queue(), ^{
 
             card.carouselDoctorImage.layer.cornerRadius = card.carouselDoctorImage.frame.size.height /2;
             card.carouselDoctorImage.layer.masksToBounds = YES;
             card.carouselDoctorImage.layer.borderWidth = 0;
             [card.carouselDoctorImage setContentMode:UIViewContentModeScaleAspectFill];
-            card.carouselDoctorImage.image = [UIImage imageWithData:imgData];
+            card.carouselDoctorImage.image = [FDB getAuthorImage:[(FCase *)items[index] authorID]];//[UIImage imageWithData:imgData];
         });
     });
     view = card.view;
@@ -411,8 +415,22 @@
 -(void)openNews
 {
     aboutClick = false;
-     [APP_DELEGATE setNewsArray:newsArray];
-    [self performSegueWithIdentifier:@"showNews" sender:self];
+    [APP_DELEGATE setNewsArray:newsArray];
+    if ([[APP_DELEGATE window].visibleViewController isKindOfClass:[FINewsContainerViewController class]]) {
+        for (UIView *object in [APP_DELEGATE window].visibleViewController.childViewControllers ) {
+            if([object isKindOfClass:[FINewsViewController class]])
+            {
+                FINewsViewController *nview = (FINewsViewController *)object;
+                [nview reloadView];
+            }
+        }
+        
+    } else
+    {
+        [self performSegueWithIdentifier:@"showNews" sender:self];
+    }
+    
+    
 }
 
 @end

@@ -90,8 +90,9 @@
     
     if (parentiPad == nil)
     {
-        [self removeFromParentViewController];
+        
         [parentiPhone showFeatured];
+        [self removeFromParentViewController];
     } else
     {
         [parentiPad showFeatured];

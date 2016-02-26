@@ -27,6 +27,7 @@
     Bubble *b1;
     Bubble *b2;
     int state;
+    
 }
 @end
 
@@ -96,6 +97,7 @@
         [bubbleC removeFromSuperview];
         bubbleC = nil;
         [scrollViewMain setScrollEnabled:NO];
+        
         [self showBubbles];
     }
 
@@ -116,8 +118,6 @@
 {
     [scrollViewMain setContentOffset:CGPointMake(0, 0) animated:YES];
    
-    
-    
     int lineSpace =7;
     int fontSizeText = 15;
     FAuthor* author = [FDB getAuthorWithID:[caseToOpen authorID]];
@@ -132,7 +132,7 @@
         NSData *imgData=[FDB getAuthorImage:[caseToOpen authorID]];
         dispatch_async(dispatch_get_main_queue(), ^{
             //code to be executed on the main thread when background task is finished
-            [imgAuthor setImage:[UIImage imageWithData:imgData]];
+            [imgAuthor setImage:[FDB getAuthorImage:[caseToOpen authorID]]];//[UIImage imageWithData:imgData]];
         });
     });
     [lblDate setText:[APP_DELEGATE timestampToDateString:[caseToOpen date]]];
@@ -447,10 +447,6 @@
     
 }
 
-
-
-
-
 - (IBAction)readMore:(id)sender {
     if(parent != nil)
     {
@@ -548,7 +544,11 @@
             // [bubbleC setBlockUserInteraction:NO];
             //[bubbleC setBackgroundTint:[UIColor clearColor]];
             b1 = [[Bubble alloc] init];
-            
+        
+            int orientation = 0;
+            if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+                orientation = -1;
+            }
             // Calculate point of caret
             CGPoint loc = btnBookmark.frame.origin;
             CGRect newFrame = btnBookmark.frame;
@@ -557,10 +557,10 @@
                     newFrame= btnRemoveBookmark.frame;
                     loc = btnRemoveBookmark.frame.origin;
                     loc.x =  [flow tabControler].view.frame.size.width - btnRemoveBookmark.frame.size.width + 25 ; // Center
-                    loc.y += 65 +  btnRemoveBookmark.frame.size.height; // Bottom
+                    loc.y += 65 +  btnRemoveBookmark.frame.size.height + (orientation * 32); // Bottom
                 } else{
                     loc.x =  [flow tabControler].view.frame.size.width - btnBookmark.frame.size.width + 25; // Center
-                    loc.y += 65 +  btnBookmark.frame.size.height; // Bottom
+                    loc.y += 65 +  btnBookmark.frame.size.height + (orientation * 32); // Bottom
                 }
                 
                 
@@ -573,13 +573,13 @@
                 newFrame =btnBookmark.frame;
                 if (!btnRemoveBookmark.isHidden) {
                     newFrame= btnRemoveBookmark.frame;
-                    newFrame.origin.y = 62 + btnRemoveBookmark.frame.origin.y;
+                    newFrame.origin.y = 62 + btnRemoveBookmark.frame.origin.y + (orientation * 32);
                     newFrame.origin.x =  [flow tabControler].view.frame.size.width - btnRemoveBookmark.frame.size.width - 25;
                 } else{
-                    newFrame.origin.y = 62 + btnBookmark.frame.origin.y;
+                    newFrame.origin.y = 62 + btnBookmark.frame.origin.y + (orientation * 32);
                     newFrame.origin.x =  [flow tabControler].view.frame.size.width - btnBookmark.frame.size.width - 25;
                 }
-               
+                
                 newFrame.size.height += 1;
                 [b1 setHighlight:newFrame];
 
@@ -628,6 +628,7 @@
             [window addSubview:bubbleC];
         }
     }
+    
 }
 
 - (void)bubbleRequestedExit:(Bubble*)bubbleObject
@@ -647,9 +648,29 @@
         [helperArray addObject:usr];
         [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"casebookHelper"];
         state = 0;
+        [bubbleC removeFromSuperview];
+        bubbleC = nil;
+
     }
     
     
+}
+
+-(void) reloadBubbles
+{
+    if(bubbleC != nil)
+    {
+        [bubbleC removeFromSuperview];
+        bubbleC = nil;
+         [self showBubbles];
+    }
+}
+
+
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [self reloadBubbles];
 }
 
 

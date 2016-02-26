@@ -526,7 +526,7 @@ NSString *count = @"";
             if ([[[menuItems objectAtIndex:indexPath.row] categoryID] isEqualToString:@""]) {
                 //list by author or alphabetical
                 if ([[[menuItems objectAtIndex:indexPath.row] title] isEqualToString:@"Case Author"]) {
-                    NSMutableArray *newItems=[FDB getAuthors];
+                    NSArray *newItems=[FDB getAuthors];
                     FCaseMenuViewController *subMenu=[[FCaseMenuViewController alloc] init];
                     if (selectedIcon) {
                         subMenu.selectedIcon=selectedIcon;

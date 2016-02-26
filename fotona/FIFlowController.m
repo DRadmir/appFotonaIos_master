@@ -17,13 +17,16 @@
 
 @synthesize fotonaTab;
 @synthesize fotonaMenu;
+@synthesize fotonaMenuArray;
 @synthesize caseTab;
 @synthesize caseMenu;
+@synthesize caseMenuArray;
 @synthesize fotonaSettings;
 @synthesize eventTab;
 @synthesize newsTab;
 @synthesize lastIndex;
 @synthesize mainControler;
+@synthesize bookmarkMenuArray;
 
 @synthesize caseFlow;
 @synthesize caseOpened;
@@ -35,6 +38,7 @@
 @synthesize showMenu;
 
 @synthesize fromSearch;
+@synthesize videoSearch;
 @synthesize videoGal;
 @synthesize vidToOpen;
 
@@ -70,9 +74,13 @@
         showMenu = nil;
         lastOpenedView = nil;
         fromSearch = nil;
+        videoSearch = nil;
         videoGal = nil;
         vidToOpen = nil;
         fotonaHelperState = 0;
+        fotonaMenuArray = [NSMutableArray new];
+        caseMenuArray = [NSMutableArray new];
+        bookmarkMenuArray = [NSMutableArray new];
     }
     return self;
 }

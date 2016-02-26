@@ -100,7 +100,11 @@
             }
         }
     }
-   
+ 
+    while ([flow.caseMenuArray lastObject] != self)
+    {
+        [flow.caseMenuArray removeLastObject];
+    }
    
 }
 
@@ -112,7 +116,10 @@
 
 - (IBAction)closeMenu:(id)sender
 {
-    [self.navigationController dismissViewControllerAnimated:true completion:nil];
+   // [self.navigationController dismissViewControllerAnimated:true completion:nil];
+    [self.navigationController popToRootViewControllerAnimated:true];
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.showMenu = false;
 }
 
 #pragma mark - Table view data source
@@ -137,6 +144,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    FIFlowController *flow = [FIFlowController sharedInstance];
     if (type > 0) {
         [self getCase:[[allItems objectAtIndex:indexPath.row] caseID]];
     } else
@@ -152,15 +160,18 @@
             if ([[clicked title] isEqualToString:@"Case Author"]) {
                 subMenu.type = -1;
                 [self.navigationController pushViewController:subMenu animated:YES];
+                [flow.caseMenuArray addObject:subMenu];
             } else
             {
                 if ([[clicked title] isEqualToString:@"Disclaimer"]) {
-                    [self.navigationController dismissViewControllerAnimated:true completion:nil];
+                   // [self.navigationController dismissViewControllerAnimated:true completion:nil];
+                    [self.navigationController popToRootViewControllerAnimated:true];
                    [parent openDisclaimer];
                 } else
                 {
                    subMenu.type = 0;
                  [self.navigationController pushViewController:subMenu animated:YES];
+                     [flow.caseMenuArray addObject:subMenu];
                 }
             }
         } else {
@@ -171,6 +182,7 @@
                 if (menuArray.count >0) {
                     subMenu.type = 2;
                     [self.navigationController pushViewController:subMenu animated:YES];
+                     [flow.caseMenuArray addObject:subMenu];
                 } else
                 {
                     UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"EMPTYCATEGORY", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -185,12 +197,14 @@
                 if (menuArray.count >0) {
                     subMenu.type = 0;
                     [self.navigationController pushViewController:subMenu animated:YES];
+                     [flow.caseMenuArray addObject:subMenu];
                 } else
                 {
                     menuArray = [FDB getCasesWithCategoryID:[clicked categoryID]];
                     if (menuArray.count >0) {
                         subMenu.type = 1;
                         [self.navigationController pushViewController:subMenu animated:YES];
+                         [flow.caseMenuArray addObject:subMenu];
                     } else
                     {
                         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"EMPTYCATEGORY", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -491,7 +505,10 @@
 
 -(void) openCase
 {
-    [self.navigationController dismissViewControllerAnimated:true completion:nil];
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.showMenu = false;
+    //[self.navigationController dismissViewControllerAnimated:true completion:nil];
+    [self.navigationController popToRootViewControllerAnimated:true];
     parent.caseToOpen = caseToReturn;
     [parent openCase];
 }

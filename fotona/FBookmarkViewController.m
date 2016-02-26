@@ -21,6 +21,7 @@
 #import "FFeaturedViewController_iPad.h"
 #import "FNewsView.h"
 #import "HelperString.h"
+#import "FDB.h"
 
 @interface FBookmarkViewController ()
 {
@@ -540,7 +541,7 @@ NSMutableDictionary *preloadMoviesImages2;
         NSData *imgData=[self getAuthorImage:[currentCase authorID]];
         dispatch_async(dispatch_get_main_queue(), ^{
             //code to be executed on the main thread when background task is finished
-            [authorImg setImage:[UIImage imageWithData:imgData]];
+            [authorImg setImage: [FDB getAuthorImage:[currentCase authorID]]];//[authorImg setImage:[UIImage imageWithData:imgData]];
         });
     });
     

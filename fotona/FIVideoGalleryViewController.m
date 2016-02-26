@@ -89,7 +89,8 @@ NSMutableDictionary *preloadGalleryMoviesImages;
 {
      FIFlowController *flow = [FIFlowController sharedInstance];
     if (flow.fromSearch) {
-        [self openVideo:flow.vidToOpen];
+            [self openVideo:flow.vidToOpen];
+            flow.fromSearch = false;
     }
 }
 
@@ -126,8 +127,7 @@ NSMutableDictionary *preloadGalleryMoviesImages;
 
 }
 
-#define degreesToRadian(x) (M_PI * (x) / 180.0)
--(void) openVideo:(FVideo *) video;
+-(void) openVideo:(FVideo *) video
 {
     BOOL downloaded = YES;
     for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
@@ -150,11 +150,12 @@ NSMutableDictionary *preloadGalleryMoviesImages;
             NSString* strurl =video.path;
             NSURL *videoURL=[NSURL URLWithString:strurl];
             moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-//            moviePlayer.view.transform = CGAffineTransformIdentity;
-//            moviePlayer.view.transform = CGAffineTransformMakeRotation(degreesToRadian(90));
+            moviePlayer.moviePlayer.shouldAutoplay = false;
+            moviePlayer.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
+            
             [self presentMoviePlayerViewControllerAnimated:moviePlayer];
             [moviePlayer.moviePlayer play];
-        } else {
+                  } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [av show];
         }
@@ -378,33 +379,5 @@ NSMutableDictionary *preloadGalleryMoviesImages;
         }
     }
 }
-
-//- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-//    
-//    if ([[self.window.rootViewController presentedViewController] isKindOfClass:[MPMoviePlayerViewController class]]) {
-//        return UIInterfaceOrientationMaskAllButUpsideDown;
-//    } else {
-//        
-//        if ([[self.window.rootViewController presentedViewController]
-//             isKindOfClass:[UINavigationController class]]) {
-//            
-//            // look for it inside UINavigationController
-//            UINavigationController *nc = (UINavigationController *)[self.window.rootViewController presentedViewController];
-//            
-//            // is at the top?
-//            if ([nc.topViewController isKindOfClass:[MPMoviePlayerViewController class]]) {
-//                return UIInterfaceOrientationMaskAllButUpsideDown;
-//                
-//                // or it's presented from the top?
-//            } else if ([[nc.topViewController presentedViewController]
-//                        isKindOfClass:[MPMoviePlayerViewController class]]) {
-//                return UIInterfaceOrientationMaskAllButUpsideDown;
-//            }
-//        }
-//    }
-//    
-//    return UIInterfaceOrientationMaskPortrait;
-//}
-
 
 @end

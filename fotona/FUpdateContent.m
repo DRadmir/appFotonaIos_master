@@ -1084,7 +1084,15 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             
         }else
         {
+            NSArray *pathComp=[[results objectForColumnName:@"image"] pathComponents];
+            NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Authors",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[pathComp objectAtIndex:pathComp.count] stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSError *error;
+            [fileManager removeItemAtPath:downloadFilename error:&error];
+            
             [database executeUpdate:@"UPDATE Author set name=?,langID=?,image=?,imageLocal=?,cv=?,active=? where authorID=?",a.name,langID,a.image,a.imageLocal,a.cv,a.active,a.authorID];
+            
+            [[APP_DELEGATE authorsImageToDownload] addObject:[a.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
         }
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];

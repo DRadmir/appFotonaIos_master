@@ -917,9 +917,6 @@ int bookmarkedCount;
                             
                         }
                         
-                        
-                        
-                        
                         [database close];
                         NSArray *pathComp=[dlink pathComponents];
                         NSString *local=[[NSString stringWithFormat:@"%@/.Cases/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[dlink lastPathComponent]];

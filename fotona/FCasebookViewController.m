@@ -25,6 +25,7 @@
 #import "FDownloadManager.h"
 #import "BubbleControler.h"
 #import "HelperBookmark.h"
+#import "FDB.h"
 
 @interface FCasebookViewController ()
 {
@@ -240,7 +241,7 @@
     if (!settingsView.isHidden && settingsView != nil) {
         [self closeSettings:nil];
     }
-    currentCase = nil;
+//    currentCase = nil;
 }
 
 
@@ -575,7 +576,7 @@
         NSData *imgData=[self getAuthorImage:[currentCase authorID]];
         dispatch_async(dispatch_get_main_queue(), ^{
             //code to be executed on the main thread when background task is finished
-            [authorImg setImage:[UIImage imageWithData:imgData]];
+            [authorImg setImage: [FDB getAuthorImage:[currentCase authorID]]];
         });
     });
     

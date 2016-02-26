@@ -27,5 +27,6 @@
 @property (strong, nonatomic) FIFotonaViewController *parent;
 
 - (void) refreshPDF:(NSString *)link;
+- (IBAction)closeMenu:(id)sender;
 
 @end

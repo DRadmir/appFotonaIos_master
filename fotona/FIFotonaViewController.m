@@ -21,8 +21,9 @@
 
 @interface FIFotonaViewController ()
 {
-    UINavigationController *menu;
+//    UINavigationController *menu;
     NSString *lastCategory;
+    FIFotonaMenuViewController *subMenu;
     
     UIViewController *openedView;
     UIStoryboard *sb;
@@ -32,6 +33,7 @@
     NSString *pdfFolder;
     NSString *pathToPdf;
     BubbleControler *bubbleCFotona;
+    Bubble *b3;
     Bubble *b4;
     int stateHelper;
     BOOL menuShown;
@@ -56,17 +58,11 @@
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnMenu, nil] animated:false];
     
     sb = [UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil];
-    menu = [sb instantiateViewControllerWithIdentifier:@"menuNavigation"];
-    
+//    menu = [sb instantiateViewControllerWithIdentifier:@"menuNavigation"];
+    subMenu = [sb instantiateViewControllerWithIdentifier:@"fotonaMenu"];
     lastCategory = @"";
     pdfFolder = @".PDF";
     pathToPdf = @"";
-    
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    if (flow.fotonaTab == nil)
-    {
-        flow.fotonaTab = self;
-    }
     
     if (self.bookmarkMenu == nil) {
         self.bookmarkMenu = [NSMutableDictionary new];
@@ -78,6 +74,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.fotonaTab = self;
     menuShown = false;
     if (flow.showMenu)
     {
@@ -86,7 +83,7 @@
         menuShown = true;
     }
     if (flow.fromSearch) {
-        [self openGalleryFromSearch:@"0" andReplace:false];
+        [self openGalleryFromSearch:flow.videoGal andReplace:false];
     }
     [self showBubbles];
 }
@@ -259,12 +256,13 @@
 
 }
 
-
-
-
-
 -(void) openPDF:(NSString *)fileURL
 {
+    if (openedView != nil) {
+        [openedView willMoveToParentViewController:nil];
+        [openedView.view removeFromSuperview];
+        [openedView removeFromParentViewController];
+    }
     pathToPdf = fileURL;
     QLPreviewController *previewController = [[QLPreviewController alloc] init];
     previewController.dataSource = self;
@@ -273,6 +271,7 @@
     previewController.currentPreviewItemIndex = 0;
     
     [self presentViewController:previewController animated:YES completion:nil];
+    
 }
 
 - (NSInteger) numberOfPreviewItemsInPreviewController: (QLPreviewController *) controller
@@ -295,7 +294,20 @@
 
 - (IBAction)showMenu:(id)sender
 {
-    [self presentViewController:menu animated:true completion:nil];
+     FIFlowController *flow = [FIFlowController sharedInstance];
+
+    if (flow.fotonaMenuArray.count > 0) {
+        NSMutableArray *controllers = [self.navigationController.viewControllers mutableCopy];
+        for (FIFotonaMenuViewController *m in flow.fotonaMenuArray) {
+            [controllers addObject:m];
+        }
+        [self.navigationController setViewControllers:controllers animated:YES];
+    } else
+    {
+        [flow.fotonaMenuArray addObject:subMenu];
+        [self.navigationController pushViewController:subMenu animated:true];
+    }
+    
 }
 
 -(void)refreshMenu:(NSString *)link{
@@ -313,21 +325,21 @@
 
 -(void)clearViews
 {
+    
     if (openedView != nil) {
         [openedView willMoveToParentViewController:nil];
         [openedView.view removeFromSuperview];
         [openedView removeFromParentViewController];
-        
-        FIFlowController *flow = [FIFlowController sharedInstance];
-        if (flow.fotonaMenu != nil)
-        {
-            [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
-        }
-        
+    }
+     FIFlowController *flow = [FIFlowController sharedInstance];
+    if (flow.fotonaMenu != nil )
+    {
+        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
     }
     openedView = nil;
     lastCategory = @"";
-    [self showMenu:self];
+    [flow.fotonaMenuArray removeAllObjects];
+
 }
 
 #pragma mark - BUBBLES :D
@@ -342,6 +354,10 @@
     if(![usersarray containsObject:usr]){
         [self.viewDeckController.leftController.view setUserInteractionEnabled:NO];
         FIFlowController *flow = [FIFlowController sharedInstance];
+        if (flow.fotonaHelperState > 1) {
+            flow.fotonaHelperState = 0;
+        }
+        
         stateHelper = flow.fotonaHelperState;
         // You should check before this, if any of bubbles needs to be displayed
         if(bubbleCFotona == nil)
@@ -351,15 +367,44 @@
             //[bubbleCFotona setBackgroundTint:[UIColor clearColor]];
             
             // Calculate point of caret
-            CGPoint loc = CGPointZero;
-            if (stateHelper<1) {
-
-                if (!flow.showMenu && !menuShown)
-                {
-                    [self showMenu:self];
-                }
-            }
+            b3 = [[Bubble alloc] init];
             
+            int orientation = 0;
+            if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+                orientation = -1;
+            }
+            // Calculate point of caret
+            CGPoint loc = contentView.view.frame.origin;
+            CGRect newFrame = contentView.view.frame;
+            if (stateHelper<1) {
+                loc.x = [[flow tabControler] tabBar].frame.size.width/2; // Center
+                loc.y = 155; // Bottom
+                
+                // Set if highlight is desired
+                
+                [b3 setCornerRadius:10];
+                [b3 setSize:CGSizeMake(200, 130)];
+                newFrame = flow.fotonaTab.view.frame;
+                
+                [b3 setHighlight:newFrame];
+                
+                [b3 setHighlight:newFrame];
+                [b3 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
+                [b3 setFontColor:[UIColor whiteColor]];
+                // Set buble size and position (first size, then position!!)
+                [b3 setSize:CGSizeMake(200, 130)];
+                [b3 setCornerRadius:5];
+                [b3 setPositionOfCaret:loc withCaretFrom:TOP_CENTER];
+                [b3 setCaretSize:15]; // Because tablet, we want a bigger bubble caret
+                // Set font, paddings and text
+                [b3 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
+                [b3 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLEFOTONA1", nil)]];
+                [b3 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]]; // Default font is helvetica-neue, size 12
+                
+                // Add bubble to controler
+                [bubbleCFotona addBubble:b3];
+                [b3 setDelegate:self];
+            }
             if (stateHelper<2) {
                 b4 = [[Bubble alloc] init];
                 FIFlowController *flow = [FIFlowController sharedInstance];
@@ -384,6 +429,7 @@
                 [bubbleCFotona addBubble:b4];
                 [b4 setDelegate:self];
             }
+
             
             //[containerView addSubview:bubbleCFotona];
             UIWindow *window = [[UIApplication sharedApplication] keyWindow];
@@ -410,12 +456,14 @@
         [helperArray addObject:usr];
         [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"fotonaHelper"];
         stateHelper = 0;
+        [bubbleCFotona removeFromSuperview];
+        bubbleCFotona = nil;
         [self showMenu:self];
+    } else if (stateHelper > 0)
+    {
+        [flow.fotonaMenuArray removeAllObjects];
+        [flow.fotonaMenu closeMenu:flow.fotonaMenu];
     }
     
 }
-
-
-
-
 @end

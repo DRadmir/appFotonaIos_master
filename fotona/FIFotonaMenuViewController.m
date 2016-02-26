@@ -22,6 +22,7 @@
     BubbleControler *bubbleCFotona;
     Bubble *b3;
     int stateHelper;
+    FIFotonaMenuViewController *sub;
 }
 
 
@@ -57,6 +58,8 @@
     if (self.bookmarkPDF == nil) {
         self.bookmarkPDF = [NSMutableArray new];
     }
+    
+    
 
 }
 
@@ -73,11 +76,15 @@
     FIFlowController *flow = [FIFlowController sharedInstance];
     stateHelper = flow.fotonaHelperState;
     flow.fotonaMenu = self;
+    while ([flow.fotonaMenuArray lastObject] != self)
+    {
+        [flow.fotonaMenuArray removeLastObject];
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [self showBubbles];
+    //[self showBubbles];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -87,7 +94,10 @@
 
 - (IBAction)closeMenu:(id)sender
 {
-    [self.navigationController dismissViewControllerAnimated:true completion:nil];
+    //[self.navigationController dismissViewControllerAnimated:true completion:nil];
+    [self.navigationController popToRootViewControllerAnimated:true];
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.showMenu = false;
 }
 
 #pragma mark - Table view data source
@@ -109,9 +119,12 @@
         subMenu.previousCategory = clicked.title;
         subMenu.previousCategoryID = clicked.categoryID;
         subMenu.parent = self.parent;
+       FIFlowController *flow = [FIFlowController sharedInstance];
+        [flow.fotonaMenuArray addObject:subMenu];
         [self.navigationController pushViewController:subMenu animated:YES];
     } else{
-        [self.navigationController dismissViewControllerAnimated:true completion:nil];
+        //[self.navigationController dismissViewControllerAnimated:true completion:nil]; - staro
+        [self.navigationController popToRootViewControllerAnimated:true];
         FIFlowController *flow = [FIFlowController sharedInstance];
         if (flow.fotonaTab != nil)
         {
@@ -178,7 +191,6 @@
             }
         }
     }
-    UIImage *temp = [UIImage imageNamed:[NSString stringWithFormat:@"%@",iconaName]];
      [cell.imageView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@",iconaName]]];
     cell.textLabel.textColor = [UIColor whiteColor];
 }
@@ -252,8 +264,6 @@
                     UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
                     [av showInView:self.view];
                 }
-                
-                
             }];
              bookmarkAction.backgroundColor = [UIColor colorFromHex:@"ED1C24"];
             return @[bookmarkAction];
@@ -302,75 +312,6 @@
         }
     }
 }
-
-#pragma mark - BUBBLES :D
-
--(void)showBubbles
-{
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
-    NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"fotonaHelper"]];
-    if(![usersarray containsObject:usr]){
-        FIFlowController *flow = [FIFlowController sharedInstance];
-        [self.viewDeckController.leftController.view setUserInteractionEnabled:NO];
-        // You should check before this, if any of bubbles needs to be displayed
-        if(bubbleCFotona == nil)
-        {
-            bubbleCFotona =[[BubbleControler alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-            //[bubbleC setBlockUserInteraction:NO];
-            //[bubbleCFotona setBackgroundTint:[UIColor clearColor]];
-            b3 = [[Bubble alloc] init];
-            
-            // Calculate point of caret
-            CGPoint loc = CGPointZero;
-            if (stateHelper<1) {
-                loc.x = [[flow tabControler] tabBar].frame.size.width/2; // Center
-                loc.y = 155; // Bottom
-                // Set if highlight is desired
-                
-                CGRect newFrame = flow.tabControler.view.frame;
-                
-                [b3 setHighlight:newFrame];
-                [b3 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-                [b3 setFontColor:[UIColor whiteColor]];
-                // Set buble size and position (first size, then position!!)
-                [b3 setSize:CGSizeMake(200, 120)];
-                [b3 setCornerRadius:5];
-                [b3 setPositionOfCaret:loc withCaretFrom:TOP_CENTER];
-                [b3 setCaretSize:15]; // Because tablet, we want a bigger bubble caret
-                // Set font, paddings and text
-                [b3 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
-                [b3 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLEFOTONA1", nil)]];
-                [b3 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]]; // Default font is helvetica-neue, size 12
-                
-                // Add bubble to controler
-                [bubbleCFotona addBubble:b3];
-                [b3 setDelegate:self];
-            }
-            
-            
-            //[containerView addSubview:bubbleCFotona];
-            UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-            [window addSubview:bubbleCFotona];
-        }
-    }
-}
-- (void)bubbleRequestedExit:(Bubble*)bubbleObject
-{
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    flow.fotonaHelperState++;
-    stateHelper++;
-    [bubbleCFotona displayNextBubble];
-    [bubbleObject removeFromSuperview];
-    [self closeMenu:self];
-
-    
-}
-
-
-
 
 
 @end

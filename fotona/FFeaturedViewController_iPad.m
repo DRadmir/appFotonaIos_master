@@ -647,7 +647,7 @@ FNewsView *newsViewController;
     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 2), ^{
         //code to be executed in the background
         NSLog(@"author id %@",[(FCase *)items[index] authorID]);
-        NSData *imgData=[FDB getAuthorImage:[(FCase *)items[index] authorID]];//[self getAuthorImage:[(FCase *)items[index] authorID]];
+       // NSData *imgData=[FDB getAuthorImage:[(FCase *)items[index] authorID]];//[self getAuthorImage:[(FCase *)items[index] authorID]];
         dispatch_async(dispatch_get_main_queue(), ^{
             //code to be executed on the main thread when background task is finished
             //[imageView setImage:[UIImage imageWithData:imgData]];
@@ -655,13 +655,10 @@ FNewsView *newsViewController;
             card.carouselDoctorImage.layer.masksToBounds = YES;
             card.carouselDoctorImage.layer.borderWidth = 0;
             [card.carouselDoctorImage setContentMode:UIViewContentModeScaleAspectFill];
-            card.carouselDoctorImage.image = [UIImage imageWithData:imgData];
+            card.carouselDoctorImage.image = [FDB getAuthorImage:[(FCase *)items[index] authorID]];//[UIImage imageWithData:imgData];
         });
     });
     view = card.view;
-    
-    
-    
     
     return view;
 }

@@ -17,6 +17,7 @@
 @implementation FIExternalLinkViewController
 
 @synthesize urlString;
+@synthesize previousUrl;
 @synthesize externalWebView;
 
 - (void)viewDidLoad {
@@ -29,13 +30,17 @@
         [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnMenu, nil] animated:false];
 
     }
-
-    [self reloadView];
+    previousUrl = @"";
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
-       [externalWebView setDelegate:self];
+    [externalWebView setDelegate:self];
+    if (![previousUrl isEqualToString: urlString]) {
+        [self reloadView];
+    }
+    previousUrl = urlString;
 }
 
 - (void)didReceiveMemoryWarning {

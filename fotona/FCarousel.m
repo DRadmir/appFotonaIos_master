@@ -40,7 +40,7 @@
             self.carouselType.backgroundColor = [UIColor colorWithRed:0.902 green:0.678 blue:0.424 alpha:1];
             break;
             case 3:
-            self.carouselType.text = @"   Gyno";
+            self.carouselType.text = @"   Gynecology";
             self.carouselType.backgroundColor = [UIColor colorWithRed:0.875 green:0.325 blue:0.549 alpha:1];
             break;
         default:

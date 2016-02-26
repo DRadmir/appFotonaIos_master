@@ -42,6 +42,7 @@
         switch (t) {
             case 2:
                 [[flow fotonaTab] clearViews];
+               
                 break;
             case 3:
                 [[flow caseTab] clearViews];

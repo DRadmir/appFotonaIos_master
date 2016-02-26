@@ -158,6 +158,7 @@
     [parentIPhone.view endEditing:YES];
     FIFlowController *flow = [FIFlowController sharedInstance];
     [flow.lastOpenedView toggleSearchBar];
+    [self.view endEditing:true];
     if (indexPath.section==0) {
         if (newsSearchResIPhone.count>0) {
             [self openNews:indexPath];
@@ -183,10 +184,7 @@
         {
             [self openVideo:indexPath];
         }
-        
     }
-    
-    
 }
 
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
@@ -228,7 +226,6 @@
 
 -(void) openNews:(NSIndexPath*) index
 {
-    
     FIFlowController *flow = [FIFlowController sharedInstance];
     [APP_DELEGATE setNewsTemp:newsSearchResIPhone[index.row]];
     flow.lastIndex = 0;
@@ -245,8 +242,13 @@
     {
         [[[flow caseMenu] navigationController] popToRootViewControllerAnimated:false];
     }
-    flow.lastIndex = 3;
-    [flow.tabControler setSelectedIndex:3];
+    if (flow.lastIndex != 3) {
+        flow.lastIndex = 3;
+        [flow.tabControler setSelectedIndex:3];
+    } else {
+        flow.caseTab.caseToOpen = flow.caseFlow;
+        [flow.caseTab openCase];
+    }
 }
 
 -(void) openVideo:(NSIndexPath*) index
@@ -259,8 +261,13 @@
     {
         [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
     }
-    flow.lastIndex = 2;
-    [flow.tabControler setSelectedIndex:2];
+    if (flow.lastIndex != 2) {
+        flow.lastIndex = 2;
+        [flow.tabControler setSelectedIndex:2];
+    } else {
+        [flow.fotonaTab openGalleryFromSearch:flow.videoGal andReplace:true];
+    }
+ 
 }
 
 @end

@@ -164,6 +164,11 @@
         }
         
     }
+    
+    while ([flow.bookmarkMenuArray lastObject] != self)
+    {
+        [flow.bookmarkMenuArray removeLastObject];
+    }
 }
 
 
@@ -175,7 +180,10 @@
 
 - (IBAction)closeMenu:(id)sender
 {
-    [self.navigationController dismissViewControllerAnimated:true completion:nil];
+    //[self.navigationController dismissViewControllerAnimated:true completion:nil];
+    [self.navigationController popToRootViewControllerAnimated:true];
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.showMenu = false;
 }
 
 
@@ -210,6 +218,7 @@
     NSMutableArray *data = [NSMutableArray new];
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil];
     FIBookmarkMenuViewController *subMenu = [sb instantiateViewControllerWithIdentifier:@"bookmarkMenu"];
+    FIFlowController *flow = [FIFlowController sharedInstance];
     subMenu.parent = self.parent;
     subMenu.titleMenu = cell.textLabel.text;
     subMenu.categories = self.categories;
@@ -227,10 +236,13 @@
                 [data addObject:@"How to use bookmarks"];
                 [data addObject:NSLocalizedString(@"HOWTOUSE", nil)];
                 [parent openData:data];
-                [self.navigationController dismissViewControllerAnimated:true completion:nil];
+                [self.navigationController popToRootViewControllerAnimated:true];
+                //[self.navigationController dismissViewControllerAnimated:true completion:nil];
             }
         }
         if (subMenu.category != -1) {
+            
+            [flow.bookmarkMenuArray addObject:subMenu];
             [self.navigationController pushViewController:subMenu animated:YES];
         }
     } else{
@@ -242,7 +254,7 @@
                 {
                     newItems=[FDB getNewsForCategory:categories[category-1]];
                     if (newItems.count>0){
-                        
+                        [flow.bookmarkMenuArray addObject:subMenu];
                         [self.navigationController pushViewController:subMenu animated:YES];
                     } else
                     {
@@ -256,7 +268,7 @@
                 {
                     newItems=[FDB getEventsForCategory:categories[category-1]];
                     if (newItems.count>0){
-                        
+                        [flow.bookmarkMenuArray addObject:subMenu];
                         [self.navigationController pushViewController:subMenu animated:YES];
                     } else
                     {
@@ -270,6 +282,7 @@
                 {
                     newItems=[FDB getAlphabeticalCasesForBookmark:categories[category-1]];
                     if (newItems.count>0){
+                        [flow.bookmarkMenuArray addObject:subMenu];
                         [self.navigationController pushViewController:subMenu animated:YES];
                     } else
                     {
@@ -281,6 +294,7 @@
                     break;
                     
                 case 3:
+                    [flow.bookmarkMenuArray addObject:subMenu];
                     [self.navigationController pushViewController:subMenu animated:YES];
                     break;
                     
@@ -298,14 +312,16 @@
                     
                     [data addObject:(FNews *)[newItems objectAtIndex:indexPath.row]];
                     [parent openData:data];
-                    [self.navigationController dismissViewControllerAnimated:true completion:nil];
+                    //[self.navigationController dismissViewControllerAnimated:true completion:nil];
+                    [self.navigationController popToRootViewControllerAnimated:true];
                 }
                     break;
                     
                 case 2:
                     [data addObject:(FEvent *)[newItems objectAtIndex:indexPath.row]];
                     [parent openData:data];
-                    [self.navigationController dismissViewControllerAnimated:true completion:nil];
+                    [self.navigationController popToRootViewControllerAnimated:true];
+                    //[self.navigationController dismissViewControllerAnimated:true completion:nil];
                     break;
                     
                 case 3:
@@ -320,7 +336,8 @@
                                 [data addObject:@"1"];
                                 [data addObject:categories[category-1]];
                                 [parent openData:data];
-                                 [self.navigationController dismissViewControllerAnimated:true completion:nil];
+                                [self.navigationController popToRootViewControllerAnimated:true];
+                                //[self.navigationController dismissViewControllerAnimated:true completion:nil];
                             } else
                             {
                                 UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"EMPTYCATEGORY", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -331,6 +348,7 @@
                             if (subMenu.subDocumentType ==2) {
                                 newItems=[FDB getPDFForCategory:categories[category-1]];
                                 if (newItems.count>0){
+                                    [flow.bookmarkMenuArray addObject:subMenu];
                                     [self.navigationController pushViewController:subMenu animated:YES];
                                 } else
                                 {
@@ -345,7 +363,8 @@
                         [data removeLastObject];//remove @"0"
                         [data addObject:@"2"];
                         [data addObject:(FFotonaMenu *)[newItems objectAtIndex:indexPath.row]];
-                        [self.navigationController dismissViewControllerAnimated:true completion:nil];
+                        [self.navigationController popToRootViewControllerAnimated:true];
+                        //[self.navigationController dismissViewControllerAnimated:true completion:nil];
                         [parent openData:data];
                         
                     }
@@ -357,7 +376,8 @@
                 {
                     [data addObject:(FCase *)[newItems objectAtIndex:indexPath.row]];
                     [parent openData:data];
-                    [self.navigationController dismissViewControllerAnimated:true completion:nil];
+                    [self.navigationController popToRootViewControllerAnimated:true];
+                    //[self.navigationController dismissViewControllerAnimated:true completion:nil];
                 }
                     break;
                     

@@ -19,7 +19,7 @@
 
 
 
-
+-(void) openGalleryFromSearch:(NSString *) galleryID andReplace:(BOOL) replace;
 -(void) openCategory: (FFotonaMenu *) fotonaCategory;
 -(void)refreshMenu:(NSString *)link;
 

@@ -11,11 +11,13 @@
 #import "FIContentViewController.h"
 #import "FICaseViewController.h"
 #import "FCase.h"
+#import "FAppDelegate.h"
 
 
 @interface FICasebookContainerViewController ()
 {
     UINavigationController *menu;
+    FICasebookMenuViewController *subm;
     UIStoryboard *sb;
     FIContentViewController *disclaimerView;
     FICaseViewController *caseView;
@@ -42,28 +44,31 @@
     
     sb = [UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil];
     menu = [sb instantiateViewControllerWithIdentifier:@"caseMenuNavigation"];
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    if (flow.caseTab == nil)
-    {
-        flow.caseTab = self;
-    }
+    subm = [sb instantiateViewControllerWithIdentifier:@"caseMenuViewController"];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.caseTab = self;
     if (flow.caseFlow != nil)
     {
+        [self clearViews];
         caseToOpen = flow.caseFlow;
-        flow.caseFlow = nil;
         [self openCase];
     }
     
-    if (flow.showMenu)
+    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
+    if (usr == nil) {
+        usr =@"guest";
+    }
+    NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
+    if (flow.showMenu && flow.caseFlow == nil && ([usersarray containsObject:usr] || !caseToOpen))
     {
         flow.showMenu = false;
         [self showMenu:self];
     }
+    flow.caseFlow = nil;
     
 }
 
@@ -76,7 +81,20 @@
 
 - (IBAction)showMenu:(id)sender
 {
-    [self presentViewController:menu animated:true completion:nil];
+   // [self presentViewController:menu animated:true completion:nil];
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    
+    if (flow.caseMenuArray.count > 0) {
+        NSMutableArray *controllers = [self.navigationController.viewControllers mutableCopy];
+        for (FICasebookMenuViewController *m in flow.caseMenuArray) {
+            [controllers addObject:m];
+        }
+        [self.navigationController setViewControllers:controllers animated:YES];
+    } else
+    {
+        [flow.caseMenuArray addObject:subm];
+        [self.navigationController pushViewController:subm animated:true];
+    }
 }
 
 #pragma mark - Open Disclaimer
@@ -136,12 +154,13 @@
 
 -(void)clearViews
 {
+    FIFlowController *flow = [FIFlowController sharedInstance];
     if (openedView != nil) {
         [openedView willMoveToParentViewController:nil];
         [openedView.view removeFromSuperview];
         [openedView removeFromParentViewController];
         
-        FIFlowController *flow = [FIFlowController sharedInstance];
+        
         if (flow.caseMenu != nil)
         {
             [[[flow caseMenu] navigationController] popToRootViewControllerAnimated:false];
@@ -149,8 +168,12 @@
         
     }
     lastCase = nil;
-    
-    [self showMenu:self];
+//    if (flow.caseMenuArray.count > 0) {
+//        FICasebookMenuViewController *temp = flow.caseMenuArray.firstObject;
+        [flow.caseMenuArray removeAllObjects];
+//        [flow.caseMenuArray addObject:temp];
+//    }
+    //[self showMenu:self];
 }
 
 

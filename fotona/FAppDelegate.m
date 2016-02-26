@@ -963,7 +963,17 @@
 
 -(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
-    if ([self.window.visibleViewController isKindOfClass:[MPMoviePlayerViewController class]]) {
+    
+    if ([self.window.visibleViewController isKindOfClass:[MPMoviePlayerViewController class]] || [self.window.visibleViewController isKindOfClass:[QLPreviewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] || [self.window.visibleViewController isKindOfClass:[EBPhotoPagesController class]] || [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]] || [FCommon isIpad]) {
+        if ( [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]]) {
+            for (UIView *object in self.window.visibleViewController.childViewControllers ) {
+                if([object isKindOfClass:[FICaseViewController class]])
+                {
+                    return UIInterfaceOrientationMaskAllButUpsideDown;
+                }
+            }
+            return UIInterfaceOrientationMaskPortrait;
+        }
         return UIInterfaceOrientationMaskAllButUpsideDown;
     }     
     return UIInterfaceOrientationMaskPortrait;

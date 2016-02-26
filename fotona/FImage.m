@@ -29,7 +29,11 @@
         [self setPath:[dic valueForKey:@"path"]];
         [self setPath:[self.path stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
         [self setLocalPath:@""];
-        [self setDescription:[dic valueForKey:@"description"]];
+        if ([dic valueForKey:@"description"]== nil || [dic valueForKey:@"description"]== (id)[NSNull null] ) {
+            [self setDescription:@""];
+        }else{
+            [self setDescription:[dic valueForKey:@"description"]];
+        }
         [self setSort:[dic valueForKey:@"sort"]];
     }
     

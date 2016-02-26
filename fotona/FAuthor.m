@@ -74,7 +74,9 @@
     }
     else
     {
-        return self.imageLocal;
+        NSArray *pathComp=[self.image pathComponents];
+        NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Authors",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[self.image lastPathComponent] stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
+        return downloadFilename;
     }
 }
 

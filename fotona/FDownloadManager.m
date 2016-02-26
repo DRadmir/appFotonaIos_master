@@ -62,6 +62,31 @@
     }
 }
 
+-(void)downloadAuthorsImage:(NSMutableArray *)imagesURL
+{
+    NSString *folder=@".Authors";
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@",docDir,folder]]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@%@",docDir,folder] withIntermediateDirectories:YES attributes:nil error:nil];
+        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",docDir,folder]]];
+    }
+    for (NSString *fileUrl in imagesURL) {
+        NSArray *pathComp=[fileUrl pathComponents];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@/%@",docDir,folder,[pathComp objectAtIndex:pathComp.count-2]]]) {
+            NSError *err;
+            [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@%@/%@",docDir,folder,[pathComp objectAtIndex:pathComp.count-2]] withIntermediateDirectories:YES attributes:nil error:&err];
+            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@/%@",docDir,folder,[pathComp objectAtIndex:pathComp.count-2]]]];
+        }
+        
+        NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@/%@",docDir,folder,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[fileUrl lastPathComponent]];
+        if ([self checkDownload:fileUrl]) {
+            [self.downloadManager addDownloadWithFilename:downloadFilename URL:[NSURL URLWithString:fileUrl]];
+        }
+        
+    }
+    [self startDownload];
+}
+
+
 -(void)downloadImages
 {
     NSString *folder=@".Cases";

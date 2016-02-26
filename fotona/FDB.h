@@ -18,7 +18,7 @@
 +(NSMutableArray *)getCasesForCarouselFromDB;
 
 +(FAuthor *)getAuthorWithID:(NSString *)authID;
-+(NSData *)getAuthorImage:(NSString *)authID;
++(UIImage *)getAuthorImage:(NSString *)authID;
 +(NSMutableArray *)getAuthors;
 
 +(FCase *)getCaseForFotona:(NSString *)caseID;

@@ -23,6 +23,7 @@
 @interface FIBookmarkViewController ()
 {
     UINavigationController *menu;
+    FIBookmarkMenuViewController *subm;
     UIStoryboard *sb;
     UIViewController *openedView;
     FIContentViewController *contentView;
@@ -54,14 +55,9 @@
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnMenu, nil] animated:false];
     
     sb = [UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil];
-    menu = [sb instantiateViewControllerWithIdentifier:@"bookmarkMenuNavigation"];
-    
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    if (flow.bookmarkTab == nil)
-    {
-        flow.bookmarkTab = self;
-    }
-    
+    //menu = [sb instantiateViewControllerWithIdentifier:@"bookmarkMenuNavigation"];
+    subm = [sb instantiateViewControllerWithIdentifier:@"bookmarkMenu"];
+
     pdfFolder = @".PDF";
     pathToPdf = @"";
 }
@@ -69,6 +65,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.bookmarkTab = self;
     if (flow.showMenu)
     {
         flow.showMenu = false;
@@ -84,7 +81,21 @@
 
 - (IBAction)showMenu:(id)sender
 {
-    [self  presentViewController:menu animated:true completion:nil];
+    //[self  presentViewController:menu animated:true completion:nil];
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    
+    if (flow.bookmarkMenuArray.count > 0) {
+        NSMutableArray *controllers = [self.navigationController.viewControllers mutableCopy];
+        for (FIBookmarkMenuViewController *m in flow.bookmarkMenuArray) {
+            [controllers addObject:m];
+        }
+        [self.navigationController setViewControllers:controllers animated:YES];
+    } else
+    {
+        [flow.bookmarkMenuArray addObject:subm];
+        [self.navigationController pushViewController:subm animated:true];
+    }
+
 }
 
 #pragma mark - Opening Views
@@ -311,6 +322,11 @@
 
 -(void) openPDF:(NSString *)fileURL
 {
+    if (openedView != nil) {
+        [openedView willMoveToParentViewController:nil];
+        [openedView.view removeFromSuperview];
+        [openedView removeFromParentViewController];
+    }
     pathToPdf = fileURL;
     QLPreviewController *previewController = [[QLPreviewController alloc] init];
     previewController.dataSource = self;
@@ -349,7 +365,7 @@
         {
             [[[flow bookmarkMenu] navigationController] popToRootViewControllerAnimated:false];
         }
-        
+        [flow.bookmarkMenuArray removeAllObjects];
     
     lastCase = nil;
     lastNews = nil;

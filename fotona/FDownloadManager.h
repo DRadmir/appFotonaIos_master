@@ -32,6 +32,7 @@
 -(BOOL)checkDownload:(NSString *)filePath;
 -(void) cancelDownload;
 -(void)startDownload;
+-(void)downloadAuthorsImage:(NSMutableArray *)imagesURL;
 
 
 

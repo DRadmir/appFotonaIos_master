@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "FVideo.h"
 
 @interface FIVideoGalleryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
@@ -17,8 +18,11 @@
 @property (strong, nonatomic) IBOutlet UITableView *videoGalleryTableView;
 @property (nonatomic,retain) MPMoviePlayerViewController *moviePlayer;
 
+@property (nonatomic,strong) MPMoviePlayerController* mc;
+
 
 -(void) loadGallery;
 -(void) reloadCells:(NSString *)videoToReload;
+-(void) openVideo:(FVideo *) video;
 
 @end

@@ -13,6 +13,7 @@
 @property (strong, nonatomic) IBOutlet UIWebView *externalWebView;
 
 @property (strong, nonatomic) NSString* urlString;
+@property (strong, nonatomic) NSString* previousUrl;
 @property (nonatomic) BOOL changePass;
 
 -(void) reloadView;
