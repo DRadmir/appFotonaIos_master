@@ -256,13 +256,13 @@
         if (type == -1)
         {
             [cell.textLabel setText:[[allItems objectAtIndex:indexPath.row] title]];
-            UIImage *image = [UIImage imageNamed:@"related_news_clear"];
+            UIImage *image = [UIImage imageNamed:@"case_author_red"];
             
             [cell.imageView setImage:image];
             
             image = [UIImage imageWithContentsOfFile:[[authors objectAtIndex:indexPath.row] imageLocal]];
             NSLog(@"%@",[[authors objectAtIndex:indexPath.row] imageLocal]);
-            UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 45, 45)];
+            UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(13, 5, 45, 45)];
             img.layer.cornerRadius = img.frame.size.height /2;
             img.layer.masksToBounds = YES;
             img.layer.borderWidth = 0;
