@@ -9,8 +9,10 @@
 #import "FITabbarController.h"
 #import "UIColor+Hex.h"
 #import "FIFlowController.h"
+#import "UIWindow+Fotona.h"
+#import "FCommon.h"
 
-@interface FITabbarController ()
+@interface FITabbarController ()<UITabBarControllerDelegate>
 
 @end
 
@@ -18,7 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self setDelegate:self];
     [[self tabBar] setTintColor:[UIColor colorFromHex:@"ED1C24"]];
     [[self tabBar] setTranslucent:NO];
     
@@ -64,10 +66,12 @@
     flow.lastIndex = t;
 }
 
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
+    return viewController != tabBarController.selectedViewController;
+}
 
 -(void)removeViews
 {
     [self dismissViewControllerAnimated:true completion:nil];
 }
-
 @end

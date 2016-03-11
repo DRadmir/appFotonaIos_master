@@ -23,8 +23,8 @@ NSIndexPath *selectedIndex;
     [super viewDidLoad];
     [self setTitle:@"Event Categories"];
     
-    menu= [NSArray arrayWithObjects: @"All", @"Aesthetics", @"Dentistry", @"Gynecology",nil];
-    categories = [NSArray arrayWithObjects: @"0", @"2", @"1", @"3",nil];
+    menu= [NSArray arrayWithObjects: @"All", @"Aesthetics", @"Dentistry", @"Gynecology", @"Surgery",nil];
+    categories = [NSArray arrayWithObjects: @"0", @"2", @"1", @"3",@"4",nil];
     
     selectedIndex = [NSIndexPath indexPathForRow:[categories indexOfObject:[NSString stringWithFormat:@"%d",self.parent.ci]] inSection:0];
 }

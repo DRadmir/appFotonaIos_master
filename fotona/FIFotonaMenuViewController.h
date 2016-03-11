@@ -10,7 +10,7 @@
 #import "FIFotonaViewController.h"
 #import "Bubble.h"
 
-@interface FIFotonaMenuViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, BubbleDelegate>
+@interface FIFotonaMenuViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
 }
 

@@ -25,6 +25,7 @@
 #import "FCommon.h"
 #import "FIFlowController.h"
 #import "UIWindow+Fotona.h"
+#import "FIExternalLinkViewController.h"
 
 
 
@@ -370,7 +371,7 @@
         success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
         [defaults setObject:userBookmarked forKey:@"userBookmarked"];
         [defaults synchronize];
-        [[NSUserDefaults standardUserDefaults] setObject:@"2.3" forKey:@"DBLastUpdate"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"2.4" forKey:@"DBLastUpdate"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         [APP_DELEGATE setBookmarkCountAll:0];
@@ -387,7 +388,7 @@
             if (!success)
                 NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
             else{
-                [[NSUserDefaults standardUserDefaults] setObject:@"2.3" forKey:@"DBLastUpdate"];
+                [[NSUserDefaults standardUserDefaults] setObject:@"2.4" forKey:@"DBLastUpdate"];
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 [defaults setObject:@"" forKey:@"newsLastUpdate"];
                 [defaults setObject:@"" forKey:@"eventsLastUpdate"];
@@ -458,6 +459,17 @@
                 [APP_DELEGATE setBookmarkCountAll:0];
                 [APP_DELEGATE setBookmarkCountLeft:0];
             }
+            if ([lastUpdate isEqualToString:@"2.3"]){
+                //added itemType for videos
+                [[NSUserDefaults standardUserDefaults] setObject:@"2.4" forKey:@"DBLastUpdate"];
+                [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"casesLastUpdate"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [defaults setObject:@"" forKey:@"lastUpdate"];
+                userBookmarked = [[NSMutableArray alloc] init];
+                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
+                [defaults synchronize];
+            }
+
         }
     }
     [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:dbPath]];
@@ -963,8 +975,8 @@
 
 -(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
-    
-    if ([self.window.visibleViewController isKindOfClass:[MPMoviePlayerViewController class]] || [self.window.visibleViewController isKindOfClass:[QLPreviewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] || [self.window.visibleViewController isKindOfClass:[EBPhotoPagesController class]] || [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]] || [FCommon isIpad]) {
+
+    if ([self.window.visibleViewController isKindOfClass:[MPMoviePlayerViewController class]] || [self.window.visibleViewController isKindOfClass:[FIFotonaViewController class]] || [self.window.visibleViewController isKindOfClass:[QLPreviewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] ||[self.window.visibleViewController isKindOfClass:[EBPhotoPagesController class]] || [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]] || [FCommon isIpad]) {
         if ( [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]]) {
             for (UIView *object in self.window.visibleViewController.childViewControllers ) {
                 if([object isKindOfClass:[FICaseViewController class]])
@@ -973,9 +985,25 @@
                 }
             }
             return UIInterfaceOrientationMaskPortrait;
+        } else if ( [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]]) {
+            for (UIView *object in self.window.visibleViewController.childViewControllers ) {
+                if([object isKindOfClass:[FICaseViewController class]])
+                {
+                    return UIInterfaceOrientationMaskAllButUpsideDown;
+                }
+            }
+            return UIInterfaceOrientationMaskPortrait;
+        } else if ( [self.window.visibleViewController isKindOfClass:[FIFotonaViewController class]]) {
+            for (UIView *object in self.window.visibleViewController.childViewControllers ) {
+                if([object isKindOfClass:[FIExternalLinkViewController class]])
+                {
+                    return UIInterfaceOrientationMaskAllButUpsideDown;
+                }
+            }
+            return UIInterfaceOrientationMaskPortrait;
         }
         return UIInterfaceOrientationMaskAllButUpsideDown;
-    }     
+    }
     return UIInterfaceOrientationMaskPortrait;
 }
 

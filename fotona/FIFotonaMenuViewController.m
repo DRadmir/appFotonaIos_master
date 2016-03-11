@@ -58,8 +58,6 @@
     if (self.bookmarkPDF == nil) {
         self.bookmarkPDF = [NSMutableArray new];
     }
-    
-    
 
 }
 
@@ -80,6 +78,9 @@
     {
         [flow.fotonaMenuArray removeLastObject];
     }
+    
+    NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
 }
 
 -(void)viewDidAppear:(BOOL)animated

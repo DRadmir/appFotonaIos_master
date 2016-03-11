@@ -791,13 +791,13 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
                 }
             } else {
                 if (!flag) {
-                    [database executeUpdate:@"INSERT INTO Cases (caseID,title, coverTypeID,name,image,active,authorID,isBookmark,alloweInCoverFlow,galleryID,videoGalleryID) VALUES (?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,c.coverTypeID,c.name,c.image,c.active,c.authorID,bookmarked,c.coverflow, c.galleryID,c.videoGalleryID];
+                    [database executeUpdate:@"INSERT INTO Cases (caseID,title, coverTypeID,name,image,active,authorID,isBookmark,alloweInCoverFlow,galleryID,videoGalleryID,allowedForGuests) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,c.coverTypeID,c.name,c.image,c.active,c.authorID,bookmarked,c.coverflow, c.galleryID,c.videoGalleryID,c.allowedForGuests];
                     [self addMediaWhithout:[c parseImages] withType:0];
                     [self addMediaWhithout:[c parseVideos] withType:1];
                     [self setCase:c.caseID InCategories:c.categories];
                 }else
                 {
-                    [database executeUpdate:@"UPDATE Cases set title=?,coverTypeID=?,name=?,image=?,active=?,authorID=?,alloweInCoverFlow=?,galleryID=?,videoGalleryID=? where caseID=?",c.title,c.coverTypeID,c.name,c.image,c.active,c.authorID,c.coverflow,c.caseID, c.galleryID,c.videoGalleryID];
+                    [database executeUpdate:@"UPDATE Cases set title=?,coverTypeID=?,name=?,image=?,active=?,authorID=?,alloweInCoverFlow=?,galleryID=?,videoGalleryID=?,allowedForGuests=? where caseID=?",c.title,c.coverTypeID,c.name,c.image,c.active,c.authorID,c.coverflow, c.galleryID,c.videoGalleryID,c.allowedForGuests,c.caseID];
                     [self updateMedia:[c parseImages] withType:0 idArray:[NSMutableArray new]];
                     [self updateMedia:[c parseVideos] withType:1  idArray:[NSMutableArray new]];
                     [self deleteCasesFromCategories:c.caseID];
@@ -1068,12 +1068,14 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 
 -(void)addAuthorsInDB:(NSMutableArray *)authArr
 {
+    NSArray *pathComp = [NSArray new];
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     for (FAuthor *a in authArr) {
         FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Author where authorID=%@",a.authorID]];
         BOOL flag=NO;
         while([results next]) {
+            pathComp=[[results objectForColumnName:@"image"] pathComponents];
             flag=YES;
         }
         
@@ -1084,8 +1086,8 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             
         }else
         {
-            NSArray *pathComp=[[results objectForColumnName:@"image"] pathComponents];
-            NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Authors",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[pathComp objectAtIndex:pathComp.count] stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
+            
+            NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Authors",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[pathComp objectAtIndex:pathComp.count-1] stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
             NSFileManager *fileManager = [NSFileManager defaultManager];
             NSError *error;
             [fileManager removeItemAtPath:downloadFilename error:&error];

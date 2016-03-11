@@ -232,7 +232,7 @@ static NSString *FrameKeyPath = @"frame";
     
     CGFloat contentHeight = subviewsRect.size.height + 10;
     [self setContentSize:CGSizeMake(1, contentHeight)];
-    CGFloat topInset = self.bounds.size.height - MIN(contentHeight, 65);
+    CGFloat topInset = self.bounds.size.height - MIN(contentHeight, 75);
     [self setContentInset:UIEdgeInsetsMake(topInset, 0, 0, 0)];
 }
 

@@ -82,7 +82,9 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     }
     [self loadGallery];
     [videoGalleryTableView reloadData];
-   
+
+    NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -92,6 +94,7 @@ NSMutableDictionary *preloadGalleryMoviesImages;
             [self openVideo:flow.vidToOpen];
             flow.fromSearch = false;
     }
+    [UIViewController attemptRotationToDeviceOrientation];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -379,5 +382,8 @@ NSMutableDictionary *preloadGalleryMoviesImages;
         }
     }
 }
+
+
+
 
 @end

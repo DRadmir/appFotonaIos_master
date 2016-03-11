@@ -82,10 +82,12 @@
         [self showMenu:self];
         menuShown = true;
     }
+    
     if (flow.fromSearch) {
         [self openGalleryFromSearch:flow.videoGal andReplace:false];
     }
     [self showBubbles];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -326,19 +328,47 @@
 -(void)clearViews
 {
     
+//    if (openedView != nil) {
+//        [openedView willMoveToParentViewController:nil];
+//        [openedView.view removeFromSuperview];
+//        [openedView removeFromParentViewController];
+//    }
+//     FIFlowController *flow = [FIFlowController sharedInstance];
+//    //[flow.fotonaMenu closeMenu:self];
+//    if (flow.fotonaMenu != nil )
+//    {
+//        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
+//    }
+//    openedView = nil;
+//    lastCategory = @"";
+//    [flow.fotonaMenuArray removeAllObjects];
+//    if (![self.navigationController.visibleViewController isKindOfClass:[FIFotonaMenuViewController class]]) {
+//        [self showMenu:self];
+//    }
+    
+    FIFlowController *flow = [FIFlowController sharedInstance];
     if (openedView != nil) {
         [openedView willMoveToParentViewController:nil];
         [openedView.view removeFromSuperview];
         [openedView removeFromParentViewController];
+        openedView = nil;
+        if (flow.fotonaMenu != nil )
+        {
+            [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
+             [flow.fotonaMenuArray removeAllObjects];
+        }
     }
-     FIFlowController *flow = [FIFlowController sharedInstance];
-    if (flow.fotonaMenu != nil )
-    {
-        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
-    }
+    
     openedView = nil;
     lastCategory = @"";
-    [flow.fotonaMenuArray removeAllObjects];
+    if (flow.fotonaMenuArray.count > 1) {
+         [flow.fotonaMenuArray removeAllObjects];
+    }
+    
+    if (![self.navigationController.visibleViewController isKindOfClass:[FIFotonaMenuViewController class]]) {
+        [self showMenu:self];
+    }
+
 
 }
 
@@ -466,4 +496,6 @@
     }
     
 }
+
+
 @end

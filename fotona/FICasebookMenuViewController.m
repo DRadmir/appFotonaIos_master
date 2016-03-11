@@ -105,6 +105,9 @@
     {
         [flow.caseMenuArray removeLastObject];
     }
+    
+    NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
    
 }
 
@@ -300,10 +303,11 @@
     {
         CGRect screenRect = [[UIScreen mainScreen] bounds];
         CGFloat screenWidth = screenRect.size.width;
-        
+      
         UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
         [img setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@white",previousIcon]]];
         [cell addSubview:img];
+        
         UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(40, 10, screenWidth-100, 20)];
         [name setText:[(FCase *)[allItems objectAtIndex:indexPath.row] name]];
         [name setFont:[UIFont fontWithName:@"HelveticaNeue" size:12.5]];
@@ -324,11 +328,8 @@
         [caseLbl setTextColor:[UIColor grayColor]];
         [caseLbl setNumberOfLines:2];
         [cell addSubview:caseLbl];
-        
-        
     }else
     {
-        
         if (!previousCategory) {
             [cell.imageView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@white",[menuIcons objectAtIndex:indexPath.row]]]];
         } else{
@@ -356,7 +357,9 @@
     {
         CGRect screenRect = [[UIScreen mainScreen] bounds];
         CGFloat screenWidth = screenRect.size.width;
-        
+        for (UIView *v in cell.subviews) {
+            v.removeFromSuperview;
+        }
         UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
         [img setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@red",previousIcon]]];
         [cell addSubview:img];

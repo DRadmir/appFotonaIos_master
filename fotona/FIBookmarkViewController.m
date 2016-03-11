@@ -57,7 +57,7 @@
     sb = [UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil];
     //menu = [sb instantiateViewControllerWithIdentifier:@"bookmarkMenuNavigation"];
     subm = [sb instantiateViewControllerWithIdentifier:@"bookmarkMenu"];
-
+    
     pdfFolder = @".PDF";
     pathToPdf = @"";
 }
@@ -95,13 +95,14 @@
         [flow.bookmarkMenuArray addObject:subm];
         [self.navigationController pushViewController:subm animated:true];
     }
-
+    
 }
 
 #pragma mark - Opening Views
 
 -(void)openData:(NSMutableArray *)data
 {
+   
     BOOL replace = false;
     NSString *tempDocument = data[0];
     int document = tempDocument.intValue;
@@ -290,7 +291,6 @@
         openedView = contentView;
         lastCase = nil;
     }
-    
 }
 
 
@@ -355,24 +355,58 @@
 #pragma mark - Clear All
 -(void)clearViews
 {
+//    if (openedView != nil) {
+//        [openedView willMoveToParentViewController:nil];
+//        [openedView.view removeFromSuperview];
+//        [openedView removeFromParentViewController];
+//        
+//        FIFlowController *flow = [FIFlowController sharedInstance];
+//        if (flow.bookmarkMenu != nil)
+//        {
+//            [[[flow bookmarkMenu] navigationController] popToRootViewControllerAnimated:false];
+//        }
+//        [flow.bookmarkMenuArray removeAllObjects];
+//        
+//        lastCase = nil;
+//        lastNews = nil;
+//        lastEvent = nil;
+//        lastDocument = -1;
+//        openedView = nil;
+//    }
+//    
+//    
+//    if (![self.navigationController.visibleViewController isKindOfClass:[FIBookmarkMenuViewController class]]) {
+//        [self showMenu:self];
+//    }
     
+    
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    if (openedView != nil) {
         [openedView willMoveToParentViewController:nil];
         [openedView.view removeFromSuperview];
         [openedView removeFromParentViewController];
-        
-        FIFlowController *flow = [FIFlowController sharedInstance];
-        if (flow.bookmarkMenu != nil)
+        openedView = nil;
+        if (flow.bookmarkMenu != nil )
         {
             [[[flow bookmarkMenu] navigationController] popToRootViewControllerAnimated:false];
+            [flow.bookmarkMenuArray removeAllObjects];
         }
-        [flow.bookmarkMenuArray removeAllObjects];
+    }
     
     lastCase = nil;
     lastNews = nil;
     lastEvent = nil;
     lastDocument = -1;
     openedView = nil;
-    [self showMenu:self];
+    if (flow.bookmarkMenuArray.count > 1) {
+        [flow.bookmarkMenuArray removeAllObjects];
+    }
+    
+    if (![self.navigationController.visibleViewController isKindOfClass:[FIBookmarkMenuViewController class]]) {
+        [self showMenu:self];
+    }
+    
+
 }
 
 #pragma mark - Open Video Gallery
@@ -384,7 +418,7 @@
     }
     
     videoView.category = category;
-     videoView.galleryID = @"-1";
+    videoView.galleryID = @"-1";
     if (replace)
     {
         [self openViewInContainer:videoView];

@@ -12,6 +12,7 @@
 #import "FICaseViewController.h"
 #import "FCase.h"
 #import "FAppDelegate.h"
+#import "UIWindow+Fotona.h"
 
 
 @interface FICasebookContainerViewController ()
@@ -53,7 +54,7 @@
     flow.caseTab = self;
     if (flow.caseFlow != nil)
     {
-        [self clearViews];
+        //[self clearViews];
         caseToOpen = flow.caseFlow;
         [self openCase];
     }
@@ -63,6 +64,7 @@
         usr =@"guest";
     }
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
+   
     if (flow.showMenu && flow.caseFlow == nil && ([usersarray containsObject:usr] || !caseToOpen))
     {
         flow.showMenu = false;
@@ -154,26 +156,29 @@
 
 -(void)clearViews
 {
+    
     FIFlowController *flow = [FIFlowController sharedInstance];
     if (openedView != nil) {
         [openedView willMoveToParentViewController:nil];
         [openedView.view removeFromSuperview];
         [openedView removeFromParentViewController];
-        
-        
+        openedView = nil;
         if (flow.caseMenu != nil)
         {
             [[[flow caseMenu] navigationController] popToRootViewControllerAnimated:false];
+            [flow.caseMenuArray removeAllObjects];
         }
-        
     }
+    
     lastCase = nil;
-//    if (flow.caseMenuArray.count > 0) {
-//        FICasebookMenuViewController *temp = flow.caseMenuArray.firstObject;
+    if (flow.caseMenuArray.count > 1) {
         [flow.caseMenuArray removeAllObjects];
-//        [flow.caseMenuArray addObject:temp];
-//    }
-    //[self showMenu:self];
+    }
+
+    if (![self.navigationController.visibleViewController isKindOfClass:[FICasebookMenuViewController class]]) {
+        [self showMenu:self];
+    }
+   
 }
 
 

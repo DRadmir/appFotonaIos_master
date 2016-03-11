@@ -62,8 +62,6 @@
         }
     }
     
-    
-    
     if (category == 0) {
         categories = [NSMutableArray new];
         NSArray *temp =[APP_DELEGATE currentLogedInUser].userTypeSubcategory;
@@ -169,6 +167,9 @@
     {
         [flow.bookmarkMenuArray removeLastObject];
     }
+    
+    NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"]; 
 }
 
 
@@ -231,6 +232,7 @@
                 subMenu.category = 4;
             } else
             {
+                subMenu.category = -1;
                 [data addObject:@"5"];
                 [data addObject:@"0"];
                 [data addObject:@"How to use bookmarks"];
