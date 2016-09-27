@@ -558,11 +558,6 @@ NSMutableDictionary *preloadMoviesImages2;
         }
     }
     
-    //    if (introductionLbl) {
-    //        [introductionLbl setFrame:CGRectMake(38, 15, self.view.frame.size.width-76, introductionLbl.frame.size.height)];
-    //    }else{
-    //        introductionLbl =[[FDLabelView alloc] initWithFrame:CGRectMake(38, 15, self.view.frame.size.width-76, introductionLbl.frame.size.height)];
-    //    }
     NSMutableAttributedString *allAdditionalInfo=[[NSMutableAttributedString alloc] init];
     NSString *check=[[currentCase introduction] stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@""];
     if ([currentCase introduction] && ![check isEqualToString:@""]) {

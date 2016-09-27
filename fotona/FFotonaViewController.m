@@ -169,9 +169,9 @@ NSString *currentVideoGalleryId;
                                                  name:@"CloseOnTabFotona"
                                                object:nil];
     if (openVideoGal == nil) {
-         openVideoGal = NO;
+        openVideoGal = NO;
     }
-   
+    
     
     settingsController = [APP_DELEGATE settingsController];
     
@@ -212,7 +212,7 @@ NSString *currentVideoGalleryId;
         CGRect newFrame = fotonaImg.frame;
         newFrame.origin.x = self.view.frame.size.width/2-fotonaImg.frame.size.width/2-162;
         fotonaImg.frame = newFrame;
-
+        
     }
     
     [self.viewDeckController setLeftSize:self.view.frame.size.width-320];
@@ -703,12 +703,12 @@ NSString *currentVideoGalleryId;
     [containerView addSubview:contentVideoModeView];
     if (videosArray.count > 0) {
         [self preloadMoviesImage:videosArray videoGalleryId:galleryID];
-        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:containerView];
-        [containerView addSubview:hud];
-        hud.labelText = @"Updating video images";
-        [hud show:YES];
+//        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:containerView];
+//        [containerView addSubview:hud];
+//        hud.labelText = @"Updating video images";
+//        [hud show:YES];
     }
-   
+    
     [cvTitleLbl setText:title];
     [contentVideModeScrollView addSubview:cvTitleLbl];
     
@@ -789,7 +789,7 @@ NSString *currentVideoGalleryId;
 
 -(void)openVideoFromSearch:(FVideo *)video
 {
-
+    
     if (!self.viewDeckController.leftController.view.isHidden) {
         CGRect newFrame = fotonaImg.frame;
         newFrame.origin.x += rotate * 180;
@@ -801,7 +801,7 @@ NSString *currentVideoGalleryId;
     }
     
     openVideoGal = YES;
-
+    
     
     BOOL downloaded = YES;
     for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
@@ -846,7 +846,7 @@ NSString *currentVideoGalleryId;
             [av show];
         }
     }
-
+    
 }
 
 
@@ -961,7 +961,7 @@ NSString *currentVideoGalleryId;
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     openVideoGal = YES;
-     [self.viewDeckController closeLeftView];
+    [self.viewDeckController closeLeftView];
     videoArray = [item getVideos];
     FVideo *vid=[videoArray objectAtIndex:[indexPath row]];
     
@@ -1119,7 +1119,7 @@ NSString *currentVideoGalleryId;
 
 -(void)preloadMoviesImage:(NSMutableArray *)videosArray videoGalleryId:(NSString *)galleryId
 {
-
+    
     NSString *lastUpdate=[[NSUserDefaults standardUserDefaults] objectForKey:@"thubnailsLastUpdate"];
     
     NSMutableDictionary *temp;
@@ -1202,31 +1202,31 @@ NSString *currentVideoGalleryId;
                 return;
             }
             
-            dispatch_async(dispatch_get_main_queue(), ^{
+            
+            
+            UIImage *img;
+            NSArray *pathComp=[[vid videoImage] pathComponents];
+            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[vid videoImage] lastPathComponent]];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
+                NSData *data=[NSData dataWithContentsOfFile:pathTmp];
+                img = [UIImage imageWithData:data];
+            } else{
+                NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid videoImage]];
+                img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
+            }
+            
+            
+            if (img!=nil) {
+                CGSize size = CGSizeMake(300, 167);
+                UIGraphicsBeginImageContext(size);
                 
-                UIImage *img;
-                NSArray *pathComp=[[vid videoImage] pathComponents];
-                NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[vid videoImage] lastPathComponent]];
-                if ([[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
-                    NSData *data=[NSData dataWithContentsOfFile:pathTmp];
-                    img = [UIImage imageWithData:data];
-                } else{
-                    NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid videoImage]];
-                    img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
-                }
+                CGRect imgBorder = CGRectMake(0, 0, size.width, size.height);
+                [img drawInRect:imgBorder];
                 
-                
-                if (img!=nil) {
-                    CGSize size = CGSizeMake(300, 167);
-                    UIGraphicsBeginImageContext(size);
-                    
-                    CGRect imgBorder = CGRectMake(0, 0, size.width, size.height);
-                    [img drawInRect:imgBorder];
-                    
-                    img = UIGraphicsGetImageFromCurrentImageContext();
-                    UIGraphicsEndImageContext();
-                    NSIndexPath *collectionIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                    
+                img = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+                NSIndexPath *collectionIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                dispatch_async(dispatch_get_main_queue(), ^{
                     GEMainMenuCell *cell = [contentsVideoModeCollectionView cellForItemAtIndexPath:collectionIndexPath];
                     
                     [preloadGalleryMoviesImages setValue:img forKey:videoKey];
@@ -1242,13 +1242,14 @@ NSString *currentVideoGalleryId;
                     {
                         [[cell image] setImage:img];//iconImage];
                     }
-                }
-                success++;
-                if (success == numberOfImages) {
-                    [MBProgressHUD hideAllHUDsForView:containerView animated:YES];
-                }
-                
-            });
+                });
+            }
+//            success++;
+//            if (success == numberOfImages) {
+//                [MBProgressHUD hideAllHUDsForView:containerView animated:YES];
+//            }
+            
+            
             
         });
         

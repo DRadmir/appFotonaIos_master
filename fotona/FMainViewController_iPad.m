@@ -92,6 +92,10 @@ UIButton *tmp;
     {
         [APP_DELEGATE setCurrentOrientation:0];
     }
+    
+    [username setText:@"radovanovic"];
+    [password setText:@"n3cuqaKU"];
+
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -246,7 +250,7 @@ UIButton *tmp;
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [super viewDidLoad];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
+    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
     if (usr == nil) {
         usr =@"guest";
     }

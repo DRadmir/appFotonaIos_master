@@ -122,10 +122,10 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     
     if (videoArray.count > 0 && ![lastGallery isEqualToString:galleryID]) {
         [self preloadMoviesImageFI:videoArray videoGalleryId:galleryID];
-        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:videoGalleryTableView];
-        [videoGalleryTableView addSubview:hud];
-        hud.labelText = @"Updating video images";
-        [hud show:YES];
+       // MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:videoGalleryTableView];
+       // [videoGalleryTableView addSubview:hud];
+       // hud.labelText = @"Updating video images";
+       // [hud show:YES];
     }
 
 }
@@ -305,8 +305,6 @@ NSMutableDictionary *preloadGalleryMoviesImages;
                 return;
             }
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
                 UIImage *img;
                 NSArray *pathComp=[[vid videoImage] pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[vid videoImage] lastPathComponent]];
@@ -320,13 +318,7 @@ NSMutableDictionary *preloadGalleryMoviesImages;
                 
                 
                 if (img!=nil) {
-//                    CGSize size = CGSizeMake(300, 167);
-//                    UIGraphicsBeginImageContext(size);
-//                    
-//                    CGRect imgBorder = CGRectMake(0, 0, size.width, size.height);
-//                    [img drawInRect:imgBorder];
-//                    
-//                    img = UIGraphicsGetImageFromCurrentImageContext();
+
                     UIGraphicsEndImageContext();
                     NSIndexPath *tableIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
                     
@@ -347,14 +339,11 @@ NSMutableDictionary *preloadGalleryMoviesImages;
                     }
                      NSMutableArray* indexArray = [NSMutableArray array];
                     [indexArray addObject:tableIndexPath];
+                    dispatch_async(dispatch_get_main_queue(), ^{
                     [videoGalleryTableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
+                        });
                 }
                 success++;
-                if (success == numberOfImages) {
-                    [MBProgressHUD hideAllHUDsForView:videoGalleryTableView animated:YES];
-                }
-                
-            });
             
         });
         
