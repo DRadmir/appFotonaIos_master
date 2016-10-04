@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 #import "FVideo.h"
 
 @interface FIVideoGalleryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>

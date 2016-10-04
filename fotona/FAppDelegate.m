@@ -357,7 +357,7 @@
 
 #pragma mark Copy DB
 - (void) copyDatabaseIfNeeded {
-                    userBookmarked = [[NSMutableArray alloc] init];
+    userBookmarked = [[NSMutableArray alloc] init];
     //Using NSFileManager we can perform many file system operations.
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *error;

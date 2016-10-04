@@ -76,7 +76,7 @@
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.fotonaTab = self;
     menuShown = false;
-    if (flow.showMenu)
+    if (flow.showMenu && !flow.fromSearch)
     {
         flow.showMenu = false;
         [self showMenu:self];
@@ -84,7 +84,11 @@
     }
     
     if (flow.fromSearch) {
-        [self openGalleryFromSearch:flow.videoGal andReplace:false];
+        if (flow.openPDF) {
+            [self openCategory:flow.pdfToOpen];
+        } else {
+            [self openGalleryFromSearch:flow.videoGal andReplace:false];
+        }
     }
     [self showBubbles];
     

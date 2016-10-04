@@ -15,12 +15,14 @@
 #import "FDownloadManager.h"
 #import "FIFlowController.h"
 
+
 @interface FIVideoGalleryViewController ()
 {
     NSMutableArray *videoArray;
-    int success;
     int numberOfImages;
     NSString *lastGallery;
+    AVQueuePlayer *player;
+    AVPlayerViewController *controller;
 }
 
 @property (nonatomic, strong)UIImage *defaultVideoImage;
@@ -71,6 +73,8 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     
     [self.videoGalleryTableView setNeedsLayout];
     [self.videoGalleryTableView layoutIfNeeded];
+    
+  
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -82,17 +86,19 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     }
     [self loadGallery];
     [videoGalleryTableView reloadData];
-
+    
     NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
     [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-     FIFlowController *flow = [FIFlowController sharedInstance];
+    FIFlowController *flow = [FIFlowController sharedInstance];
     if (flow.fromSearch) {
+        if (!flow.openPDF) {
             [self openVideo:flow.vidToOpen];
-            flow.fromSearch = false;
+        }
+        flow.fromSearch = false;
     }
     [UIViewController attemptRotationToDeviceOrientation];
 }
@@ -106,28 +112,23 @@ NSMutableDictionary *preloadGalleryMoviesImages;
 
 -(void)loadGallery
 {
-    success = 0;
     if ([galleryID isEqualToString:@"-1"]) {
         
         videoArray = [FDB getVideoswithCategory:category];
     } else
     {
-       videoArray = [FDB getVideosWithGallery:galleryID]; 
+        videoArray = [FDB getVideosWithGallery:galleryID];
     }
     
     numberOfImages = [videoArray count];
     if (![lastGallery isEqualToString:galleryID]) {
-       [videoGalleryTableView setContentOffset:CGPointZero animated:YES];
+        [videoGalleryTableView setContentOffset:CGPointZero animated:YES];
     }
     
     if (videoArray.count > 0 && ![lastGallery isEqualToString:galleryID]) {
         [self preloadMoviesImageFI:videoArray videoGalleryId:galleryID];
-       // MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:videoGalleryTableView];
-       // [videoGalleryTableView addSubview:hud];
-       // hud.labelText = @"Updating video images";
-       // [hud show:YES];
     }
-
+    
 }
 
 -(void) openVideo:(FVideo *) video
@@ -152,18 +153,47 @@ NSMutableDictionary *preloadGalleryMoviesImages;
         if([APP_DELEGATE connectedToInternet]){
             NSString* strurl =video.path;
             NSURL *videoURL=[NSURL URLWithString:strurl];
-            moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-            moviePlayer.moviePlayer.shouldAutoplay = false;
-            moviePlayer.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
             
-            [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-            [moviePlayer.moviePlayer play];
-                  } else {
+            FVideo *vid=[videoArray objectAtIndex:1];
+            NSString* strurl2 =vid.path;
+            NSURL *videoURL2=[NSURL URLWithString:strurl2];
+
+            AVPlayer *avplayer = [AVPlayer playerWithURL:videoURL];
+       
+//            AVPlayerLayer *layer = [AVPlayerLayer playerLayerWithPlayer:avplayer];
+//            avplayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+//            
+//            layer.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+//            [self.view.layer addSublayer: layer];
+//            [avplayer play];
+            
+//            AVPlayerItem *item1 = [AVPlayerItem playerItemWithURL:videoURL];
+//            AVPlayerItem *item2 = [AVPlayerItem playerItemWithURL:videoURL2];
+//            player = [[AVQueuePlayer alloc] initWithItems:@[item1, item2]];
+//
+//            // create a player view controller
+            
+            player = [[AVQueuePlayer alloc] initWithURL:videoURL];
+            controller = [[AVPlayerViewController alloc] init];
+            controller.player = player;
+            [self presentViewController:controller animated:YES completion:nil];
+            [player play];
+           
+            
+            
+//            moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
+//            moviePlayer.moviePlayer.shouldAutoplay = false;
+//            moviePlayer.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
+//            [self presentMoviePlayerViewControllerAnimated:moviePlayer];
+//            [moviePlayer.moviePlayer play];
+//            
+//
+        } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [av show];
         }
     }
-
+    
 }
 
 
@@ -172,7 +202,7 @@ NSMutableDictionary *preloadGalleryMoviesImages;
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     lastGallery = galleryID;
-   
+    
     if ([galleryID isEqualToString:@"-1"]) {
         
         videoArray = [FDB getVideoswithCategory:category];
@@ -196,12 +226,12 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     //[[cell imgVideoThumbnail] setContentMode:UIViewContentModeCenter];
     
     FVideo *vid= [videoArray objectAtIndex:indexPath.row];
-
+    
     [cell setVideo:vid];
     NSString *videoKey = [self getpreloadGalleryMoviesImagesKeyWithGalleryId:galleryID videoId:vid.itemID];
     UIImage *img = [preloadGalleryMoviesImages objectForKey:videoKey];
     [[cell imgVideoThumbnail] setImage:img];
-
+    
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     
     return cell;
@@ -276,75 +306,61 @@ NSMutableDictionary *preloadGalleryMoviesImages;
                         }
                     }
                 }
-                success++;
-                if (success == numberOfImages) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideAllHUDsForView:videoGalleryTableView animated:YES];
-                    });
-                }
                 
                 return;
             }
             
             //we are not loading current gallery
             if (galleryId != galleryID) {
-                success++;
-                if (success == numberOfImages) {
-                    [MBProgressHUD hideAllHUDsForView:videoGalleryTableView animated:YES];
-                }
                 return;
             }
             
             
             
             if ([preloadGalleryMoviesImages count] <= i) {
-                success++;
-                if (success == numberOfImages) {
-                    [MBProgressHUD hideAllHUDsForView:videoGalleryTableView animated:YES];
-                }
                 return;
             }
             
-                UIImage *img;
-                NSArray *pathComp=[[vid videoImage] pathComponents];
-                NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[vid videoImage] lastPathComponent]];
-                if ([[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
-                    NSData *data=[NSData dataWithContentsOfFile:pathTmp];
-                    img = [UIImage imageWithData:data];
-                } else{
-                    NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid videoImage]];
-                    img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
-                }
-                
-                
-                if (img!=nil) {
-
-                    UIGraphicsEndImageContext();
-                    NSIndexPath *tableIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                    
-                    FIVideoGalleryTableViewCell *cell = [videoGalleryTableView cellForRowAtIndexPath:tableIndexPath];
-                    
-                    [preloadGalleryMoviesImages setValue:img forKey:videoKey];
-                    NSMutableDictionary *temp;
-                    if ([APP_DELEGATE videoImages]==nil) {
-                        temp =  [[NSMutableDictionary alloc] init];
-                    } else{
-                        temp =  [APP_DELEGATE videoImages];
-                    }
-                    [temp setValue:img forKey:videoKey];
-                    [APP_DELEGATE setVideoImages:temp];
-                    if (cell)
-                    {
-                        [[cell imgVideoThumbnail] setImage:img];//iconImage];
-                    }
-                     NSMutableArray* indexArray = [NSMutableArray array];
-                    [indexArray addObject:tableIndexPath];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                    [videoGalleryTableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
-                        });
-                }
-                success++;
+            UIImage *img;
+            NSArray *pathComp=[[vid videoImage] pathComponents];
+            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[vid videoImage] lastPathComponent]];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
+                NSData *data=[NSData dataWithContentsOfFile:pathTmp];
+                img = [UIImage imageWithData:data];
+            } else{
+                NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid videoImage]];
+                img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
+            }
             
+            
+            if (img!=nil) {
+                
+                UIGraphicsEndImageContext();
+                NSIndexPath *tableIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                
+                
+                
+                [preloadGalleryMoviesImages setValue:img forKey:videoKey];
+                NSMutableDictionary *temp;
+                if ([APP_DELEGATE videoImages]==nil) {
+                    temp =  [[NSMutableDictionary alloc] init];
+                } else{
+                    temp =  [APP_DELEGATE videoImages];
+                }
+                [temp setValue:img forKey:videoKey];
+                [APP_DELEGATE setVideoImages:temp];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                FIVideoGalleryTableViewCell *cell = (FIVideoGalleryTableViewCell *)[videoGalleryTableView cellForRowAtIndexPath:tableIndexPath];
+                if (cell)
+                {
+                    [[cell imgVideoThumbnail] setImage:img];//iconImage];
+                }
+                NSMutableArray* indexArray = [NSMutableArray array];
+                [indexArray addObject:tableIndexPath];
+                
+                    [videoGalleryTableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
+                });
+            }
         });
         
     }
@@ -371,8 +387,5 @@ NSMutableDictionary *preloadGalleryMoviesImages;
         }
     }
 }
-
-
-
 
 @end

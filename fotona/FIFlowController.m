@@ -42,6 +42,10 @@
 @synthesize videoGal;
 @synthesize vidToOpen;
 
+@synthesize pdfToOpen;
+@synthesize openPDF;
+
+
 @synthesize fotonaHelperState;
 
 + (FIFlowController *)sharedInstance
@@ -77,6 +81,8 @@
         videoSearch = nil;
         videoGal = nil;
         vidToOpen = nil;
+        pdfToOpen = nil;
+        openPDF = false;
         fotonaHelperState = 0;
         fotonaMenuArray = [NSMutableArray new];
         caseMenuArray = [NSMutableArray new];

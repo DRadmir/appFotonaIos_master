@@ -159,13 +159,16 @@
 
 
 
-+(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt
++(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database
 {
     NSMutableArray *tmp=[[NSMutableArray alloc] init];
     
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt]];
+    FMResultSet *results;
+    if ([APP_DELEGATE checkGuest]) {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt]];
+    } else {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and allowedForGuests=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt]];
+    }
     while([results next]) {
         FCase *f=[[FCase alloc] init];
         [f setCaseID:[results stringForColumn:@"caseID"]];
@@ -186,18 +189,8 @@
         [f setAuthorID:[results stringForColumn:@"authorID"]];
         [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
         [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        //[tmp addObject:f];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [tmp addObject:f];
-            }
-        } else {
-            [tmp addObject:f];
-        }
+        [tmp addObject:f];
     }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
     return tmp;
 }
 
@@ -598,19 +591,16 @@
 
 #pragma mark - News
 
-+(NSMutableArray *)getNewsForSearchFromDB:(NSString *) searchTxt
++(NSMutableArray *)getNewsForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database
 {
     NSMutableArray *news=[[NSMutableArray alloc] init];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
+    
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM News where active=%@ and (title like '%%%@%%'or description like '%%%@%%'or text like '%%%@%%' ) ORDER BY newsID DESC",@"1",searchTxt,searchTxt,searchTxt]];
     while([results next]) {
-        
         FNews *f=[[FNews alloc] initWithDictionary:[results resultDictionary]];
         [news addObject:f];
     }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
+    
     return news;
 }
 
@@ -699,14 +689,18 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
 
 #pragma mark - Videos
 
-+(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt
-{
++(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database{
     NSMutableArray *tmpVideo=[[NSMutableArray alloc] init];
     
-    FMDatabase *databaseVideo = [FMDatabase databaseWithPath:DB_PATH];
-    [databaseVideo open];
+    FMResultSet *results;
     
-    FMResultSet *results = [databaseVideo executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaType=1 and (title like '%%%@%%')",searchTxt]];
+    if ([[[APP_DELEGATE currentLogedInUser] userTypeSubcategory] count]>0) {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT res.* FROM (SELECT m.*, fm.categoryID  FROM Media m LEFT JOIN FotonaMenu fm  ON  m.galleryID = fm.videoGalleryID where m.mediaType=1 and fm.active=1 and (m.title like '%%%@%%')) as res LEFT JOIN FotonaMenuForUserSubType fust ON fust.fotonaID=res.categoryID WHERE fust.userSubType IN %@",searchTxt,[[APP_DELEGATE currentLogedInUser] userTypeSubcategory]]];
+    }
+    else{
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT res.* FROM (SELECT m.*, fm.categoryID  FROM Media m LEFT JOIN FotonaMenu fm  ON  m.galleryID = fm.videoGalleryID where m.mediaType=1 and fm.active=1 and (m.title like '%%%@%%')) LEFT JOIN FotonaMenuForUserType fut ON fut.fotonaID=res.categoryID WHERE fut.userType=%@",searchTxt,[[APP_DELEGATE currentLogedInUser] userType]]];
+    }
+    
     while([results next]) {
         FVideo *f=[[FVideo alloc] init];
         [f setItemID:[results stringForColumn:@"mediaID"]];
@@ -721,28 +715,12 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
         [f setBookmark:[results stringForColumn:@"isBookmark"]];
         [f setUserType:[results stringForColumn:@"userType"]];
         [f setUserSubType:[results stringForColumn:@"userSubType"]];
-        /* ta del za pravice na videu
-         if ([f checkVideoForUser]) {
-         [tmpVideo addObject:f];
-         } */// če so pravice na videu
-        if (f.videoGalleryID != nil) {
-            FMResultSet *resultsFC= [databaseVideo executeQuery:[NSString stringWithFormat:@"SELECT categoryID FROM FotonaMenu where active=1 and videoGalleryID=%@",f.videoGalleryID]];
-            NSString *fCategory = @"";
-            while([resultsFC next]) {
-                fCategory = [resultsFC stringForColumn:@"categoryID"];
-            }
-            
-            if ([self checkFotonaForUserSearch:fCategory]) {
-                [tmpVideo addObject:f];
-            }
-        }
+        
+        [tmpVideo addObject:f];
     }
     
-    
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [databaseVideo close];
-    
     return tmpVideo;
+
 }
 
 +(NSMutableArray *)getVideosWithGallery:(NSString *)videoGalleryID
@@ -925,6 +903,41 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     
     return menu;
 }
+
++(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database{
+    NSMutableArray *tmpPDF=[[NSMutableArray alloc] init];
+    
+    FMResultSet *results;
+    
+    if ([[[APP_DELEGATE currentLogedInUser] userTypeSubcategory] count]>0) {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT fm.* FROM FotonaMenu fm LEFT JOIN FotonaMenuForUserSubType fust ON fust.fotonaID=fm.categoryID where fm.fotonaCategoryType = 6 and fm.active=1 and (fm.title like '%%%@%%') AND fust.userSubType IN %@",searchTxt,[[APP_DELEGATE currentLogedInUser] userTypeSubcategory]]];
+    }
+    else{
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT fm.* FROM FotonaMenu fm LEFT JOIN FotonaMenuForUserType fut ON fut.fotonaID=fm.categoryID where fm.fotonaCategoryType = 6 and fm.active=1 and (fm.title like '%%%@%%') AND fut.userType=%@",searchTxt,[[APP_DELEGATE currentLogedInUser] userType]]];
+    }
+    while([results next]) {
+        FFotonaMenu *f=[[FFotonaMenu alloc] init];
+        [f setCategoryID:[results stringForColumn:@"categoryID"]];
+        [f setCategoryIDPrev:[results stringForColumn:@"categoryIDPrev"]];
+        [f setTitle:[results stringForColumn:@"title"]];
+        [f setFotonaCategoryType:[results stringForColumn:@"fotonaCategoryType"]];
+        [f setDescription:[results stringForColumn:@"description"]];
+        [f setText:[results stringForColumn:@"text"]];
+        [f setCaseID:[results stringForColumn:@"caseID"]];
+        [f setPdfSrc:[results stringForColumn:@"pdfSrc"]];
+        [f setExternalLink:[results stringForColumn:@"externalLink"]];
+        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
+        [f setActive:[results stringForColumn:@"active"]];
+        [f setSort:[results stringForColumn:@"sort"]];
+        [f setIconName:[results stringForColumn:@"icon"]];
+        [f setBookmark:[results stringForColumn:@"isBookmark"]];
+        
+        [tmpPDF addObject:f];
+    }
+    
+    return tmpPDF;
+}
+
 
 
 +(NSMutableArray *)getPDFForCategory:(NSString *)category

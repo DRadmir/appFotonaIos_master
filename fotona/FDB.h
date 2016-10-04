@@ -12,6 +12,7 @@
 #import "FFotonaMenu.h"
 #import "FAuthor.h"
 #import "FVideo.h"
+#import "FMDatabase.h"
 
 @interface FDB : NSObject
 
@@ -38,15 +39,16 @@
 +(NSMutableArray *)getEventsForCategory:(NSString *)category;
 
 +(NSMutableArray  *) fillEventsWithCategory:(NSInteger) ci andType:(NSInteger) ti andMobile:(BOOL) mobile;
-+(NSMutableArray *)getNewsForSearchFromDB:(NSString *) searchTxt;
-+(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt;
++(NSMutableArray *)getNewsForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
++(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
 
-+(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt;
++(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
 +(NSMutableArray *)getVideosWithGallery:(NSString *)videoGalleryID;
 +(NSMutableArray *)getVideoswithCategory:(NSString *)videoCategory;
 +(void) removeBookmarkedVideo:(FVideo *)videoToRemove;
 
 +(NSMutableArray *)getFotonaMenu:(NSString *)catID;
++(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
 +(NSMutableArray *)getPDFForCategory:(NSString *)category;
 
 +(BOOL)checkFotonaForUserSearch:(NSString *)fc;

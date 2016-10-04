@@ -20,6 +20,7 @@
 #import "AFNetworking.h"
 #import "FImage.h"
 #import "FVideo.h"
+#import "FDB.h"
 
 @interface FSearchViewController ()
 
@@ -31,6 +32,7 @@
 @synthesize newsSearchRes;
 @synthesize casesSearchRes;
 @synthesize videosSearchRes;
+@synthesize pdfsSearchRes;
 @synthesize parent;
 @synthesize popupView;
 @synthesize popupTitle;
@@ -49,7 +51,6 @@
     [super viewDidLoad];
     updateCounter=0;
     success=0;
-    // Do any additional setup after loading the view from its nib.
 }
 
 
@@ -67,117 +68,139 @@
     {
         count++;
     }
+    if ([pdfsSearchRes count]>0)
+    {
+        count++;
+    }
     return count;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section==0) {
-        if (newsSearchRes.count>0) {
-            return newsSearchRes.count;
-        }else
-        {
-            if (casesSearchRes.count>0) {
-                return casesSearchRes.count;
+    switch (section) {
+        case 0:
+            if (newsSearchRes.count>0) {
+                return newsSearchRes.count;
             }else
             {
-                return videosSearchRes.count;
+                if (casesSearchRes.count>0) {
+                    return casesSearchRes.count;
+                }else
+                {
+                    if (videosSearchRes.count>0) {
+                        return videosSearchRes.count;
+                    }
+                }
             }
-        }
-    }else
-    {
-        if (section==1) {
+            break;
+        case 1:
             if (newsSearchRes.count>0 && casesSearchRes.count>0) {
                 return casesSearchRes.count;
             }else
             {
+                if (videosSearchRes.count>0) {
+                    return videosSearchRes.count;
+                }
+            }
+            break;
+        case 2:
+            if (videosSearchRes.count>0) {
                 return videosSearchRes.count;
             }
-        }else
-        {
-            return videosSearchRes.count;
-        }
-        
+            break;
+        default:
+            return pdfsSearchRes.count;
     }
+    return pdfsSearchRes.count;
     
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section==0) {
-        if (newsSearchRes.count>0) {
-            return @"News";
-        }else
-        {
-            if (casesSearchRes.count>0) {
-                return @"Cases";
+    
+    switch (section) {
+        case 0:
+            if (newsSearchRes.count>0) {
+                return @"News";
             }else
             {
-                return @"Videos";
+                if (casesSearchRes.count>0) {
+                    return @"Cases";
+                }else
+                {
+                    if (videosSearchRes.count>0) {
+                        return @"Videos";
+                    }
+                }
             }
-        }
-    }else
-    {
-        if (section==1) {
+            break;
+        case 1:
             if (newsSearchRes.count>0 && casesSearchRes.count>0) {
                 return @"Cases";
             }else
             {
+                if (videosSearchRes.count>0) {
+                    return @"Videos";
+                }
+            }
+            break;
+        case 2:
+            if (videosSearchRes.count>0) {
                 return @"Videos";
             }
-        }else
-        {
-            return @"Videos";
-        }
-        
+            break;
+        default:
+            return @"PDFs";
     }
+    return @"PDFs";
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
-    if (indexPath.section==0) {
-        if (newsSearchRes.count>0) {
-            [cell.textLabel setText:[[newsSearchRes objectAtIndex:indexPath.row] title]];
-        }else
-        {
-            if (casesSearchRes.count>0) {
-                [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
+    switch (indexPath.section) {
+        case 0:
+            if (newsSearchRes.count>0) {
+                [cell.textLabel setText:[[newsSearchRes objectAtIndex:indexPath.row] title]];
             }else
             {
-                [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
+                if (casesSearchRes.count>0) {
+                    [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
+                }else
+                {
+                    if (videosSearchRes.count>0) {
+                        [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
+                    }else {
+                        [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                    }
+                }
             }
-        }
-    }else
-    {
-        if (indexPath.section==1) {
+            break;
+        case 1:
             if (newsSearchRes.count>0 && casesSearchRes.count>0) {
                 [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
             }else
             {
-                [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
+                if (videosSearchRes.count>0) {
+                    [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
+                }else {
+                    [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                }
             }
-        }else
-        {
-            [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
-        }
-        
+            break;
+        case 2:
+            if (videosSearchRes.count>0) {
+                [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
+            } else {
+                [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+            }
+            break;
+        case 3:
+            [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+            break;
+        default:
+            [cell.textLabel setText:@"TITLE IPAD"];
     }
-    
-    
-    
-    
-    //    if (indexPath.section==0) {
-    //        if (newsSearchRes.count>0) {
-    //            [cell.textLabel setText:[[newsSearchRes objectAtIndex:indexPath.row] title]];
-    //        }else
-    //        {
-    //            [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
-    //        }
-    //    }else
-    //    {
-    //        [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
-    //    }
     
     return cell;
 }
@@ -186,54 +209,62 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [parent.view endEditing:YES];
-    //    if (indexPath.section==0) {
-    //        if (newsSearchRes.count>0) {
-    //            [self openNews:indexPath];
-    //        }else
-    //        {
-    //            [self openCase:indexPath];
-    //        }
-    //    }else
-    //    {
-    //        [self openCase:indexPath];
-    //    }
     
-    if (indexPath.section==0) {
-        if (newsSearchRes.count>0) {
-            [self openNews:indexPath];
-        }else
-        {
-            if (casesSearchRes.count>0) {
-                [self openCase:indexPath];
+    switch (indexPath.section) {
+        case 0:
+            if (newsSearchRes.count>0) {
+                [self openNews:indexPath];
             }else
-            {
-                [self openVideo:indexPath];
-            }
-        }
-    }else
-    {
-        if (indexPath.section==1) {
+                {
+                    if (casesSearchRes.count>0) {
+                        [self openCase:indexPath];
+                    }else
+                    {
+                        if (videosSearchRes.count>0) {
+                            [self openVideo:indexPath];
+                        }else {
+                            [self openPDF:indexPath];
+                        }
+                    }
+                }
+            break;
+        case 1:
             if (newsSearchRes.count>0 && casesSearchRes.count>0) {
                 [self openCase:indexPath];
             }else
             {
-                [self openVideo:indexPath];
+                if (videosSearchRes.count>0) {
+                    [self openVideo:indexPath];
+                }else {
+                    [self openPDF:indexPath];
+                }
             }
-        }else
-        {
-            [self openVideo:indexPath];
-        }
-        
+            break;
+        case 2:
+            if (videosSearchRes.count>0) {
+                [self openVideo:indexPath];
+            } else {
+                [self openPDF:indexPath];
+            }
+            break;
+        case 3:
+            [self openPDF:indexPath];
+            break;
+        default:
+            break;
     }
-    
-    
 }
 
 -(void)search
 {
-    newsSearchRes=[self getNewsFromDB];
-    casesSearchRes=[self getCasesFromDB];
-    videosSearchRes=[self getVideosFromDB];
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    newsSearchRes=[FDB getNewsForSearchFromDB:searchTxt withDatabase:database];
+    casesSearchRes=[FDB getCasesForSearchFromDB:searchTxt withDatabase:database];
+    videosSearchRes=[FDB getVideosForSearchFromDB:searchTxt withDatabase:database];
+    pdfsSearchRes = [FDB getPDFForSearchFromDB:searchTxt withDatabase:database];
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
 }
 
 -(IBAction)closePopup:(id)sender
@@ -245,142 +276,17 @@
 
 
 
--(NSMutableArray *)getNewsFromDB
+-(NSMutableArray *)getNewsFromDB:(FMDatabase *) database
 {
     NSMutableArray *news=[[NSMutableArray alloc] init];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
+    
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM News where active=%@ and (title like '%%%@%%'or description like '%%%@%%'or text like '%%%@%%' ) ORDER BY newsID DESC",@"1",searchTxt,searchTxt,searchTxt]];
     while([results next]) {
-        
         FNews *f=[[FNews alloc] initWithDictionary:[results resultDictionary]];
         [news addObject:f];
     }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
+    
     return news;
-}
-
-
--(NSMutableArray *)getCasesFromDB
-{
-    NSMutableArray *tmp=[[NSMutableArray alloc] init];
-    
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt]];
-    while([results next]) {
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        //[tmp addObject:f];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [tmp addObject:f];
-            }
-        } else {
-            [tmp addObject:f];
-        }
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return tmp;
-}
-
--(NSMutableArray *)getVideosFromDB
-{
-    NSMutableArray *tmpVideo=[[NSMutableArray alloc] init];
-    
-    FMDatabase *databaseVideo = [FMDatabase databaseWithPath:DB_PATH];
-    [databaseVideo open];
-    
-    FMResultSet *results = [databaseVideo executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaType=1 and (title like '%%%@%%')",searchTxt]];
-    while([results next]) {
-        FVideo *f=[[FVideo alloc] init];
-        [f setItemID:[results stringForColumn:@"mediaID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setPath:[results stringForColumn:@"path"]];
-        [f setLocalPath:[results stringForColumn:@"localPath"]];
-        [f setVideoGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setDescription:[results stringForColumn:@"description"]];
-        [f setTime:[results stringForColumn:@"time"]];
-        [f setVideoImage:[results stringForColumn:@"videoImage"]];
-        [f setSort:[results stringForColumn:@"sort"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setUserType:[results stringForColumn:@"userType"]];
-        [f setUserSubType:[results stringForColumn:@"userSubType"]];
-       /* ta del za pravice na videu
-        if ([f checkVideoForUser]) {
-            [tmpVideo addObject:f];
-        } */// če so pravice na videu
-            if (f.videoGalleryID != nil) {
-                FMResultSet *resultsFC= [databaseVideo executeQuery:[NSString stringWithFormat:@"SELECT categoryID FROM FotonaMenu where active=1 and videoGalleryID=%@",f.videoGalleryID]];
-        
-                NSString *fCategory = @"";
-                while([resultsFC next]) {
-                    fCategory = [resultsFC stringForColumn:@"categoryID"];
-                }
-        
-                if ([self checkFotonaForUserSearch:fCategory]) {
-                    [tmpVideo addObject:f];
-                }
-                
-                
-            }
-
-
-    }
-   
-    
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [databaseVideo close];
-    
-    return tmpVideo;
-}
-
-
--(BOOL)checkFotonaForUserSearch:(NSString *)fc
-{
-    BOOL check=NO;
-    
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    
-    if ([[[APP_DELEGATE currentLogedInUser] userTypeSubcategory] count]>0) {
-        for (NSString *subType in [[APP_DELEGATE currentLogedInUser] userTypeSubcategory]) {
-            FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenuForUserSubType where fotonaID=%@ and userSubType=%@",fc,subType]];
-            while([results next]) {
-                check=YES;
-            }
-        }
-    }
-    else{
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenuForUserType where fotonaID=%@ and userType=%@",fc,[[APP_DELEGATE currentLogedInUser] userType]]];
-        while([results next]) {
-            check=YES;
-        }
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return check;
 }
 
 
@@ -426,7 +332,6 @@
         [(FFeaturedViewController_iPad *)parent  openNews:tmpN];
     }
     else{
-        // UINavigationController *tempC = [(IIViewDeckController *)[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:0] centerController];
         [[APP_DELEGATE tabBar] setSelectedIndex:0];
         [(FFeaturedViewController_iPad *)[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:0]  openNews:tmpN];
         
@@ -517,10 +422,6 @@
 -(void) openVideo:(NSIndexPath*) index
 {
     [[(FFotonaViewController *)parent popover] dismissPopoverAnimated:YES];
-    //    [[APP_DELEGATE tabBar] setSelectedIndex:2];
-    //    UINavigationController *tempC = [[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:2];
-    //
-    //    [(FFotonaViewController *)[tempC visibleViewController]  openVideoFromSearch:[videosSearchRes objectAtIndex:index.row]];
     UINavigationController *tempC = [[[parent.tabBarController viewControllers] objectAtIndex:2] centerController];
     
     [(FFotonaViewController *)[tempC topViewController] setOpenGal:YES];
@@ -529,5 +430,20 @@
     [(FFotonaViewController *)[tempC topViewController] openVideoFromSearch:[videosSearchRes objectAtIndex:index.row]];
     
 }
+
+-(void) openPDF:(NSIndexPath*) index
+{
+    [[(FFotonaViewController *)parent popover] dismissPopoverAnimated:YES];
+    UINavigationController *tempC = [[[parent.tabBarController viewControllers] objectAtIndex:2] centerController];
+    
+    [(FFotonaViewController *)[tempC topViewController] setOpenGal:YES];
+    [(FFotonaViewController *)[tempC topViewController] setPDF:[pdfsSearchRes objectAtIndex:index.row] ];
+    if (parent.tabBarController.selectedIndex == 2) {
+         [(FFotonaViewController *)[tempC topViewController] openPDFFromSearch];
+    } else {
+        [parent.tabBarController setSelectedIndex:2];
+    }
+}
+
 
 @end

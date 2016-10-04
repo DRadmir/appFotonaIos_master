@@ -298,7 +298,6 @@
             {
                 [subMenu setSelectedIcon: @"fotonam"];
             }
-
         }
         
         [self.navigationController pushViewController:subMenu animated:YES];
@@ -319,12 +318,9 @@
                 [parent openContentWithTitle:[clicked title] description:[clicked text] videoGallery:[clicked videoGalleryID] videos:[clicked getVideos]];
             } else
             {
-                
                 UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"EMPTYCATEGORY", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [av show];
             }
-            
-            
         } else
         {
 

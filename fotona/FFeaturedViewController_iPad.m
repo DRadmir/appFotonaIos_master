@@ -39,7 +39,10 @@
     BOOL wrap;
     int status;
     FSettingsViewController *settingsController;
-     UILabel *disclaimerLbl;
+    UILabel *disclaimerLbl;
+    
+    long selectedCowerflowIndexIpad;
+    NSTimer *animationRotationTimerIpad;
 }
 
 @end
@@ -135,15 +138,14 @@ FNewsView *newsViewController;
                                                  name:@"CloseOnTabNews"
                                                object:nil];
     //disclaimerScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.parentViewController.view.frame.size.width, self.parentViewController.view.frame.size.height - 63)];
-   // disclaimerLbl = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, 20.0f, disclaimerScrollView.frame.size.width-40, 460.0f)];
-
-  
+    // disclaimerLbl = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, 20.0f, disclaimerScrollView.frame.size.width-40, 460.0f)];
+    
+    
     
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-   
-    
+    [super viewWillAppear:animated];
     [self setUp];
     carousel.type = iCarouselTypeLinear;
     [carousel reloadData];
@@ -223,8 +225,9 @@ FNewsView *newsViewController;
     }
 }
 
--(void)viewDidDisappear:(BOOL)animated
-{
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [self stopRotationAnimationIpad];
     [self.tabBarItem setImage:[UIImage imageNamed:@"homepage_grey.png"]];
 }
 
@@ -402,7 +405,7 @@ FNewsView *newsViewController;
         }
         dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
         dispatch_async(queue, ^{
-             newsArray = [FNews getImages:newsArray fromStart:index forNumber:l];
+            newsArray = [FNews getImages:newsArray fromStart:index forNumber:l];
             dispatch_async(dispatch_get_main_queue(), ^{
                 collectionView.scrollEnabled = YES;
                 [collectionView reloadData ];
@@ -647,7 +650,7 @@ FNewsView *newsViewController;
     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 2), ^{
         //code to be executed in the background
         NSLog(@"author id %@",[(FCase *)items[index] authorID]);
-       // NSData *imgData=[FDB getAuthorImage:[(FCase *)items[index] authorID]];//[self getAuthorImage:[(FCase *)items[index] authorID]];
+        // NSData *imgData=[FDB getAuthorImage:[(FCase *)items[index] authorID]];//[self getAuthorImage:[(FCase *)items[index] authorID]];
         dispatch_async(dispatch_get_main_queue(), ^{
             //code to be executed on the main thread when background task is finished
             //[imageView setImage:[UIImage imageWithData:imgData]];
@@ -659,7 +662,7 @@ FNewsView *newsViewController;
         });
     });
     view = card.view;
-    
+     [self resetRotationAnimationIpad];
     return view;
 }
 
@@ -680,7 +683,7 @@ FNewsView *newsViewController;
         //this `if (view == nil) {...}` statement because the view will be
         //recycled and used with other index values later
         view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 440.0, 193.0)];
-        ((UIImageView *)view).image = [UIImage imageNamed:[NSString stringWithFormat:@"card%u.png",index%3+1]];
+        ((UIImageView *)view).image = [UIImage imageNamed:[NSString stringWithFormat:@"card%lu.png",index%3+1]];
         view.contentMode = UIViewContentModeCenter;
         
         label = [[UILabel alloc] initWithFrame:CGRectMake(30, 20, 210, 30)];
@@ -1074,8 +1077,35 @@ FNewsView *newsViewController;
     disclaimerScrollView.contentSize = CGSizeMake(disclaimerScrollView.contentSize.width, disclaimerLbl.frame.size.height+15);
     [self.parentViewController.view addSubview:disclaimerView];
     disclamerRotation = [APP_DELEGATE currentOrientation];
-
+    
 }
+
+#pragma mark: - Rotating cases
+
+- (void) startRotationAnimationIpad {
+    animationRotationTimerIpad = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(moveTo) userInfo:nil repeats:NO];
+}
+
+- (void) stopRotationAnimationIpad {
+    [animationRotationTimerIpad invalidate];
+    animationRotationTimerIpad = nil;
+}
+
+- (void) resetRotationAnimationIpad {
+    [self stopRotationAnimationIpad];
+    [self startRotationAnimationIpad];
+}
+
+- (void) moveTo
+{
+    [UIView animateWithDuration:5.0 delay:0 options:UIViewAnimationOptionTransitionNone
+                     animations:^{
+                         selectedCowerflowIndexIpad = [carousel currentItemIndex] + 1;
+                         [carousel scrollToItemAtIndex:selectedCowerflowIndexIpad animated:true];
+                     }
+                     completion:nil];
+}
+
 
 
 
