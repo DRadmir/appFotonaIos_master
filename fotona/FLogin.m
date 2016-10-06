@@ -209,14 +209,17 @@ UIButton *tmp;
         if (![[dic valueForKey:@"msg"] isEqualToString:@"Success"]) {
             
             ////////////////////////////////////////////////////////
+            
+            FUser *usr=[[FUser alloc] init];
+            [usr setUsername:usrName];
             [SFHFKeychainUtils storeUsername:usrName andPassword:@"" forServiceName:@"fotona" updateExisting:YES error:nil];
             [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"autoLogin"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             //TODO: Brisanje uporabnika iz baze [FUser addUserInDB:usr];
-            //TODO: Pogledat kako preprečt autologin - kaj je pogoj de izvede autologin
-            
-            
+            //TODO: Pogledat kako preprečt autologin - kaj je pogoj da izvede autologin
+            [FUser deleteUserInDB:usr];
+            [FUser checkIfUserExistsInDB:usr];
             //////////////////////////////////////////////////////
             
             UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];

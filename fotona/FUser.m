@@ -77,6 +77,25 @@
     [database close];
 }
 
+//remove user from DB
++(void)deleteUserInDB:(FUser *)usr;
+{
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM User where username=%@",usr.userID]];
+    BOOL flag=NO;
+    while([results next]) {
+        flag=YES;
+    }
+    
+    if (flag) {
+        [database executeUpdate:@"DELETE FROM User where username=%@",usr,nil];
+    }
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+}
 
-
++(void)checkIfUserExistsInDB:(FUser *)usr;
+{
+    }
 @end
