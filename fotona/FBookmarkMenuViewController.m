@@ -722,7 +722,6 @@ NSString *categoryMenu = @"";
 -(NSMutableArray *)getNewsMenu
 {
     NSMutableArray *menu=[[NSMutableArray alloc] init];
-    BOOL showNews = false;
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     

@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 4egenus. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 
 @interface FItemBookmark : NSObject
 @property (nonatomic, retain) NSString *itemID;

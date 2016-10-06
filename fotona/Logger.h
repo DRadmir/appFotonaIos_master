@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Hypnos. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface Logger : NSObject
 
 +(void)LogDebug:(NSString*)message inObject:(NSObject *)objectReference;

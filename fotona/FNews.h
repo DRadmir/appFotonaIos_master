@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Dejan Krstevski. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface FNews : NSObject
 
 

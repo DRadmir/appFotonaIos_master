@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Dejan Krstevski. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "FMainViewController_iPad.h"
 #import "UpdateDelegate.h"
 

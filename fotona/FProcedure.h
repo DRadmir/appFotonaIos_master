@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 4egenus. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface FProcedure : NSObject
 @property (nonatomic, retain) NSString *procedureID;
 @property (nonatomic, retain) NSString *name;

@@ -6,7 +6,6 @@
 //  Copyright © 2015 4egenus. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "FNews.h"
 #import "FCase.h"
 #import "FFotonaMenu.h"
@@ -59,4 +58,5 @@
 +(void)removeFromBookmarkForDocumentID:(NSString *)documentID;
 
 +(void) addTooFavoritesItem:(int) documentID ofType:(int) typeID;
++(void) removeFromFavoritesItem:(int) documentID ofType:(int) typeID;
 @end

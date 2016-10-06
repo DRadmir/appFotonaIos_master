@@ -1166,4 +1166,22 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     [database close];
 }
 
++(void) removeFromFavoritesItem:(int) documentID ofType:(int) typeID {
+    NSString *usr = [FCommon getUser];
+    bool exist = false;
+    
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    FMResultSet *resultsFavorites = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserFavorites where username=%@ and typeID=%d and and documentID=%d",usr, typeID, documentID]];
+    while([resultsFavorites next]) {
+        exist = true;
+    }
+    if (exist) {
+        [database executeUpdate:@"DELETE FROM UserFavorites where username=? and documentID=? and typeID=?", usr, documentID, typeID];
+    }
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+}
+
+
 @end

@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 4egenus. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "DownloadManager.h"
 #import "UpdateDelegate.h"
 

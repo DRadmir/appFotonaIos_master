@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Dejan Krstevski. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 
 @interface FCaseCategory : NSObject
 @property (nonatomic, retain) NSString *categoryID;

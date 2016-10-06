@@ -6,7 +6,6 @@
 //  Copyright © 2016 4egenus. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "EBPhotoPagesController.h"
 #import <MediaPlayer/MediaPlayer.h>
