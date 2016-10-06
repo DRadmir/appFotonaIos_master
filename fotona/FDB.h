@@ -6,12 +6,12 @@
 //  Copyright © 2015 4egenus. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "FNews.h"
 #import "FCase.h"
 #import "FFotonaMenu.h"
 #import "FAuthor.h"
 #import "FVideo.h"
+#import "FMDatabase.h"
 
 @interface FDB : NSObject
 
@@ -38,15 +38,16 @@
 +(NSMutableArray *)getEventsForCategory:(NSString *)category;
 
 +(NSMutableArray  *) fillEventsWithCategory:(NSInteger) ci andType:(NSInteger) ti andMobile:(BOOL) mobile;
-+(NSMutableArray *)getNewsForSearchFromDB:(NSString *) searchTxt;
-+(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt;
++(NSMutableArray *)getNewsForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
++(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
 
-+(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt;
++(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
 +(NSMutableArray *)getVideosWithGallery:(NSString *)videoGalleryID;
 +(NSMutableArray *)getVideoswithCategory:(NSString *)videoCategory;
 +(void) removeBookmarkedVideo:(FVideo *)videoToRemove;
 
 +(NSMutableArray *)getFotonaMenu:(NSString *)catID;
++(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
 +(NSMutableArray *)getPDFForCategory:(NSString *)category;
 
 +(BOOL)checkFotonaForUserSearch:(NSString *)fc;
@@ -54,7 +55,9 @@
 +(BOOL)checkFotonaForUser:(FFotonaMenu *)f andCategory:(NSString *)category;
 
 +(BOOL)checkIfBookmarkedForDocumentID:(NSString *)documentID andType:(NSString *)type;
-
 +(void)removeFromBookmarkForDocumentID:(NSString *)documentID;
 
++(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID;
++(void) removeFromFavoritesItem:(int) documentID ofType:(NSString *) typeID;
++(BOOL) checkIfFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 @end

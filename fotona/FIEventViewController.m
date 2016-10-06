@@ -13,7 +13,6 @@
 #import "FEvent.h"
 #import "FIEventSingleViewController.h"
 #import "FIEventMenuTableViewController.h"
-#import "FAppDelegate.h"
 #import "FIFlowController.h"
 #import "FIEventContainerViewController.h"
 
@@ -59,6 +58,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     if ([APP_DELEGATE eventTemp] != eventToOpen && [APP_DELEGATE eventTemp] != nil) {
         eventToOpen = [APP_DELEGATE eventTemp];
         [self openEvent];

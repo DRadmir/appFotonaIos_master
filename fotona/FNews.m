@@ -7,7 +7,6 @@
 //
 
 #import "FNews.h"
-#import "FAppDelegate.h"
 #import "FMDatabase.h"
 #import "FDownloadManager.h"
 #import "HelperBookmark.h"
@@ -134,10 +133,7 @@
         [self setActive:[[dic valueForKey:@"active"] boolValue]];
         [self setNDate:[dic valueForKey:@"date"]];
         
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         
         FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
         [database open];

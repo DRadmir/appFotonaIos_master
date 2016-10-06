@@ -11,7 +11,6 @@
 #import "FDB.h"
 #import "Bubble.h"
 #import "BubbleControler.h"
-#import "FAppDelegate.h"
 #import "FIGalleryController.h"
 #import "FImage.h"
 #import "FDownloadManager.h"
@@ -59,6 +58,9 @@
 @synthesize canBookmark;
 @synthesize parentBookmarks;
 
+@synthesize btnAddFavorite;
+@synthesize btnRemoveFavorite;
+
 @synthesize gallery;
 
 - (void)viewDidLoad {
@@ -69,6 +71,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
     if (bookmarked){//[currentCase.bookmark boolValue]) {
         [btnBookmark setHidden:YES];
@@ -77,6 +80,8 @@
         [btnBookmark setHidden:NO];
         [btnRemoveBookmark setHidden:YES];
     }
+    
+    
     
     [self loadCase];
     [self createGallery];
@@ -88,10 +93,7 @@
         flow.caseView = self;
     }
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
     if(![usersarray containsObject:usr]){
         [bubbleC removeFromSuperview];
@@ -99,6 +101,14 @@
         [scrollViewMain setScrollEnabled:NO];
         
         [self showBubbles];
+    }
+    
+    if ([FDB checkIfFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE]) {
+        [btnRemoveFavorite setHidden:NO];
+        [btnAddFavorite setHidden:YES];
+    } else {
+        [btnRemoveFavorite setHidden:YES];
+        [btnAddFavorite setHidden:NO];
     }
 
 }
@@ -455,7 +465,6 @@
     {
         [parentBookmarks openDisclaimer];
     }
-    
 }
 
 - (IBAction)removeBookmark:(id)sender {
@@ -476,13 +485,24 @@
         UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
         [av showInView:self.view];
     }
-
 }
 
 - (void) refreshBookmarkBtn  {
     [btnBookmark setHidden:YES];
     [btnRemoveBookmark setHidden:NO];
     
+}
+
+- (IBAction)addToFavorite:(id)sender {
+    [FDB addTooFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE];
+    [btnRemoveFavorite setHidden:NO];
+    [btnAddFavorite setHidden:YES];
+}
+
+- (IBAction)removeFavorite:(id)sender {
+    [FDB removeFromFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE];
+    [btnRemoveFavorite setHidden:YES];
+    [btnAddFavorite setHidden:NO];
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -494,11 +514,9 @@
         if ([buttonTitle isEqualToString:NSLocalizedString(@"CHECKWIFIONLYBTN", nil)]) {
             [APP_DELEGATE setWifiOnlyConnection:TRUE];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
-            //            [ wifiSwitch setOn:YES animated:YES];
             [self bookmarkCase];
         }
     }
-    
 }
 
 -(void) bookmarkCase{
@@ -511,8 +529,6 @@
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTIONBOOKMARK", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
     }
-    
-    
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -530,10 +546,7 @@
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
     // You should check before this, if any of bubbles needs to be displayed
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
     if(![usersarray containsObject:usr]){
         
@@ -633,7 +646,6 @@
 
 - (void)bubbleRequestedExit:(Bubble*)bubbleObject
 {
-    
     state++;
     [bubbleC displayNextBubble];
     [bubbleObject removeFromSuperview];
@@ -641,19 +653,13 @@
     [scrollViewMain setScrollEnabled:YES];
     if (state>1) {
         NSMutableArray *helperArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         [helperArray addObject:usr];
         [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"casebookHelper"];
         state = 0;
         [bubbleC removeFromSuperview];
         bubbleC = nil;
-
     }
-    
-    
 }
 
 -(void) reloadBubbles
@@ -665,7 +671,6 @@
          [self showBubbles];
     }
 }
-
 
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation

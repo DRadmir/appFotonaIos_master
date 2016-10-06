@@ -57,9 +57,13 @@
     IBOutlet UIToolbar *webViewToolbar;
     
     UIView *settingsView;
-
+    
+    
     
 }
+@property (nonatomic)BOOL openPDF;
+@property (nonatomic, retain) FFotonaMenu *PDFToOpen;
+
 @property (strong, nonatomic) IBOutlet UIWebView *cDescription;
 
 @property (weak, nonatomic) IBOutlet UIButton *settingsBtn;
@@ -81,6 +85,7 @@
 @property (nonatomic) BOOL openVideoGal;
 
 -(void)downloadFile:(NSString *)fileUrl inFolder:(NSString *)folder type:(int)t;
+-(void)downloadFileFromSearch:(NSString *)fileUrl inFolder:(NSString *)folder type:(int)t withCategoryID:(NSString*)cID;
 -(void)downloadFile:(NSString *)fileUrl inFolder:(NSString *)folder type:(int)t withCategoryID:(NSString *)cID;
 -(void)externalLink:(NSString *)link;
 -(void)openContentWithTitle:(NSString *)title description:(NSString *)description;
@@ -102,4 +107,6 @@
 -(void)openVideoFromSearch:(FVideo *)video;
 
 - (void) setOpenGal: (BOOL) og;
+-(void) setPDF:(FFotonaMenu *)PDF;
+-(void) openPDFFromSearch;
 @end

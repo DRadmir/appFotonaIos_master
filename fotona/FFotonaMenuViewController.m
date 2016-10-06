@@ -7,7 +7,6 @@
 //
 
 #import "FFotonaMenuViewController.h"
-#import "FAppDelegate.h"
 #import "FMDatabase.h"
 #import "FCase.h"
 #import "FFotonaMenu.h"
@@ -17,7 +16,6 @@
 #import "FDownloadManager.h"
 #import "HelperBookmark.h"
 #import "FItemBookmark.h"
-#import "FCommon.h"
 #import "FDB.h"
 #import "UIColor+Hex.h"
 
@@ -64,7 +62,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+     [super viewWillAppear:animated];
     iconsInMenu=[NSArray arrayWithObjects:@"about_fotona",@"aesthetics_and_surgery_products",@"dental_products",@"gynecology_products",@"distributor_news",@"la&ha_publications",@"ifw_2015",@"disclaimer", nil];
     for (UIView *v in self.navigationController.navigationBar.subviews) {
         if ([v isKindOfClass:[UILabel class]]) {
@@ -134,7 +132,7 @@
     
     UIView *bck=[[UIView alloc] initWithFrame:cell.frame];
     
-    [bck setBackgroundColor:[UIColor colorFromHex:@"ED1C24"]];
+    [bck setBackgroundColor:[UIColor colorFromHex:FOTONARED]];
     [cell setSelectedBackgroundView:bck];
     cell.textLabel.highlightedTextColor = [UIColor whiteColor];
     cell.imageView.highlightedImage =[UIImage imageNamed:[NSString stringWithFormat:@"%@",iconaName]];
@@ -162,7 +160,7 @@
                 
                 
             }];
-             bookmarkAction.backgroundColor = [UIColor colorFromHex:@"ED1C24"];
+             bookmarkAction.backgroundColor = [UIColor colorFromHex:FOTONARED];
             return @[bookmarkAction];
             
         } else{
@@ -170,10 +168,7 @@
                 [[menuItems objectAtIndex:indexPath.row] setBookmark:@"0"];
                 FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
                 [database open];
-                NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-                if (usr == nil) {
-                    usr =@"guest";
-                }
+                NSString *usr = [FCommon getUser];
                 [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[[menuItems objectAtIndex:indexPath.row] categoryID],usr,BOOKMARKPDF];
                 FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",[[menuItems objectAtIndex:indexPath.row] categoryID],BOOKMARKPDF]];
                 BOOL flag=NO;
@@ -202,7 +197,7 @@
                 [av show];
                 
             }];
-             unbookmarkAction.backgroundColor = [UIColor colorFromHex:@"ED1C24"];
+             unbookmarkAction.backgroundColor = [UIColor colorFromHex:FOTONARED];
             return @[unbookmarkAction];
         }
     }
@@ -298,7 +293,6 @@
             {
                 [subMenu setSelectedIcon: @"fotonam"];
             }
-
         }
         
         [self.navigationController pushViewController:subMenu animated:YES];
@@ -319,12 +313,9 @@
                 [parent openContentWithTitle:[clicked title] description:[clicked text] videoGallery:[clicked videoGalleryID] videos:[clicked getVideos]];
             } else
             {
-                
                 UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"EMPTYCATEGORY", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [av show];
             }
-            
-            
         } else
         {
 

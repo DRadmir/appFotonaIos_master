@@ -7,10 +7,10 @@
 //
 
 #import "FISearchViewController.h"
-#import "FAppDelegate.h"
 #import "FDB.h"
 #import "MBProgressHUD.h"
 #import "FIFlowController.h"
+#import "FMDatabase.h"
 
 @interface FISearchViewController ()
 
@@ -23,6 +23,7 @@
 @synthesize newsSearchResIPhone;
 @synthesize casesSearchResIPhone;
 @synthesize videosSearchResIPhone;
+@synthesize pdfsSearcResIPhone;
 @synthesize parentIPhone;
 
 - (void)viewDidLoad {
@@ -53,103 +54,142 @@
     {
         count++;
     }
+    if ([pdfsSearcResIPhone count]>0)
+    {
+        count++;
+    }
     return count;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section==0) {
-        if (newsSearchResIPhone.count>0) {
-            return newsSearchResIPhone.count;
-        }else
-        {
-            if (casesSearchResIPhone.count>0) {
-                return casesSearchResIPhone.count;
+
+    switch (section) {
+        case 0:
+            if (newsSearchResIPhone.count>0) {
+                return newsSearchResIPhone.count;
             }else
             {
-                return videosSearchResIPhone.count;
+                if (casesSearchResIPhone.count>0) {
+                    return casesSearchResIPhone.count;
+                }else
+                {
+                    if (videosSearchResIPhone.count>0) {
+                        return videosSearchResIPhone.count;
+                    }
+                }
             }
-        }
-    }else
-    {
-        if (section==1) {
+            break;
+        case 1:
             if (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0) {
                 return casesSearchResIPhone.count;
             }else
             {
+                if (videosSearchResIPhone.count>0) {
+                    return videosSearchResIPhone.count;
+                }
+            }
+            break;
+        case 2:
+            if (videosSearchResIPhone.count>0) {
                 return videosSearchResIPhone.count;
             }
-        }else
-        {
-            return videosSearchResIPhone.count;
-        }
-        
+            break;
+        default:
+            return pdfsSearcResIPhone.count;
     }
+    return pdfsSearcResIPhone.count;
     
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section==0) {
-        if (newsSearchResIPhone.count>0) {
-            return @"News";
-        }else
-        {
-            if (casesSearchResIPhone.count>0) {
-                return @"Cases";
+    switch (section) {
+        case 0:
+            if (newsSearchResIPhone.count>0) {
+                return @"News";
             }else
             {
-                return @"Videos";
+                if (casesSearchResIPhone.count>0) {
+                    return @"Cases";
+                }else
+                {
+                    if (videosSearchResIPhone.count>0) {
+                        return @"Videos";
+                    }
+                }
             }
-        }
-    }else
-    {
-        if (section==1) {
+            break;
+        case 1:
             if (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0) {
                 return @"Cases";
             }else
             {
+                if (videosSearchResIPhone.count>0) {
+                    return @"Videos";
+                }
+            }
+            break;
+        case 2:
+            if (videosSearchResIPhone.count>0) {
                 return @"Videos";
             }
-        }else
-        {
-            return @"Videos";
-        }
-        
+            break;
+        default:
+            return @"PDFs";
     }
+    return @"PDFs";
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
-    if (indexPath.section==0) {
-        if (newsSearchResIPhone.count>0) {
-            [cell.textLabel setText:[[newsSearchResIPhone objectAtIndex:indexPath.row] title]];
-        }else
-        {
-            if (casesSearchResIPhone.count>0) {
-                [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
+    switch (indexPath.section) {
+        case 0:
+            if (newsSearchResIPhone.count>0) {
+                [cell.textLabel setText:[[newsSearchResIPhone objectAtIndex:indexPath.row] title]];
             }else
             {
-                [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
+                if (casesSearchResIPhone.count>0) {
+                    [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
+                }else
+                {
+                    if (videosSearchResIPhone.count>0) {
+                        [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
+                    }else {
+                        [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
+                    }
+                }
             }
-        }
-    }else
-    {
-        if (indexPath.section==1) {
+            break;
+        case 1:
             if (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0) {
                 [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
             }else
             {
-                [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
+                if (videosSearchResIPhone.count>0) {
+                    [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
+                }else {
+                    [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
+                }
             }
-        }else
-        {
-            [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
-        }
-        
+            break;
+        case 2:
+            if (videosSearchResIPhone.count>0) {
+                [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
+            } else {
+                [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
+            }
+            break;
+        case 3:
+            [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
+            break;
+        default:
+            [cell.textLabel setText:@"TITLE IPAD"];
     }
+    
     return cell;
+
 }
 
 
@@ -159,31 +199,48 @@
     FIFlowController *flow = [FIFlowController sharedInstance];
     [flow.lastOpenedView toggleSearchBar];
     [self.view endEditing:true];
-    if (indexPath.section==0) {
-        if (newsSearchResIPhone.count>0) {
-            [self openNews:indexPath];
-        }else
-        {
-            if (casesSearchResIPhone.count>0) {
-                [self openCase:indexPath];
+    switch (indexPath.section) {
+        case 0:
+            if (newsSearchResIPhone.count>0) {
+                [self openNews:indexPath];
             }else
             {
-                [self openVideo:indexPath];
+                if (casesSearchResIPhone.count>0) {
+                    [self openCase:indexPath];
+                }else
+                {
+                    if (videosSearchResIPhone.count>0) {
+                        [self openVideo:indexPath];
+                    }else {
+                        [self openPDF:indexPath];
+                    }
+                }
             }
-        }
-    }else
-    {
-        if (indexPath.section==1) {
+            break;
+        case 1:
             if (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0) {
                 [self openCase:indexPath];
             }else
             {
-                [self openVideo:indexPath];
+                if (videosSearchResIPhone.count>0) {
+                    [self openVideo:indexPath];
+                }else {
+                    [self openPDF:indexPath];
+                }
             }
-        }else
-        {
-            [self openVideo:indexPath];
-        }
+            break;
+        case 2:
+            if (videosSearchResIPhone.count>0) {
+                [self openVideo:indexPath];
+            } else {
+                [self openPDF:indexPath];
+            }
+            break;
+        case 3:
+            [self openPDF:indexPath];
+            break;
+        default:
+            break;
     }
 }
 
@@ -194,9 +251,14 @@
 
 -(void)searchIPhone
 {
-    newsSearchResIPhone=[FDB getNewsForSearchFromDB:searchTxtIPhone];
-    casesSearchResIPhone=[FDB getCasesForSearchFromDB:searchTxtIPhone];
-    videosSearchResIPhone=[FDB getVideosForSearchFromDB:searchTxtIPhone];
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    newsSearchResIPhone=[FDB getNewsForSearchFromDB:searchTxtIPhone withDatabase:database];
+    casesSearchResIPhone=[FDB getCasesForSearchFromDB:searchTxtIPhone withDatabase:database];
+    videosSearchResIPhone=[FDB getVideosForSearchFromDB:searchTxtIPhone withDatabase:database];
+    pdfsSearcResIPhone=[FDB getPDFForSearchFromDB:searchTxtIPhone withDatabase:database];
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
 }
 
 -(IBAction)closePopup:(id)sender
@@ -256,6 +318,7 @@
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.vidToOpen = videosSearchResIPhone[index.row];
     flow.videoGal = flow.vidToOpen.videoGalleryID;
+    flow.openPDF = false;
     flow.fromSearch = true;
     if (flow.fotonaMenu != nil)
     {
@@ -269,5 +332,25 @@
     }
  
 }
+
+-(void) openPDF:(NSIndexPath*) index
+{
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.pdfToOpen = pdfsSearcResIPhone[index.row];
+    flow.openPDF = true;
+    flow.fromSearch = true;
+    if (flow.fotonaMenu != nil)
+    {
+        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
+    }
+    if (flow.lastIndex != 2) {
+        flow.lastIndex = 2;
+        [flow.tabControler setSelectedIndex:2];
+    } else {
+        [flow.fotonaTab openCategory:flow.pdfToOpen];
+    }
+    
+}
+
 
 @end

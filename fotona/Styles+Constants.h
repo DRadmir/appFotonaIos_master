@@ -16,4 +16,8 @@
 #define BOOKMARKNEWS @"3"
 #define BOOKMARKEVENTS @"4"
 
+//COLORS
+#define DISABLEDCOLORALPHA 0.4
+
+#define FOTONARED @"ED1C24"
 #endif

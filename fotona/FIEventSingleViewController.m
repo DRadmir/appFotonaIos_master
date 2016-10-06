@@ -9,7 +9,6 @@
 #import "FIEventSingleViewController.h"
 #import "HelperDate.h"
 #import "HelperString.h"
-#import "FAppDelegate.h"
 
 @interface FIEventSingleViewController ()
 
@@ -37,6 +36,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
   if([APP_DELEGATE eventTemp] != nil )
   {
       eventToOpen = [APP_DELEGATE eventTemp];

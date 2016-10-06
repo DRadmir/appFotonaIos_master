@@ -2,9 +2,7 @@
 
 #import "FEventViewController.h"
 #import "GEMainMenuCell.h"
-#import "FFolderViewController.h"
 #import "AFNetworking.h"
-#import "FAppDelegate.h"
 #import "FDocument.h"
 #import "FMDatabase.h"
 #import "FSearchViewController.h"
@@ -72,10 +70,10 @@
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
     ci = 0;
     [APP_DELEGATE setClosedEvents:NO];
     beforeOrient=[APP_DELEGATE currentOrientation];
-    [super viewDidLoad];
     //feedback
     [feedbackBtn addTarget:APP_DELEGATE action:@selector(sendFeedback:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -108,6 +106,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     [self.tabBarItem setImage:[UIImage imageNamed:@"events_red.png"]];
     [[[APP_DELEGATE tabBar] tabBar] setUserInteractionEnabled:YES];
     eventsTable = [APP_DELEGATE eventArray];

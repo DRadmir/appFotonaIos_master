@@ -7,14 +7,12 @@
 //
 
 #import "FDB.h"
-#import "FAppDelegate.h"
 #import "FMDatabase.h"
 #import "FCaseCategory.h"
 #import "FAuthor.h"
 #import "FImage.h"
 #import "FVideo.h"
 #import "FDownloadManager.h"
-#import "FCommon.h"
 
 
 @implementation FDB
@@ -159,13 +157,16 @@
 
 
 
-+(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt
++(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database
 {
     NSMutableArray *tmp=[[NSMutableArray alloc] init];
     
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt]];
+    FMResultSet *results;
+    if ([APP_DELEGATE checkGuest]) {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt]];
+    } else {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and allowedForGuests=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt]];
+    }
     while([results next]) {
         FCase *f=[[FCase alloc] init];
         [f setCaseID:[results stringForColumn:@"caseID"]];
@@ -186,18 +187,8 @@
         [f setAuthorID:[results stringForColumn:@"authorID"]];
         [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
         [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        //[tmp addObject:f];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [tmp addObject:f];
-            }
-        } else {
-            [tmp addObject:f];
-        }
+        [tmp addObject:f];
     }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
     return tmp;
 }
 
@@ -365,10 +356,7 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and isBookmark=1 order by title"]];
     while([results next]) {
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKCASE, [results stringForColumn:@"caseID"]]];
         BOOL flag=NO;
         while([resultsBookmarked next]) {
@@ -415,10 +403,7 @@
 {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=0",caseToRemove.caseID,usr,nil];
     BOOL bookmarked = NO;
     
@@ -536,10 +521,7 @@
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     FMResultSet *resultsBookmarked =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=?" withArgumentsInArray:[NSArray arrayWithObjects:usr,BOOKMARKEVENTS, nil]];
     while([resultsBookmarked next]) {
         showEvent = false;
@@ -598,19 +580,16 @@
 
 #pragma mark - News
 
-+(NSMutableArray *)getNewsForSearchFromDB:(NSString *) searchTxt
++(NSMutableArray *)getNewsForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database
 {
     NSMutableArray *news=[[NSMutableArray alloc] init];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
+    
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM News where active=%@ and (title like '%%%@%%'or description like '%%%@%%'or text like '%%%@%%' ) ORDER BY newsID DESC",@"1",searchTxt,searchTxt,searchTxt]];
     while([results next]) {
-        
         FNews *f=[[FNews alloc] initWithDictionary:[results resultDictionary]];
         [news addObject:f];
     }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
+    
     return news;
 }
 
@@ -653,10 +632,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     FMDatabase *databaseN = [FMDatabase databaseWithPath:DB_PATH];
     [databaseN open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSString * newsIDtemp=[NSString stringWithFormat:@"%ld",[news newsID]];
     [databaseN executeUpdate:@"INSERT INTO NewsRead (newsID, userName) VALUES (?,?)",newsIDtemp,usr];
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -669,10 +645,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     FMResultSet *resultsBookmarked =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=?" withArgumentsInArray:[NSArray arrayWithObjects:usr,BOOKMARKNEWS, nil]];
     while([resultsBookmarked next]) {
         FNews *f=[[FNews alloc] init];
@@ -699,14 +672,18 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
 
 #pragma mark - Videos
 
-+(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt
-{
++(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database{
     NSMutableArray *tmpVideo=[[NSMutableArray alloc] init];
     
-    FMDatabase *databaseVideo = [FMDatabase databaseWithPath:DB_PATH];
-    [databaseVideo open];
+    FMResultSet *results;
     
-    FMResultSet *results = [databaseVideo executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaType=1 and (title like '%%%@%%')",searchTxt]];
+    if ([[[APP_DELEGATE currentLogedInUser] userTypeSubcategory] count]>0) {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT res.* FROM (SELECT m.*, fm.categoryID  FROM Media m LEFT JOIN FotonaMenu fm  ON  m.galleryID = fm.videoGalleryID where m.mediaType=1 and fm.active=1 and (m.title like '%%%@%%')) as res LEFT JOIN FotonaMenuForUserSubType fust ON fust.fotonaID=res.categoryID WHERE fust.userSubType IN %@",searchTxt,[[APP_DELEGATE currentLogedInUser] userTypeSubcategory]]];
+    }
+    else{
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT res.* FROM (SELECT m.*, fm.categoryID  FROM Media m LEFT JOIN FotonaMenu fm  ON  m.galleryID = fm.videoGalleryID where m.mediaType=1 and fm.active=1 and (m.title like '%%%@%%')) LEFT JOIN FotonaMenuForUserType fut ON fut.fotonaID=res.categoryID WHERE fut.userType=%@",searchTxt,[[APP_DELEGATE currentLogedInUser] userType]]];
+    }
+    
     while([results next]) {
         FVideo *f=[[FVideo alloc] init];
         [f setItemID:[results stringForColumn:@"mediaID"]];
@@ -721,28 +698,12 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
         [f setBookmark:[results stringForColumn:@"isBookmark"]];
         [f setUserType:[results stringForColumn:@"userType"]];
         [f setUserSubType:[results stringForColumn:@"userSubType"]];
-        /* ta del za pravice na videu
-         if ([f checkVideoForUser]) {
-         [tmpVideo addObject:f];
-         } */// če so pravice na videu
-        if (f.videoGalleryID != nil) {
-            FMResultSet *resultsFC= [databaseVideo executeQuery:[NSString stringWithFormat:@"SELECT categoryID FROM FotonaMenu where active=1 and videoGalleryID=%@",f.videoGalleryID]];
-            NSString *fCategory = @"";
-            while([resultsFC next]) {
-                fCategory = [resultsFC stringForColumn:@"categoryID"];
-            }
-            
-            if ([self checkFotonaForUserSearch:fCategory]) {
-                [tmpVideo addObject:f];
-            }
-        }
+        
+        [tmpVideo addObject:f];
     }
     
-    
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [databaseVideo close];
-    
     return tmpVideo;
+
 }
 
 +(NSMutableArray *)getVideosWithGallery:(NSString *)videoGalleryID
@@ -796,10 +757,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? " withArgumentsInArray:@[usr, BOOKMARKVIDEO]];
     while([resultsBookmarked next]) {
@@ -842,10 +800,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
 {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",videoToRemove.itemID,usr,BOOKMARKVIDEO];
     
     FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",videoToRemove.itemID,BOOKMARKVIDEO]];
@@ -902,10 +857,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
         [f setSort:[results stringForColumn:@"sort"]];
         [f setIconName:[results stringForColumn:@"icon"]];
         [f setSortInt:[f.sort intValue]];
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKPDF, f.categoryID]];
         NSString *flag=@"0";
         while([resultsBookmarked next]) {
@@ -926,6 +878,41 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     return menu;
 }
 
++(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database{
+    NSMutableArray *tmpPDF=[[NSMutableArray alloc] init];
+    
+    FMResultSet *results;
+    
+    if ([[[APP_DELEGATE currentLogedInUser] userTypeSubcategory] count]>0) {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT fm.* FROM FotonaMenu fm LEFT JOIN FotonaMenuForUserSubType fust ON fust.fotonaID=fm.categoryID where fm.fotonaCategoryType = 6 and fm.active=1 and (fm.title like '%%%@%%') AND fust.userSubType IN %@",searchTxt,[[APP_DELEGATE currentLogedInUser] userTypeSubcategory]]];
+    }
+    else{
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT fm.* FROM FotonaMenu fm LEFT JOIN FotonaMenuForUserType fut ON fut.fotonaID=fm.categoryID where fm.fotonaCategoryType = 6 and fm.active=1 and (fm.title like '%%%@%%') AND fut.userType=%@",searchTxt,[[APP_DELEGATE currentLogedInUser] userType]]];
+    }
+    while([results next]) {
+        FFotonaMenu *f=[[FFotonaMenu alloc] init];
+        [f setCategoryID:[results stringForColumn:@"categoryID"]];
+        [f setCategoryIDPrev:[results stringForColumn:@"categoryIDPrev"]];
+        [f setTitle:[results stringForColumn:@"title"]];
+        [f setFotonaCategoryType:[results stringForColumn:@"fotonaCategoryType"]];
+        [f setDescription:[results stringForColumn:@"description"]];
+        [f setText:[results stringForColumn:@"text"]];
+        [f setCaseID:[results stringForColumn:@"caseID"]];
+        [f setPdfSrc:[results stringForColumn:@"pdfSrc"]];
+        [f setExternalLink:[results stringForColumn:@"externalLink"]];
+        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
+        [f setActive:[results stringForColumn:@"active"]];
+        [f setSort:[results stringForColumn:@"sort"]];
+        [f setIconName:[results stringForColumn:@"icon"]];
+        [f setBookmark:[results stringForColumn:@"isBookmark"]];
+        
+        [tmpPDF addObject:f];
+    }
+    
+    return tmpPDF;
+}
+
+
 
 +(NSMutableArray *)getPDFForCategory:(NSString *)category
 {
@@ -934,10 +921,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=2" withArgumentsInArray:[NSArray arrayWithObjects:usr, nil]];
     while([resultsBookmarked next]) {
@@ -1059,10 +1043,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     BOOL bookmarked = NO;
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, type, documentID]];
     while([resultsBookmarked next]) {
         bookmarked = YES;
@@ -1077,10 +1058,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
 {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",documentID,usr,BOOKMARKPDF];
     FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",documentID,BOOKMARKPDF]];
     BOOL flag=NO;
@@ -1132,7 +1110,6 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
                 NSArray *pathComp=[vid.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
                 [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,time,videoImage,sort, userType,userSubType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.videoGalleryID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.videoImage,vid.sort, vid.userType,vid.userSubType];
-                //                [vid downloadFile:vid.path inFolder:@"/.Cases"];
                 [links addObject:vid.path];
             }
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -1170,6 +1147,51 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     [database close];
 }
 
+#pragma mark - Favorites
+
++(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID {
+    NSString *usr = [FCommon getUser];
+    bool exist = [self checkIfFavoritesItem:documentID ofType:typeID];
+    
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+   
+    if (!exist) {
+        [database executeUpdate:@"INSERT INTO UserFavorites (username,documentID,typeID) VALUES (?,?,?)", usr, [NSString stringWithFormat:@"%d", documentID], typeID];
+    }
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+}
+
++(void) removeFromFavoritesItem:(int) documentID ofType:(NSString *) typeID {
+    NSString *usr = [FCommon getUser];
+    bool exist = [self checkIfFavoritesItem:documentID ofType:typeID];
+    
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+   
+    if (exist) {
+        [database executeUpdate:@"DELETE FROM UserFavorites where username=? and documentID=? and typeID=?", usr, [NSString stringWithFormat:@"%d", documentID], typeID];
+    }
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+}
+
++(BOOL)checkIfFavoritesItem:(int)documentID ofType:(NSString *)typeID{
+    NSString *usr = [FCommon getUser];
+    bool exist = false;
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    FMResultSet *resultsFavorites = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserFavorites where username='%@' AND documentID=%@ AND typeID=%@",usr, [NSString stringWithFormat:@"%d", documentID],typeID]];
+   
+    while([resultsFavorites next]) {
+        exist = true;
+    }
+   
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+    return exist;
+}
 
 
 @end

@@ -13,7 +13,6 @@
 #import "FIFlowController.h"
 #import "FIVideoGalleryViewController.h"
 #import "FIContentViewController.h"
-#import "FAppDelegate.h"
 #import "FDownloadManager.h"
 #import "FDB.h"
 #import "BubbleControler.h"
@@ -76,7 +75,7 @@
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.fotonaTab = self;
     menuShown = false;
-    if (flow.showMenu)
+    if (flow.showMenu && !flow.fromSearch)
     {
         flow.showMenu = false;
         [self showMenu:self];
@@ -84,7 +83,11 @@
     }
     
     if (flow.fromSearch) {
-        [self openGalleryFromSearch:flow.videoGal andReplace:false];
+        if (flow.openPDF) {
+            [self openCategory:flow.pdfToOpen];
+        } else {
+            [self openGalleryFromSearch:flow.videoGal andReplace:false];
+        }
     }
     [self showBubbles];
     
@@ -376,10 +379,7 @@
 
 -(void)showBubbles
 {
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"fotonaHelper"]];
     if(![usersarray containsObject:usr]){
         [self.viewDeckController.leftController.view setUserInteractionEnabled:NO];
@@ -479,10 +479,7 @@
     [self.viewDeckController.leftController.view setUserInteractionEnabled:YES];
     if (stateHelper>1) {
         NSMutableArray *helperArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"fotonaHelper"]];
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         [helperArray addObject:usr];
         [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"fotonaHelper"];
         stateHelper = 0;

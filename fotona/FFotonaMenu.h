@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 4egenus. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface FFotonaMenu : NSObject
 @property (nonatomic,retain) NSString *categoryID;
 @property (nonatomic,retain) NSString *categoryIDPrev;

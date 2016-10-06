@@ -10,7 +10,6 @@
 #import "FVideo.h"
 #import "FImage.h"
 #import <AVFoundation/AVFoundation.h>
-#import "FAppDelegate.h"
 #import "FNews.h"
 #import "FEvent.h"
 

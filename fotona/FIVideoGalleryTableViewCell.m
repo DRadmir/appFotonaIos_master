@@ -10,7 +10,6 @@
 #import "FDB.h"
 #import "FDownloadManager.h"
 #import "HelperBookmark.h"
-#import "FAppDelegate.h"
 #import "FIFlowController.h"
 
 @implementation FIVideoGalleryTableViewCell

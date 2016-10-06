@@ -4,7 +4,6 @@
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
 #import "AFNetworking.h"
-#import "FAppDelegate.h"
 #import "FNews.h"
 #import "FCaseCategory.h"
 #import "FCase.h"
@@ -305,10 +304,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     for (FNews *f in delete) {
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         
         [database executeUpdate:@"delete from News where newsID=?",[[NSNumber numberWithLong:f.newsID]stringValue]];
         FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@ AND userName=%@",[[NSNumber numberWithLong:f.newsID]stringValue],BOOKMARKNEWS,usr]];
@@ -575,10 +571,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     
     for (FEvent *f in delete) {
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         
         [database executeUpdate:@"delete from Events where eventID=?",[[NSNumber numberWithLong:f.eventID]stringValue]];
         FMResultSet *results = [database executeQuery:@"SELECT * FROM UserBookmark where documentID=? AND typeID=? AND username=?" withArgumentsInArray:[NSArray arrayWithObjects:@"100",BOOKMARKEVENTS,@"guest", nil]];//[database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@ AND username=%@",[[NSNumber numberWithLong:f.eventID]stringValue],BOOKMARKEVENTS,usr]];
@@ -1367,11 +1360,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
                     [self updateMedia:m.videos withType:1 idArray:tempVideos];
                 }
                 
-                NSString *currentUsr =[APP_DELEGATE currentLogedInUser].username;
-                if (currentUsr == nil) {
-                    currentUsr =@"guest";
-                }
-                
+                NSString *currentUsr = [FCommon getUser];                
                 if (tempVideos.count > 0) {
                     for (NSString *vid in tempVideos) {
                         [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",vid,currentUsr,BOOKMARKVIDEO];

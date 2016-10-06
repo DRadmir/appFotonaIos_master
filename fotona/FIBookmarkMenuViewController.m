@@ -8,7 +8,6 @@
 
 #import "FIBookmarkMenuViewController.h"
 #import "FIFlowController.h"
-#import "FAppDelegate.h"
 #import "UIColor+Hex.h"
 #import "FDB.h"
 
@@ -44,6 +43,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     menuIcons = [NSMutableArray new];
     menuTitles = [NSMutableArray new];
     FIFlowController *flow = [FIFlowController sharedInstance];
@@ -476,7 +476,7 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
     
-    [self setCellColor:[UIColor colorFromHex:@"ED1C24"] ForCell:cell];  //highlight colour
+    [self setCellColor:[UIColor colorFromHex:FOTONARED] ForCell:cell];  //highlight colour
     
     
     if (documentType == 4)
@@ -619,7 +619,7 @@
                 [av show];
                 
             }];
-         unbookmarkAction.backgroundColor = [UIColor colorFromHex:@"ED1C24"];
+         unbookmarkAction.backgroundColor = [UIColor colorFromHex:FOTONARED];
             return @[unbookmarkAction];
     }
     return nil;

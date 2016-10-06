@@ -24,7 +24,6 @@
 
 #import "DownloadManager.h"
 #import "Download.h"
-#import "FAppDelegate.h"
 #import "HelperBookmark.h"
 
 @interface DownloadManager () <DownloadDelegate>

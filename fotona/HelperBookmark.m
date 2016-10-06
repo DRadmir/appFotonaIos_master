@@ -7,16 +7,13 @@
 //
 
 #import "HelperBookmark.h"
-#import "FAppDelegate.h"
 #import "FMDatabase.h"
 #import "FImage.h"
 #import "FVideo.h"
 #import "FDownloadManager.h"
 #import "FItemBookmark.h"
 #import "AFNetworking.h"
-#import "FCommon.h"
 #import "FIFlowController.h"
-#import "FCommon.h"
 
 @implementation HelperBookmark
 {
@@ -156,10 +153,7 @@ int bookmarkedCount;
 +(void) bookmarkEvent: (FEvent *) event forCategory:(int) category{
     //    NSLog(@"Event id:%ld",(long)event.eventID);
     NSString *categories = [NSString stringWithFormat:@"%d",category];
-    NSString *eventUsr =[APP_DELEGATE currentLogedInUser].username;
-    if (eventUsr == nil) {
-        eventUsr =@"guest";
-    }
+    NSString *eventUsr = [FCommon getUser];
     FMDatabase *eventsBookmarkDatabase = [FMDatabase databaseWithPath:DB_PATH];
     [eventsBookmarkDatabase open];
     BOOL bookmarked = true;
@@ -179,10 +173,7 @@ int bookmarkedCount;
 #pragma mark checkIfBookmarked
 
 +(BOOL) bookmarked: (int) itemID withType:(NSString *)type inCategory:(int) category {
-    NSString *itemUsr =[APP_DELEGATE currentLogedInUser].username;
-    if (itemUsr == nil) {
-        itemUsr =@"guest";
-    }
+    NSString *itemUsr = [FCommon getUser];
     FMDatabase *localDatabase = [FMDatabase databaseWithPath:DB_PATH];
     [localDatabase open];
     FMResultSet *resultsBookmarked =  [localDatabase executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[itemUsr,type,[[NSNumber numberWithInt:itemID] stringValue]]];
@@ -203,10 +194,7 @@ int bookmarkedCount;
 }
 
 +(BOOL) bookmarked: (int) itemID withType:(NSString *)type{
-    NSString *itemUsr =[APP_DELEGATE currentLogedInUser].username;
-    if (itemUsr == nil) {
-        itemUsr =@"guest";
-    }
+    NSString *itemUsr = [FCommon getUser];
     FMDatabase *localDatabase = [FMDatabase databaseWithPath:DB_PATH];
     [localDatabase open];
     FMResultSet *resultsBookmarked =  [localDatabase executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[itemUsr,type,[[NSNumber numberWithInt:itemID] stringValue]]];
@@ -249,11 +237,7 @@ int bookmarkedCount;
 + (void)bookmarkCase:(FCase*) currentCase forCategory:(int) category {
     
     if ([HelperBookmark checkItem:[NSString stringWithFormat:@"%d",[currentCase.caseID intValue]] forCategory:category andType:BOOKMARKCASE]) {
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
-        
+        NSString *usr = [FCommon getUser];
         if (![[currentCase coverflow] boolValue]) {
             //insertMedia TODO
             
@@ -516,10 +500,7 @@ int bookmarkedCount;
             FMResultSet *videos = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media WHERE galleryID = %d and mediaType=1",[menu.videoGalleryID intValue]]];
             while([videos next]) {
                 if (![self bookmarked:[[videos stringForColumn:@"mediaID"] intValue] withType:BOOKMARKVIDEO inCategory:category]) {
-                    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-                    if (usr == nil) {
-                        usr =@"guest";
-                    }
+                    NSString *usr = [FCommon getUser];
                     FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%d and isBookmark=1 and mediaType=1",[[videos stringForColumn:@"mediaID"] intValue]]];
                     BOOL flag=NO;
                     while([resultsBookmarked next]) {
@@ -563,10 +544,7 @@ int bookmarkedCount;
     [database open];
     FMResultSet *videos = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media WHERE galleryID = %d AND mediaID = %d and mediaType=1",[video.videoGalleryID intValue], [video.itemID intValue]]];
     while([videos next]) {
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT isBookmark FROM Media where mediaID=%d and isBookmark=1 and mediaType=1",[[videos stringForColumn:@"mediaID"] intValue]]];
         BOOL flag=NO;
         while([resultsBookmarked next]) {
@@ -625,10 +603,7 @@ int bookmarkedCount;
 }
 
 +(void)userBookmarked{
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *users=[[[NSUserDefaults standardUserDefaults] objectForKey:@"userBookmarked"] mutableCopy];
     if (![users containsObject:usr]) {
         [users addObject:usr];
@@ -660,10 +635,7 @@ int bookmarkedCount;
             break;
         }
     }
-    NSString *fileUsr =[APP_DELEGATE currentLogedInUser].username;
-    if (fileUsr == nil) {
-        fileUsr =@"guest";
-    }
+    NSString *fileUsr = [FCommon getUser];
     BOOL exists = true;
     if (item!=nil) {
         if ([item.type isEqualToString:BOOKMARKNEWS]) {
@@ -711,10 +683,7 @@ int bookmarkedCount;
                     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
                     [database open];
                     
-                    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-                    if (usr == nil) {
-                        usr =@"guest";
-                    }
+                    NSString *usr = [FCommon getUser];
                     // typeID 0-case 1-video 2-pdf
                     FMResultSet *selectedCases = [database executeQuery:@"SELECT * FROM Cases where caseID=?" withArgumentsInArray:@[item.itemID]];
                     FCase * selected;
@@ -812,10 +781,7 @@ int bookmarkedCount;
                 if ([item.type isEqualToString:BOOKMARKPDF]) {
                     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
                     [database open];
-                    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-                    if (usr == nil) {
-                        usr =@"guest";
-                    }
+                    NSString *usr = [FCommon getUser];
                     // typeID 0-case 1-video 2-pdf
                     //                    if (item.category == 0) {
                     BOOL bookmarked = true;
@@ -865,10 +831,7 @@ int bookmarkedCount;
                         FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
                         [database open];
                         
-                        NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-                        if (usr == nil) {
-                            usr =@"guest";
-                        }
+                        NSString *usr = [FCommon getUser];
                         //treba pogledat, če je še kak item s tem idjem not kot pr casih
                         //if (item.category == 0) {
                         

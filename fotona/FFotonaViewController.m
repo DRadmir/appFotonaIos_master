@@ -8,8 +8,6 @@
 
 #import "FFotonaViewController.h"
 #import "FMDatabase.h"
-
-#import "FAppDelegate.h"
 #import "MBProgressHUD.h"
 #import "FCasebookViewController.h"
 #import "FDocument.h"
@@ -29,7 +27,6 @@
 @interface FFotonaViewController (){
     bool fotonaHidden;
     UITapGestureRecognizer *fotonaTap;
-    int success;
     int numberOfImages;
     BubbleControler *bubbleCFotona;
     Bubble *b3;
@@ -61,7 +58,8 @@
 @synthesize popupCloseBtn;
 @synthesize openVideoGal;
 @synthesize cDescription;
-
+@synthesize PDFToOpen;
+@synthesize openPDF;
 
 
 //cell identifier
@@ -190,6 +188,7 @@ NSString *currentVideoGalleryId;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     [[[APP_DELEGATE tabBar] tabBar] setUserInteractionEnabled:YES];
     UIInterfaceOrientation orientation=[[UIApplication sharedApplication] statusBarOrientation];
     if (orientation!=UIInterfaceOrientationPortrait) {
@@ -204,6 +203,7 @@ NSString *currentVideoGalleryId;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    NSLog(@"test5");
     BOOL fimg =self.viewDeckController.leftController.view.isHidden;
     if (!openVideoGal) {
         [self.viewDeckController openLeftView];
@@ -216,10 +216,7 @@ NSString *currentVideoGalleryId;
     }
     
     [self.viewDeckController setLeftSize:self.view.frame.size.width-320];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     if (w!=self.view.frame.size.width) {
         if (!self.viewDeckController.leftController.view.isHidden) {
@@ -242,6 +239,10 @@ NSString *currentVideoGalleryId;
     
     [self showBubbles];
     openVideoGal = NO;
+    
+    if (openPDF) {
+        [self openPDFFromSearch];
+    }
     
 }
 
@@ -389,6 +390,17 @@ NSString *currentVideoGalleryId;
     
 }
 
+
+
+-(void)downloadFileFromSearch:(NSString *)fileUrl inFolder:(NSString *)folder type:(int)t withCategoryID:(NSString*)cID
+{
+    [fotonaImg setHidden:YES];
+    [self downloadFile:fileUrl inFolder:folder type:t withCategoryID:cID];
+    
+}
+
+
+
 -(void)downloadFile:(NSString *)fileUrl inFolder:(NSString *)folder type:(int)t withCategoryID:(NSString*)cID
 {
     if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@",docDir,folder]]) {
@@ -402,10 +414,7 @@ NSString *currentVideoGalleryId;
     }
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKPDF, cID]];
     BOOL flag=NO;
@@ -689,7 +698,6 @@ NSString *currentVideoGalleryId;
     
     //preload movie images
     numberOfImages = [videosArray count];
-    success = 0;
     
     
     
@@ -703,10 +711,6 @@ NSString *currentVideoGalleryId;
     [containerView addSubview:contentVideoModeView];
     if (videosArray.count > 0) {
         [self preloadMoviesImage:videosArray videoGalleryId:galleryID];
-//        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:containerView];
-//        [containerView addSubview:hud];
-//        hud.labelText = @"Updating video images";
-//        [hud show:YES];
     }
     
     [cvTitleLbl setText:title];
@@ -752,10 +756,7 @@ NSString *currentVideoGalleryId;
     }
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, [vid itemID]]];
     BOOL flag=NO;
@@ -810,10 +811,7 @@ NSString *currentVideoGalleryId;
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, [video itemID]]];
     BOOL flag=NO;
@@ -922,10 +920,7 @@ NSString *currentVideoGalleryId;
     BOOL bookmarked = NO;
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, vid.itemID]];
     while([resultsBookmarked next]) {
         bookmarked = YES;
@@ -972,10 +967,7 @@ NSString *currentVideoGalleryId;
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, [vid itemID]]];
     BOOL flag=NO;
@@ -1173,32 +1165,17 @@ NSString *currentVideoGalleryId;
                         }
                     }
                 }
-                success++;
-                if (success == numberOfImages) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideAllHUDsForView:containerView animated:YES];
-                    });
-                }
-                
                 return;
             }
             
             //we are not loading current gallery
             if (galleryId != currentVideoGalleryId) {
-                success++;
-                if (success == numberOfImages) {
-                    [MBProgressHUD hideAllHUDsForView:containerView animated:YES];
-                }
                 return;
             }
             
             
             
             if ([preloadGalleryMoviesImages count] <= i) {
-                success++;
-                if (success == numberOfImages) {
-                    [MBProgressHUD hideAllHUDsForView:containerView animated:YES];
-                }
                 return;
             }
             
@@ -1244,13 +1221,6 @@ NSString *currentVideoGalleryId;
                     }
                 });
             }
-//            success++;
-//            if (success == numberOfImages) {
-//                [MBProgressHUD hideAllHUDsForView:containerView animated:YES];
-//            }
-            
-            
-            
         });
         
     }
@@ -1371,10 +1341,7 @@ NSString *currentVideoGalleryId;
 
 -(void)showBubbles
 {
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"fotonaHelper"]];
     if(![usersarray containsObject:usr]){
         [self.viewDeckController.leftController.view setUserInteractionEnabled:NO];
@@ -1460,10 +1427,7 @@ NSString *currentVideoGalleryId;
     [self.viewDeckController.leftController.view setUserInteractionEnabled:YES];
     if (stateHelper>1) {
         NSMutableArray *helperArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"fotonaHelper"]];
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         [helperArray addObject:usr];
         [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"fotonaHelper"];
         stateHelper = 0;
@@ -1553,6 +1517,16 @@ NSString *currentVideoGalleryId;
 - (void) setOpenGal: (BOOL) og
 {
     self.openVideoGal = og;
+}
+
+-(void) setPDF:(FFotonaMenu *)PDF{
+    openPDF = true;
+    self.PDFToOpen = PDF;
+}
+
+-(void) openPDFFromSearch{
+    openPDF = false;
+    [self  downloadFileFromSearch:[NSString stringWithFormat:@"%@",[PDFToOpen pdfSrc]] inFolder:@".PDF" type:6 withCategoryID:[PDFToOpen categoryID]];
 }
 
 @end

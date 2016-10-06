@@ -11,7 +11,6 @@
 #import "FIContentViewController.h"
 #import "FICaseViewController.h"
 #import "FCase.h"
-#import "FAppDelegate.h"
 #import "UIWindow+Fotona.h"
 
 
@@ -50,6 +49,12 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.caseTab = self;
     if (flow.caseFlow != nil)
@@ -59,19 +64,16 @@
         [self openCase];
     }
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-   
+    
     if (flow.showMenu && flow.caseFlow == nil && ([usersarray containsObject:usr] || !caseToOpen))
     {
         flow.showMenu = false;
         [self showMenu:self];
     }
     flow.caseFlow = nil;
-    
+
 }
 
 - (void)didReceiveMemoryWarning {

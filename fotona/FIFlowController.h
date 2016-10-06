@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "FIFotonaViewController.h"
-#import <Foundation/Foundation.h>
 #import "FIFotonaMenuViewController.h"
 #import "FISettingsViewController.h"
 #import "FICasebookMenuViewController.h"
@@ -63,6 +62,9 @@
 
 @property(strong, nonatomic) NSString* videoGal;
 @property(strong, nonatomic) FVideo* vidToOpen;
+
+@property(nonatomic) BOOL openPDF;
+@property(strong, nonatomic) FFotonaMenu* pdfToOpen;
 
 @property(nonatomic) int fotonaHelperState;
 

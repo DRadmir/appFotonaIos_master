@@ -22,7 +22,6 @@
 #import "FSettingsViewController.h"
 #import "FDownloadManager.h"
 #import "UIColor+Hex.h"
-#import "FCommon.h"
 #import "FIFlowController.h"
 #import "UIWindow+Fotona.h"
 #import "FIExternalLinkViewController.h"
@@ -76,7 +75,7 @@
 {
     self.DEVELOP = true;
     self.logText = @"";
-    self.logingEnabled = false;
+    self.logingEnabled = NO;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     //    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"pushType"];
@@ -121,7 +120,7 @@
         UINavigationController *navRoot=[[UINavigationController alloc] initWithRootViewController:main];
         [self.window setRootViewController:navRoot];
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:true];
-        [[UINavigationBar appearance] setBarTintColor:[UIColor colorFromHex:@"ED1C24"]];
+        [[UINavigationBar appearance] setBarTintColor:[UIColor colorFromHex:FOTONARED]];
         
         [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
         [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
@@ -173,7 +172,7 @@
     }
     
     [self setDownloadList:[[NSMutableArray alloc] init]];
-    [self setLoginShown:false];
+    [self setLoginShown:NO];
     
     
 
@@ -357,7 +356,7 @@
 
 #pragma mark Copy DB
 - (void) copyDatabaseIfNeeded {
-                    userBookmarked = [[NSMutableArray alloc] init];
+    userBookmarked = [[NSMutableArray alloc] init];
     //Using NSFileManager we can perform many file system operations.
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *error;
@@ -423,7 +422,6 @@
             if ([lastUpdate isEqualToString:@"2.1"]){
                 FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
                 [database open];
-//                [database executeUpdate:@"CREATE TABLE Disclaimer (disclaimer TEXT);"];
                 [database executeUpdate:@"ALTER TABLE Events ADD COLUMN isBookmark TEXT"];
                 [database executeUpdate:@"ALTER TABLE News ADD COLUMN isBookmark TEXT"];
                 [database executeUpdate:@"ALTER TABLE UserBookmark ADD COLUMN categories TEXT"];
@@ -458,6 +456,7 @@
                 
                 [APP_DELEGATE setBookmarkCountAll:0];
                 [APP_DELEGATE setBookmarkCountLeft:0];
+                lastUpdate = @"2.3";
             }
             if ([lastUpdate isEqualToString:@"2.3"]){
                 //added itemType for videos
@@ -468,6 +467,18 @@
                 userBookmarked = [[NSMutableArray alloc] init];
                 [defaults setObject:userBookmarked forKey:@"userBookmarked"];
                 [defaults synchronize];
+                lastUpdate = @"2.4";
+            }
+            if ([lastUpdate isEqualToString:@"2.4"]){
+                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+                [database open];
+                [database executeUpdate:@"CREATE TABLE UserFavorites (userFavoriteID INTEGER PRIMARY KEY, username TEXT NOT NULL, documentID INTEGER NOT NULL, typeID INTEGER NOT NULL);"];
+                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+                [database close];
+                [defaults setObject:@"3.0" forKey:@"DBLastUpdate"];
+                [defaults setObject:@"" forKey:@"lastUpdate"];
+                [defaults synchronize];
+                lastUpdate = @"3.0";
             }
 
         }
@@ -511,7 +522,7 @@
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus networkStatus = [reachability currentReachabilityStatus];    
     if ([[Reachability reachabilityForLocalWiFi] currentReachabilityStatus] != ReachableViaWiFi) {
-        return false;
+        return NO;
     }
     return !(networkStatus == NotReachable);
 }
@@ -947,10 +958,7 @@
 -(BOOL) checkGuest
 {
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     if ([usr isEqualToString:@"guest"] || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3 ) {
         return TRUE;
     }

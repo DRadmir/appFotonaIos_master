@@ -8,7 +8,6 @@
 
 #import "FIExternalLinkViewController.h"
 #import "MBProgressHUD.h"
-#import "FAppDelegate.h"
 
 @interface FIExternalLinkViewController ()
 
@@ -36,6 +35,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     [externalWebView setDelegate:self];
     if (![previousUrl isEqualToString: urlString]) {
         [self reloadView];
