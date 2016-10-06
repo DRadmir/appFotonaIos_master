@@ -7,7 +7,6 @@
 //
 
 #import "FMainViewController_iPad.h"
-#import "FAppDelegate.h"
 #import "FFeaturedViewController_iPad.h"
 #import "FBookmarkViewController.h"
 #import "FBookmarkMenuViewController.h"
@@ -250,10 +249,7 @@ UIButton *tmp;
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [super viewDidLoad];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"disclaimerShown"]];
     if(![usersarray containsObject:usr]){
         

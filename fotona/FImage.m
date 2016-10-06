@@ -7,7 +7,6 @@
 //
 
 #import "FImage.h"
-#import "FAppDelegate.h"
 #import "AFNetworking.h"
 #import "FMDatabase.h"
 

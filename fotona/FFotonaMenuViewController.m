@@ -7,7 +7,6 @@
 //
 
 #import "FFotonaMenuViewController.h"
-#import "FAppDelegate.h"
 #import "FMDatabase.h"
 #import "FCase.h"
 #import "FFotonaMenu.h"
@@ -17,7 +16,6 @@
 #import "FDownloadManager.h"
 #import "HelperBookmark.h"
 #import "FItemBookmark.h"
-#import "FCommon.h"
 #import "FDB.h"
 #import "UIColor+Hex.h"
 
@@ -170,10 +168,7 @@
                 [[menuItems objectAtIndex:indexPath.row] setBookmark:@"0"];
                 FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
                 [database open];
-                NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-                if (usr == nil) {
-                    usr =@"guest";
-                }
+                NSString *usr = [FCommon getUser];
                 [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[[menuItems objectAtIndex:indexPath.row] categoryID],usr,BOOKMARKPDF];
                 FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",[[menuItems objectAtIndex:indexPath.row] categoryID],BOOKMARKPDF]];
                 BOOL flag=NO;

@@ -9,7 +9,6 @@
 
 #import "FLogin.h"
 #import "MBProgressHUD.h"
-#import "FAppDelegate.h"
 #import "ConnectionHelper.h"
 #import "FDownloadManager.h"
 #import "SFHFKeychainUtils.h"

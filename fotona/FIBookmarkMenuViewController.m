@@ -8,7 +8,6 @@
 
 #import "FIBookmarkMenuViewController.h"
 #import "FIFlowController.h"
-#import "FAppDelegate.h"
 #import "UIColor+Hex.h"
 #import "FDB.h"
 

@@ -9,7 +9,6 @@
 #import "FIFeaturedEventTableViewCell.h"
 #import "FEvent.h"
 #import "HelperDate.h"
-#import "FAppDelegate.h"
 #import "FIFeaturedSingleEventViewController.h"
 #import "FDB.h"
 

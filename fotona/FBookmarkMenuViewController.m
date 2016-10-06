@@ -11,7 +11,6 @@
 #import "FMDatabase.h"
 #import "FCase.h"
 #import "FAuthor.h"
-#import "FAppDelegate.h"
 #import "FBookmarkViewController.h"
 #import "IIViewDeckController.h"
 #import "MBProgressHUD.h"
@@ -552,17 +551,12 @@ NSString *categoryMenu = @"";
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([[[menuItems objectAtIndex:indexPath.row] fotonaCategoryType] isEqualToString:@"6"]) {
         
-        
-        
         UITableViewRowAction *unbookmarkAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"Remove from Bookmarks"  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath){
             //[table deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             [[menuItems objectAtIndex:indexPath.row] setBookmark:@"0"];
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
-            NSString *usr = [APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-            if (usr == nil) {
-                usr =@"guest";
-            }
+            NSString *usr = [FCommon getUser];
             [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[[menuItems objectAtIndex:indexPath.row] categoryID],usr,BOOKMARKPDF];
             FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",[[menuItems objectAtIndex:indexPath.row] categoryID],BOOKMARKPDF]];
             BOOL flag=NO;
@@ -618,10 +612,7 @@ NSString *categoryMenu = @"";
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and isBookmark=1 order by title"]];
     while([results next]) {
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKCASE, [results stringForColumn:@"caseID"]]];
         BOOL flag=NO;
         while([resultsBookmarked next]) {
@@ -671,10 +662,7 @@ NSString *categoryMenu = @"";
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+   NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=2" withArgumentsInArray:[NSArray arrayWithObjects:usr, nil]];
     while([resultsBookmarked next]) {
@@ -738,10 +726,7 @@ NSString *categoryMenu = @"";
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     FMResultSet *resultsBookmarked =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=?" withArgumentsInArray:[NSArray arrayWithObjects:usr,BOOKMARKNEWS, nil]];
     while([resultsBookmarked next]) {
         FNews *f=[[FNews alloc] init];
@@ -773,10 +758,7 @@ NSString *categoryMenu = @"";
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     FMResultSet *resultsBookmarked =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=?" withArgumentsInArray:[NSArray arrayWithObjects:usr,BOOKMARKEVENTS, nil]];
     while([resultsBookmarked next]) {
         showEvent = false;

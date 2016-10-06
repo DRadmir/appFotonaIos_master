@@ -22,7 +22,6 @@
 #import "FSettingsViewController.h"
 #import "FDownloadManager.h"
 #import "UIColor+Hex.h"
-#import "FCommon.h"
 #import "FIFlowController.h"
 #import "UIWindow+Fotona.h"
 #import "FIExternalLinkViewController.h"
@@ -959,10 +958,7 @@
 -(BOOL) checkGuest
 {
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     if ([usr isEqualToString:@"guest"] || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3 ) {
         return TRUE;
     }

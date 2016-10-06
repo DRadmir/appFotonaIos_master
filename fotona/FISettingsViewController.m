@@ -7,7 +7,6 @@
 //
 
 #import "FISettingsViewController.h"
-#import "FAppDelegate.h"
 #import "MBProgressHUD.h"
 #import "HelperBookmark.h"
 #import "FMDatabase.h"
@@ -305,10 +304,7 @@
 
 - (void)unbookmark{
     [self stopDownload];
-    NSString *currentUsr =[APP_DELEGATE currentLogedInUser].username;
-    if (currentUsr == nil) {
-        currentUsr =@"guest";
-    }
+    NSString *currentUsr = [FCommon getUser];
     int x = 0;
     FMDatabase *localDatabase = [FMDatabase databaseWithPath:DB_PATH];
     [localDatabase open];

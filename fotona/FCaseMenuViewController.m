@@ -11,7 +11,6 @@
 #import "FMDatabase.h"
 #import "FCase.h"
 #import "FAuthor.h"
-#import "FAppDelegate.h"
 #import "FCasebookViewController.h"
 #import "IIViewDeckController.h"
 #import "MBProgressHUD.h"
@@ -311,10 +310,7 @@ NSString *count = @"";
            // [(FCasebookViewController*)self.viewDeckController.centerController setPrevCase:[(FCasebookViewController*)self.viewDeckController.centerController currentCase]];
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
-            NSString *usr = [APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-            if (usr == nil) {
-                usr =@"guest";
-            }
+            NSString *usr = [FCommon getUser];
             
             FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKCASE, [[casesInMenu objectAtIndex:indexPath.row] caseID]]];
             BOOL flag=NO;
@@ -416,10 +412,7 @@ NSString *count = @"";
             [(FCasebookViewController *)[tempC visibleViewController]  setPrevCase:[(FCasebookViewController*)[tempC visibleViewController] currentCase]];
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
-            NSString *usr = [APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-            if (usr == nil) {
-                usr =@"guest";
-            }
+            NSString *usr = [FCommon getUser];
             
             FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKCASE, [[menuItems objectAtIndex:indexPath.row] caseID]]];
             BOOL flag=NO;

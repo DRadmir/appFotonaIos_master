@@ -41,7 +41,6 @@
 -(id)initWithDictionary:(NSDictionary *)dic;
 -(id)initWithDictionaryDB:(NSDictionary *)dic WithRest:(NSString *)online andBookmarked:(NSString *)bookmark;
 -(id)initWithDictionaryToDB:(FNews *)news WithRest:(NSString *)online andBookmarked:(NSString *)bookmark;
--(id)initWithDictionaryToDB:(FNews *)news WithRest:(NSString *)online forBookmarked:(NSString *)bookmark;
 
 +(NSMutableArray *) getImages:(NSMutableArray *) newsArray fromStart:(int) startIndex forNumber:(int)number;
 

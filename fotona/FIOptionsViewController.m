@@ -7,8 +7,6 @@
 //
 
 #import "FIOptionsViewController.h"
-#import "FAppDelegate.h"
-
 @interface FIOptionsViewController ()  
 
 @end

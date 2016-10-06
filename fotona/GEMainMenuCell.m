@@ -8,7 +8,6 @@
 
 #import "GEMainMenuCell.h"
 #import "FMDatabase.h"
-#import "FAppDelegate.h"
 #import "FBookmarkViewController.h"
 #import "FDownloadManager.h"
 #import "HelperBookmark.h"
@@ -104,10 +103,7 @@
 {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",video.itemID,usr,BOOKMARKVIDEO];
     
     FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",video.itemID,BOOKMARKVIDEO]];

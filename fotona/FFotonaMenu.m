@@ -9,7 +9,6 @@
 #import "FFotonaMenu.h"
 #import "FVideo.h"
 #import "FMDatabase.h"
-#import "FAppDelegate.h"
 #import "FDB.h"
 
 @implementation FFotonaMenu

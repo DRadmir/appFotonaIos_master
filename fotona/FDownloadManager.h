@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "DownloadManager.h"
-#import "FAppDelegate.h"
 #import "UpdateDelegate.h"
 
 @interface FDownloadManager : NSObject <DownloadManagerDelegate, UpdateDelegate>

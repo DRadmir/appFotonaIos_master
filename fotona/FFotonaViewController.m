@@ -8,8 +8,6 @@
 
 #import "FFotonaViewController.h"
 #import "FMDatabase.h"
-
-#import "FAppDelegate.h"
 #import "MBProgressHUD.h"
 #import "FCasebookViewController.h"
 #import "FDocument.h"
@@ -217,10 +215,7 @@ NSString *currentVideoGalleryId;
     }
     
     [self.viewDeckController setLeftSize:self.view.frame.size.width-320];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     if (w!=self.view.frame.size.width) {
         if (!self.viewDeckController.leftController.view.isHidden) {
@@ -418,10 +413,7 @@ NSString *currentVideoGalleryId;
     }
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKPDF, cID]];
     BOOL flag=NO;
@@ -763,10 +755,7 @@ NSString *currentVideoGalleryId;
     }
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, [vid itemID]]];
     BOOL flag=NO;
@@ -821,10 +810,7 @@ NSString *currentVideoGalleryId;
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, [video itemID]]];
     BOOL flag=NO;
@@ -933,10 +919,7 @@ NSString *currentVideoGalleryId;
     BOOL bookmarked = NO;
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, vid.itemID]];
     while([resultsBookmarked next]) {
         bookmarked = YES;
@@ -983,10 +966,7 @@ NSString *currentVideoGalleryId;
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, [vid itemID]]];
     BOOL flag=NO;
@@ -1360,10 +1340,7 @@ NSString *currentVideoGalleryId;
 
 -(void)showBubbles
 {
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"fotonaHelper"]];
     if(![usersarray containsObject:usr]){
         [self.viewDeckController.leftController.view setUserInteractionEnabled:NO];
@@ -1449,10 +1426,7 @@ NSString *currentVideoGalleryId;
     [self.viewDeckController.leftController.view setUserInteractionEnabled:YES];
     if (stateHelper>1) {
         NSMutableArray *helperArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"fotonaHelper"]];
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         [helperArray addObject:usr];
         [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"fotonaHelper"];
         stateHelper = 0;

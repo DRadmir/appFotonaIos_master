@@ -7,7 +7,6 @@
 //
 
 #import "FCollectionViewCell.h"
-#import "FAppDelegate.h"
 #import "UIView+Border.h"
 #import "FEventViewController.h"
 #import "HelperDate.h"

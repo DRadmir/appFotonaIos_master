@@ -7,14 +7,12 @@
 //
 
 #import "FDB.h"
-#import "FAppDelegate.h"
 #import "FMDatabase.h"
 #import "FCaseCategory.h"
 #import "FAuthor.h"
 #import "FImage.h"
 #import "FVideo.h"
 #import "FDownloadManager.h"
-#import "FCommon.h"
 
 
 @implementation FDB
@@ -358,10 +356,7 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and isBookmark=1 order by title"]];
     while([results next]) {
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKCASE, [results stringForColumn:@"caseID"]]];
         BOOL flag=NO;
         while([resultsBookmarked next]) {
@@ -408,10 +403,7 @@
 {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=0",caseToRemove.caseID,usr,nil];
     BOOL bookmarked = NO;
     
@@ -529,10 +521,7 @@
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     FMResultSet *resultsBookmarked =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=?" withArgumentsInArray:[NSArray arrayWithObjects:usr,BOOKMARKEVENTS, nil]];
     while([resultsBookmarked next]) {
         showEvent = false;
@@ -643,10 +632,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     FMDatabase *databaseN = [FMDatabase databaseWithPath:DB_PATH];
     [databaseN open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSString * newsIDtemp=[NSString stringWithFormat:@"%ld",[news newsID]];
     [databaseN executeUpdate:@"INSERT INTO NewsRead (newsID, userName) VALUES (?,?)",newsIDtemp,usr];
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -659,10 +645,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     FMResultSet *resultsBookmarked =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=?" withArgumentsInArray:[NSArray arrayWithObjects:usr,BOOKMARKNEWS, nil]];
     while([resultsBookmarked next]) {
         FNews *f=[[FNews alloc] init];
@@ -774,10 +757,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? " withArgumentsInArray:@[usr, BOOKMARKVIDEO]];
     while([resultsBookmarked next]) {
@@ -820,10 +800,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
 {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",videoToRemove.itemID,usr,BOOKMARKVIDEO];
     
     FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",videoToRemove.itemID,BOOKMARKVIDEO]];
@@ -880,10 +857,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
         [f setSort:[results stringForColumn:@"sort"]];
         [f setIconName:[results stringForColumn:@"icon"]];
         [f setSortInt:[f.sort intValue]];
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKPDF, f.categoryID]];
         NSString *flag=@"0";
         while([resultsBookmarked next]) {
@@ -947,10 +921,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=2" withArgumentsInArray:[NSArray arrayWithObjects:usr, nil]];
     while([resultsBookmarked next]) {
@@ -1072,10 +1043,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     BOOL bookmarked = NO;
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, type, documentID]];
     while([resultsBookmarked next]) {
         bookmarked = YES;
@@ -1090,10 +1058,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
 {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",documentID,usr,BOOKMARKPDF];
     FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",documentID,BOOKMARKPDF]];
     BOOL flag=NO;
@@ -1185,17 +1150,20 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
 #pragma mark - Favorites
 
 +(void) addTooFavoritesItem:(int) documentID ofType:(int) typeID {
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
+    bool exist = false;
+    
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    [database executeUpdate:@"INSERT INTO UserFavorites (username,documentID,typeID) VALUES (?,?,?)", usr, documentID, typeID];
+    FMResultSet *resultsFavorites = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserFavorites where username=%@ and typeID=%d and and documentID=%d",usr, typeID, documentID]];
+    while([resultsFavorites next]) {
+        exist = true;
+    }
+    if (!exist) {
+        [database executeUpdate:@"INSERT INTO UserFavorites (username,documentID,typeID) VALUES (?,?,?)", usr, documentID, typeID];
+    }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
 }
-
-
 
 @end

@@ -7,7 +7,6 @@
 //
 
 #import "DisclaimerViewController.h"
-#import "FAppDelegate.h"
 
 @interface DisclaimerViewController ()
 {
@@ -30,10 +29,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"disclaimerShown"]];
     if(![usersarray containsObject:usr]){
         [self showDisclaimer];
@@ -80,10 +76,7 @@
 
 - (IBAction)btnAcceptClick:(id)sender {
     NSMutableArray *disclaimerArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"disclaimerShown"]];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [disclaimerArray addObject:usr];
     [[NSUserDefaults standardUserDefaults] setObject:disclaimerArray forKey:@"disclaimerShown"];
     [[NSUserDefaults standardUserDefaults] synchronize];

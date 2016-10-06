@@ -12,5 +12,6 @@
 
 +(BOOL) isIpad;
 +(NSString *)currentTimeInLjubljana;
++(NSString *)getUser;
 
 @end

@@ -7,7 +7,6 @@
 //
 
 #import "FTabBarController.h"
-#import "FAppDelegate.h"
 
 @interface FTabBarController (){
     int last;

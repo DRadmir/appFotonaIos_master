@@ -30,6 +30,14 @@
     return [dateFormater stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]];
 }
 
++(NSString *)getUser{
+    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
+    if (usr == nil) {
+        usr =@"guest";
+    }
+    return usr;
+}
+
 
 
 @end

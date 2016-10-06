@@ -10,7 +10,6 @@
 #import "FNews.h"
 #import "FCase.h"
 #import "FMDatabase.h"
-#import "FAppDelegate.h"
 #import "FFeaturedViewController_iPad.h"
 #import "FCasebookViewController.h"
 #import "IIViewDeckController.h"

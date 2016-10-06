@@ -8,7 +8,6 @@
 
 #import "FUser.h"
 #import "FMDatabase.h"
-#import "FAppDelegate.h"
 
 @implementation FUser
 @synthesize userID;

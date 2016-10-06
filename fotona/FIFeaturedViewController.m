@@ -8,7 +8,6 @@
 
 #import "FIFeaturedViewController.h"
 #import "FICarousel.h"
-#import "FAppDelegate.h"
 #import "FDB.h"
 #import "FIFeaturedEventTableViewCell.h"
 #import "FIFeaturedNewsTableViewCell.h"

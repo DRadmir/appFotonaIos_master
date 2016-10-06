@@ -2,7 +2,6 @@
 
 #import "FBookmarkViewController.h"
 #import "AFNetworking.h"
-#import "FAppDelegate.h"
 #import "FMDatabase.h"
 #import "FCaseCategory.h"
 #import "NSString+HTML.h"
@@ -485,10 +484,7 @@ NSMutableDictionary *preloadMoviesImages2;
     [self setPrevCase:currentCase];
     
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+   NSString *usr = [FCommon getUser];
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKCASE, [currentCase caseID]]];
@@ -1016,10 +1012,7 @@ NSMutableDictionary *preloadMoviesImages2;
     [removeBookmarks setHidden:YES];
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=0",currentCase.caseID,usr,nil];
     BOOL bookmarked = NO;
     
@@ -1753,10 +1746,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     [cell setVideo:vid];
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr = [APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *results = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, vid.itemID]];
     while([results next]) {
@@ -1834,10 +1824,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     NSMutableArray *videosTmp=[[NSMutableArray alloc] init];
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr = [APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *results = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? " withArgumentsInArray:@[usr, BOOKMARKVIDEO]];
     while([results next]) {
@@ -1884,10 +1871,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? " withArgumentsInArray:@[usr, BOOKMARKVIDEO]];
     while([resultsBookmarked next]) {
@@ -1952,10 +1936,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+   NSString *usr = [FCommon getUser];
     
     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? " withArgumentsInArray:@[usr, BOOKMARKVIDEO]];
     while([resultsBookmarked next]) {
@@ -2450,10 +2431,8 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
+    
     NSString * newsIDtemp=[NSString stringWithFormat:@"%ld",[news newsID]];
     [database executeUpdate:@"INSERT INTO NewsRead (newsID, userName) VALUES (?,?)",newsIDtemp,usr];
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];

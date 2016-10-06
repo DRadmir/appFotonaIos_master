@@ -8,7 +8,6 @@
 
 #import "FNewsView.h"
 #import "FNews.h"
-#import "FAppDelegate.h"
 #import "FImage.h"
 #import "NSString+HTML.h"
 #import "FMDatabase.h"
@@ -125,17 +124,6 @@ NSMutableArray *relatedNews;
         [newsView setFrame:CGRectMake(0,65, 768, 909)];
     }
     
-//    FMDatabase *databaseN = [FMDatabase databaseWithPath:DB_PATH];
-//    [databaseN open];
-//    
-//    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-//    if (usr == nil) {
-//        usr =@"guest";
-//    }
-//    NSString * newsIDtemp=[NSString stringWithFormat:@"%ld",[[self news] newsID]];
-//    [databaseN executeUpdate:@"INSERT INTO NewsRead (newsID, userName) VALUES (?,?)",newsIDtemp,usr];
-//    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-//    [databaseN close];
     [FDB setNewsRead:[self news]];
 }
 

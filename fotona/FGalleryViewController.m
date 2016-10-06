@@ -9,7 +9,6 @@
 #import "FGalleryViewController.h"
 #import "FImage.h"
 #import "FMDatabase.h"
-#import "FAppDelegate.h"
 
 @interface FGalleryViewController ()
 

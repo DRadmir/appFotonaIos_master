@@ -11,7 +11,6 @@
 #import "FIContentViewController.h"
 #import "FICaseViewController.h"
 #import "FCase.h"
-#import "FAppDelegate.h"
 #import "UIWindow+Fotona.h"
 
 
@@ -59,10 +58,7 @@
         [self openCase];
     }
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
    
     if (flow.showMenu && flow.caseFlow == nil && ([usersarray containsObject:usr] || !caseToOpen))

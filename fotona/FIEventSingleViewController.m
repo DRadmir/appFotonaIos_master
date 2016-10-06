@@ -9,7 +9,6 @@
 #import "FIEventSingleViewController.h"
 #import "HelperDate.h"
 #import "HelperString.h"
-#import "FAppDelegate.h"
 
 @interface FIEventSingleViewController ()
 

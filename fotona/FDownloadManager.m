@@ -7,10 +7,8 @@
 //
 
 #import "FDownloadManager.h"
-#import "FAppDelegate.h"
 #import "HelperBookmark.h"
 #import "MBProgressHUD.h"
-#import "FCommon.h"
 #import "FIFlowController.h"
 
 @implementation FDownloadManager
@@ -363,6 +361,10 @@
     
 }
 
+-(void)updateProcess{
+    
+}
+
 -(BOOL)checkDownload:(NSString *)filePath{
     NSString * temp;
     for (Download *download in self.downloadManager.downloads) {
@@ -379,6 +381,4 @@
     
     return YES;
 }
-
-
 @end

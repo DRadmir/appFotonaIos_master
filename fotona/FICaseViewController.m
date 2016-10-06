@@ -11,7 +11,6 @@
 #import "FDB.h"
 #import "Bubble.h"
 #import "BubbleControler.h"
-#import "FAppDelegate.h"
 #import "FIGalleryController.h"
 #import "FImage.h"
 #import "FDownloadManager.h"
@@ -88,10 +87,7 @@
         flow.caseView = self;
     }
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
     if(![usersarray containsObject:usr]){
         [bubbleC removeFromSuperview];
@@ -528,10 +524,7 @@
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
     // You should check before this, if any of bubbles needs to be displayed
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
     if(![usersarray containsObject:usr]){
         
@@ -638,10 +631,7 @@
     [scrollViewMain setScrollEnabled:YES];
     if (state>1) {
         NSMutableArray *helperArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         [helperArray addObject:usr];
         [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"casebookHelper"];
         state = 0;

@@ -10,7 +10,6 @@
 #import "FMDatabase.h"
 #import "FNews.h"
 #import "FEvent.h"
-#import "FAppDelegate.h"
 #import "NSString+HTML.h"
 #import "FDLabelView.h"
 #import "FCase.h"
@@ -535,10 +534,7 @@ FNewsView *newsViewController;
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSString * newsIDtemp=[NSString stringWithFormat:@"%ld",[news newsID]];
     [database executeUpdate:@"INSERT INTO NewsRead (newsID, userName) VALUES (?,?)",newsIDtemp,usr];
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -1012,10 +1008,7 @@ FNewsView *newsViewController;
 
 - (IBAction)btnAcceptClick:(id)sender {
     NSMutableArray *disclaimerArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"disclaimerShown"]];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [disclaimerArray addObject:usr];
     [[NSUserDefaults standardUserDefaults] setObject:disclaimerArray forKey:@"disclaimerShown"];
     [[NSUserDefaults standardUserDefaults] synchronize];

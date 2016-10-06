@@ -9,7 +9,6 @@
 #import "FIBookmarkViewController.h"
 #import "FIFlowController.h"
 #import "FIContentViewController.h"
-#import "FAppDelegate.h"
 #import "FDownloadManager.h"
 #import "FCase.h"
 #import "FNews.h"

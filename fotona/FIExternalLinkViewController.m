@@ -8,7 +8,6 @@
 
 #import "FIExternalLinkViewController.h"
 #import "MBProgressHUD.h"
-#import "FAppDelegate.h"
 
 @interface FIExternalLinkViewController ()
 

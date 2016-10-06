@@ -8,7 +8,6 @@
 
 #import "FRegistrationViewController.h"
 #import "UIView+Border.h"
-#import "FAppDelegate.h"
 
 @interface FRegistrationViewController ()
 

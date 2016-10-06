@@ -10,7 +10,6 @@
 #import "UIColor+Hex.h"
 #import "FIFlowController.h"
 #import "UIWindow+Fotona.h"
-#import "FCommon.h"
 
 @interface FITabbarController ()<UITabBarControllerDelegate>
 

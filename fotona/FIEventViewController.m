@@ -13,7 +13,6 @@
 #import "FEvent.h"
 #import "FIEventSingleViewController.h"
 #import "FIEventMenuTableViewController.h"
-#import "FAppDelegate.h"
 #import "FIFlowController.h"
 #import "FIEventContainerViewController.h"
 

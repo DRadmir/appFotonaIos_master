@@ -7,7 +7,6 @@
 //
 
 #import "FMainViewController.h"
-#import "FAppDelegate.h"
 #import "FSetDefaults.h"
 #import "FLogin.h"
 #import "MBProgressHUD.h"
@@ -181,10 +180,7 @@ int forgotenBottom = 0;
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [super viewDidLoad];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"disclaimerShown"]];
     if(![usersarray containsObject:usr]){
         

@@ -7,7 +7,6 @@
 //
 
 #import "FISearchViewController.h"
-#import "FAppDelegate.h"
 #import "FDB.h"
 #import "MBProgressHUD.h"
 #import "FIFlowController.h"

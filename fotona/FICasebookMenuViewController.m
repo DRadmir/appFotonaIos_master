@@ -12,7 +12,6 @@
 #import "FCase.h"
 #import "FDB.h"
 #import "FIFlowController.h"
-#import "FAppDelegate.h"
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
 #import "FImage.h"

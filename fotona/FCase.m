@@ -9,7 +9,6 @@
 #import "FImage.h"
 #import "FVideo.h"
 #import "FMDatabase.h"
-#import "FAppDelegate.h"
 
 @implementation FCase
 @synthesize caseID;

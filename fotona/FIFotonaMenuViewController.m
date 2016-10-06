@@ -9,7 +9,6 @@
 #import "FIFotonaMenuViewController.h"
 #import "FDB.h"
 #import "FIFlowController.h"
-#import "FAppDelegate.h"
 #import "FDownloadManager.h"
 #import "HelperBookmark.h"
 #import "UIColor+Hex.h"

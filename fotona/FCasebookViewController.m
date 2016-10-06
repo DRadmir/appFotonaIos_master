@@ -8,7 +8,6 @@
 
 #import "FCasebookViewController.h"
 #import "AFNetworking.h"
-#import "FAppDelegate.h"
 #import "FMDatabase.h"
 #import "FCaseCategory.h"
 #import "NSString+HTML.h"
@@ -155,10 +154,7 @@
             BOOL bookmarked = NO;
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
-            NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-            if (usr == nil) {
-                usr =@"guest";
-            }
+            NSString *usr = [FCommon getUser];
             
             FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKCASE, currentCase.caseID]];
             while([resultsBookmarked next]) {
@@ -485,10 +481,7 @@
 -(void)openCase
 {
     [contentModeView removeFromSuperview];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
     
     [caseScroll removeGestureRecognizer:swipeRecognizerB];
@@ -1048,10 +1041,7 @@
     [removeBookmarks setHidden:YES];
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=0",currentCase.caseID,usr,nil];
     BOOL bookmarked = NO;
     
@@ -1614,10 +1604,7 @@
     }
     [self.view bringSubviewToFront:[self.view viewWithTag:1000]];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
     if(![usersarray containsObject:usr]){
         if (bubbleC != nil) {
@@ -2026,10 +2013,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
 {
     
     // You should check before this, if any of bubbles needs to be displayed
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
     if(![usersarray containsObject:usr]){
 
@@ -2122,10 +2106,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     [caseScroll setScrollEnabled:YES];
     if (state>1) {
         NSMutableArray *helperArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         [helperArray addObject:usr];
         [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"casebookHelper"];
         state = 0;

@@ -9,9 +9,7 @@
 #import "FIVideoGalleryViewController.h"
 #import "FIVideoGalleryTableViewCell.h"
 #import "FDB.h"
-#import "FAppDelegate.h"
 #import "MBProgressHUD.h"
-#import "FCommon.h"
 #import "FDownloadManager.h"
 #import "FIFlowController.h"
 

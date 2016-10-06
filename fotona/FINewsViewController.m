@@ -7,7 +7,6 @@
 //
 
 #import "FINewsViewController.h"
-#import "FAppDelegate.h"
 #import "HelperString.h"
 #import "FIFeaturedNewsTableViewCell.h"
 #import "FDB.h"

@@ -7,14 +7,12 @@
 //
 
 #import "FSettingsViewController.h"
-#import "FAppDelegate.h"
 #import "FUser.h"
 #import "FSearchViewController.h"
 #import "UIView+Border.h"
 #import "HelperBookmark.h"
 #import "FMDatabase.h"
 #import "MBProgressHUD.h"
-#import "FCommon.h"
 #import "FUpdateContent.h"
 #import "FRegistrationViewController.h"
 
@@ -324,10 +322,7 @@
 
 - (void)unbookmark{
     [self stopDownload];
-    NSString *currentUsr =[APP_DELEGATE currentLogedInUser].username;
-    if (currentUsr == nil) {
-        currentUsr =@"guest";
-    }
+    NSString *currentUsr = [FCommon getUser];
     int x = 0;
     FMDatabase *localDatabase = [FMDatabase databaseWithPath:DB_PATH];
     [localDatabase open];
