@@ -134,7 +134,7 @@
     
     UIView *bck=[[UIView alloc] initWithFrame:cell.frame];
     
-    [bck setBackgroundColor:[UIColor colorFromHex:@"ED1C24"]];
+    [bck setBackgroundColor:[UIColor colorFromHex:FOTONARED]];
     [cell setSelectedBackgroundView:bck];
     cell.textLabel.highlightedTextColor = [UIColor whiteColor];
     cell.imageView.highlightedImage =[UIImage imageNamed:[NSString stringWithFormat:@"%@",iconaName]];
@@ -162,7 +162,7 @@
                 
                 
             }];
-             bookmarkAction.backgroundColor = [UIColor colorFromHex:@"ED1C24"];
+             bookmarkAction.backgroundColor = [UIColor colorFromHex:FOTONARED];
             return @[bookmarkAction];
             
         } else{
@@ -202,7 +202,7 @@
                 [av show];
                 
             }];
-             unbookmarkAction.backgroundColor = [UIColor colorFromHex:@"ED1C24"];
+             unbookmarkAction.backgroundColor = [UIColor colorFromHex:FOTONARED];
             return @[unbookmarkAction];
         }
     }

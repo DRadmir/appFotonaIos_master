@@ -292,7 +292,7 @@ NSString *categoryMenu = @"";
             
             UIView *bck=[[UIView alloc] initWithFrame:cell.frame];
             
-            [bck setBackgroundColor:[UIColor colorFromHex:@"ED1C24"]];
+            [bck setBackgroundColor:[UIColor colorFromHex:FOTONARED]];
             [cell setSelectedBackgroundView:bck];
             
             cell.textLabel.highlightedTextColor = [UIColor whiteColor];
@@ -589,7 +589,7 @@ NSString *categoryMenu = @"";
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [av show];
         }];
-         unbookmarkAction.backgroundColor = [UIColor colorFromHex:@"ED1C24"];
+         unbookmarkAction.backgroundColor = [UIColor colorFromHex:FOTONARED];
         return @[unbookmarkAction];
     }
     

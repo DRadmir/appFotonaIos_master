@@ -21,7 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setDelegate:self];
-    [[self tabBar] setTintColor:[UIColor colorFromHex:@"ED1C24"]];
+    [[self tabBar] setTintColor:[UIColor colorFromHex:FOTONARED]];
     [[self tabBar] setTranslucent:NO];
     
     FIFlowController *flow = [FIFlowController sharedInstance];

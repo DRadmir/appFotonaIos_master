@@ -56,7 +56,7 @@
 +(BOOL)checkFotonaForUser:(FFotonaMenu *)f andCategory:(NSString *)category;
 
 +(BOOL)checkIfBookmarkedForDocumentID:(NSString *)documentID andType:(NSString *)type;
-
 +(void)removeFromBookmarkForDocumentID:(NSString *)documentID;
 
++(void) addTooFavoritesItem:(int) documentID ofType:(int) typeID;
 @end

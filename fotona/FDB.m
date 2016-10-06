@@ -1145,7 +1145,6 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
                 NSArray *pathComp=[vid.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
                 [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,time,videoImage,sort, userType,userSubType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.videoGalleryID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.videoImage,vid.sort, vid.userType,vid.userSubType];
-                //                [vid downloadFile:vid.path inFolder:@"/.Cases"];
                 [links addObject:vid.path];
             }
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -1179,6 +1178,20 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     [database executeUpdate:@"delete from Media where galleryID=?",gID];
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+}
+
+#pragma mark - Favorites
+
++(void) addTooFavoritesItem:(int) documentID ofType:(int) typeID {
+    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
+    if (usr == nil) {
+        usr =@"guest";
+    }
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    [database executeUpdate:@"INSERT INTO UserFavorites (username,documentID,typeID) VALUES (?,?,?)", usr, documentID, typeID];
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
 }

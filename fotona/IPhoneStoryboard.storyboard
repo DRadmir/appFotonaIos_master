@@ -722,11 +722,11 @@
             </objects>
             <point key="canvasLocation" x="1886" y="2127"/>
         </scene>
-        <!--Bookmarks-->
+        <!--Favorites-->
         <scene sceneID="V4B-NM-NSY">
             <objects>
                 <navigationController id="BTt-qz-v7W" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Bookmarks" image="bookmarks_red.png" id="xY3-9g-rbp"/>
+                    <tabBarItem key="tabBarItem" title="Favorites" image="bookmarks_red.png" id="xY3-9g-rbp"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="4h8-vw-cWE">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -829,12 +829,13 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="RcF-2O-DBx">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="separatorColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="casebookMenuCell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="casebookMenuCell" id="LJM-AH-28t">
-                                        <rect key="frame" x="0.0" y="56" width="1000" height="44"/>
+                                        <rect key="frame" x="0.0" y="56" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LJM-AH-28t" id="V0S-uz-mE4">
-                                            <frame key="frameInset" width="1000" height="44"/>
+                                            <frame key="frameInset" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -878,14 +879,14 @@
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="optionsCell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="RFM-h4-ETh" style="IBUITableViewCellStyleDefault" id="G36-hw-v3w">
-                                        <rect key="frame" x="0.0" y="120" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="120" width="1000" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="G36-hw-v3w" id="NKM-UT-6et">
-                                            <frame key="frameInset" width="375" height="44"/>
+                                            <frame key="frameInset" width="1000" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="RFM-h4-ETh">
-                                                    <frame key="frameInset" minX="15" width="345" height="43.5"/>
+                                                    <frame key="frameInset" minX="164" width="672" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1728,9 +1729,19 @@
                                                     <action selector="addBookmark:" destination="P3I-fc-7gf" eventType="touchUpInside" id="2vc-uA-L7Z"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VQq-rh-4Ff">
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                                                <state key="normal" title="Fav">
+                                                    <color key="titleColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="addToFavorite:" destination="P3I-fc-7gf" eventType="touchUpInside" id="6DU-NG-xeM"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
+                                            <constraint firstItem="Zgh-sG-bjq" firstAttribute="leading" secondItem="VQq-rh-4Ff" secondAttribute="trailing" id="0JO-Dq-AH2"/>
                                             <constraint firstItem="pin-0Z-M9m" firstAttribute="top" secondItem="W3y-Gw-gvR" secondAttribute="bottom" constant="9" id="490-NF-TkH"/>
                                             <constraint firstItem="Zgh-sG-bjq" firstAttribute="top" secondItem="O9d-JD-hLD" secondAttribute="top" constant="54" id="4E2-cF-vjE"/>
                                             <constraint firstItem="W3y-Gw-gvR" firstAttribute="top" secondItem="kD6-NX-BrX" secondAttribute="bottom" constant="5" id="4TN-fZ-vXs"/>
@@ -1755,6 +1766,7 @@
                                             <constraint firstAttribute="height" priority="250" constant="600" id="dkl-Nz-w7y"/>
                                             <constraint firstItem="kD6-NX-BrX" firstAttribute="leading" secondItem="Uzt-vw-2B1" secondAttribute="trailing" constant="8" id="iCK-ZD-pAg"/>
                                             <constraint firstItem="Uzt-vw-2B1" firstAttribute="leading" secondItem="O9d-JD-hLD" secondAttribute="leading" constant="20" id="rel-wK-BQz"/>
+                                            <constraint firstItem="VQq-rh-4Ff" firstAttribute="top" secondItem="W3y-Gw-gvR" secondAttribute="bottom" constant="4" id="u7q-Qj-2Mr"/>
                                             <constraint firstItem="5hq-4V-Uts" firstAttribute="top" secondItem="O9d-JD-hLD" secondAttribute="top" constant="54" id="vi1-x1-3c0"/>
                                             <constraint firstAttribute="trailing" secondItem="W3y-Gw-gvR" secondAttribute="trailing" constant="20" id="vs0-au-UZb"/>
                                             <constraint firstItem="kD6-NX-BrX" firstAttribute="top" secondItem="O9d-JD-hLD" secondAttribute="top" constant="27" id="wIu-5a-LHG"/>
@@ -1781,6 +1793,7 @@
                     </view>
                     <connections>
                         <outlet property="btnBookmark" destination="5hq-4V-Uts" id="yF5-sG-4MF"/>
+                        <outlet property="btnFavorite" destination="VQq-rh-4Ff" id="QUk-Uk-NoF"/>
                         <outlet property="btnReadMore" destination="i0q-TZ-WQa" id="QCA-DU-XZJ"/>
                         <outlet property="btnRemoveBookmark" destination="Zgh-sG-bjq" id="lFD-sD-7Kc"/>
                         <outlet property="headerHeight" destination="fp8-ne-rdf" id="nVm-6o-mO9"/>

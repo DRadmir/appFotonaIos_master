@@ -455,7 +455,6 @@
     {
         [parentBookmarks openDisclaimer];
     }
-    
 }
 
 - (IBAction)removeBookmark:(id)sender {
@@ -476,12 +475,15 @@
         UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
         [av showInView:self.view];
     }
-
 }
 
 - (void) refreshBookmarkBtn  {
     [btnBookmark setHidden:YES];
     [btnRemoveBookmark setHidden:NO];
+    
+}
+
+- (IBAction)addToFavorite:(id)sender {
     
 }
 
@@ -494,11 +496,9 @@
         if ([buttonTitle isEqualToString:NSLocalizedString(@"CHECKWIFIONLYBTN", nil)]) {
             [APP_DELEGATE setWifiOnlyConnection:TRUE];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
-            //            [ wifiSwitch setOn:YES animated:YES];
             [self bookmarkCase];
         }
     }
-    
 }
 
 -(void) bookmarkCase{
@@ -511,8 +511,6 @@
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTIONBOOKMARK", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
     }
-    
-    
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -633,7 +631,6 @@
 
 - (void)bubbleRequestedExit:(Bubble*)bubbleObject
 {
-    
     state++;
     [bubbleC displayNextBubble];
     [bubbleObject removeFromSuperview];

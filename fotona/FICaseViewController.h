@@ -39,6 +39,8 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *parametersHeight;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *headerHeight;
 
+@property (strong, nonatomic) IBOutlet UIButton *btnFavorite;
+
 @property (strong, nonatomic)  FIGalleryController *gallery;
 @property (nonatomic) BOOL canBookmark;
 
@@ -51,4 +53,5 @@
 - (IBAction)removeBookmark:(id)sender;
 - (IBAction)addBookmark:(id)sender;
 - (void) refreshBookmarkBtn;
+- (IBAction)addToFavorite:(id)sender;
 @end

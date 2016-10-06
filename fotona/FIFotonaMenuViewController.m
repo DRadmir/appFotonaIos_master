@@ -170,7 +170,7 @@
 - (void)tableView:(UITableView *)tableView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     // Add your Colour.
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    [self setCellColor:[UIColor colorFromHex:@"ED1C24"] ForCell:cell];  //highlight colour
+    [self setCellColor:[UIColor colorFromHex:FOTONARED] ForCell:cell];  //highlight colour
     NSString *iconaName=@"fotonamenu_icon9";
 
     int icon = [[[allItems objectAtIndex:indexPath.row] iconName] intValue];
@@ -266,7 +266,7 @@
                     [av showInView:self.view];
                 }
             }];
-             bookmarkAction.backgroundColor = [UIColor colorFromHex:@"ED1C24"];
+             bookmarkAction.backgroundColor = [UIColor colorFromHex:FOTONARED];
             return @[bookmarkAction];
             
         } else{
@@ -280,7 +280,7 @@
                 [av show];
                 
             }];
-            unbookmarkAction.backgroundColor = [UIColor colorFromHex:@"ED1C24"];
+            unbookmarkAction.backgroundColor = [UIColor colorFromHex:FOTONARED];
             return @[unbookmarkAction];
         }
     }
