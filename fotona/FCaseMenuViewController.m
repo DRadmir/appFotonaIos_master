@@ -93,7 +93,7 @@ NSString *count = @"";
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+     [super viewWillAppear:animated];
     count=menuTitle.text;
     titleMenu = menuTitle.text;
     for (UIView *v in self.navigationController.navigationBar.subviews) {

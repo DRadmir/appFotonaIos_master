@@ -49,6 +49,7 @@ int bottomHeight;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     if ([APP_DELEGATE newsTemp] != nil  ) {
         [self reloadView];
     }

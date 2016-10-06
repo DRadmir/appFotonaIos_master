@@ -77,6 +77,7 @@ NSMutableDictionary *preloadGalleryMoviesImages;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     FIFlowController *flow = [FIFlowController sharedInstance];
     
     if (flow.lastIndex == 2) {

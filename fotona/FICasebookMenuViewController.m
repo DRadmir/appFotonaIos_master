@@ -25,7 +25,7 @@
     int updateCounter;
     int success;
     FCase *caseToReturn;
-    bool enabled;
+    BOOL enabled;
 }
 
 @end

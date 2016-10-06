@@ -84,6 +84,7 @@ UIButton *tmp;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     [APP_DELEGATE setLoginShown:true];
     if (self.view.frame.size.width>900) {
         [APP_DELEGATE setCurrentOrientation:1];

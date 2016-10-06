@@ -49,6 +49,12 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.caseTab = self;
     if (flow.caseFlow != nil)
@@ -60,14 +66,14 @@
     
     NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-   
+    
     if (flow.showMenu && flow.caseFlow == nil && ([usersarray containsObject:usr] || !caseToOpen))
     {
         flow.showMenu = false;
         [self showMenu:self];
     }
     flow.caseFlow = nil;
-    
+
 }
 
 - (void)didReceiveMemoryWarning {

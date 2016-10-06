@@ -75,6 +75,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     [self setUp];
     carousel.type = iCarouselTypeLinear;
     [carousel reloadData];

@@ -57,6 +57,7 @@
 +(BOOL)checkIfBookmarkedForDocumentID:(NSString *)documentID andType:(NSString *)type;
 +(void)removeFromBookmarkForDocumentID:(NSString *)documentID;
 
-+(void) addTooFavoritesItem:(int) documentID ofType:(int) typeID;
-+(void) removeFromFavoritesItem:(int) documentID ofType:(int) typeID;
++(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID;
++(void) removeFromFavoritesItem:(int) documentID ofType:(NSString *) typeID;
++(BOOL) checkIfFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 @end

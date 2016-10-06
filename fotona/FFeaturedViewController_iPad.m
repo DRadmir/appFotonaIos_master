@@ -96,9 +96,9 @@ FNewsView *newsViewController;
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
     newsViewController = [[FNewsView alloc] init];
     [APP_DELEGATE setClosedNews:NO];
-    [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
     firstRun=YES;

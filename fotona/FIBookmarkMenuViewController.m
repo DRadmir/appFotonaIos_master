@@ -43,6 +43,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     menuIcons = [NSMutableArray new];
     menuTitles = [NSMutableArray new];
     FIFlowController *flow = [FIFlowController sharedInstance];

@@ -188,6 +188,7 @@ NSString *currentVideoGalleryId;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     [[[APP_DELEGATE tabBar] tabBar] setUserInteractionEnabled:YES];
     UIInterfaceOrientation orientation=[[UIApplication sharedApplication] statusBarOrientation];
     if (orientation!=UIInterfaceOrientationPortrait) {

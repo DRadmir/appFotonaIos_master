@@ -75,7 +75,7 @@
 {
     self.DEVELOP = true;
     self.logText = @"";
-    self.logingEnabled = false;
+    self.logingEnabled = NO;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     //    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"pushType"];
@@ -172,7 +172,7 @@
     }
     
     [self setDownloadList:[[NSMutableArray alloc] init]];
-    [self setLoginShown:false];
+    [self setLoginShown:NO];
     
     
 
@@ -522,7 +522,7 @@
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus networkStatus = [reachability currentReachabilityStatus];    
     if ([[Reachability reachabilityForLocalWiFi] currentReachabilityStatus] != ReachableViaWiFi) {
-        return false;
+        return NO;
     }
     return !(networkStatus == NotReachable);
 }

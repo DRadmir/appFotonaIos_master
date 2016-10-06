@@ -89,6 +89,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.fotonaSettings = self;
     

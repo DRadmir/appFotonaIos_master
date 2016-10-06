@@ -173,7 +173,7 @@ NSMutableDictionary *preloadMoviesImages2;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+     [super viewWillAppear:animated];
     CGRect newFrame = fotonaImg.frame;
     newFrame.origin.x = self.view.frame.size.width/2-fotonaImg.frame.size.width/2;
     if (!self.viewDeckController.leftController.view.isHidden) {

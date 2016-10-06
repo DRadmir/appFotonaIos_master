@@ -61,7 +61,7 @@
     
     
 }
-@property (nonatomic)Boolean openPDF;
+@property (nonatomic)BOOL openPDF;
 @property (nonatomic, retain) FFotonaMenu *PDFToOpen;
 
 @property (strong, nonatomic) IBOutlet UIWebView *cDescription;

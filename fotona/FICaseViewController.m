@@ -58,6 +58,9 @@
 @synthesize canBookmark;
 @synthesize parentBookmarks;
 
+@synthesize btnAddFavorite;
+@synthesize btnRemoveFavorite;
+
 @synthesize gallery;
 
 - (void)viewDidLoad {
@@ -68,6 +71,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
     if (bookmarked){//[currentCase.bookmark boolValue]) {
         [btnBookmark setHidden:YES];
@@ -76,6 +80,8 @@
         [btnBookmark setHidden:NO];
         [btnRemoveBookmark setHidden:YES];
     }
+    
+    
     
     [self loadCase];
     [self createGallery];
@@ -95,6 +101,14 @@
         [scrollViewMain setScrollEnabled:NO];
         
         [self showBubbles];
+    }
+    
+    if ([FDB checkIfFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE]) {
+        [btnRemoveFavorite setHidden:NO];
+        [btnAddFavorite setHidden:YES];
+    } else {
+        [btnRemoveFavorite setHidden:YES];
+        [btnAddFavorite setHidden:NO];
     }
 
 }
@@ -480,7 +494,15 @@
 }
 
 - (IBAction)addToFavorite:(id)sender {
-    
+    [FDB addTooFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE];
+    [btnRemoveFavorite setHidden:NO];
+    [btnAddFavorite setHidden:YES];
+}
+
+- (IBAction)removeFavorite:(id)sender {
+    [FDB removeFromFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE];
+    [btnRemoveFavorite setHidden:YES];
+    [btnAddFavorite setHidden:NO];
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -637,10 +659,7 @@
         state = 0;
         [bubbleC removeFromSuperview];
         bubbleC = nil;
-
     }
-    
-    
 }
 
 -(void) reloadBubbles
@@ -652,7 +671,6 @@
          [self showBubbles];
     }
 }
-
 
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation

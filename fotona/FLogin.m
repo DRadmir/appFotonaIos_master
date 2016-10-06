@@ -230,11 +230,8 @@ UIButton *tmp;
             
         }
         else if([[dic valueForKey:@"msg"] isEqualToString:@"Success"]){
-            
- 
-            
+        
             FUser *usr=[[FUser alloc] initWithDictionary:[[dic objectForKey:@"values"] objectAtIndex:0]];
-            [usr setUsername:@"test"];
             [SFHFKeychainUtils storeUsername:usr.username andPassword:password forServiceName:@"fotona" updateExisting:YES error:nil];
             [[NSUserDefaults standardUserDefaults] setValue:usr.username forKey:@"autoLogin"];
             [[NSUserDefaults standardUserDefaults] synchronize];

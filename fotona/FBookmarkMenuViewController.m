@@ -141,6 +141,8 @@ NSString *categoryMenu = @"";
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+
     for (UIView *v in self.navigationController.navigationBar.subviews) {
         if ([v isKindOfClass:[UILabel class]]) {
             [v removeFromSuperview];
@@ -753,14 +755,14 @@ NSString *categoryMenu = @"";
 {
     
     NSMutableArray *menu=[[NSMutableArray alloc] init];
-    BOOL showEvent = false;
+    BOOL showEvent = NO;
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
     NSString *usr = [FCommon getUser];
     FMResultSet *resultsBookmarked =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=?" withArgumentsInArray:[NSArray arrayWithObjects:usr,BOOKMARKEVENTS, nil]];
     while([resultsBookmarked next]) {
-        showEvent = false;
+        showEvent = NO;
             FEvent *e=[[FEvent alloc] init];
             FMResultSet *results = [database executeQuery:@"SELECT * FROM Events where eventID=?" withArgumentsInArray:[NSArray arrayWithObjects:[resultsBookmarked stringForColumn:@"documentID"], nil]];
             while([results next]) {

@@ -95,6 +95,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     if (tableData == nil) {
         tableData = [NSMutableArray array];
     }

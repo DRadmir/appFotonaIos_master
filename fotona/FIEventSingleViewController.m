@@ -36,6 +36,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
   if([APP_DELEGATE eventTemp] != nil )
   {
       eventToOpen = [APP_DELEGATE eventTemp];

@@ -62,7 +62,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+     [super viewWillAppear:animated];
     iconsInMenu=[NSArray arrayWithObjects:@"about_fotona",@"aesthetics_and_surgery_products",@"dental_products",@"gynecology_products",@"distributor_news",@"la&ha_publications",@"ifw_2015",@"disclaimer", nil];
     for (UIView *v in self.navigationController.navigationBar.subviews) {
         if ([v isKindOfClass:[UILabel class]]) {

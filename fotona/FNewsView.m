@@ -39,7 +39,8 @@ NSMutableArray *relatedNews;
     // Do any additional setup after loading the view from its nib.
 }
 -(void)viewWillAppear:(BOOL)animated{
-[self openNews:[self news] andNewsArray:[self newsArray]];
+     [super viewWillAppear:animated];
+    [self openNews:[self news] andNewsArray:[self newsArray]];
 }
 
 - (void)didReceiveMemoryWarning {

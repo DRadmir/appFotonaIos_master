@@ -1149,38 +1149,48 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
 
 #pragma mark - Favorites
 
-+(void) addTooFavoritesItem:(int) documentID ofType:(int) typeID {
++(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID {
     NSString *usr = [FCommon getUser];
-    bool exist = false;
+    bool exist = [self checkIfFavoritesItem:documentID ofType:typeID];
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    FMResultSet *resultsFavorites = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserFavorites where username=%@ and typeID=%d and and documentID=%d",usr, typeID, documentID]];
-    while([resultsFavorites next]) {
-        exist = true;
-    }
+   
     if (!exist) {
-        [database executeUpdate:@"INSERT INTO UserFavorites (username,documentID,typeID) VALUES (?,?,?)", usr, documentID, typeID];
+        [database executeUpdate:@"INSERT INTO UserFavorites (username,documentID,typeID) VALUES (?,?,?)", usr, [NSString stringWithFormat:@"%d", documentID], typeID];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
 }
 
-+(void) removeFromFavoritesItem:(int) documentID ofType:(int) typeID {
++(void) removeFromFavoritesItem:(int) documentID ofType:(NSString *) typeID {
     NSString *usr = [FCommon getUser];
-    bool exist = false;
+    bool exist = [self checkIfFavoritesItem:documentID ofType:typeID];
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    FMResultSet *resultsFavorites = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserFavorites where username=%@ and typeID=%d and and documentID=%d",usr, typeID, documentID]];
-    while([resultsFavorites next]) {
-        exist = true;
-    }
+   
     if (exist) {
-        [database executeUpdate:@"DELETE FROM UserFavorites where username=? and documentID=? and typeID=?", usr, documentID, typeID];
+        [database executeUpdate:@"DELETE FROM UserFavorites where username=? and documentID=? and typeID=?", usr, [NSString stringWithFormat:@"%d", documentID], typeID];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
+}
+
++(BOOL)checkIfFavoritesItem:(int)documentID ofType:(NSString *)typeID{
+    NSString *usr = [FCommon getUser];
+    bool exist = false;
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    FMResultSet *resultsFavorites = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserFavorites where username='%@' AND documentID=%@ AND typeID=%@",usr, [NSString stringWithFormat:@"%d", documentID],typeID]];
+   
+    while([resultsFavorites next]) {
+        exist = true;
+    }
+   
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+    return exist;
 }
 
 

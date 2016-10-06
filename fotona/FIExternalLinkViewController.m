@@ -35,6 +35,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     [externalWebView setDelegate:self];
     if (![previousUrl isEqualToString: urlString]) {
         [self reloadView];
