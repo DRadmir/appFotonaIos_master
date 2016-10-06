@@ -187,6 +187,8 @@
     return cell;
 }
 
+
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FEventViewController *paren=(FEventViewController *)[self.navigationController.viewControllers objectAtIndex:0];
@@ -324,6 +326,7 @@
     }
     [table reloadData];
 }
+
 
 
 @end

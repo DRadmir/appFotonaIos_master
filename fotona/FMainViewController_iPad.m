@@ -93,9 +93,9 @@ UIButton *tmp;
         [APP_DELEGATE setCurrentOrientation:0];
     }
     
-    [username setText:@"radovanovic"];
-    [password setText:@"n3cuqaKU"];
-
+//    [username setText:@"radovanovic"];
+//    [password setText:@"n3cuqaKU"];
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated

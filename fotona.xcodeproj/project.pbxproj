@@ -1932,6 +1932,7 @@
 				TargetAttributes = {
 					C9A3D07D18ED1845007A0E49 = {
 						DevelopmentTeam = NR5BL2Y2D7;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.DataProtection = {
 								enabled = 1;
@@ -2450,6 +2451,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = NR5BL2Y2D7;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "fotona/fotona-Prefix.pch";
 				INFOPLIST_FILE = "fotona/fotona-Info.plist";
@@ -2469,6 +2471,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = NR5BL2Y2D7;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "fotona/fotona-Prefix.pch";
 				INFOPLIST_FILE = "fotona/fotona-Info.plist";
@@ -2572,6 +2575,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = NR5BL2Y2D7;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "fotona/fotona-Prefix.pch";
 				INFOPLIST_FILE = "fotona/fotona-Info.plist";
