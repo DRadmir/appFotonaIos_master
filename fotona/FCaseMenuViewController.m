@@ -149,6 +149,7 @@ NSString *count = @"";
     return 0;
 }
 
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -698,6 +699,9 @@ NSString *count = @"";
     
     
 }
+
+
+
 -(void)removeHud
 {
     NSLog(@"remove");
@@ -735,5 +739,4 @@ NSString *count = @"";
 }
 
 
-
-@end
+ @end

@@ -193,6 +193,8 @@
 //creating events
 - (UITableViewCell *)tableView:(UITableView *)tableView2 cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    
    // FEventViewCell *cell =  [FEventViewCell fillCell:indexPath fromArray:tableData andCategory: ci andOwner:self ];
     FEventViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FEventViewCell" owner:self options:nil] objectAtIndex:0];
     NSString * img =@"";
@@ -296,6 +298,7 @@
     [popEvent setContentOffset:CGPointMake(0, -popEvent.contentInset.top) animated:YES];
     
 }
+
 
 
 -(void)openSettings:(id)sender
@@ -664,6 +667,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     
     [settingsBtn setEnabled:YES];
 }
+
 
 
 @end

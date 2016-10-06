@@ -6,6 +6,7 @@
 //  Copyright © 2015 4egenus. All rights reserved.
 //
 
+
 #import "FLogin.h"
 #import "MBProgressHUD.h"
 #import "FAppDelegate.h"
@@ -25,6 +26,7 @@
 
 @synthesize logintype;
 @synthesize letToLogin;
+
 
 UIButton *tmp;
 
@@ -76,6 +78,7 @@ UIButton *tmp;
             }
             
         }
+        
     }
     
 }
@@ -154,8 +157,17 @@ UIButton *tmp;
     
 }
 
+
 -(IBAction)loginOnFotona:(id)sender
 {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if (![defaults objectForKey:@"Username"]) {
+        
+    } else {
+        
+    }
+
     NSString *usrName=@"";
     NSString *password=@"";
     if(parentiPad != nil)
@@ -184,7 +196,10 @@ UIButton *tmp;
         [parent.view addSubview:hud];
         hud.labelText = @"Login user";
         [hud show:YES];
+       
+        
     }
+    
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -192,6 +207,18 @@ UIButton *tmp;
         //        NSLog(@"%@",[operation responseString]);
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
         if (![[dic valueForKey:@"msg"] isEqualToString:@"Success"]) {
+            
+            ////////////////////////////////////////////////////////
+            [SFHFKeychainUtils storeUsername:usrName andPassword:@"" forServiceName:@"fotona" updateExisting:YES error:nil];
+            [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"autoLogin"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            //TODO: Brisanje uporabnika iz baze [FUser addUserInDB:usr];
+            //TODO: Pogledat kako preprečt autologin - kaj je pogoj de izvede autologin
+            
+            
+            //////////////////////////////////////////////////////
+            
             UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
             [alertView show];
             if(parentiPad != nil)
@@ -204,7 +231,11 @@ UIButton *tmp;
             
         }
         else if([[dic valueForKey:@"msg"] isEqualToString:@"Success"]){
+            
+ 
+            
             FUser *usr=[[FUser alloc] initWithDictionary:[[dic objectForKey:@"values"] objectAtIndex:0]];
+            [usr setUsername:@"test"];
             [SFHFKeychainUtils storeUsername:usr.username andPassword:password forServiceName:@"fotona" updateExisting:YES error:nil];
             [[NSUserDefaults standardUserDefaults] setValue:usr.username forKey:@"autoLogin"];
             [[NSUserDefaults standardUserDefaults] synchronize];
