@@ -39,6 +39,7 @@
 @synthesize loginBtn;
 @synthesize loginGuestBtn;
 
+
 int logintype = -1;
 FLogin * login;
 UIButton *tmp;
@@ -104,7 +105,13 @@ UIButton *tmp;
     [login setDefaultParent:self andiPhone:nil];
     
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
+        
+        //
+        NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
+        if (![usrName isEqualToString:@""])
+        {            
         [login autoLogin];
+        }
     }else
     {
         [self showLoginForm];

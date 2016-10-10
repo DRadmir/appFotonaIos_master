@@ -20,5 +20,5 @@
 +(FUser *)getUser:(NSString *)_username;
 +(void)addUserInDB:(FUser *)usr;
 +(void)deleteUserInDB:(FUser *)usr;
-+(void)checkIfUserExistsInDB:(FUser *)usr;
++(BOOL)checkIfUserExistsInDB:(FUser *)usr;
 @end
