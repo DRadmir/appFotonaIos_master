@@ -520,7 +520,6 @@
 }
 
 -(void) bookmarkCase{
-    
     if([APP_DELEGATE connectedToInternet] || [[caseToOpen coverflow] boolValue]){
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Item bookmarking" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];

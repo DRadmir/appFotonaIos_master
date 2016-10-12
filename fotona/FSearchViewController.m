@@ -20,6 +20,7 @@
 #import "FImage.h"
 #import "FVideo.h"
 #import "FDB.h"
+#import "FHelperRequest.h"
 
 @interface FSearchViewController ()
 
@@ -214,18 +215,18 @@
             if (newsSearchRes.count>0) {
                 [self openNews:indexPath];
             }else
+            {
+                if (casesSearchRes.count>0) {
+                    [self openCase:indexPath];
+                }else
                 {
-                    if (casesSearchRes.count>0) {
-                        [self openCase:indexPath];
-                    }else
-                    {
-                        if (videosSearchRes.count>0) {
-                            [self openVideo:indexPath];
-                        }else {
-                            [self openPDF:indexPath];
-                        }
+                    if (videosSearchRes.count>0) {
+                        [self openVideo:indexPath];
+                    }else {
+                        [self openPDF:indexPath];
                     }
                 }
+            }
             break;
         case 1:
             if (newsSearchRes.count>0 && casesSearchRes.count>0) {
@@ -305,10 +306,10 @@
 {
     NSLog(@"remove");
     [APP_DELEGATE setUpdateInProgress:NO];
-    [MBProgressHUD hideAllHUDsForView:[parent.viewDeckController.centerController view] animated:YES];
+    UINavigationController *tempC = [[[parent.tabBarController viewControllers] objectAtIndex:3] centerController];
+    [MBProgressHUD hideAllHUDsForView: [(FCasebookViewController *)[tempC topViewController] view] animated:YES];
     if (success<updateCounter) {
-        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Problem with content update!" delegate:(FCasebookViewController*)self.viewDeckController.centerController cancelButtonTitle:@"Cancel" otherButtonTitles:@"Try again", nil]
-        ;
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"ERRORCONTENTFETCH", nil)]  delegate:(FCasebookViewController*)self.viewDeckController.centerController cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [av setTag:0];
         [av show];
     }
@@ -340,12 +341,13 @@
 
 -(void) openCase:(NSIndexPath*) index
 {
-    [[(FFeaturedViewController_iPad *)parent popover] dismissPopoverAnimated:YES];
     if ([[casesSearchRes objectAtIndex:index.row] isKindOfClass:[FCase class]]) {
+        [[(FFeaturedViewController_iPad *)parent popover] dismissPopoverAnimated:YES];
+        UINavigationController *tempC = [[[parent.tabBarController viewControllers] objectAtIndex:3] centerController];
+        
         FCase *item = [casesSearchRes objectAtIndex:index.row];
         if ( [[item bookmark] boolValue]|| [[item coverflow] boolValue]){
             
-            UINavigationController *tempC = [[[parent.tabBarController viewControllers] objectAtIndex:3] centerController];
             
             [(FCasebookViewController *)[tempC topViewController] setCurrentCase:item];
             [(FCasebookViewController *)[tempC topViewController] setFlagCarousel:YES];
@@ -357,17 +359,8 @@
             
         } else{
             if([APP_DELEGATE connectedToInternet]){
-                MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:[parent.viewDeckController.centerController view]];
-                [[(FCasebookViewController*)self.viewDeckController.centerController view] addSubview:hud];
-                hud.labelText = @"Opening case";
-                [hud show:YES];
-                NSString *requestData;
-                requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"caseID\":\"%@\",\"access_token\":\"%@\",\"dateUpdated\":\"%@\"}",langID,[item caseID]  ,globalAccessToken,@"01.01.2000 10:36:20"];
-                NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@GetCaseById",webService]];
-                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-                [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
-                [request setHTTPMethod:@"POST"];
-                [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+             
+                 NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[item caseID] onView:[(FCasebookViewController *)[tempC topViewController] view]];
                 AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
                 [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                     NSError *jsonError;
@@ -393,7 +386,6 @@
                     updateCounter++;
                     success++;
                     [self removeHud];
-                    UINavigationController *tempC = [[[parent.tabBarController viewControllers] objectAtIndex:3] centerController];
                     
                     [(FCasebookViewController *)[tempC topViewController] setCurrentCase:caseObj];
                     [(FCasebookViewController *)[tempC topViewController] setFlagCarousel:YES];
@@ -438,7 +430,7 @@
     [(FFotonaViewController *)[tempC topViewController] setOpenGal:YES];
     [(FFotonaViewController *)[tempC topViewController] setPDF:[pdfsSearchRes objectAtIndex:index.row] ];
     if (parent.tabBarController.selectedIndex == 2) {
-         [(FFotonaViewController *)[tempC topViewController] openPDFFromSearch];
+        [(FFotonaViewController *)[tempC topViewController] openPDFFromSearch];
     } else {
         [parent.tabBarController setSelectedIndex:2];
     }

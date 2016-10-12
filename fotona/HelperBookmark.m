@@ -14,6 +14,7 @@
 #import "FItemBookmark.h"
 #import "AFNetworking.h"
 #import "FIFlowController.h"
+#import "FHelperRequest.h"
 
 @implementation HelperBookmark
 {
@@ -706,17 +707,9 @@ int bookmarkedCount;
                     
                     if (selected.coverflow == nil || ![[selected coverflow] boolValue]) {
                         
-                        NSString *requestData;
+                     
                         
-                        requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"caseID\":\"%@\",\"access_token\":\"%@\",\"dateUpdated\":\"%@\"}",langID,selected.caseID  ,globalAccessToken,@"01.01.2000 10:36:20"];
-                        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@GetCaseById",webService]];
-                        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-                        
-                        [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
-                        [request setHTTPMethod:@"POST"];
-                        [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-                        [request setTimeoutInterval:180];
-                        
+                         NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:selected.caseID onView:nil];
                         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
                         [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                             // I get response as XML here and parse it in a function
@@ -767,12 +760,12 @@ int bookmarkedCount;
                     if ([FCommon isIpad]) {
                         if ([[[APP_DELEGATE casebookController] currentCase] caseID] == selected.caseID ) {
                             [[APP_DELEGATE casebookController] refreshBookmarkBtn];
-                        }
+                        }//TODO: dodat da pogleda na favorite in če je tm da refresha tisto celico
                     } else{
                         FIFlowController *flow = [FIFlowController sharedInstance];
                         if ([[flow caseOpened] caseID] == selected.caseID ) {
                             [[flow caseView] refreshBookmarkBtn];
-                        }
+                        }//TODO: dodat da pogleda na favorite in če je tm da refresha tisto celico
                     }
 
                 }

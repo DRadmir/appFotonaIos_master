@@ -17,6 +17,7 @@
 #import "FImage.h"
 #import "FVideo.h"
 #import "UIColor+Hex.h"
+#import "FHelperRequest.h"
 
 @interface FICasebookMenuViewController ()
 {
@@ -415,21 +416,8 @@
         [self openCase];
     } else{
         if([APP_DELEGATE connectedToInternet]){
-            MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view addSubview:hud];
-            hud.labelText = @"Opening case";
-            [hud show:YES];
-            NSString *requestData;
-            
-            requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"caseID\":\"%@\",\"access_token\":\"%@\",\"dateUpdated\":\"%@\"}",langID,[caseTemp caseID]  ,globalAccessToken,@"01.01.2000 10:36:20"];
-            
-            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@GetCaseById",webService]];
-            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-            
-            [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
-            [request setHTTPMethod:@"POST"];
-            [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-            
+
+             NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[caseTemp caseID] onView:self.view];
             AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
             [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                 // I get response as XML here and parse it in a function
@@ -485,8 +473,8 @@
     [APP_DELEGATE setUpdateInProgress:NO];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     if (success<updateCounter) {
-        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Problem with content update!" delegate:(FCasebookViewController*)self.viewDeckController.centerController cancelButtonTitle:@"Cancel" otherButtonTitles:@"Try again", nil]
-        ;
+      
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:(FCasebookViewController*)self.viewDeckController.centerController cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av setTag:0];
         [av show];
     }

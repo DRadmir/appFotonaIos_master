@@ -140,17 +140,8 @@
     [super viewWillAppear:animated];
     [self.tabBarItem setImage:[UIImage imageNamed:@"casebook_red.png"]];
     [[[APP_DELEGATE tabBar] tabBar] setUserInteractionEnabled:YES];
-    if (![currentCase isEqual:prevCase]){
-        if (currentCase && beforeOrient!=[APP_DELEGATE currentOrientation]) {
-            //            MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
-            //            [self.view addSubview:hud];
-            //            hud.labelText = @"Opening case";
-            //            [hud show:YES];
-        }
-    }
-
+    
     if (!exCaseView.isHidden) {
-        //[self openCase];
         if (currentCase!=nil) {
             BOOL bookmarked = NO;
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];

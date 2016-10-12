@@ -13,6 +13,7 @@
 #import "FImage.h"
 #import "FVideo.h"
 #import "FDownloadManager.h"
+#import "FItemFavorite.h"
 
 
 @implementation FDB
@@ -1191,6 +1192,21 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     return exist;
+}
+
++ (NSMutableArray *) getAllFavoritesForUser {
+    NSString *usr = [FCommon getUser];
+    NSMutableArray *favorites = [[NSMutableArray alloc] init];
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    FMResultSet *resultsFavorites = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserFavorites where username='%@' ORDER BY typeID",usr]];
+    while([resultsFavorites next]) {
+        FItemFavorite *favorite = [[FItemFavorite alloc] initWithDictionary:[resultsFavorites resultDictionary]];
+        [favorites addObject:favorite];
+    }
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+    return favorites;
 }
 
 

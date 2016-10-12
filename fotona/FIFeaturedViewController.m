@@ -276,12 +276,11 @@
         //code to be executed in the background
         //NSData *imgData=[FDB getAuthorImage:[(FCase *)items[index] authorID]];//[self getAuthorImage:[(FCase *)items[index] authorID]];
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             card.carouselDoctorImage.layer.cornerRadius = card.carouselDoctorImage.frame.size.height /2;
             card.carouselDoctorImage.layer.masksToBounds = YES;
             card.carouselDoctorImage.layer.borderWidth = 0;
             [card.carouselDoctorImage setContentMode:UIViewContentModeScaleAspectFill];
-            card.carouselDoctorImage.image = [FDB getAuthorImage:[(FCase *)items[index] authorID]];//[UIImage imageWithData:imgData];
+            card.carouselDoctorImage.image = [FDB getAuthorImage:[(FCase *)items[index] authorID]];
         });
     });
     view = card.view;

@@ -195,6 +195,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //TODO: preverjanje če ni neta? - odpiranje stvari ko ni neta oz če case ni na napravi
     [parentIPhone.view endEditing:YES];
     FIFlowController *flow = [FIFlowController sharedInstance];
     [flow.lastOpenedView toggleSearchBar];
@@ -284,7 +285,7 @@
     successIPhone=0;
 }
 
-#pragma mark OpenElements
+#pragma mark - Open News
 
 -(void) openNews:(NSIndexPath*) index
 {
@@ -296,6 +297,7 @@
 }
 
 
+#pragma mark - Open Case
 -(void) openCase:(NSIndexPath*) index
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
@@ -313,6 +315,7 @@
     }
 }
 
+#pragma mark - Open Video
 -(void) openVideo:(NSIndexPath*) index
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
@@ -333,6 +336,7 @@
  
 }
 
+#pragma mark - Open PDF
 -(void) openPDF:(NSIndexPath*) index
 {
     FIFlowController *flow = [FIFlowController sharedInstance];

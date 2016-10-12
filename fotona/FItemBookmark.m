@@ -14,24 +14,24 @@
 @synthesize category;
 @synthesize link;
 
--(id) initWithItemID:(NSString *)itemID ofType:(NSString *)type inCategory:(int)category withLink:(NSString *)link{
+-(id) initWithItemID:(NSString *)_itemID ofType:(NSString *)_type inCategory:(int)_category withLink:(NSString *)_link{
     self=[super init];
     if (self) {
-        [self setItemID:itemID];
-        [self setType:type];
-        [self setCategory:[NSString stringWithFormat:@"%d",category]];
-        [self setLink:link];
+        [self setItemID:_itemID];
+        [self setType:_type];
+        [self setCategory:[NSString stringWithFormat:@"%d",_category]];
+        [self setLink:_link];
     }
     return self;
 }
 
--(id) initWithItemIDint:(int)itemID ofType:(NSString *)type inCategory:(int)category withLink:(NSString *)link{
+-(id) initWithItemIDint:(int)_itemID ofType:(NSString *)_type inCategory:(int)_category withLink:(NSString *)_link{
     self=[super init];
     if (self) {
-        [self setItemID:[NSString stringWithFormat:@"%d",itemID]];
-        [self setType:type];
-        [self setCategory:[NSString stringWithFormat:@"%d",category]];
-        [self setLink:link];
+        [self setItemID:[NSString stringWithFormat:@"%d",_itemID]];
+        [self setType:_type];
+        [self setCategory:[NSString stringWithFormat:@"%d",_category]];
+        [self setLink:_link];
         
     }
     return self;

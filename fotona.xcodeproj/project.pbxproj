@@ -162,6 +162,15 @@
 		1BDBA19D1B81D4DD00F36569 /* fotona_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BDBA19C1B81D4DD00F36569 /* fotona_red@2x.png */; };
 		1BDDA01D1C0840C100AABEAE /* HelperString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDDA01C1C0840C100AABEAE /* HelperString.m */; };
 		1BE30CC51ADE6709006E7B69 /* FTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE30CC41ADE6708006E7B69 /* FTabBarController.m */; };
+		1BF4EEA11DACD336007E90A3 /* favorites_grey.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BF4EE9D1DACD336007E90A3 /* favorites_grey.png */; };
+		1BF4EEA21DACD336007E90A3 /* favorites_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BF4EE9E1DACD336007E90A3 /* favorites_grey@2x.png */; };
+		1BF4EEA31DACD336007E90A3 /* favorites_red.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BF4EE9F1DACD336007E90A3 /* favorites_red.png */; };
+		1BF4EEA41DACD336007E90A3 /* favorites_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BF4EEA01DACD336007E90A3 /* favorites_red@2x.png */; };
+		1BF4EEA81DACD8BF007E90A3 /* FHelperRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF4EEA71DACD8BF007E90A3 /* FHelperRequest.m */; };
+		1BFA5F0F1DA7902B0042DD4D /* FIFavoriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFA5F0E1DA7902B0042DD4D /* FIFavoriteViewController.m */; };
+		1BFA5F1C1DA7A1310042DD4D /* FItemFavorite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFA5F1B1DA7A1310042DD4D /* FItemFavorite.m */; };
+		1BFA5F1E1DA7C1ED0042DD4D /* FIFavoriteCells.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFA5F1D1DA7C1ED0042DD4D /* FIFavoriteCells.xib */; };
+		1BFE5EA41DAB73250071F755 /* FFavoriteCaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFE5EA31DAB73250071F755 /* FFavoriteCaseTableViewCell.m */; };
 		C9277265190F602F00E9D4FA /* ipad_camera_roll.png in Resources */ = {isa = PBXBuildFile; fileRef = C9277264190F602F00E9D4FA /* ipad_camera_roll.png */; };
 		C927726919105DFA00E9D4FA /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C927726819105DFA00E9D4FA /* AssetsLibrary.framework */; };
 		C927726F191488A800E9D4FA /* ASDepthModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C927726C191488A800E9D4FA /* ASDepthModalViewController.m */; };
@@ -584,7 +593,20 @@
 		1BDDA01C1C0840C100AABEAE /* HelperString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelperString.m; sourceTree = "<group>"; };
 		1BE30CC31ADE6708006E7B69 /* FTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTabBarController.h; sourceTree = "<group>"; };
 		1BE30CC41ADE6708006E7B69 /* FTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTabBarController.m; sourceTree = "<group>"; };
+		1BF4EE9D1DACD336007E90A3 /* favorites_grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorites_grey.png; sourceTree = "<group>"; };
+		1BF4EE9E1DACD336007E90A3 /* favorites_grey@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorites_grey@2x.png"; sourceTree = "<group>"; };
+		1BF4EE9F1DACD336007E90A3 /* favorites_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorites_red.png; sourceTree = "<group>"; };
+		1BF4EEA01DACD336007E90A3 /* favorites_red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorites_red@2x.png"; sourceTree = "<group>"; };
+		1BF4EEA61DACD8BF007E90A3 /* FHelperRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHelperRequest.h; sourceTree = "<group>"; };
+		1BF4EEA71DACD8BF007E90A3 /* FHelperRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHelperRequest.m; sourceTree = "<group>"; };
 		1BF887861B04A52F0063C114 /* fotona.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = fotona.entitlements; sourceTree = "<group>"; };
+		1BFA5F0D1DA7902B0042DD4D /* FIFavoriteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FIFavoriteViewController.h; path = fotona/FIFavoriteViewController.h; sourceTree = SOURCE_ROOT; };
+		1BFA5F0E1DA7902B0042DD4D /* FIFavoriteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIFavoriteViewController.m; path = fotona/FIFavoriteViewController.m; sourceTree = SOURCE_ROOT; };
+		1BFA5F1A1DA7A1310042DD4D /* FItemFavorite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FItemFavorite.h; sourceTree = "<group>"; };
+		1BFA5F1B1DA7A1310042DD4D /* FItemFavorite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FItemFavorite.m; sourceTree = "<group>"; };
+		1BFA5F1D1DA7C1ED0042DD4D /* FIFavoriteCells.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FIFavoriteCells.xib; sourceTree = "<group>"; };
+		1BFE5EA21DAB73250071F755 /* FFavoriteCaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFavoriteCaseTableViewCell.h; path = fotona/FFavoriteCaseTableViewCell.h; sourceTree = SOURCE_ROOT; };
+		1BFE5EA31DAB73250071F755 /* FFavoriteCaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFavoriteCaseTableViewCell.m; path = fotona/FFavoriteCaseTableViewCell.m; sourceTree = SOURCE_ROOT; };
 		C9277264190F602F00E9D4FA /* ipad_camera_roll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ipad_camera_roll.png; path = ../ipad_camera_roll.png; sourceTree = "<group>"; };
 		C927726819105DFA00E9D4FA /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		C927726B191488A800E9D4FA /* ASDepthModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASDepthModalViewController.h; sourceTree = "<group>"; };
@@ -1029,16 +1051,6 @@
 			path = icon_round_square;
 			sourceTree = "<group>";
 		};
-		1B9F8AE81B68F224003D7474 /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				1BCB28E41C47AAF900C9C066 /* HelperBookmark */,
-				1BCB28E31C47AAEC00C9C066 /* HelpeeString */,
-				1B7777E51B345B8A00660472 /* HelperDate */,
-			);
-			name = Helpers;
-			sourceTree = "<group>";
-		};
 		1BC5190E1C242DA10077878C /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
@@ -1055,6 +1067,7 @@
 				1BD3ED381C2C1CEE000FE916 /* EventsTab */,
 				1BD6622E1C4D279D009BA994 /* FotonaTab */,
 				1B7A22C91C57D9610031CEB3 /* CasebookTab */,
+				1BFA5F0C1DA78FA90042DD4D /* FavoriteTab */,
 				1B48CDB91C597D5E00E5F039 /* BookmarkTab */,
 				1BD6BDCE1C357E3B00DFD5B0 /* Search */,
 				1BD6BDBC1C33DA3800DFD5B0 /* MenuViewController */,
@@ -1158,6 +1171,38 @@
 			name = Search;
 			sourceTree = "<group>";
 		};
+		1BF4EEA51DACD87C007E90A3 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				1BF4EEA91DAD1496007E90A3 /* HelperRequest */,
+				1BCB28E41C47AAF900C9C066 /* HelperBookmark */,
+				1BCB28E31C47AAEC00C9C066 /* HelpeeString */,
+				1B7777E51B345B8A00660472 /* HelperDate */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
+		1BF4EEA91DAD1496007E90A3 /* HelperRequest */ = {
+			isa = PBXGroup;
+			children = (
+				1BF4EEA61DACD8BF007E90A3 /* FHelperRequest.h */,
+				1BF4EEA71DACD8BF007E90A3 /* FHelperRequest.m */,
+			);
+			name = HelperRequest;
+			sourceTree = "<group>";
+		};
+		1BFA5F0C1DA78FA90042DD4D /* FavoriteTab */ = {
+			isa = PBXGroup;
+			children = (
+				1BFA5F0D1DA7902B0042DD4D /* FIFavoriteViewController.h */,
+				1BFA5F0E1DA7902B0042DD4D /* FIFavoriteViewController.m */,
+				1BFA5F1D1DA7C1ED0042DD4D /* FIFavoriteCells.xib */,
+				1BFE5EA21DAB73250071F755 /* FFavoriteCaseTableViewCell.h */,
+				1BFE5EA31DAB73250071F755 /* FFavoriteCaseTableViewCell.m */,
+			);
+			name = FavoriteTab;
+			sourceTree = "<group>";
+		};
 		C927726A191488A800E9D4FA /* ASDepthModal */ = {
 			isa = PBXGroup;
 			children = (
@@ -1222,6 +1267,7 @@
 		C9A3D08718ED1845007A0E49 /* fotona */ = {
 			isa = PBXGroup;
 			children = (
+				1BD1AE441C2050430059560B /* Images.xcassets */,
 				1BF887861B04A52F0063C114 /* fotona.entitlements */,
 				C9E0A3D71960815E00CFFBDD /* trashCan@2x.png */,
 				C9E0A3A4195F7B5D00CFFBDD /* EBPhotoPagesController */,
@@ -1235,10 +1281,10 @@
 				C9A3D1B818EDF709007A0E49 /* Tabbar Controllers */,
 				1BC5190E1C242DA10077878C /* iPhone */,
 				1B7F4AC21C2944E400DCFBA5 /* Common */,
+				1BF4EEA51DACD87C007E90A3 /* Helpers */,
 				C9A3D21518F2D8DA007A0E49 /* Custom */,
 				C9A3D1B718EDF6CC007A0E49 /* Update content */,
 				C9A3D1B518EDF63D007A0E49 /* Model */,
-				1BD1AE441C2050430059560B /* Images.xcassets */,
 				1BD0E70B1C244B62004D4908 /* Extensions */,
 				C9A3D08818ED1845007A0E49 /* Supporting Files */,
 			);
@@ -1249,7 +1295,6 @@
 			isa = PBXGroup;
 			children = (
 				1B206B171C2171C200DBA153 /* ConnectionHelper */,
-				1B9F8AE81B68F224003D7474 /* Helpers */,
 				C9B060B6191AD1BB00930993 /* fotona.db */,
 				C9BD434F1941E0E700E5789E /* security */,
 				C9941297192BF16C006CB5D9 /* DownloadManager */,
@@ -1367,6 +1412,10 @@
 		C9A3D0CA18ED1898007A0E49 /* footer */ = {
 			isa = PBXGroup;
 			children = (
+				1BF4EE9D1DACD336007E90A3 /* favorites_grey.png */,
+				1BF4EE9E1DACD336007E90A3 /* favorites_grey@2x.png */,
+				1BF4EE9F1DACD336007E90A3 /* favorites_red.png */,
+				1BF4EEA01DACD336007E90A3 /* favorites_red@2x.png */,
 				160764281A8E2BD40021738A /* bookmarks_red.png */,
 				16A3F53A1A95E076005739A3 /* bookmarks_red@2x.png */,
 				160764291A8E2BD40021738A /* bookmarks.png */,
@@ -1699,6 +1748,8 @@
 				1B4A96A51C5CBD090070C8BF /* FICarousel.h */,
 				1B4A96A61C5CBD090070C8BF /* FICarousel.m */,
 				1B4A96A71C5CBD090070C8BF /* FICarousel.xib */,
+				1BFA5F1A1DA7A1310042DD4D /* FItemFavorite.h */,
+				1BFA5F1B1DA7A1310042DD4D /* FItemFavorite.m */,
 			);
 			name = Custom;
 			sourceTree = "<group>";
@@ -1972,6 +2023,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BD1AE451C2050430059560B /* Images.xcassets in Resources */,
+				1BF4EEA21DACD336007E90A3 /* favorites_grey@2x.png in Resources */,
 				1BDBA1971B81D41500F36569 /* events_white@2x.png in Resources */,
 				160764251A8D59330021738A /* green.png in Resources */,
 				1B8265521BB532B600D854AD /* about_fotona@2x.png in Resources */,
@@ -2012,6 +2064,7 @@
 				C9A3D20918F27D0E007A0E49 /* settings_red@2x.png in Resources */,
 				C9A3D19818ED1898007A0E49 /* FFotonaViewController.xib in Resources */,
 				C9A3D18118ED1898007A0E49 /* old_menu@2x.png in Resources */,
+				1BF4EEA41DACD336007E90A3 /* favorites_red@2x.png in Resources */,
 				C9A3D16618ED1898007A0E49 /* settings_grey.png in Resources */,
 				C9A3D18318ED1898007A0E49 /* menu_arrow_red@2x.png in Resources */,
 				C9277265190F602F00E9D4FA /* ipad_camera_roll.png in Resources */,
@@ -2041,6 +2094,7 @@
 				1BCE0BF11BBBB6F8002255B5 /* fotonamenu_icon8_white@2x.png in Resources */,
 				1BC519121C242F760077878C /* IPhoneStoryboard.storyboard in Resources */,
 				16F0EE8E1A9E5E570073EED6 /* NewsViewCell.xib in Resources */,
+				1BFA5F1E1DA7C1ED0042DD4D /* FIFavoriteCells.xib in Resources */,
 				1B8265571BB532B600D854AD /* disclaimer_red@2x.png in Resources */,
 				C9A3D16D18ED1898007A0E49 /* app_06.png in Resources */,
 				C9A3D15D18ED1898007A0E49 /* feedback@2x.png in Resources */,
@@ -2050,6 +2104,7 @@
 				1BDBA19A1B81D41500F36569 /* news_red@2x.png in Resources */,
 				C9A3D19718ED1898007A0E49 /* FFeaturedViewController_iPad.xib in Resources */,
 				C9A3D16C18ED1898007A0E49 /* app_03.png in Resources */,
+				1BF4EEA31DACD336007E90A3 /* favorites_red.png in Resources */,
 				C9A3D22018F2E297007A0E49 /* FFolderViewController.xib in Resources */,
 				C9E0A3D81960815E00CFFBDD /* trashCan@2x.png in Resources */,
 				1BDBA19B1B81D41500F36569 /* news_white@2x.png in Resources */,
@@ -2118,6 +2173,7 @@
 				160764241A8D59330021738A /* blue.png in Resources */,
 				16C808E21AB76B1300A7EB4D /* fotona_bookmark_landscape@2x.png in Resources */,
 				16A3F5461A95E14A005739A3 /* blue@2x.png in Resources */,
+				1BF4EEA11DACD336007E90A3 /* favorites_grey.png in Resources */,
 				C9B060D4191F90ED00930993 /* menu_arrow_red_forward@2x.png in Resources */,
 				1B7A22C71C57CEF80031CEB3 /* feedbackMenu_red@2x.png in Resources */,
 				1B82655D1BB532B600D854AD /* gynecology_products@2x.png in Resources */,
@@ -2227,6 +2283,7 @@
 				C9A3D1DD18F0B129007A0E49 /* FSession.m in Sources */,
 				C9E0A3C8195F7B5D00CFFBDD /* EBCaptionView.m in Sources */,
 				1BD6BDBB1C33D21900DFD5B0 /* FIMenuView.m in Sources */,
+				1BFA5F0F1DA7902B0042DD4D /* FIFavoriteViewController.m in Sources */,
 				1BD662371C4D2FB9009BA994 /* FIFotonaMenuViewController.m in Sources */,
 				1B7A22A51C568B2C0031CEB3 /* FISettingsViewController.m in Sources */,
 				1B7F4AC11C293CD500DCFBA5 /* FIFeaturedViewController.m in Sources */,
@@ -2241,6 +2298,7 @@
 				16D6D93D1A8A08AB00E646CE /* FBookmarkViewController.m in Sources */,
 				1B206B131C2159B000DBA153 /* FSetDefaults.m in Sources */,
 				161E25911A7A16120015C340 /* FEventViewCell.m in Sources */,
+				1BF4EEA81DACD8BF007E90A3 /* FHelperRequest.m in Sources */,
 				C9F9C7EE18FF3CAE0031FEEB /* IIWrapController.m in Sources */,
 				C994129C192BF17E006CB5D9 /* Download.m in Sources */,
 				1BD3ED331C2ADFE8000FE916 /* FIFeaturedEventTableViewCell.m in Sources */,
@@ -2300,12 +2358,14 @@
 				C9F9C7ED18FF3CAE0031FEEB /* IIViewDeckController.m in Sources */,
 				1B03B2361ADBB7BA00BE2DE4 /* BubbleControler.m in Sources */,
 				C9A3D1DA18F0B0F4007A0E49 /* FProcedure.m in Sources */,
+				1BFA5F1C1DA7A1310042DD4D /* FItemFavorite.m in Sources */,
 				1BD3ED441C2C1F21000FE916 /* FIBaseView.m in Sources */,
 				C9B060D2191E3B7900930993 /* zip.c in Sources */,
 				06C3735B1A764EC900FA4D11 /* FEvent.m in Sources */,
 				C9A3D19118ED1898007A0E49 /* FMDatabaseQueue.m in Sources */,
 				C9A3D19018ED1898007A0E49 /* FMDatabasePool.m in Sources */,
 				C9A3D15718ED1898007A0E49 /* FUpdateContent.m in Sources */,
+				1BFE5EA41DAB73250071F755 /* FFavoriteCaseTableViewCell.m in Sources */,
 				1BD3ED471C2C1F73000FE916 /* FIEventViewController.m in Sources */,
 				C9A3D19F18ED1898007A0E49 /* FUser.m in Sources */,
 				1B7F4ACB1C294AD800DCFBA5 /* FLogin.m in Sources */,

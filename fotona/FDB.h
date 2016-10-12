@@ -60,4 +60,5 @@
 +(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(void) removeFromFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(BOOL) checkIfFavoritesItem:(int) documentID ofType:(NSString *) typeID;
++ (NSMutableArray *) getAllFavoritesForUser;
 @end
