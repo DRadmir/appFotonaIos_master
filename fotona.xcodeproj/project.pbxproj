@@ -171,6 +171,7 @@
 		1BFA5F1C1DA7A1310042DD4D /* FItemFavorite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFA5F1B1DA7A1310042DD4D /* FItemFavorite.m */; };
 		1BFA5F1E1DA7C1ED0042DD4D /* FIFavoriteCells.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFA5F1D1DA7C1ED0042DD4D /* FIFavoriteCells.xib */; };
 		1BFE5EA41DAB73250071F755 /* FFavoriteCaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFE5EA31DAB73250071F755 /* FFavoriteCaseTableViewCell.m */; };
+		42CA64766B061A3AC4D66B64 /* libPods-fotona.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B7801B1E3B5D5AF08045FD8 /* libPods-fotona.a */; };
 		C9277265190F602F00E9D4FA /* ipad_camera_roll.png in Resources */ = {isa = PBXBuildFile; fileRef = C9277264190F602F00E9D4FA /* ipad_camera_roll.png */; };
 		C927726919105DFA00E9D4FA /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C927726819105DFA00E9D4FA /* AssetsLibrary.framework */; };
 		C927726F191488A800E9D4FA /* ASDepthModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C927726C191488A800E9D4FA /* ASDepthModalViewController.m */; };
@@ -362,6 +363,7 @@
 		C9F9C8151901031D0031FEEB /* card1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9F9C8121901031D0031FEEB /* card1@2x.png */; };
 		C9F9C8161901031D0031FEEB /* card3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9F9C8131901031D0031FEEB /* card3@2x.png */; };
 		C9F9C819190168C40031FEEB /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9F9C818190168C40031FEEB /* menu@2x.png */; };
+		F3C1FC781C388F1DA0B286AE /* libPods-fotonaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 240BC38E0F9687E900F08B3C /* libPods-fotonaTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -607,6 +609,14 @@
 		1BFA5F1D1DA7C1ED0042DD4D /* FIFavoriteCells.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FIFavoriteCells.xib; sourceTree = "<group>"; };
 		1BFE5EA21DAB73250071F755 /* FFavoriteCaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFavoriteCaseTableViewCell.h; path = fotona/FFavoriteCaseTableViewCell.h; sourceTree = SOURCE_ROOT; };
 		1BFE5EA31DAB73250071F755 /* FFavoriteCaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFavoriteCaseTableViewCell.m; path = fotona/FFavoriteCaseTableViewCell.m; sourceTree = SOURCE_ROOT; };
+		240BC38E0F9687E900F08B3C /* libPods-fotonaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fotonaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B7801B1E3B5D5AF08045FD8 /* libPods-fotona.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fotona.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		31FA2060B74BA98D9AF8E373 /* Pods-fotona.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotona.distribution.xcconfig"; path = "Pods/Target Support Files/Pods-fotona/Pods-fotona.distribution.xcconfig"; sourceTree = "<group>"; };
+		43B6332B00B2A4D1E9217AD7 /* Pods-fotonaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotonaTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-fotonaTests/Pods-fotonaTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7EFE5850B5D11C103CD42AA5 /* Pods-fotonaTests.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotonaTests.distribution.xcconfig"; path = "Pods/Target Support Files/Pods-fotonaTests/Pods-fotonaTests.distribution.xcconfig"; sourceTree = "<group>"; };
+		7F0BEAD65D0DCF118D0F97E0 /* Pods-fotona.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotona.release.xcconfig"; path = "Pods/Target Support Files/Pods-fotona/Pods-fotona.release.xcconfig"; sourceTree = "<group>"; };
+		9672549751941F02CDC50D31 /* Pods-fotona.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotona.debug.xcconfig"; path = "Pods/Target Support Files/Pods-fotona/Pods-fotona.debug.xcconfig"; sourceTree = "<group>"; };
+		BA275CFADC74C1720F6B3F20 /* Pods-fotonaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotonaTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-fotonaTests/Pods-fotonaTests.release.xcconfig"; sourceTree = "<group>"; };
 		C9277264190F602F00E9D4FA /* ipad_camera_roll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ipad_camera_roll.png; path = ../ipad_camera_roll.png; sourceTree = "<group>"; };
 		C927726819105DFA00E9D4FA /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		C927726B191488A800E9D4FA /* ASDepthModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASDepthModalViewController.h; sourceTree = "<group>"; };
@@ -907,6 +917,7 @@
 				C9A3D08418ED1845007A0E49 /* CoreGraphics.framework in Frameworks */,
 				C9A3D08618ED1845007A0E49 /* UIKit.framework in Frameworks */,
 				C9A3D08218ED1845007A0E49 /* Foundation.framework in Frameworks */,
+				42CA64766B061A3AC4D66B64 /* libPods-fotona.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -917,6 +928,7 @@
 				C9A3D09B18ED1845007A0E49 /* XCTest.framework in Frameworks */,
 				C9A3D09D18ED1845007A0E49 /* UIKit.framework in Frameworks */,
 				C9A3D09C18ED1845007A0E49 /* Foundation.framework in Frameworks */,
+				F3C1FC781C388F1DA0B286AE /* libPods-fotonaTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1232,6 +1244,7 @@
 				C9A3D0A018ED1845007A0E49 /* fotonaTests */,
 				C9A3D08018ED1845007A0E49 /* Frameworks */,
 				C9A3D07F18ED1845007A0E49 /* Products */,
+				D9137169918D6882CB638EB7 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1260,6 +1273,8 @@
 				C9A3D08318ED1845007A0E49 /* CoreGraphics.framework */,
 				C9A3D08518ED1845007A0E49 /* UIKit.framework */,
 				C9A3D09A18ED1845007A0E49 /* XCTest.framework */,
+				2B7801B1E3B5D5AF08045FD8 /* libPods-fotona.a */,
+				240BC38E0F9687E900F08B3C /* libPods-fotonaTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1933,6 +1948,19 @@
 			name = oldvocericons;
 			sourceTree = "<group>";
 		};
+		D9137169918D6882CB638EB7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9672549751941F02CDC50D31 /* Pods-fotona.debug.xcconfig */,
+				7F0BEAD65D0DCF118D0F97E0 /* Pods-fotona.release.xcconfig */,
+				31FA2060B74BA98D9AF8E373 /* Pods-fotona.distribution.xcconfig */,
+				43B6332B00B2A4D1E9217AD7 /* Pods-fotonaTests.debug.xcconfig */,
+				BA275CFADC74C1720F6B3F20 /* Pods-fotonaTests.release.xcconfig */,
+				7EFE5850B5D11C103CD42AA5 /* Pods-fotonaTests.distribution.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1940,9 +1968,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C9A3D0AA18ED1845007A0E49 /* Build configuration list for PBXNativeTarget "fotona" */;
 			buildPhases = (
+				4B132AA229F9BA06E310C6D6 /* [CP] Check Pods Manifest.lock */,
 				C9A3D07A18ED1845007A0E49 /* Sources */,
 				C9A3D07B18ED1845007A0E49 /* Frameworks */,
 				C9A3D07C18ED1845007A0E49 /* Resources */,
+				A4B2865F25DB212CEAF71921 /* [CP] Embed Pods Frameworks */,
+				530E278E51C439F34620D2E5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1957,9 +1988,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C9A3D0AD18ED1845007A0E49 /* Build configuration list for PBXNativeTarget "fotonaTests" */;
 			buildPhases = (
+				A845A093E7888D1DB3000BCB /* [CP] Check Pods Manifest.lock */,
 				C9A3D09518ED1845007A0E49 /* Sources */,
 				C9A3D09618ED1845007A0E49 /* Frameworks */,
 				C9A3D09718ED1845007A0E49 /* Resources */,
+				127793AA7A4F33263272A9C3 /* [CP] Embed Pods Frameworks */,
+				17612AD39DF9895AA5322FB0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2230,6 +2264,99 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		127793AA7A4F33263272A9C3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-fotonaTests/Pods-fotonaTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		17612AD39DF9895AA5322FB0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-fotonaTests/Pods-fotonaTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4B132AA229F9BA06E310C6D6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		530E278E51C439F34620D2E5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-fotona/Pods-fotona-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A4B2865F25DB212CEAF71921 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-fotona/Pods-fotona-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A845A093E7888D1DB3000BCB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C9A3D07A18ED1845007A0E49 /* Sources */ = {
@@ -2506,6 +2633,7 @@
 		};
 		C9A3D0AB18ED1845007A0E49 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9672549751941F02CDC50D31 /* Pods-fotona.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2526,6 +2654,7 @@
 		};
 		C9A3D0AC18ED1845007A0E49 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7F0BEAD65D0DCF118D0F97E0 /* Pods-fotona.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2546,6 +2675,7 @@
 		};
 		C9A3D0AE18ED1845007A0E49 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 43B6332B00B2A4D1E9217AD7 /* Pods-fotonaTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/fotona.app/fotona";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -2572,6 +2702,7 @@
 		};
 		C9A3D0AF18ED1845007A0E49 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA275CFADC74C1720F6B3F20 /* Pods-fotonaTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/fotona.app/fotona";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -2630,6 +2761,7 @@
 		};
 		C9B060D6191F92ED00930993 /* Distribution */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 31FA2060B74BA98D9AF8E373 /* Pods-fotona.distribution.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2650,6 +2782,7 @@
 		};
 		C9B060D7191F92ED00930993 /* Distribution */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7EFE5850B5D11C103CD42AA5 /* Pods-fotonaTests.distribution.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/fotona.app/fotona";
 				CODE_SIGN_IDENTITY = "iPhone Developer";

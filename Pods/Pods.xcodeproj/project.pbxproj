@@ -1,0 +1,688 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8D64F69C2DD017248CA624230F5F7CE6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC22C73C1608DFA5D5D78BDCB218219 /* Foundation.framework */; };
+		912BE269D0DABE1CA4DC61ACC33BDFD3 /* Pods-fotona-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9AFAD85BBFC3AC1B1A00837D70D46 /* Pods-fotona-dummy.m */; };
+		B2E0670A3C4665BC9F81C946C05198F1 /* Pods-fotonaTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FA4AEADAB03F107553C11A493F97ECF /* Pods-fotonaTests-dummy.m */; };
+		DF328EBD37D7E8F1F6F9531460DC32EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC22C73C1608DFA5D5D78BDCB218219 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		027C7626D8E3A83387F9F749C903B34C /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseAnalytics.framework; path = Frameworks/frameworks/FirebaseAnalytics.framework; sourceTree = "<group>"; };
+		0FF4E02FD9EC3F7EE7036A8241FC8C6D /* GAIEcommerceProduct.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GAIEcommerceProduct.h; path = Headers/Public/GAIEcommerceProduct.h; sourceTree = "<group>"; };
+		1370A4D93A80EB70476E55E0A8796D80 /* GoogleInterchangeUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleInterchangeUtilities.framework; path = Frameworks/GoogleInterchangeUtilities.framework; sourceTree = "<group>"; };
+		13A1A6F8DC545C1C662B698534679C37 /* GoogleSymbolUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSymbolUtilities.framework; path = Frameworks/GoogleSymbolUtilities.framework; sourceTree = "<group>"; };
+		1D3A36E4E6E8D249B9B1D6D20FC5629D /* Pods-fotona.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-fotona.distribution.xcconfig"; sourceTree = "<group>"; };
+		1F2957A0E3D2CD70C91D90E5D931F1DF /* Pods-fotona-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-fotona-acknowledgements.markdown"; sourceTree = "<group>"; };
+		22453F4F3EF3618A2596B4F424FD9FD0 /* FIRInstanceID.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FIRInstanceID.h; path = Headers/Public/FIRInstanceID.h; sourceTree = "<group>"; };
+		23548437E5E18941B0EB096C19D5C898 /* Pods-fotonaTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-fotonaTests-acknowledgements.plist"; sourceTree = "<group>"; };
+		2849D8E25B5E3638D0F0E2526C0BBF7B /* GAIDictionaryBuilder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GAIDictionaryBuilder.h; path = Headers/Public/GAIDictionaryBuilder.h; sourceTree = "<group>"; };
+		2DCD577D9283E5386E36D244B8AB8DDC /* Pods-fotona-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-fotona-resources.sh"; sourceTree = "<group>"; };
+		3556D54D87B9F4D7C6A758FC9F85A31F /* GAILogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GAILogger.h; path = Headers/Public/GAILogger.h; sourceTree = "<group>"; };
+		37BA0FD8FBBE83B61D8E5256D2859D39 /* Pods-fotona.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-fotona.release.xcconfig"; sourceTree = "<group>"; };
+		3839E6955E498E0594043C7F67020719 /* SignIn-Module.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "SignIn-Module.h"; path = "Headers/ModuleHeaders/SignIn-Module.h"; sourceTree = "<group>"; };
+		43D55FCBC248D3DA55CA1D04E7B47328 /* GAIEcommercePromotion.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GAIEcommercePromotion.h; path = Headers/Public/GAIEcommercePromotion.h; sourceTree = "<group>"; };
+		49B9E7CAD2DC9401E972C0242C4101C3 /* Pods-fotonaTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-fotonaTests-frameworks.sh"; sourceTree = "<group>"; };
+		4B2F1B8C64F7F24EC5C7C5597778F08A /* Analytics-Module.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Analytics-Module.h"; path = "Headers/ModuleHeaders/Analytics-Module.h"; sourceTree = "<group>"; };
+		4D311EE24D8116C820FF4880AF44B4BA /* Pods-fotonaTests.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-fotonaTests.distribution.xcconfig"; sourceTree = "<group>"; };
+		54FDA27A06A41EB0190AD8C984ECA39D /* Analytics.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Analytics.h; path = Headers/Analytics.h; sourceTree = "<group>"; };
+		667EC18B1B5CDE03495C036E4A00353C /* GGLAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GGLAnalytics.framework; path = Frameworks/GGLAnalytics.framework; sourceTree = "<group>"; };
+		6895E8711E8C895D2540E18A68CC7B77 /* GAITracker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GAITracker.h; path = Headers/Public/GAITracker.h; sourceTree = "<group>"; };
+		6B501126F03CEFD5848E80D8C4F8BE9D /* GAIEcommerceProductAction.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GAIEcommerceProductAction.h; path = Headers/Public/GAIEcommerceProductAction.h; sourceTree = "<group>"; };
+		7BF9AFAD85BBFC3AC1B1A00837D70D46 /* Pods-fotona-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-fotona-dummy.m"; sourceTree = "<group>"; };
+		7C3758831CC26B20FA48F22B47A67524 /* FirebaseInstanceID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseInstanceID.framework; path = Frameworks/FirebaseInstanceID.framework; sourceTree = "<group>"; };
+		8A4C5231645C9597F942C546F63AC337 /* Core-Module.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Core-Module.h"; path = "Headers/ModuleHeaders/Core-Module.h"; sourceTree = "<group>"; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		99816ED70DE798ADB220203A49605C1F /* GAIFields.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GAIFields.h; path = Headers/Public/GAIFields.h; sourceTree = "<group>"; };
+		99B2B7F490639E4C793CDF5E9333C78B /* Core.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Core.h; path = Headers/Core.h; sourceTree = "<group>"; };
+		9F565398C5B1AE20B4263AB7C3909BE3 /* GGLCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GGLCore.framework; path = Frameworks/GGLCore.framework; sourceTree = "<group>"; };
+		9F65ECB3252DC10E0D2E9DF116243EEA /* GAIEcommerceFields.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GAIEcommerceFields.h; path = Headers/Public/GAIEcommerceFields.h; sourceTree = "<group>"; };
+		9FA4AEADAB03F107553C11A493F97ECF /* Pods-fotonaTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-fotonaTests-dummy.m"; sourceTree = "<group>"; };
+		A1FF57F36A1D11F7D42615B5BD175087 /* GAI.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GAI.h; path = Headers/Public/GAI.h; sourceTree = "<group>"; };
+		ADF2C54D5DD719AA4822ECF08E7C1D36 /* libGoogleAnalytics.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libGoogleAnalytics.a; path = Libraries/libGoogleAnalytics.a; sourceTree = "<group>"; };
+		B4134FFE60F9CBA410D0E4F3D09DA4C3 /* Pods-fotonaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-fotonaTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B84719F38EA1B91516039575FBD4749D /* Pods-fotonaTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-fotonaTests-resources.sh"; sourceTree = "<group>"; };
+		C3E03C2719382CC2610FE45CECE1E8EB /* Pods-fotona-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-fotona-frameworks.sh"; sourceTree = "<group>"; };
+		C491A11B4C4B28FD7D0991AEDC08B8C5 /* Pods-fotonaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-fotonaTests.release.xcconfig"; sourceTree = "<group>"; };
+		CEC22C73C1608DFA5D5D78BDCB218219 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		E5AFE272D1DECB0CBD87303201219247 /* Pods-fotonaTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-fotonaTests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		EBCFC4D758C6A6ECB8A4D751AA43483E /* libPods-fotonaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fotonaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC8AA9ADBCA7F7E8CCBD0585AF653782 /* GoogleUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleUtilities.framework; path = Frameworks/GoogleUtilities.framework; sourceTree = "<group>"; };
+		EE137CB10E9B986EC9E7A7BA00B4CEE3 /* libPods-fotona.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fotona.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFBF93F7FF20CE4947494FA74365BF54 /* GAITrackedViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GAITrackedViewController.h; path = Headers/Public/GAITrackedViewController.h; sourceTree = "<group>"; };
+		F9AC907AED0BE8B06D7236BF0BDD0AA6 /* Pods-fotona-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-fotona-acknowledgements.plist"; sourceTree = "<group>"; };
+		FB2EC15FD6EAAD1B4ABF3766BC93160A /* Pods-fotona.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-fotona.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		38980E21E3E20BA206EAEC9B440B8716 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DF328EBD37D7E8F1F6F9531460DC32EC /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ECDF7EDFFFF98B9309EC8FC1991C0846 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D64F69C2DD017248CA624230F5F7CE6 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1532DE4184DC7E468D1D0EFFF35818F7 /* Pods-fotona */ = {
+			isa = PBXGroup;
+			children = (
+				1F2957A0E3D2CD70C91D90E5D931F1DF /* Pods-fotona-acknowledgements.markdown */,
+				F9AC907AED0BE8B06D7236BF0BDD0AA6 /* Pods-fotona-acknowledgements.plist */,
+				7BF9AFAD85BBFC3AC1B1A00837D70D46 /* Pods-fotona-dummy.m */,
+				C3E03C2719382CC2610FE45CECE1E8EB /* Pods-fotona-frameworks.sh */,
+				2DCD577D9283E5386E36D244B8AB8DDC /* Pods-fotona-resources.sh */,
+				FB2EC15FD6EAAD1B4ABF3766BC93160A /* Pods-fotona.debug.xcconfig */,
+				1D3A36E4E6E8D249B9B1D6D20FC5629D /* Pods-fotona.distribution.xcconfig */,
+				37BA0FD8FBBE83B61D8E5256D2859D39 /* Pods-fotona.release.xcconfig */,
+			);
+			name = "Pods-fotona";
+			path = "Target Support Files/Pods-fotona";
+			sourceTree = "<group>";
+		};
+		22E2FD9DFE186A1CA3A27FA7C9118A89 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7C3758831CC26B20FA48F22B47A67524 /* FirebaseInstanceID.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2A66F8AEF75F271E89D5FB1A11FF5DE6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ADF2C54D5DD719AA4822ECF08E7C1D36 /* libGoogleAnalytics.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2ACDDB954D3E5A1553D9FCD10923CFEF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EA81DDAFB717009D6FEAC6C40EBB0C67 /* FirebaseAnalytics */,
+				A237F285B4635E5632B240C1DB880C30 /* FirebaseInstanceID */,
+				D0F1F2D3A93406B6F20538D9564F460B /* Google */,
+				EE341534EE7209C78CB01BCF27FB36A5 /* GoogleAnalytics */,
+				A233F3FC4CE578E1C44730EB00627608 /* GoogleInterchangeUtilities */,
+				93EECB14200D3B232114C6E839C90445 /* GoogleSymbolUtilities */,
+				B46185945C3D77EDE52F1AD0EEDD2410 /* GoogleUtilities */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		3DCAB2B7CDE207B3958B6CB957FCC758 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				CEC22C73C1608DFA5D5D78BDCB218219 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		52001905DF33DE19D17CB263F524C87F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				667EC18B1B5CDE03495C036E4A00353C /* GGLAnalytics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		76433B5AE4246D6A796B63A52F485F81 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				027C7626D8E3A83387F9F749C903B34C /* FirebaseAnalytics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7DB346D0F39D3F0E887471402A8071AB = {
+			isa = PBXGroup;
+			children = (
+				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
+				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
+				2ACDDB954D3E5A1553D9FCD10923CFEF /* Pods */,
+				C8AE2FD184B141718CF98EA5E87628CC /* Products */,
+				9485B0DB722ED0CD3C3246D9D6016203 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		8CBCF8B8C3DDA1EE7B2F7705FD7D069B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1370A4D93A80EB70476E55E0A8796D80 /* GoogleInterchangeUtilities.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		93EECB14200D3B232114C6E839C90445 /* GoogleSymbolUtilities */ = {
+			isa = PBXGroup;
+			children = (
+				D1EC5FD3D7D82F71930690AADFBE9BFA /* Frameworks */,
+			);
+			path = GoogleSymbolUtilities;
+			sourceTree = "<group>";
+		};
+		9485B0DB722ED0CD3C3246D9D6016203 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				1532DE4184DC7E468D1D0EFFF35818F7 /* Pods-fotona */,
+				EDF1E08D36A5EB20CF7C58BB7D334E2E /* Pods-fotonaTests */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		A14A97CCC4A89AAE511DD747524C409F /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				4B2F1B8C64F7F24EC5C7C5597778F08A /* Analytics-Module.h */,
+				99B2B7F490639E4C793CDF5E9333C78B /* Core.h */,
+				8A4C5231645C9597F942C546F63AC337 /* Core-Module.h */,
+				3839E6955E498E0594043C7F67020719 /* SignIn-Module.h */,
+				A1B67F399217C8B5BD984BE0A9A6E24D /* Frameworks */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		A1B67F399217C8B5BD984BE0A9A6E24D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9F565398C5B1AE20B4263AB7C3909BE3 /* GGLCore.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A233F3FC4CE578E1C44730EB00627608 /* GoogleInterchangeUtilities */ = {
+			isa = PBXGroup;
+			children = (
+				8CBCF8B8C3DDA1EE7B2F7705FD7D069B /* Frameworks */,
+			);
+			path = GoogleInterchangeUtilities;
+			sourceTree = "<group>";
+		};
+		A237F285B4635E5632B240C1DB880C30 /* FirebaseInstanceID */ = {
+			isa = PBXGroup;
+			children = (
+				22453F4F3EF3618A2596B4F424FD9FD0 /* FIRInstanceID.h */,
+				22E2FD9DFE186A1CA3A27FA7C9118A89 /* Frameworks */,
+			);
+			path = FirebaseInstanceID;
+			sourceTree = "<group>";
+		};
+		B46185945C3D77EDE52F1AD0EEDD2410 /* GoogleUtilities */ = {
+			isa = PBXGroup;
+			children = (
+				DAFE5632CF2082A6AF76AFF134B9F87C /* Frameworks */,
+			);
+			path = GoogleUtilities;
+			sourceTree = "<group>";
+		};
+		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3DCAB2B7CDE207B3958B6CB957FCC758 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C8AE2FD184B141718CF98EA5E87628CC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EE137CB10E9B986EC9E7A7BA00B4CEE3 /* libPods-fotona.a */,
+				EBCFC4D758C6A6ECB8A4D751AA43483E /* libPods-fotonaTests.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D0F1F2D3A93406B6F20538D9564F460B /* Google */ = {
+			isa = PBXGroup;
+			children = (
+				F0209F154945412EE1A6969571B4833E /* Analytics */,
+				A14A97CCC4A89AAE511DD747524C409F /* Core */,
+			);
+			path = Google;
+			sourceTree = "<group>";
+		};
+		D1EC5FD3D7D82F71930690AADFBE9BFA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				13A1A6F8DC545C1C662B698534679C37 /* GoogleSymbolUtilities.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DAFE5632CF2082A6AF76AFF134B9F87C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EC8AA9ADBCA7F7E8CCBD0585AF653782 /* GoogleUtilities.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EA81DDAFB717009D6FEAC6C40EBB0C67 /* FirebaseAnalytics */ = {
+			isa = PBXGroup;
+			children = (
+				76433B5AE4246D6A796B63A52F485F81 /* Frameworks */,
+			);
+			path = FirebaseAnalytics;
+			sourceTree = "<group>";
+		};
+		EDF1E08D36A5EB20CF7C58BB7D334E2E /* Pods-fotonaTests */ = {
+			isa = PBXGroup;
+			children = (
+				E5AFE272D1DECB0CBD87303201219247 /* Pods-fotonaTests-acknowledgements.markdown */,
+				23548437E5E18941B0EB096C19D5C898 /* Pods-fotonaTests-acknowledgements.plist */,
+				9FA4AEADAB03F107553C11A493F97ECF /* Pods-fotonaTests-dummy.m */,
+				49B9E7CAD2DC9401E972C0242C4101C3 /* Pods-fotonaTests-frameworks.sh */,
+				B84719F38EA1B91516039575FBD4749D /* Pods-fotonaTests-resources.sh */,
+				B4134FFE60F9CBA410D0E4F3D09DA4C3 /* Pods-fotonaTests.debug.xcconfig */,
+				4D311EE24D8116C820FF4880AF44B4BA /* Pods-fotonaTests.distribution.xcconfig */,
+				C491A11B4C4B28FD7D0991AEDC08B8C5 /* Pods-fotonaTests.release.xcconfig */,
+			);
+			name = "Pods-fotonaTests";
+			path = "Target Support Files/Pods-fotonaTests";
+			sourceTree = "<group>";
+		};
+		EE341534EE7209C78CB01BCF27FB36A5 /* GoogleAnalytics */ = {
+			isa = PBXGroup;
+			children = (
+				A1FF57F36A1D11F7D42615B5BD175087 /* GAI.h */,
+				2849D8E25B5E3638D0F0E2526C0BBF7B /* GAIDictionaryBuilder.h */,
+				9F65ECB3252DC10E0D2E9DF116243EEA /* GAIEcommerceFields.h */,
+				0FF4E02FD9EC3F7EE7036A8241FC8C6D /* GAIEcommerceProduct.h */,
+				6B501126F03CEFD5848E80D8C4F8BE9D /* GAIEcommerceProductAction.h */,
+				43D55FCBC248D3DA55CA1D04E7B47328 /* GAIEcommercePromotion.h */,
+				99816ED70DE798ADB220203A49605C1F /* GAIFields.h */,
+				3556D54D87B9F4D7C6A758FC9F85A31F /* GAILogger.h */,
+				EFBF93F7FF20CE4947494FA74365BF54 /* GAITrackedViewController.h */,
+				6895E8711E8C895D2540E18A68CC7B77 /* GAITracker.h */,
+				2A66F8AEF75F271E89D5FB1A11FF5DE6 /* Frameworks */,
+			);
+			path = GoogleAnalytics;
+			sourceTree = "<group>";
+		};
+		F0209F154945412EE1A6969571B4833E /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				54FDA27A06A41EB0190AD8C984ECA39D /* Analytics.h */,
+				52001905DF33DE19D17CB263F524C87F /* Frameworks */,
+			);
+			name = Analytics;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		30C3BE768CCDA8AE6113F70903F9C677 /* Pods-fotonaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BF5793651657B2243D711DA73F204DBB /* Build configuration list for PBXNativeTarget "Pods-fotonaTests" */;
+			buildPhases = (
+				F2814B75FD72A566B7679997A7AB18FE /* Sources */,
+				38980E21E3E20BA206EAEC9B440B8716 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pods-fotonaTests";
+			productName = "Pods-fotonaTests";
+			productReference = EBCFC4D758C6A6ECB8A4D751AA43483E /* libPods-fotonaTests.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		E44FCF3C1DFF27CBD90C7C60783AD1F1 /* Pods-fotona */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B83D35B726D4B6BE8457819888F811E /* Build configuration list for PBXNativeTarget "Pods-fotona" */;
+			buildPhases = (
+				D12CE9465305D8DD191D275A2D715965 /* Sources */,
+				ECDF7EDFFFF98B9309EC8FC1991C0846 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pods-fotona";
+			productName = "Pods-fotona";
+			productReference = EE137CB10E9B986EC9E7A7BA00B4CEE3 /* libPods-fotona.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0700;
+			};
+			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
+			productRefGroup = C8AE2FD184B141718CF98EA5E87628CC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E44FCF3C1DFF27CBD90C7C60783AD1F1 /* Pods-fotona */,
+				30C3BE768CCDA8AE6113F70903F9C677 /* Pods-fotonaTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D12CE9465305D8DD191D275A2D715965 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				912BE269D0DABE1CA4DC61ACC33BDFD3 /* Pods-fotona-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F2814B75FD72A566B7679997A7AB18FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2E0670A3C4665BC9F81C946C05198F1 /* Pods-fotonaTests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2CAA611D7457181945B60082EF9F36D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FB2EC15FD6EAAD1B4ABF3766BC93160A /* Pods-fotona.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		3FA2475660FFC880302AD18E29B2E5FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		8A6ED5CB7B6B9605D66C45C1A5872E29 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1D3A36E4E6E8D249B9B1D6D20FC5629D /* Pods-fotona.distribution.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Distribution;
+		};
+		9407E1FF025752D82320A0406F05A149 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 37BA0FD8FBBE83B61D8E5256D2859D39 /* Pods-fotona.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		9890980DB8D3AB0EAC802D7FD1367C7B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C491A11B4C4B28FD7D0991AEDC08B8C5 /* Pods-fotonaTests.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		A26CAC6477765F7604BC7BF8F89B7413 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DISTRIBUTION=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				STRIP_INSTALLED_PRODUCT = NO;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Distribution;
+		};
+		B1ACBF5DAD03D15D81A63E3D5B812818 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B4134FFE60F9CBA410D0E4F3D09DA4C3 /* Pods-fotonaTests.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		DAE376C6366ECAAE2C2290BA607C4322 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4D311EE24D8116C820FF4880AF44B4BA /* Pods-fotonaTests.distribution.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Distribution;
+		};
+		F325026B55060D3B22BEC0BAB5FA7344 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3FA2475660FFC880302AD18E29B2E5FC /* Debug */,
+				A26CAC6477765F7604BC7BF8F89B7413 /* Distribution */,
+				F325026B55060D3B22BEC0BAB5FA7344 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4B83D35B726D4B6BE8457819888F811E /* Build configuration list for PBXNativeTarget "Pods-fotona" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2CAA611D7457181945B60082EF9F36D5 /* Debug */,
+				8A6ED5CB7B6B9605D66C45C1A5872E29 /* Distribution */,
+				9407E1FF025752D82320A0406F05A149 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BF5793651657B2243D711DA73F204DBB /* Build configuration list for PBXNativeTarget "Pods-fotonaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B1ACBF5DAD03D15D81A63E3D5B812818 /* Debug */,
+				DAE376C6366ECAAE2C2290BA607C4322 /* Distribution */,
+				9890980DB8D3AB0EAC802D7FD1367C7B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+}
