@@ -89,7 +89,8 @@
     }
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.showMenu = true;
-}
+    
+    }
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];

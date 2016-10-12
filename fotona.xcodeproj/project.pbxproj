@@ -162,6 +162,7 @@
 		1BDBA19D1B81D4DD00F36569 /* fotona_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BDBA19C1B81D4DD00F36569 /* fotona_red@2x.png */; };
 		1BDDA01D1C0840C100AABEAE /* HelperString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BDDA01C1C0840C100AABEAE /* HelperString.m */; };
 		1BE30CC51ADE6709006E7B69 /* FTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE30CC41ADE6708006E7B69 /* FTabBarController.m */; };
+		1BF442091DAE28EB005B9A38 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1BF442081DAE28EB005B9A38 /* GoogleService-Info.plist */; };
 		1BF4EEA11DACD336007E90A3 /* favorites_grey.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BF4EE9D1DACD336007E90A3 /* favorites_grey.png */; };
 		1BF4EEA21DACD336007E90A3 /* favorites_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BF4EE9E1DACD336007E90A3 /* favorites_grey@2x.png */; };
 		1BF4EEA31DACD336007E90A3 /* favorites_red.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BF4EE9F1DACD336007E90A3 /* favorites_red.png */; };
@@ -595,6 +596,7 @@
 		1BDDA01C1C0840C100AABEAE /* HelperString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelperString.m; sourceTree = "<group>"; };
 		1BE30CC31ADE6708006E7B69 /* FTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTabBarController.h; sourceTree = "<group>"; };
 		1BE30CC41ADE6708006E7B69 /* FTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTabBarController.m; sourceTree = "<group>"; };
+		1BF442081DAE28EB005B9A38 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1BF4EE9D1DACD336007E90A3 /* favorites_grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorites_grey.png; sourceTree = "<group>"; };
 		1BF4EE9E1DACD336007E90A3 /* favorites_grey@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "favorites_grey@2x.png"; sourceTree = "<group>"; };
 		1BF4EE9F1DACD336007E90A3 /* favorites_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorites_red.png; sourceTree = "<group>"; };
@@ -1342,12 +1344,13 @@
 				C9A3D13D18ED1898007A0E49 /* FDLabelView */,
 				C9A3D14518ED1898007A0E49 /* MBProgressHUD */,
 				C9A3D0B318ED1898007A0E49 /* en.lproj */,
-				C9A3D08918ED1845007A0E49 /* fotona-Info.plist */,
-				C9A3D08A18ED1845007A0E49 /* InfoPlist.strings */,
-				1B8FC0131AE1570000121444 /* Localizable.strings */,
 				1B9F8AEC1B69097F003D7474 /* Styles+Constants.h */,
 				C9A3D08D18ED1845007A0E49 /* main.m */,
 				C9A3D08F18ED1845007A0E49 /* fotona-Prefix.pch */,
+				1B8FC0131AE1570000121444 /* Localizable.strings */,
+				C9A3D08A18ED1845007A0E49 /* InfoPlist.strings */,
+				C9A3D08918ED1845007A0E49 /* fotona-Info.plist */,
+				1BF442081DAE28EB005B9A38 /* GoogleService-Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -2089,6 +2092,7 @@
 				1B8265581BB532B600D854AD /* disclaimer_white@2x.png in Resources */,
 				C9A3D16418ED1898007A0E49 /* patients_grey.png in Resources */,
 				C9A3D20618F27D0E007A0E49 /* fotona_red@2x.png in Resources */,
+				1BF442091DAE28EB005B9A38 /* GoogleService-Info.plist in Resources */,
 				C9A3D20518F27D0E007A0E49 /* casebook_red@2x.png in Resources */,
 				1B8265541BB532B600D854AD /* aesthetics_and_surgery_products@2x.png in Resources */,
 				C9A3D18218ED1898007A0E49 /* menu_arrow@2x.png in Resources */,

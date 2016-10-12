@@ -10,13 +10,26 @@
 #import "FISearchViewController.h"
 #import "FIFlowController.h"
 
-@interface FIBaseView ()
-
+@interface FIBaseView (){
+    id<GAITracker> tracker;
+}
 @end
 
 @implementation FIBaseView
 
 @synthesize searchBar;
+
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    NSString *className = NSStringFromClass([self class]);
+    if (tracker == nil){
+        tracker = [[GAI sharedInstance] defaultTracker];
+    }
+    [tracker set:kGAIScreenName value:className];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
