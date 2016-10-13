@@ -12,4 +12,8 @@
 +(NSString *)currentTimeInLjubljana;
 +(NSString *)getUser;
 
++(UIImageView *)imageCutWithRect:(CGRect) rect;
+
+
+
 @end

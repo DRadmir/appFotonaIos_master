@@ -148,7 +148,7 @@ NSString *count = @"";
     return 0;
 }
 
-
+//creating menu
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -212,9 +212,11 @@ NSString *count = @"";
         
         if ([[menuItems objectAtIndex:indexPath.row] isKindOfClass:[FCase class]])
         {
-            UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
-            [img setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@red",imageName]]];
+            UIImageView *img = [FCommon imageCutWithRect:CGRectMake(15, 5, 45, 45)];
+            UIImage *temp = [FDB getAuthorImage:[[menuItems objectAtIndex:indexPath.row] authorID]];
+            [img setImage:temp];
             [cell addSubview:img];
+            
             UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(40, 10, 220, 20)];
             [name setText:[(FCase *)[menuItems objectAtIndex:indexPath.row] name]];
             [name setFont:[UIFont fontWithName:@"HelveticaNeue" size:12.5]];
@@ -235,7 +237,6 @@ NSString *count = @"";
             [caseLbl setNumberOfLines:2];
             [cell addSubview:caseLbl];
             
-            
         }else
         {
             if ([[menuItems objectAtIndex:indexPath.row] isKindOfClass:[FAuthor class]])
@@ -244,7 +245,6 @@ NSString *count = @"";
                 UIImage *image = [UIImage imageNamed:@"related_news_clear"];
 
                 [cell.imageView setImage:image];
-                
                 image = [UIImage imageWithContentsOfFile:[[menuItems objectAtIndex:indexPath.row] imageLocal]];
                 NSLog(@"%@",[[menuItems objectAtIndex:indexPath.row] imageLocal]);
                 UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 45, 45)];
@@ -256,7 +256,7 @@ NSString *count = @"";
                 img.image = image;
                 
                 [cell.contentView addSubview:img];
-
+                
                 
             }else{
                 [cell.textLabel setText:[[menuItems objectAtIndex:indexPath.row] title]];
@@ -282,6 +282,8 @@ NSString *count = @"";
     return cell;
 }
 
+
+//detect touch on row
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section==1) {
@@ -398,7 +400,6 @@ NSString *count = @"";
                         break;
                         
                     default:
-                        //temp=[self getAlphabeticalCases];
                         break;
                 }
                 menuItems = temp;
@@ -407,8 +408,6 @@ NSString *count = @"";
             
             [self.viewDeckController toggleLeftViewAnimated:YES];
             UINavigationController *tempC = self.viewDeckController.centerController;
-            //                [(FCasebookViewController *)[tempC visibleViewController] setCurrentCase:item];
-            //                [(FCasebookViewController *)[tempC visibleViewController] setFlagCarousel:YES];
             [(FCasebookViewController *)[tempC visibleViewController]  setPrevCase:[(FCasebookViewController*)[tempC visibleViewController] currentCase]];
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
@@ -501,7 +500,8 @@ NSString *count = @"";
                 FCaseMenuViewController *subMenu=[[FCaseMenuViewController alloc] init];
                 if (selectedIcon) {
                     subMenu.selectedIcon=selectedIcon;
-                }else{
+                }
+                 else{
                     subMenu.selectedIcon=[menuIcons objectAtIndex:indexPath.row];
                 }
                 [subMenu  setMenuTitles:[NSMutableArray arrayWithObject:[[menuItems objectAtIndex:indexPath.row] name]]];
@@ -578,7 +578,8 @@ NSString *count = @"";
                     } else
                     {
                         subMenu.selectedIcon=[menuIcons objectAtIndex:indexPath.row];
-                    }                    [subMenu  setMenuTitles:[NSMutableArray arrayWithObject:[[menuItems objectAtIndex:indexPath.row] title]]];
+                    }
+                    [subMenu  setMenuTitles:[NSMutableArray arrayWithObject:[[menuItems objectAtIndex:indexPath.row] title]]];
                     [subMenu  setAllItems:[NSMutableArray arrayWithObject:newItems]];
                     casesInMenu=[self getCases:[[menuItems objectAtIndex:indexPath.row] categoryID]];
                     category =[[menuItems objectAtIndex:indexPath.row] categoryID];
@@ -730,6 +731,7 @@ NSString *count = @"";
     
     return data;
 }
+
 
 
  @end

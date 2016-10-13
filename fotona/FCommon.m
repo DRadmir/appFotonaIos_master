@@ -39,5 +39,17 @@
 }
 
 
++(UIImageView *)imageCutWithRect:(CGRect) rect
+{
+    UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
+    img.layer.cornerRadius = img.frame.size.height /2;
+    img.layer.masksToBounds = YES;
+    img.layer.borderWidth = 0;
+    [img setContentMode:UIViewContentModeScaleAspectFill];
+    
+    return img;
+}
+
+
 
 @end
