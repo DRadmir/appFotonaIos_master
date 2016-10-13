@@ -81,7 +81,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     FItemFavorite *item = favorites[indexPath.row];
     if ([[item typeID] intValue] == [BOOKMARKCASE intValue]) {
-        FFavoriteCaseTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFavoriteCells" owner:self options:nil] objectAtIndex:0];
+        FFavoriteCaseTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryCells" owner:self options:nil] objectAtIndex:0];
         FCase *caseToShow = [FDB getCaseWithID:[item itemID]];
         [cell setItem:item];
         [cell setIndex:indexPath];
