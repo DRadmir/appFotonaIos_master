@@ -42,18 +42,32 @@ UIButton *tmp;
     }
     
 }
-
+/*
+ 1-guest login
+ 2-user login
+ 3-auto login
+ */
 -(void)autoLogin
 {
     logintype = 3;
     if([ConnectionHelper isConnected])
     {
-        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
-        [parent.view addSubview:hud];
-        hud.labelText = @"Updating content";
-        [hud show:YES];
+        
+        NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
+        
+        if ([usrName isEqualToString:@""])
+        {
+            
+        }  else{
+            
+            MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
+            [parent.view addSubview:hud];
+            hud.labelText = @"Updating content";
+            [hud show:YES];
+        }
         
         [self setDelegate];
+        
     } else{
         logintype = 0;
         NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
@@ -166,7 +180,7 @@ UIButton *tmp;
     } else {
         
     }
-
+    
     NSString *usrName=@"";
     NSString *password=@"";
     if(parentiPad != nil)
@@ -195,10 +209,8 @@ UIButton *tmp;
         [parent.view addSubview:hud];
         hud.labelText = @"Login user";
         [hud show:YES];
-       
         
     }
-    
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -207,22 +219,20 @@ UIButton *tmp;
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
         if (![[dic valueForKey:@"msg"] isEqualToString:@"Success"]) {
             
-            ////////////////////////////////////////////////////////
-            
+            ///
             FUser *usr=[[FUser alloc] init];
             [usr setUsername:usrName];
             [SFHFKeychainUtils storeUsername:usrName andPassword:@"" forServiceName:@"fotona" updateExisting:YES error:nil];
             [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"autoLogin"];
             [[NSUserDefaults standardUserDefaults] synchronize];
-            
-            //TODO: Brisanje uporabnika iz baze [FUser addUserInDB:usr];
-            //TODO: Pogledat kako preprečt autologin - kaj je pogoj da izvede autologin
             [FUser deleteUserInDB:usr];
             [FUser checkIfUserExistsInDB:usr];
-            //////////////////////////////////////////////////////
             
+            if ([usrName isEqualToString:@""]) {
+                
+            } else{
             UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
-            [alertView show];
+                [alertView show];}
             if(parentiPad != nil)
             {
                 [parentiPad showLoginForm];
@@ -233,7 +243,7 @@ UIButton *tmp;
             
         }
         else if([[dic valueForKey:@"msg"] isEqualToString:@"Success"]){
-        
+            
             FUser *usr=[[FUser alloc] initWithDictionary:[[dic objectForKey:@"values"] objectAtIndex:0]];
             [SFHFKeychainUtils storeUsername:usr.username andPassword:password forServiceName:@"fotona" updateExisting:YES error:nil];
             [[NSUserDefaults standardUserDefaults] setValue:usr.username forKey:@"autoLogin"];
@@ -310,9 +320,6 @@ UIButton *tmp;
     
     NSDate *lastOnlineLogin=[[NSUserDefaults standardUserDefaults] valueForKey:@"lastOnlineLogin"];
     if (lastOnlineLogin) {
-        NSString *lastLoginString=[APP_DELEGATE differenceBetweenDate:[NSDate dateWithTimeIntervalSinceNow:0] and:lastOnlineLogin];
-        int days=[[[lastLoginString componentsSeparatedByString:@","] objectAtIndex:1] intValue];
-        if (days<=7) {
             FUser *localUser=[FUser getUser:usrName];
             if (localUser) {
                 if ([usrName isEqualToString:localUser.username] && [password isEqualToString:[SFHFKeychainUtils getPasswordForUsername:localUser.username andServiceName:@"fotona" error:nil]]) {
@@ -344,14 +351,7 @@ UIButton *tmp;
                 UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
                 [alertView show];
             }
-        }
-        else
-        {
-            UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"You have to login online to continue using this app." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alertView show];
-        }
-    }else
-    {
+        }else{
         UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"For first login you need to be connected to internet." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
     }

@@ -376,8 +376,11 @@
     [caseLbl setNumberOfLines:2];
     [cell addSubview:caseLbl];
     
-    UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
-    [img setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@red",previousIcon]]];
+    UIImageView *img = [FCommon imageCutWithRect:CGRectMake(15, 5, 45, 45)];
+    
+    UIImage *temp = [FDB getAuthorImage:[[allItems objectAtIndex:indexPath.row] authorID]];
+    [img setImage:temp];
+
     
     if ([[(FCase *)[allItems objectAtIndex:indexPath.row] bookmark] isEqualToString:@"0"] && [[(FCase *)[allItems objectAtIndex:indexPath.row] coverflow] isEqualToString:@"0"] && ![APP_DELEGATE connectedToInternet]) {
         enabled = false;
