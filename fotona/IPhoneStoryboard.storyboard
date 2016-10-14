@@ -759,8 +759,9 @@
                                             <constraint firstAttribute="height" constant="161" id="D6P-p7-1ia"/>
                                         </constraints>
                                     </imageView>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Kt3-Cn-cGc" userLabel="contentTableView">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="193" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Kt3-Cn-cGc" userLabel="contentTableView">
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <sections/>
                                         <connections>
                                             <outlet property="dataSource" destination="dqr-qr-bTx" id="RS4-nW-8Xx"/>
                                             <outlet property="delegate" destination="dqr-qr-bTx" id="UUh-hs-mbc"/>

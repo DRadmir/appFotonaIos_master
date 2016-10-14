@@ -15,6 +15,7 @@
 #import "FIEventMenuTableViewController.h"
 #import "FIFlowController.h"
 #import "FIEventContainerViewController.h"
+#import "FGoogleAnalytics.h"
 
 @interface FIEventViewController ()
 {
@@ -67,6 +68,7 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [FGoogleAnalytics writeGAForItem:nil andType:GAEVENTTABINT];
 }
 
 - (void)didReceiveMemoryWarning {

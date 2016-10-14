@@ -18,19 +18,30 @@ id<GAITracker> tracker;
     
     NSString *text = @"";
     switch (type) {
-        case FOTONAPDFINT:
-            text = @"PDF with title ";
+        case GAFOTONAPDFINT:
+            text = [NSString stringWithFormat:@"PDF with title %@",title];
             break;
-        case FOTONAVIDEOINT:
-            text = @"Video with title ";
+        case GAFOTONAVIDEOINT:
+            text = [NSString stringWithFormat:@"Video with title %@",title];
             break;
-        case FOTONAWEBPAGEINT:
-            text = @"Webpage with title ";
+        case GAFOTONAWEBPAGEINT:
+            text = [NSString stringWithFormat:@"Webpage with title %@",title];
+            break;
+        case GACASEINT:
+            text = [NSString stringWithFormat:@"Case with title %@",title];
+            break;
+        case GAFEATUREDTABINT:
+            text = [NSString stringWithFormat:@"Featured tab"];
+            break;
+        case GAEVENTTABINT:
+            text = [NSString stringWithFormat:@"Event tab"];
+            break;
+        case GAFAVORITETABINT:
+            text = [NSString stringWithFormat:@"Favorite tab"];
             break;
         default:
             break;
     }
-    text = [NSString stringWithFormat:@"%@%@",text,title];
     
     if (tracker == nil){
         tracker = [[GAI sharedInstance] defaultTracker];

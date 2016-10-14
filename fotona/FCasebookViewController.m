@@ -25,6 +25,7 @@
 #import "BubbleControler.h"
 #import "HelperBookmark.h"
 #import "FDB.h"
+#import "FGoogleAnalytics.h"
 
 @interface FCasebookViewController ()
 {
@@ -539,13 +540,11 @@
         [caseScroll setScrollEnabled:NO];
         [self showBubbles];
     }
-
-    
-    
 }
 
 -(void)setCaseOutlets
 {
+    [FGoogleAnalytics writeGAForItem:[currentCase title] andType:GACASEINT];
     if (![currentCase isEqual:prevCase]) {
         for (UIView *v in additionalInfo.subviews) {
             if ([v isKindOfClass:[FDLabelView class]]) {

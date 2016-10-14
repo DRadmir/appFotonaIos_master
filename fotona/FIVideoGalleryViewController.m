@@ -133,7 +133,7 @@ NSMutableDictionary *preloadGalleryMoviesImages;
 
 -(void) openVideo:(FVideo *) video
 {
-    [FGoogleAnalytics writeGAForItem:[video title] andType:FOTONAVIDEOINT];
+    [FGoogleAnalytics writeGAForItem:[video title] andType:GAFOTONAVIDEOINT];
     BOOL downloaded = YES;
     for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
         downloaded = [download checkDownload:video.localPath];

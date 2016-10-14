@@ -116,7 +116,7 @@
     }
     
     if ([lastCategory isEqual:@"2"]) {
-        [FGoogleAnalytics writeGAForItem:[fotonaCategory title] andType:FOTONAWEBPAGEINT];
+        [FGoogleAnalytics writeGAForItem:[fotonaCategory title] andType:GAFOTONAWEBPAGEINT];
         [self openExternalLink:[fotonaCategory externalLink] andReplace:replace];
     } else{
         if ([lastCategory isEqual:@"3"]) {
@@ -237,7 +237,7 @@
 
 -(void) openPDFCategory:(FFotonaMenu *)category andReplace:(BOOL) replace
 {
-    [FGoogleAnalytics writeGAForItem:[category title] andType:FOTONAPDFINT];
+    [FGoogleAnalytics writeGAForItem:[category title] andType:GAFOTONAPDFINT];
     NSString *fileURL = [category pdfSrc];
     if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@",docDir,pdfFolder]]) {
         [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@%@",docDir,pdfFolder] withIntermediateDirectories:YES attributes:nil error:nil];

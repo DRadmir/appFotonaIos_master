@@ -17,6 +17,7 @@
 #import "HelperBookmark.h"
 #import "FIFlowController.h"
 #import "FITabbarController.h"
+#import "FGoogleAnalytics.h"
 
 @interface FICaseViewController ()
 {
@@ -126,6 +127,8 @@
 
 -(void) loadCase
 {
+    [FGoogleAnalytics writeGAForItem:[caseToOpen title] andType:GACASEINT];
+    
     [scrollViewMain setContentOffset:CGPointMake(0, 0) animated:YES];
    
     int lineSpace =7;

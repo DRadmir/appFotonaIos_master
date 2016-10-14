@@ -30,7 +30,7 @@
 #import "HelperBookmark.h"
 #import "HelperDate.h"
 #import "FDB.h"
-
+#import "FGoogleAnalytics.h"
 
 
 @interface FFeaturedViewController_iPad ()
@@ -203,6 +203,7 @@ FNewsView *newsViewController;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [FGoogleAnalytics writeGAForItem:nil andType:GAFEATUREDTABINT];
     if (firstRun || [APP_DELEGATE newNews]){
         self.eventsArray = [FDB getEventsFromDB];//[self getEventsFromDB];
         //[self getNewsFromDB];

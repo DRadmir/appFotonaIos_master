@@ -23,6 +23,7 @@
 #import "BubbleControler.h"
 #import "FTabBarController.h"
 #import "HelperString.h"
+#import "FGoogleAnalytics.h"
 
 @interface FFotonaViewController (){
     bool fotonaHidden;
@@ -188,7 +189,7 @@ NSString *currentVideoGalleryId;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-     [super viewWillAppear:animated];
+    [super viewWillAppear:animated];
     [[[APP_DELEGATE tabBar] tabBar] setUserInteractionEnabled:YES];
     UIInterfaceOrientation orientation=[[UIApplication sharedApplication] statusBarOrientation];
     if (orientation!=UIInterfaceOrientationPortrait) {
@@ -750,47 +751,11 @@ NSString *currentVideoGalleryId;
 -(IBAction)openVideo:(id)sender
 {
     FVideo *vid=[videos objectAtIndex:[sender tag]];
-    BOOL downloaded = YES;
-    for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
-        downloaded = [download checkDownload:vid.localPath];
-    }
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    NSString *usr = [FCommon getUser];
-    
-    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, [vid itemID]]];
-    BOOL flag=NO;
-    while([resultsBookmarked next]) {
-        flag=YES;
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:vid.localPath] && downloaded && flag) {
-        NSString* strurl =vid.localPath;
-        NSURL *videoURL=[NSURL fileURLWithPath:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
-    }else
-    {
-        if([APP_DELEGATE connectedToInternet]){
-            NSString* strurl =vid.path;
-            NSURL *videoURL=[NSURL URLWithString:strurl];
-            moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-            [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-            [moviePlayer.moviePlayer play];
-        } else {
-            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [av show];
-        }
-    }
-    
+     [self playVideo:vid];
 }
 
 -(void)openVideoFromSearch:(FVideo *)video
 {
-    
     if (!self.viewDeckController.leftController.view.isHidden) {
         CGRect newFrame = fotonaImg.frame;
         newFrame.origin.x += rotate * 180;
@@ -800,15 +765,16 @@ NSString *currentVideoGalleryId;
         direction = FALSE;
         
     }
-    
     openVideoGal = YES;
-    
-    
+    [self playVideo:video];
+}
+
+-(void) playVideo: (FVideo *) video{
+    [FGoogleAnalytics writeGAForItem:[video title] andType:GAFOTONAVIDEOINT];
     BOOL downloaded = YES;
     for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
         downloaded = [download checkDownload:video.localPath];
     }
-    
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     NSString *usr = [FCommon getUser];
@@ -825,9 +791,7 @@ NSString *currentVideoGalleryId;
         NSString* strurl =video.localPath;
         NSURL *videoURL=[NSURL fileURLWithPath:strurl];
         moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 1), dispatch_get_main_queue(), ^{
-            [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-        });
+        [self presentMoviePlayerViewControllerAnimated:moviePlayer];
         [moviePlayer.moviePlayer play];
     }else
     {
@@ -835,16 +799,14 @@ NSString *currentVideoGalleryId;
             NSString* strurl =video.path;
             NSURL *videoURL=[NSURL URLWithString:strurl];
             moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 1), dispatch_get_main_queue(), ^{
-                [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-            });
+            [self presentMoviePlayerViewControllerAnimated:moviePlayer];
             [moviePlayer.moviePlayer play];
         } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [av show];
         }
     }
-    
+
 }
 
 
@@ -960,43 +922,7 @@ NSString *currentVideoGalleryId;
     videoArray = [item getVideos];
     FVideo *vid=[videoArray objectAtIndex:[indexPath row]];
     
-    BOOL downloaded = YES;
-    for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
-        downloaded = [download checkDownload:vid.localPath];
-    }
-    
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    NSString *usr = [FCommon getUser];
-    
-    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, [vid itemID]]];
-    BOOL flag=NO;
-    while([resultsBookmarked next]) {
-        flag=YES;
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:vid.localPath] && downloaded && flag) {
-        NSString* strurl =vid.localPath;
-        NSURL *videoURL=[NSURL fileURLWithPath:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
-    }else
-    {
-        if([APP_DELEGATE connectedToInternet]){
-            NSString* strurl =vid.path;
-            NSURL *videoURL=[NSURL URLWithString:strurl];
-            moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-            [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-            [moviePlayer.moviePlayer play];
-        } else {
-            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [av show];
-        }
-    }
-    
+    [self playVideo:vid];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath

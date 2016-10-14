@@ -14,6 +14,7 @@
 #import "HelperDate.h"
 #import "HelperString.h"
 #import "FDB.h"
+#import "FGoogleAnalytics.h"
 
 @interface FEventViewController ()
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeight;
@@ -124,6 +125,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     beforeOrient=[APP_DELEGATE currentOrientation];
+    [FGoogleAnalytics writeGAForItem:nil andType:GAEVENTTABINT];
 }
 
 -(void)viewDidDisappear:(BOOL)animated

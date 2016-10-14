@@ -16,6 +16,7 @@
 #import "FINewsContainerViewController.h"
 #import "UIWindow+Fotona.h"
 #import "FINewsViewController.h"
+#import "FGoogleAnalytics.h"
 
 
 #define ABOUT_CELL_VIEW_START_TAG 600
@@ -94,6 +95,7 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [FGoogleAnalytics writeGAForItem:nil andType:GAFEATUREDTABINT];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{

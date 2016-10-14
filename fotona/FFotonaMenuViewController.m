@@ -18,6 +18,7 @@
 #import "FItemBookmark.h"
 #import "FDB.h"
 #import "UIColor+Hex.h"
+#import "FGoogleAnalytics.h"
 
 @interface FFotonaMenuViewController (){
     
@@ -329,6 +330,7 @@
         //logic open screen
         if ([[clicked fotonaCategoryType] isEqualToString:@"2"]) {
             //external link
+            [FGoogleAnalytics writeGAForItem:[clicked title] andType:GAFOTONAWEBPAGEINT];
             [parent setItem:nil];
             [parent externalLink:[clicked externalLink]];
         }
@@ -349,6 +351,7 @@
         }
         if ([[clicked fotonaCategoryType] isEqualToString:@"6"]) {
             //pdf
+            [FGoogleAnalytics writeGAForItem:[clicked title] andType:GAFOTONAPDFINT];
             [parent setItem:nil];
             [parent downloadFile:[NSString stringWithFormat:@"%@",[clicked pdfSrc]] inFolder:@".PDF" type:6 withCategoryID:[clicked categoryID]];
         }

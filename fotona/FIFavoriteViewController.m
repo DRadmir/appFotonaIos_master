@@ -15,6 +15,7 @@
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
 #import "FImage.h"
+#import "FGoogleAnalytics.h"
 
 @interface FIFavoriteViewController ()
 
@@ -47,10 +48,11 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [favoriteTableView reloadData];
+   [favoriteTableView reloadData];
     
     updateCounter = 0;
     success = 0;
+     [FGoogleAnalytics writeGAForItem:nil andType:GAFAVORITETABINT];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -62,13 +64,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return UITableViewAutomaticDimension;
+     return 182;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
-{
-    return 193;
-}
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -80,7 +78,9 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     FItemFavorite *item = favorites[indexPath.row];
+       
     if ([[item typeID] intValue] == [BOOKMARKCASE intValue]) {
+        
         FFavoriteCaseTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryCells" owner:self options:nil] objectAtIndex:0];
         FCase *caseToShow = [FDB getCaseWithID:[item itemID]];
         [cell setItem:item];
@@ -89,7 +89,7 @@
         [cell showCase:caseToShow];
         return cell;
     }
-    return [[UITableViewCell alloc] init];
+    return [[UITableViewCell alloc] init];    return [[UITableViewCell alloc] init];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
