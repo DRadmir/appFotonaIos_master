@@ -106,10 +106,15 @@ UIButton *tmp;
     
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
         
-        //
+        
         NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
         if (![usrName isEqualToString:@""])
-        {            
+        {
+            //TODO: dodat zapisovanje uporabnika
+            FUser *guest=[[FUser alloc] init];
+            [guest setUsername:usrName];
+            [APP_DELEGATE setCurrentLogedInUser:guest];
+            
         [login autoLogin];
         }
     }else

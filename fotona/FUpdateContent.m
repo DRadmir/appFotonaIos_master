@@ -63,7 +63,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
                                                            withString:@"%3A"];
         lastUpdate = [lastUpdate stringByReplacingOccurrencesOfString:@" "
                                                            withString:@"+"];
-        postString = [NSString stringWithFormat:@"cmd=nws&d=%@",lastUpdate];
+        postString = [NSString stringWithFormat:@"cmd=nws&d=%@", lastUpdate];
     }
     
     
@@ -100,6 +100,14 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 -(void)parseNews:(NSDictionary *)dicNews
 {
     
+    int newsCount = 5;
+    
+    if([FCommon isGuest]){
+        newsCount = 4;
+    }
+    else{
+        newsCount = 5;
+    }
     NSMutableArray *newsArray=[[NSMutableArray alloc] init];
     NSDateFormatter *df=[[NSDateFormatter alloc] init];
     [df setDateFormat:@"dd.MM.yyyy"];
@@ -124,7 +132,8 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
                             
                             if (([difference day]>=0)&& ([difference day]<=endDate)) {
                                 FNews *news;
-                                if(newsArray.count < 12){
+                                
+                                if(newsArray.count < newsCount){
                                     news=[[FNews alloc] initWithDictionaryDB:n WithRest:@"0" andBookmarked:@"0"];
                                 }
                                 else{

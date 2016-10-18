@@ -55,11 +55,7 @@ UIButton *tmp;
         
         NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
         
-        if ([usrName isEqualToString:@""])
-        {
-            
-        }  else{
-            
+        if (![usrName isEqualToString:@""]){
             MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
             [parent.view addSubview:hud];
             hud.labelText = @"Updating content";
@@ -137,50 +133,29 @@ UIButton *tmp;
             [av setTag:1];
             [av show];
         }
-        
-        
     }
-    
 }
 
+//začetek logina
 -(void)login:(id)sender
 {
     logintype = 2;
     tmp=(UIButton *)sender;
     if([ConnectionHelper isConnected])
     {
-        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
-        [parent.view addSubview:hud];
-        hud.labelText = @"Updating content";
-        [hud show:YES];
-        [self setDelegate];
-        
+        //[self updateStart];
+        [self loginOnFotona:tmp];
     } else{
         logintype = 0;
         [tmp setEnabled:NO];
-        if([ConnectionHelper isConnected])
-        {
-            [self loginOnFotona:tmp];
-        }else{
-            [self loginUserOffline];
-            [tmp setEnabled:YES];
-        }
-        
+        [self loginUserOffline];
+        [tmp setEnabled:YES];
     }
-    
 }
 
-
+//online login
 -(IBAction)loginOnFotona:(id)sender
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    if (![defaults objectForKey:@"Username"]) {
-        
-    } else {
-        
-    }
-    
     NSString *usrName=@"";
     NSString *password=@"";
     if(parentiPad != nil)
@@ -192,7 +167,6 @@ UIButton *tmp;
         usrName = parentiPhone.textFieldUser.text;
         password = parentiPhone.textFieldPass.text;
     }
-    
     
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.fotona.com/inc/verzija2/ajax/"]];
@@ -231,8 +205,9 @@ UIButton *tmp;
             if ([usrName isEqualToString:@""]) {
                 
             } else{
-            UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
+                UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
                 [alertView show];}
+            [MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
             if(parentiPad != nil)
             {
                 [parentiPad showLoginForm];
@@ -270,20 +245,13 @@ UIButton *tmp;
             [[NSUserDefaults standardUserDefaults] setValue:usr.username forKey:@"autoLogin"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             [self showUserFolder:[NSString stringWithFormat:@".%@",usr.username]];
-            if(parentiPad != nil)
-            {
-                [parentiPad showFeatured];
-            } else
-            {
-                [parentiPhone showFeatured];
-            }
+            [self updateStart];
         }
         
         
         
         [sender setEnabled:YES];
-        //        [SVProgressHUD dismiss];
-        [MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
+
     }
                                      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                          NSLog(@"failed %@",error.localizedDescription);
@@ -304,6 +272,7 @@ UIButton *tmp;
     [operation start];
 }
 
+//offline login
 -(void)loginUserOffline
 {
     NSString *usrName=@"";
@@ -320,43 +289,39 @@ UIButton *tmp;
     
     NSDate *lastOnlineLogin=[[NSUserDefaults standardUserDefaults] valueForKey:@"lastOnlineLogin"];
     if (lastOnlineLogin) {
-            FUser *localUser=[FUser getUser:usrName];
-            if (localUser) {
-                if ([usrName isEqualToString:localUser.username] && [password isEqualToString:[SFHFKeychainUtils getPasswordForUsername:localUser.username andServiceName:@"fotona" error:nil]]) {
-                    [APP_DELEGATE setCurrentLogedInUser:localUser];
-                    [APP_DELEGATE setUserFolderPath:[NSString stringWithFormat:@"%@/Documents/%@",NSHomeDirectory(),localUser.username]];
-                    if (![[NSFileManager defaultManager] fileExistsAtPath:[APP_DELEGATE userFolderPath]]) {
-                        [[NSFileManager defaultManager] createDirectoryAtPath:[APP_DELEGATE userFolderPath] withIntermediateDirectories:YES attributes:nil error:nil];
-                        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:[APP_DELEGATE userFolderPath]]];
-                    }
-                    NSArray *arrDir=[[NSFileManager defaultManager] contentsOfDirectoryAtPath:docDir error:nil];
-                    for (NSString *s in arrDir) {
-                        if (![[s substringToIndex:1] isEqualToString:@"."]) {
-                            [self renameFolder:[NSString stringWithFormat:@"%@%@",docDir,s]];
-                        }
-                    }
-                    [self showUserFolder:[NSString stringWithFormat:@".%@",localUser.username]];
-                    if(parentiPad != nil)
-                    {
-                        [parentiPad showFeatured];
-                    } else
-                    {
-                        [parentiPhone showFeatured];
-                    }
-                }else{
-                    UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
-                    [alertView show];
+        FUser *localUser=[FUser getUser:usrName];
+        if (localUser) {
+            if ([usrName isEqualToString:localUser.username] && [password isEqualToString:[SFHFKeychainUtils getPasswordForUsername:localUser.username andServiceName:@"fotona" error:nil]]) {
+                [APP_DELEGATE setCurrentLogedInUser:localUser];
+                [APP_DELEGATE setUserFolderPath:[NSString stringWithFormat:@"%@/Documents/%@",NSHomeDirectory(),localUser.username]];
+                if (![[NSFileManager defaultManager] fileExistsAtPath:[APP_DELEGATE userFolderPath]]) {
+                    [[NSFileManager defaultManager] createDirectoryAtPath:[APP_DELEGATE userFolderPath] withIntermediateDirectories:YES attributes:nil error:nil];
+                    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:[APP_DELEGATE userFolderPath]]];
                 }
+                NSArray *arrDir=[[NSFileManager defaultManager] contentsOfDirectoryAtPath:docDir error:nil];
+                for (NSString *s in arrDir) {
+                    if (![[s substringToIndex:1] isEqualToString:@"."]) {
+                        [self renameFolder:[NSString stringWithFormat:@"%@%@",docDir,s]];
+                    }
+                }
+                [self showUserFolder:[NSString stringWithFormat:@".%@",localUser.username]];
+                [self updateStart];
             }else{
                 UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
                 [alertView show];
             }
         }else{
+            UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
+            [alertView show];
+        }
+    }else{
         UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"For first login you need to be connected to internet." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
     }
 }
 
+
+//po updatu
 -(void)updateProcess{
     /*
      1-guest login
@@ -370,7 +335,6 @@ UIButton *tmp;
     } else if (logintype == 3) {
         [self autoLoginUpdated];
     }
-    
 }
 
 -(void)guestLogin{
@@ -413,15 +377,16 @@ UIButton *tmp;
     }
 }
 
+
 -(void)loginUpdated{
-    logintype = 0;
-    if([ConnectionHelper isConnected])
+    if(parentiPad != nil)
     {
-        [self loginOnFotona:tmp];
-    }else{
-        [self loginUserOffline];
-        [tmp setEnabled:YES];
+        [parentiPad showFeatured];
+    } else
+    {
+        [parentiPhone showFeatured];
     }
+    
 }
 
 -(void)autoLoginUpdated
@@ -454,6 +419,8 @@ UIButton *tmp;
     }
 }
 
+
+//kliče update
 -(void) setDelegate
 {
     if (![APP_DELEGATE updateInProgress]) {
@@ -485,8 +452,6 @@ UIButton *tmp;
             } else{
                 [FDownloadManager shared].updateDelegate = parentiPhone;
             }
-            //[[FUpdateContent shared] updateContent:self];
-            
             letToLogin=0;
         }else{
             if (buttonIndex==2) {
@@ -501,13 +466,8 @@ UIButton *tmp;
             [guest setUserType:@"0"];
             [guest setUsername:@"guest"];
             [APP_DELEGATE setCurrentLogedInUser:guest];
-            if(parentiPad != nil)
-            {
-                [parentiPad showFeatured];
-            } else
-            {
-                [parentiPhone showFeatured];
-            }
+            [self updateStart];
+            
         }
         
     }
@@ -628,7 +588,15 @@ UIButton *tmp;
     }
 }
 
-
+-(void)updateStart
+{
+    [MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
+    MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
+    [parent.view addSubview:hud];
+    hud.labelText = @"Updating content";
+    [hud show:YES];
+    [self setDelegate];
+}
 
 
 @end

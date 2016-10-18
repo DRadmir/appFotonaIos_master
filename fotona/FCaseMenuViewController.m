@@ -213,7 +213,7 @@ NSString *count = @"";
         
         if ([[menuItems objectAtIndex:indexPath.row] isKindOfClass:[FCase class]])
         {
-            UIImageView *img = [FCommon imageCutWithRect:CGRectMake(15, 5, 45, 45)];
+            UIImageView *img = [FCommon imageCutWithRect:CGRectMake(5, 5, 30, 30)];
             UIImage *temp = [FDB getAuthorImage:[[menuItems objectAtIndex:indexPath.row] authorID]];
             [img setImage:temp];
             [cell addSubview:img];
@@ -248,11 +248,7 @@ NSString *count = @"";
                 [cell.imageView setImage:image];
                 image = [UIImage imageWithContentsOfFile:[[menuItems objectAtIndex:indexPath.row] imageLocal]];
                 NSLog(@"%@",[[menuItems objectAtIndex:indexPath.row] imageLocal]);
-                UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 45, 45)];
-                img.layer.cornerRadius = img.frame.size.height /2;
-                img.layer.masksToBounds = YES;
-                img.layer.borderWidth = 0;
-                [img setContentMode:UIViewContentModeScaleAspectFill];
+                UIImageView *img=[FCommon imageCutWithRect:CGRectMake(15, 5, 45, 45)];
                 //img.backgroundColor = [UIColor whiteColor];
                 img.image = image;
                 
