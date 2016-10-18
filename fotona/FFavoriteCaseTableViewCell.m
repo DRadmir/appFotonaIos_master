@@ -27,12 +27,12 @@
     [super setSelected:selected animated:animated];
 }
 
--(void) showCase:(FCase *)fcase{
+-(void) setContentForCase:(FCase *)fcase{
     enabled = true;
     [cellView setItem:item];
     [cellView setIndex:index];
     [cellView setParentIphone:parentIphone];
-    [cellView showCase:fcase];
-   }
+    [cellView setContentForCase:fcase];
+}
 
 @end

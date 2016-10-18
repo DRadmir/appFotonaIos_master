@@ -8,11 +8,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="FGalleryCells" selectionStyle="none" indentationWidth="10" reuseIdentifier="FGalleryCells" rowHeight="193" id="Uh5-jP-Iiz" userLabel="FGalleryCells" customClass="FFavoriteCaseTableViewCell">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="FITableGalleryCells" selectionStyle="none" indentationWidth="10" reuseIdentifier="FITableGalleryCells" rowHeight="193" id="Uh5-jP-Iiz" userLabel="FITableGalleryCells" customClass="FFavoriteCaseTableViewCell">
             <rect key="frame" x="0.0" y="0.0" width="440" height="193"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Uh5-jP-Iiz" id="FC3-SW-dUL">
-                <frame key="frameInset" width="440" height="192"/>
+                <frame key="frameInset" width="440" height="193"/>
                 <autoresizingMask key="autoresizingMask"/>
             </tableViewCellContentView>
             <point key="canvasLocation" x="10" y="-269.5"/>

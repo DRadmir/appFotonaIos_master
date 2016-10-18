@@ -53,7 +53,6 @@
 @synthesize popover;
 @synthesize containerView;
 @synthesize videos;
-@synthesize moviePlayer;
 @synthesize item;
 @synthesize defaultVideoImage = _defaultVideoImage;
 @synthesize popupCloseBtn;
@@ -204,7 +203,6 @@ NSString *currentVideoGalleryId;
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    NSLog(@"test5");
     BOOL fimg =self.viewDeckController.leftController.view.isHidden;
     if (!openVideoGal) {
         [self.viewDeckController openLeftView];
@@ -217,7 +215,6 @@ NSString *currentVideoGalleryId;
     }
     
     [self.viewDeckController setLeftSize:self.view.frame.size.width-320];
-    NSString *usr = [FCommon getUser];
     
     if (w!=self.view.frame.size.width) {
         if (!self.viewDeckController.leftController.view.isHidden) {
@@ -788,19 +785,11 @@ NSString *currentVideoGalleryId;
     [database close];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:video.localPath] && downloaded && flag) {
-        NSString* strurl =video.localPath;
-        NSURL *videoURL=[NSURL fileURLWithPath:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
+       [FCommon playVideoFromURL:video.localPath onViewController:self];
     }else
     {
         if([APP_DELEGATE connectedToInternet]){
-            NSString* strurl =video.path;
-            NSURL *videoURL=[NSURL URLWithString:strurl];
-            moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-            [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-            [moviePlayer.moviePlayer play];
+            [FCommon playVideoFromURL:video.path onViewController:self];
         } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [av show];

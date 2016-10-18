@@ -21,7 +21,7 @@
 @property (strong, nonatomic) FCaseGalleryView *cellView;
 
 
-- (void) showCase:(FCase *)fcase;
+- (void) setContentForCase:(FCase *)fcase;
 
 
 @end

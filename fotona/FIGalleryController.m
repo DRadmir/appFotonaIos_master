@@ -19,7 +19,6 @@
 @synthesize scrollViewGallery;
 @synthesize imagesArray;
 @synthesize videosArray;
-@synthesize moviePlayer;
 @synthesize type;
 
 -(void)createGalleryWithImages:(NSArray *)images andVideos:(NSArray *)videos forScrollView:(UIScrollView *)scrollView andScrollHeight:(NSLayoutConstraint *)height
@@ -246,18 +245,10 @@
 {
     FVideo *vid=[videosArray objectAtIndex:[sender tag]];
     if (![vid.localPath isEqualToString:@""]) {
-        NSString* strurl =vid.localPath;
-        NSURL *videoURL=[NSURL fileURLWithPath:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [parent presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
+        [FCommon playVideoFromURL:vid.localPath onViewController:parent];
     }else
     {
-        NSString* strurl =vid.path;
-        NSURL *videoURL=[NSURL URLWithString:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [parent presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
+        [FCommon playVideoFromURL:vid.path onViewController:parent];
     }
     
 }

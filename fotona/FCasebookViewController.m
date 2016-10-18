@@ -53,7 +53,6 @@
 @synthesize flagCarousel;
 @synthesize casesInMenu;
 @synthesize allCasesInMenu;
-@synthesize moviePlayer;
 @synthesize popover;
 @synthesize popupCloseBtn;
 
@@ -1293,18 +1292,10 @@
 {
     FVideo *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
     if (![vid.localPath isEqualToString:@""]) {
-        NSString* strurl =vid.localPath;
-        NSURL *videoURL=[NSURL fileURLWithPath:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
+        [FCommon playVideoFromURL:vid.localPath onViewController:self];
     }else
     {
-        NSString* strurl =vid.path;
-        NSURL *videoURL=[NSURL URLWithString:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
+         [FCommon playVideoFromURL:vid.path onViewController:self];
     }
     
 }

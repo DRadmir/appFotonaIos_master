@@ -20,8 +20,7 @@
     NSMutableArray *videoArray;
     int numberOfImages;
     NSString *lastGallery;
-    AVQueuePlayer *player;
-    AVPlayerViewController *controller;
+   
 }
 
 @property (nonatomic, strong)UIImage *defaultVideoImage;
@@ -35,7 +34,6 @@ NSMutableDictionary *preloadGalleryMoviesImages;
 @synthesize galleryID;
 @synthesize defaultVideoImage = _defaultVideoImage;
 @synthesize videoGalleryTableView;
-@synthesize moviePlayer;
 @synthesize category;
 
 
@@ -144,51 +142,12 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:video.localPath] && downloaded && flag) {
-        NSString* strurl =video.localPath;
-        NSURL *videoURL=[NSURL fileURLWithPath:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
+          [FCommon playVideoFromURL:video.localPath onViewController:self];
     }else
     {
         if([APP_DELEGATE connectedToInternet]){
-            NSString* strurl =video.path;
-            NSURL *videoURL=[NSURL URLWithString:strurl];
-            
             FVideo *vid=[videoArray objectAtIndex:1];
-            NSString* strurl2 =vid.path;
-            NSURL *videoURL2=[NSURL URLWithString:strurl2];
-
-            AVPlayer *avplayer = [AVPlayer playerWithURL:videoURL];
-       
-//            AVPlayerLayer *layer = [AVPlayerLayer playerLayerWithPlayer:avplayer];
-//            avplayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
-//            
-//            layer.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-//            [self.view.layer addSublayer: layer];
-//            [avplayer play];
-            
-//            AVPlayerItem *item1 = [AVPlayerItem playerItemWithURL:videoURL];
-//            AVPlayerItem *item2 = [AVPlayerItem playerItemWithURL:videoURL2];
-//            player = [[AVQueuePlayer alloc] initWithItems:@[item1, item2]];
-//
-//            // create a player view controller
-            
-            player = [[AVQueuePlayer alloc] initWithURL:videoURL];
-            controller = [[AVPlayerViewController alloc] init];
-            controller.player = player;
-            [self presentViewController:controller animated:YES completion:nil];
-            [player play];
-           
-            
-            
-//            moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-//            moviePlayer.moviePlayer.shouldAutoplay = false;
-//            moviePlayer.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
-//            [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-//            [moviePlayer.moviePlayer play];
-//            
-//
+            [FCommon playVideoFromURL:vid.path onViewController:self];
         } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [av show];
@@ -196,6 +155,8 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     }
     
 }
+
+
 
 
 #pragma mark - TableView
@@ -218,6 +179,11 @@ NSMutableDictionary *preloadGalleryMoviesImages;
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    
+    
+    
+    
     FIVideoGalleryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"videoGalleryTableViewCell"];
     cell.video = videoArray[indexPath.row];
     [cell fillCell];

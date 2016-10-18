@@ -1,7 +1,6 @@
 
 #import <UIKit/UIKit.h>
 #import "FCase.h"
-#import <MediaPlayer/MediaPlayer.h>
 #import "FDLabelView.h"
 #import <QuickLook/QuickLook.h>
 #import "IIViewDeckController.h"
@@ -98,9 +97,6 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *settingsBtn;
 @property (weak, nonatomic) IBOutlet UIButton *popupCloseBtn;
-
-@property (nonatomic,retain) MPMoviePlayerViewController *moviePlayer;
-
 
 @property (nonatomic, retain) FCase *currentCase;
 @property (nonatomic, retain) FCase *prevCase;

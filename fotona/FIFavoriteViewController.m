@@ -81,12 +81,12 @@
        
     if ([[item typeID] intValue] == [BOOKMARKCASE intValue]) {
         
-        FFavoriteCaseTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryCells" owner:self options:nil] objectAtIndex:0];
+        FFavoriteCaseTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
         FCase *caseToShow = [FDB getCaseWithID:[item itemID]];
         [cell setItem:item];
         [cell setIndex:indexPath];
         [cell setParentIphone:self];
-        [cell showCase:caseToShow];
+        [cell setContentForCase:caseToShow];
         return cell;
     }
     return [[UITableViewCell alloc] init];    return [[UITableViewCell alloc] init];

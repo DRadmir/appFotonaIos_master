@@ -7,9 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MediaPlayer/MediaPlayer.h>
-#import <AVFoundation/AVFoundation.h>
-#import <AVKit/AVKit.h>
 #import "FVideo.h"
 
 @interface FIVideoGalleryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
@@ -18,9 +15,6 @@
 @property (strong, nonatomic) NSString* category;
 
 @property (strong, nonatomic) IBOutlet UITableView *videoGalleryTableView;
-@property (nonatomic,retain) MPMoviePlayerViewController *moviePlayer;
-
-@property (nonatomic,strong) MPMoviePlayerController* mc;
 
 
 -(void) loadGallery;

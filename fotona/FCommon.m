@@ -7,6 +7,8 @@
 //
 
 #import "FCommon.h"
+#import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 
 @implementation FCommon
 
@@ -50,6 +52,14 @@
     return img;
 }
 
++(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController{
 
+    NSURL *videoURL=[NSURL URLWithString:url];
+    AVQueuePlayer * player = [[AVQueuePlayer alloc] initWithURL:videoURL];
+    AVPlayerViewController *controller = [[AVPlayerViewController alloc] init];
+    controller.player = player;
+    [viewController presentViewController:controller animated:YES completion:nil];
+    [player play];
+}
 
 @end

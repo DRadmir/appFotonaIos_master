@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "EBPhotoPagesController.h"
-#import <MediaPlayer/MediaPlayer.h>
 #import "FNews.h"
 #import "FEvent.h"
 
@@ -18,7 +17,6 @@
 @property (strong, nonatomic) UIScrollView *scrollViewGallery;
 @property (strong, nonatomic) NSArray *imagesArray;
 @property (strong, nonatomic) NSArray *videosArray;
-@property (nonatomic,retain) MPMoviePlayerViewController *moviePlayer;
 
 @property (nonatomic) int type;
 

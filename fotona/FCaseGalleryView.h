@@ -30,7 +30,7 @@
 @property (nonatomic) BOOL enabled;
 
 
-- (void) showCase:(FCase *)fcase;
+- (void) setContentForCase:(FCase *)fcase;
 - (IBAction)favoriteRemove:(id)sender;
 - (IBAction)favoriteAdd:(id)sender;
 - (IBAction)downloadRemove:(id)sender;

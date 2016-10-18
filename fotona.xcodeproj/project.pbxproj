@@ -57,6 +57,7 @@
 		16F0EE941A9FB6DE0073EED6 /* cloud_1_portrait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16F0EE901A9FB6DE0073EED6 /* cloud_1_portrait@2x.png */; };
 		16F0EE951A9FB6DE0073EED6 /* cloud_2_landscape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16F0EE911A9FB6DE0073EED6 /* cloud_2_landscape@2x.png */; };
 		16F0EE961A9FB6DE0073EED6 /* cloud_2_portrait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16F0EE921A9FB6DE0073EED6 /* cloud_2_portrait@2x.png */; };
+		1B01D2F91DB4AE2700CF7391 /* FFotonaGalleryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B01D2F81DB4AE2700CF7391 /* FFotonaGalleryView.m */; };
 		1B03B2341ADBB7BA00BE2DE4 /* Background.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B03B22F1ADBB7BA00BE2DE4 /* Background.m */; };
 		1B03B2351ADBB7BA00BE2DE4 /* Bubble.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B03B2311ADBB7BA00BE2DE4 /* Bubble.m */; };
 		1B03B2361ADBB7BA00BE2DE4 /* BubbleControler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B03B2331ADBB7BA00BE2DE4 /* BubbleControler.m */; };
@@ -173,7 +174,7 @@
 		1BF4EEA81DACD8BF007E90A3 /* FHelperRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF4EEA71DACD8BF007E90A3 /* FHelperRequest.m */; };
 		1BFA5F0F1DA7902B0042DD4D /* FIFavoriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFA5F0E1DA7902B0042DD4D /* FIFavoriteViewController.m */; };
 		1BFA5F1C1DA7A1310042DD4D /* FItemFavorite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFA5F1B1DA7A1310042DD4D /* FItemFavorite.m */; };
-		1BFA5F1E1DA7C1ED0042DD4D /* FGalleryCells.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFA5F1D1DA7C1ED0042DD4D /* FGalleryCells.xib */; };
+		1BFA5F1E1DA7C1ED0042DD4D /* FITableGalleryCells.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFA5F1D1DA7C1ED0042DD4D /* FITableGalleryCells.xib */; };
 		1BFE5EA41DAB73250071F755 /* FFavoriteCaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFE5EA31DAB73250071F755 /* FFavoriteCaseTableViewCell.m */; };
 		42CA64766B061A3AC4D66B64 /* libPods-fotona.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B7801B1E3B5D5AF08045FD8 /* libPods-fotona.a */; };
 		C9277265190F602F00E9D4FA /* ipad_camera_roll.png in Resources */ = {isa = PBXBuildFile; fileRef = C9277264190F602F00E9D4FA /* ipad_camera_roll.png */; };
@@ -440,6 +441,8 @@
 		16F0EE901A9FB6DE0073EED6 /* cloud_1_portrait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud_1_portrait@2x.png"; sourceTree = "<group>"; };
 		16F0EE911A9FB6DE0073EED6 /* cloud_2_landscape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud_2_landscape@2x.png"; sourceTree = "<group>"; };
 		16F0EE921A9FB6DE0073EED6 /* cloud_2_portrait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud_2_portrait@2x.png"; sourceTree = "<group>"; };
+		1B01D2F71DB4AE2700CF7391 /* FFotonaGalleryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFotonaGalleryView.h; sourceTree = "<group>"; };
+		1B01D2F81DB4AE2700CF7391 /* FFotonaGalleryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFotonaGalleryView.m; sourceTree = "<group>"; };
 		1B03B22E1ADBB7BA00BE2DE4 /* Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Background.h; sourceTree = "<group>"; };
 		1B03B22F1ADBB7BA00BE2DE4 /* Background.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Background.m; sourceTree = "<group>"; };
 		1B03B2301ADBB7BA00BE2DE4 /* Bubble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bubble.h; sourceTree = "<group>"; };
@@ -616,7 +619,7 @@
 		1BFA5F0E1DA7902B0042DD4D /* FIFavoriteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIFavoriteViewController.m; path = fotona/FIFavoriteViewController.m; sourceTree = SOURCE_ROOT; };
 		1BFA5F1A1DA7A1310042DD4D /* FItemFavorite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FItemFavorite.h; sourceTree = "<group>"; };
 		1BFA5F1B1DA7A1310042DD4D /* FItemFavorite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FItemFavorite.m; sourceTree = "<group>"; };
-		1BFA5F1D1DA7C1ED0042DD4D /* FGalleryCells.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FGalleryCells.xib; path = icon_round_square/FGalleryCells.xib; sourceTree = "<group>"; };
+		1BFA5F1D1DA7C1ED0042DD4D /* FITableGalleryCells.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FITableGalleryCells.xib; path = icon_round_square/FITableGalleryCells.xib; sourceTree = "<group>"; };
 		1BFE5EA21DAB73250071F755 /* FFavoriteCaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFavoriteCaseTableViewCell.h; path = fotona/FFavoriteCaseTableViewCell.h; sourceTree = SOURCE_ROOT; };
 		1BFE5EA31DAB73250071F755 /* FFavoriteCaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFavoriteCaseTableViewCell.m; path = fotona/FFavoriteCaseTableViewCell.m; sourceTree = SOURCE_ROOT; };
 		240BC38E0F9687E900F08B3C /* libPods-fotonaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fotonaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -945,6 +948,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B01D2F41DB4AC3D00CF7391 /* ErrorLogger */ = {
+			isa = PBXGroup;
+			children = (
+				1BCE0BEB1BBA8155002255B5 /* Logger.h */,
+				1BCE0BEC1BBA8155002255B5 /* Logger.m */,
+			);
+			name = ErrorLogger;
+			sourceTree = "<group>";
+		};
+		1B01D2F51DB4AC6500CF7391 /* BubbleController */ = {
+			isa = PBXGroup;
+			children = (
+				1B03B22E1ADBB7BA00BE2DE4 /* Background.h */,
+				1B03B22F1ADBB7BA00BE2DE4 /* Background.m */,
+				1B03B2301ADBB7BA00BE2DE4 /* Bubble.h */,
+				1B03B2311ADBB7BA00BE2DE4 /* Bubble.m */,
+				1B03B2321ADBB7BA00BE2DE4 /* BubbleControler.h */,
+				1B03B2331ADBB7BA00BE2DE4 /* BubbleControler.m */,
+			);
+			name = BubbleController;
+			sourceTree = "<group>";
+		};
+		1B01D2F61DB4ADBC00CF7391 /* GalleryViews */ = {
+			isa = PBXGroup;
+			children = (
+				1BFA5F1D1DA7C1ED0042DD4D /* FITableGalleryCells.xib */,
+				1B21D8F11DB0B97E00648E60 /* FGalleryView.xib */,
+				1B21D8F31DB0C07900648E60 /* FCaseGalleryView.h */,
+				1B21D8F41DB0C07900648E60 /* FCaseGalleryView.m */,
+				1B01D2F71DB4AE2700CF7391 /* FFotonaGalleryView.h */,
+				1B01D2F81DB4AE2700CF7391 /* FFotonaGalleryView.m */,
+			);
+			name = GalleryViews;
+			sourceTree = "<group>";
+		};
 		1B0FF06D1C512CB800AD16F5 /* VideoGallery */ = {
 			isa = PBXGroup;
 			children = (
@@ -1747,14 +1785,9 @@
 		C9A3D21518F2D8DA007A0E49 /* Custom */ = {
 			isa = PBXGroup;
 			children = (
-				1BCE0BEB1BBA8155002255B5 /* Logger.h */,
-				1BCE0BEC1BBA8155002255B5 /* Logger.m */,
-				1B03B22E1ADBB7BA00BE2DE4 /* Background.h */,
-				1B03B22F1ADBB7BA00BE2DE4 /* Background.m */,
-				1B03B2301ADBB7BA00BE2DE4 /* Bubble.h */,
-				1B03B2311ADBB7BA00BE2DE4 /* Bubble.m */,
-				1B03B2321ADBB7BA00BE2DE4 /* BubbleControler.h */,
-				1B03B2331ADBB7BA00BE2DE4 /* BubbleControler.m */,
+				1B01D2F61DB4ADBC00CF7391 /* GalleryViews */,
+				1B01D2F51DB4AC6500CF7391 /* BubbleController */,
+				1B01D2F41DB4AC3D00CF7391 /* ErrorLogger */,
 				16F0EE8A1A9E5E570073EED6 /* NewsViewCell.h */,
 				16F0EE8B1A9E5E570073EED6 /* NewsViewCell.m */,
 				16F0EE8C1A9E5E570073EED6 /* NewsViewCell.xib */,
@@ -1785,10 +1818,6 @@
 				1B4A96A71C5CBD090070C8BF /* FICarousel.xib */,
 				1BFA5F1A1DA7A1310042DD4D /* FItemFavorite.h */,
 				1BFA5F1B1DA7A1310042DD4D /* FItemFavorite.m */,
-				1BFA5F1D1DA7C1ED0042DD4D /* FGalleryCells.xib */,
-				1B21D8F11DB0B97E00648E60 /* FGalleryView.xib */,
-				1B21D8F31DB0C07900648E60 /* FCaseGalleryView.h */,
-				1B21D8F41DB0C07900648E60 /* FCaseGalleryView.m */,
 			);
 			name = Custom;
 			sourceTree = "<group>";
@@ -2154,7 +2183,7 @@
 				1BCE0BF11BBBB6F8002255B5 /* fotonamenu_icon8_white@2x.png in Resources */,
 				1BC519121C242F760077878C /* IPhoneStoryboard.storyboard in Resources */,
 				16F0EE8E1A9E5E570073EED6 /* NewsViewCell.xib in Resources */,
-				1BFA5F1E1DA7C1ED0042DD4D /* FGalleryCells.xib in Resources */,
+				1BFA5F1E1DA7C1ED0042DD4D /* FITableGalleryCells.xib in Resources */,
 				1B8265571BB532B600D854AD /* disclaimer_red@2x.png in Resources */,
 				C9A3D16D18ED1898007A0E49 /* app_06.png in Resources */,
 				C9A3D15D18ED1898007A0E49 /* feedback@2x.png in Resources */,
@@ -2449,6 +2478,7 @@
 				C99412A0192BF6E8006CB5D9 /* FDownloadManager.m in Sources */,
 				1BD662271C4CD167009BA994 /* FRegistrationViewController.m in Sources */,
 				16D6D93D1A8A08AB00E646CE /* FBookmarkViewController.m in Sources */,
+				1B01D2F91DB4AE2700CF7391 /* FFotonaGalleryView.m in Sources */,
 				1B206B131C2159B000DBA153 /* FSetDefaults.m in Sources */,
 				161E25911A7A16120015C340 /* FEventViewCell.m in Sources */,
 				1BF4EEA81DACD8BF007E90A3 /* FHelperRequest.m in Sources */,

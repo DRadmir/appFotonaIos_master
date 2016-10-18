@@ -14,6 +14,6 @@
 
 +(UIImageView *)imageCutWithRect:(CGRect) rect;
 
-
++(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController;
 
 @end

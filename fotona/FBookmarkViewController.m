@@ -50,7 +50,6 @@
 @synthesize flagCarousel;
 @synthesize casesInMenu;
 @synthesize allCasesInMenu;
-@synthesize moviePlayer;
 @synthesize popover;
 @synthesize popupCloseBtn;
 @synthesize caseView;
@@ -1161,11 +1160,7 @@ NSMutableDictionary *preloadMoviesImages2;
         downloaded = [download checkDownload:vid.localPath];
     }
     if (![vid.localPath isEqualToString:@""] && downloaded) {
-        NSString* strurl =vid.localPath;
-        NSURL *videoURL=[NSURL fileURLWithPath:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
+        [FCommon playVideoFromURL:vid.localPath onViewController:self];
     }else
     {
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"FILEDOWNLOAD", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -1784,11 +1779,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     }
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:vid.localPath] && downloaded) {
-        NSString* strurl =vid.localPath;
-        NSURL *videoURL=[NSURL fileURLWithPath:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [self presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
+        [FCommon playVideoFromURL:vid.localPath onViewController:self];
     }else
     {
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"FILEDOWNLOAD", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];

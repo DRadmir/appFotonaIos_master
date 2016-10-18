@@ -25,6 +25,7 @@
 #import "FIFlowController.h"
 #import "UIWindow+Fotona.h"
 #import "FIExternalLinkViewController.h"
+#import <AVKit/AVKit.h>
 
 
 
@@ -956,14 +957,12 @@
 
 -(BOOL) checkGuest
 {
-    
     NSString *usr = [FCommon getUser];
     if ([usr isEqualToString:@"guest"] || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3 ) {
         return TRUE;
     }
     
     return FALSE;
-    
 }
 
 - (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
@@ -983,7 +982,7 @@
 -(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
 
-    if ([self.window.visibleViewController isKindOfClass:[MPMoviePlayerViewController class]] || [self.window.visibleViewController isKindOfClass:[FIFotonaViewController class]] || [self.window.visibleViewController isKindOfClass:[QLPreviewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] ||[self.window.visibleViewController isKindOfClass:[EBPhotoPagesController class]] || [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]] || [FCommon isIpad]) {
+    if ([self.window.visibleViewController isKindOfClass:[AVPlayerViewController class]] || [self.window.visibleViewController isKindOfClass:[FIFotonaViewController class]] || [self.window.visibleViewController isKindOfClass:[QLPreviewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] ||[self.window.visibleViewController isKindOfClass:[EBPhotoPagesController class]] || [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]] || [FCommon isIpad]) {
         if ( [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]]) {
             for (UIView *object in self.window.visibleViewController.childViewControllers ) {
                 if([object isKindOfClass:[FICaseViewController class]])

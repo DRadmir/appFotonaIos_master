@@ -10,7 +10,6 @@
 #import "FFotonaMenu.h"
 #import <QuickLook/QuickLook.h>
 #import "FDLabelView.h"
-#import <MediaPlayer/MediaPlayer.h>
 #import "Bubble.h"
 #import "FVideo.h"
 
@@ -71,7 +70,6 @@
 
 @property (nonatomic, retain) FFotonaMenu *item;
 
-@property (nonatomic,retain) MPMoviePlayerViewController *moviePlayer;
 @property (nonatomic, retain) NSMutableArray *videos;
 @property (nonatomic, retain) IBOutlet UIView *containerView;
 @property (strong, nonatomic) UIPopoverController *popover;

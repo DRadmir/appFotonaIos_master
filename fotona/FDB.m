@@ -19,53 +19,7 @@
 @implementation FDB
 
 
-#pragma mark - Cases
-+(NSMutableArray *)getCasesForCarouselFromDB
-{
-    NSMutableArray *cases=[[NSMutableArray alloc] init];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and alloweInCoverFlow=1"]];
-    while([results next]) {
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        //[cases addObject:f];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [cases addObject:f];
-            }
-        } else {
-            [cases addObject:f];
-        }
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    NSMutableArray *returnCases=[[NSMutableArray alloc] init];
-    for (int i=MIN(30, (int)[cases count]-1); i>=0; i--) {
-        [returnCases addObject:[cases objectAtIndex:i]];
-    }
-    
-    return returnCases;
-}
-
+#pragma mark - Author
 +(UIImage *)getAuthorImage:(NSString *)authID
 {
     UIImage *image=nil;
@@ -78,7 +32,7 @@
         NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Authors",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[imgOnline lastPathComponent] stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
         if (![[NSFileManager defaultManager] fileExistsAtPath:downloadFilename]) {
             //image=[NSData dataWithContentsOfURL:[NSURL URLWithString:[results stringForColumn:@"image"]]];
-             NSMutableArray *authorsImgs = [[NSMutableArray alloc] init];
+            NSMutableArray *authorsImgs = [[NSMutableArray alloc] init];
             if ([APP_DELEGATE connectedToInternet]) {
                 [authorsImgs addObject:[imgOnline stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
             }
@@ -86,10 +40,8 @@
                 [[FDownloadManager shared] downloadAuthorsImage:authorsImgs];
             }
         }else{
-            //data=[NSData dataWithContentsOfURL:[NSURL URLWithString:downloadFilename]];
             image = [UIImage imageWithContentsOfFile:downloadFilename];
         }
-        
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
@@ -139,7 +91,7 @@
         } else
         {
             if ([APP_DELEGATE connectedToInternet]) {
-                 [authorsImgs addObject:[f.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
+                [authorsImgs addObject:[f.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
             }
         }
         [f setCv:[results stringForColumn:@"cv"]];
@@ -151,8 +103,55 @@
     if (authorsImgs.count != 0) {
         [[FDownloadManager shared] downloadAuthorsImage:authorsImgs];
     }
-
+    
     return authors;
+}
+
+#pragma mark - Cases
+
++(NSMutableArray *)getCasesForCarouselFromDB
+{
+    NSMutableArray *cases=[[NSMutableArray alloc] init];
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and alloweInCoverFlow=1"]];
+    while([results next]) {
+        FCase *f=[[FCase alloc] init];
+        [f setCaseID:[results stringForColumn:@"caseID"]];
+        [f setTitle:[results stringForColumn:@"title"]];
+        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
+        [f setName:[results stringForColumn:@"name"]];
+        [f setImage:[results stringForColumn:@"image"]];
+        [f setIntroduction:[results stringForColumn:@"introduction"]];
+        [f setProcedure:[results stringForColumn:@"procedure"]];
+        [f setResults:[results stringForColumn:@"results"]];
+        [f setReferences:[results stringForColumn:@"references"]];
+        [f setParametars:[results stringForColumn:@"parameters"]];
+        [f setDate:[results stringForColumn:@"date"]];
+        [f setGalleryID:[results stringForColumn:@"galleryID"]];
+        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
+        [f setActive:[results stringForColumn:@"active"]];
+        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
+        [f setAuthorID:[results stringForColumn:@"authorID"]];
+        [f setBookmark:[results stringForColumn:@"isBookmark"]];
+        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
+        if ([APP_DELEGATE checkGuest]) {
+            if ([f.allowedForGuests isEqualToString:@"1"]) {
+                [cases addObject:f];
+            }
+        } else {
+            [cases addObject:f];
+        }
+    }
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+    
+    NSMutableArray *returnCases=[[NSMutableArray alloc] init];
+    for (int i=MIN(30, (int)[cases count]-1); i>=0; i--) {
+        [returnCases addObject:[cases objectAtIndex:i]];
+    }
+    
+    return returnCases;
 }
 
 
@@ -296,7 +295,6 @@
         [f setAuthorID:[results stringForColumn:@"authorID"]];
         [f setBookmark:[results stringForColumn:@"isBookmark"]];
         [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        //[cases addObject:f];
         if ([APP_DELEGATE checkGuest]) {
             if ([f.allowedForGuests isEqualToString:@"1"]) {
                 [cases addObject:f];
@@ -335,7 +333,6 @@
         [f setAuthorID:[results stringForColumn:@"authorID"]];
         [f setBookmark:[results stringForColumn:@"isBookmark"]];
         [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        //[cases addObject:f];
         if ([APP_DELEGATE checkGuest]) {
             if ([f.allowedForGuests isEqualToString:@"1"]) {
                 [cases addObject:f];
@@ -391,7 +388,6 @@
             } else {
                 [cases addObject:f];
             }
-            
         }
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -428,7 +424,6 @@
             [self deleteMediaForCaseGalleryID:caseToRemove.galleryID withArray:caseToRemove.images andType:0];
             [self deleteMediaForCaseGalleryID:caseToRemove.videoGalleryID withArray:caseToRemove.video andType:1];
         }
-        
     }
     UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [av show];
@@ -477,8 +472,6 @@
     
     return m;
 }
-
-
 
 
 
@@ -537,8 +530,6 @@
             } else {
                 [menu addObject:e];
             }
-            
-            
         }
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -570,11 +561,9 @@
             if ((mobile && [[eventsTable objectAtIndex:i] mobileFeatured]) || (!mobile)) {
                 [returnTable addObject:[eventsTable objectAtIndex:i]];
             }
-            
         }
     }
     return returnTable;
-    
 }
 
 
@@ -609,36 +598,13 @@
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     
-    news = [NSMutableArray arrayWithArray:[news sortedArrayUsingFunction:dateSort context:nil] ];
-    
+    news = [NSMutableArray arrayWithArray:[news sortedArrayUsingFunction:dateSortForNews context:nil] ];
     
     //The date sort function
     return news;
 }
 
-NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"dd.MM.yyyy"];
-    
-    NSDate *d1 = [formatter dateFromString:n1.nDate];
-    NSDate *d2 = [formatter dateFromString:n2.nDate];
-    
-    //return [d1 compare:d2]; // ascending order
-    return [d2 compare:d1]; // descending order
-}
 
-+(void)setNewsRead:(FNews *)news
-{
-    FMDatabase *databaseN = [FMDatabase databaseWithPath:DB_PATH];
-    [databaseN open];
-    
-    NSString *usr = [FCommon getUser];
-    NSString * newsIDtemp=[NSString stringWithFormat:@"%ld",[news newsID]];
-    [databaseN executeUpdate:@"INSERT INTO NewsRead (newsID, userName) VALUES (?,?)",newsIDtemp,usr];
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [databaseN close];
-}
 
 +(NSMutableArray *)getNewsForCategory:(NSString *)category
 {
@@ -662,12 +628,24 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
             } else {
                 [menu addObject:f];
             }
-            
         }
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     return menu;
+}
+
+
++(void)setNewsRead:(FNews *)news
+{
+    FMDatabase *databaseN = [FMDatabase databaseWithPath:DB_PATH];
+    [databaseN open];
+    
+    NSString *usr = [FCommon getUser];
+    NSString * newsIDtemp=[NSString stringWithFormat:@"%ld",[news newsID]];
+    [databaseN executeUpdate:@"INSERT INTO NewsRead (newsID, userName) VALUES (?,?)",newsIDtemp,usr];
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [databaseN close];
 }
 
 
@@ -704,7 +682,6 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     }
     
     return tmpVideo;
-
 }
 
 +(NSMutableArray *)getVideosWithGallery:(NSString *)videoGalleryID
@@ -784,7 +761,6 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
             if ([f checkVideoForCategory:videoCategory]) {
                 [videosTmp addObject:f];
             }
-            
         }
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -819,13 +795,35 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
         NSArray *pathComp=[[videoToRemove videoImage] pathComponents];
         NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[videoToRemove videoImage] lastPathComponent]];
         [fileManager removeItemAtPath:pathTmp error:&error];
-        
     }
-    
     
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
+}
 
++(FVideo *)getVideoWithId:(NSString *) videoId{
+    FVideo *video=[[FVideo alloc] init];
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    
+    FMResultSet *results2 = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ and mediaType=1 order by sort",videoId]];
+    
+    [video setItemID:[results2 stringForColumn:@"mediaID"]];
+    [video setTitle:[results2 stringForColumn:@"title"]];
+    [video setPath:[results2 stringForColumn:@"path"]];
+    [video setLocalPath:[results2 stringForColumn:@"localPath"]];
+    [video setVideoGalleryID:[results2 stringForColumn:@"galleryID"]];
+    [video setDescription:[results2 stringForColumn:@"description"]];
+    [video setTime:[results2 stringForColumn:@"time"]];
+    [video setVideoImage:[results2 stringForColumn:@"videoImage"]];
+    [video setSort:[results2 stringForColumn:@"sort"]];
+    [video setUserType:[results2 stringForColumn:@"userType"]];
+    [video setUserSubType:[results2 stringForColumn:@"userSubType"]];
+    
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+    
+    return video;
 }
 
 #pragma mark - FotonaMenu
@@ -869,7 +867,6 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
         if (checkFotona) {
             [menu addObject:f];
         }
-        
     }
     NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"sortInt" ascending:YES];
     [menu sortUsingDescriptors:[NSArray arrayWithObject:descriptor]];
@@ -1053,7 +1050,6 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     return bookmarked;
 }
 
-#pragma mark - Remove from bookmark
 
 +(void)removeFromBookmarkForDocumentID:(NSString *)documentID
 {
@@ -1085,7 +1081,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
 }
 
 
-#pragma mark - Delete Case Media
+#pragma mark - Media
 
 +(void)addMedia:(NSMutableArray *)m withType:(int)type{
     if (m.count>0) {
@@ -1156,7 +1152,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-   
+    
     if (!exist) {
         [database executeUpdate:@"INSERT INTO UserFavorites (username,documentID,typeID) VALUES (?,?,?)", usr, [NSString stringWithFormat:@"%d", documentID], typeID];
     }
@@ -1170,7 +1166,7 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-   
+    
     if (exist) {
         [database executeUpdate:@"DELETE FROM UserFavorites where username=? and documentID=? and typeID=?", usr, [NSString stringWithFormat:@"%d", documentID], typeID];
     }
@@ -1184,11 +1180,11 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     FMResultSet *resultsFavorites = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserFavorites where username='%@' AND documentID=%@ AND typeID=%@",usr, [NSString stringWithFormat:@"%d", documentID],typeID]];
-   
+    
     while([resultsFavorites next]) {
         exist = true;
     }
-   
+    
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     return exist;
@@ -1208,6 +1204,22 @@ NSComparisonResult dateSort(FNews *n1, FNews *n2, void *context) {
     [database close];
     return favorites;
 }
+
+
+#pragma mark - Rest
+
+NSComparisonResult dateSortForNews(FNews *n1, FNews *n2, void *context) {
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"dd.MM.yyyy"];
+    
+    NSDate *d1 = [formatter dateFromString:n1.nDate];
+    NSDate *d2 = [formatter dateFromString:n2.nDate];
+    
+    //return [d1 compare:d2]; // ascending order
+    return [d2 compare:d1]; // descending order
+}
+
 
 
 @end
