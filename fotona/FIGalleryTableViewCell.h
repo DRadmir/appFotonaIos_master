@@ -1,5 +1,5 @@
 //
-//  FFavoriteCaseTableViewCell.h
+//  FIGalleryTableViewCell.h
 //  fotona
 //
 //  Created by Janos on 10/10/16.
@@ -11,7 +11,7 @@
 #import "FIFavoriteViewController.h"
 #import "FCaseGalleryView.h"
 
-@interface FFavoriteCaseTableViewCell : UITableViewCell
+@interface FIGalleryTableViewCell : UITableViewCell
 
 @property (strong, nonatomic) FCase *caseToShow;
 @property (strong, nonatomic) FItemFavorite *item;

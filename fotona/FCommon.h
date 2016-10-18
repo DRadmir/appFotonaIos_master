@@ -16,4 +16,5 @@
 
 +(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController;
 
++(BOOL) isGuest;
 @end

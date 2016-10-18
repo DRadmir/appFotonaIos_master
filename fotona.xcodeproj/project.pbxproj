@@ -175,7 +175,7 @@
 		1BFA5F0F1DA7902B0042DD4D /* FIFavoriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFA5F0E1DA7902B0042DD4D /* FIFavoriteViewController.m */; };
 		1BFA5F1C1DA7A1310042DD4D /* FItemFavorite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFA5F1B1DA7A1310042DD4D /* FItemFavorite.m */; };
 		1BFA5F1E1DA7C1ED0042DD4D /* FITableGalleryCells.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFA5F1D1DA7C1ED0042DD4D /* FITableGalleryCells.xib */; };
-		1BFE5EA41DAB73250071F755 /* FFavoriteCaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFE5EA31DAB73250071F755 /* FFavoriteCaseTableViewCell.m */; };
+		1BFE5EA41DAB73250071F755 /* FIGalleryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFE5EA31DAB73250071F755 /* FIGalleryTableViewCell.m */; };
 		42CA64766B061A3AC4D66B64 /* libPods-fotona.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B7801B1E3B5D5AF08045FD8 /* libPods-fotona.a */; };
 		C9277265190F602F00E9D4FA /* ipad_camera_roll.png in Resources */ = {isa = PBXBuildFile; fileRef = C9277264190F602F00E9D4FA /* ipad_camera_roll.png */; };
 		C927726919105DFA00E9D4FA /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C927726819105DFA00E9D4FA /* AssetsLibrary.framework */; };
@@ -620,8 +620,8 @@
 		1BFA5F1A1DA7A1310042DD4D /* FItemFavorite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FItemFavorite.h; sourceTree = "<group>"; };
 		1BFA5F1B1DA7A1310042DD4D /* FItemFavorite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FItemFavorite.m; sourceTree = "<group>"; };
 		1BFA5F1D1DA7C1ED0042DD4D /* FITableGalleryCells.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FITableGalleryCells.xib; path = icon_round_square/FITableGalleryCells.xib; sourceTree = "<group>"; };
-		1BFE5EA21DAB73250071F755 /* FFavoriteCaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFavoriteCaseTableViewCell.h; path = fotona/FFavoriteCaseTableViewCell.h; sourceTree = SOURCE_ROOT; };
-		1BFE5EA31DAB73250071F755 /* FFavoriteCaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFavoriteCaseTableViewCell.m; path = fotona/FFavoriteCaseTableViewCell.m; sourceTree = SOURCE_ROOT; };
+		1BFE5EA21DAB73250071F755 /* FIGalleryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FIGalleryTableViewCell.h; path = fotona/FIGalleryTableViewCell.h; sourceTree = SOURCE_ROOT; };
+		1BFE5EA31DAB73250071F755 /* FIGalleryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIGalleryTableViewCell.m; path = fotona/FIGalleryTableViewCell.m; sourceTree = SOURCE_ROOT; };
 		240BC38E0F9687E900F08B3C /* libPods-fotonaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fotonaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B7801B1E3B5D5AF08045FD8 /* libPods-fotona.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fotona.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		31FA2060B74BA98D9AF8E373 /* Pods-fotona.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotona.distribution.xcconfig"; path = "Pods/Target Support Files/Pods-fotona/Pods-fotona.distribution.xcconfig"; sourceTree = "<group>"; };
@@ -1265,8 +1265,8 @@
 			children = (
 				1BFA5F0D1DA7902B0042DD4D /* FIFavoriteViewController.h */,
 				1BFA5F0E1DA7902B0042DD4D /* FIFavoriteViewController.m */,
-				1BFE5EA21DAB73250071F755 /* FFavoriteCaseTableViewCell.h */,
-				1BFE5EA31DAB73250071F755 /* FFavoriteCaseTableViewCell.m */,
+				1BFE5EA21DAB73250071F755 /* FIGalleryTableViewCell.h */,
+				1BFE5EA31DAB73250071F755 /* FIGalleryTableViewCell.m */,
 			);
 			name = FavoriteTab;
 			sourceTree = "<group>";
@@ -2550,7 +2550,7 @@
 				C9A3D19118ED1898007A0E49 /* FMDatabaseQueue.m in Sources */,
 				C9A3D19018ED1898007A0E49 /* FMDatabasePool.m in Sources */,
 				C9A3D15718ED1898007A0E49 /* FUpdateContent.m in Sources */,
-				1BFE5EA41DAB73250071F755 /* FFavoriteCaseTableViewCell.m in Sources */,
+				1BFE5EA41DAB73250071F755 /* FIGalleryTableViewCell.m in Sources */,
 				1BD3ED471C2C1F73000FE916 /* FIEventViewController.m in Sources */,
 				C9A3D19F18ED1898007A0E49 /* FUser.m in Sources */,
 				1B7F4ACB1C294AD800DCFBA5 /* FLogin.m in Sources */,

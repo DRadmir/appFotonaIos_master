@@ -9,7 +9,7 @@
 #import "FIFavoriteViewController.h"
 #import "FDB.h"
 #import "FItemFavorite.h"
-#import "FFavoriteCaseTableViewCell.h"
+#import "FIGalleryTableViewCell.h"
 #import "FIFlowController.h"
 #import "FHelperRequest.h"
 #import "MBProgressHUD.h"
@@ -81,7 +81,7 @@
        
     if ([[item typeID] intValue] == [BOOKMARKCASE intValue]) {
         
-        FFavoriteCaseTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
+        FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
         FCase *caseToShow = [FDB getCaseWithID:[item itemID]];
         [cell setItem:item];
         [cell setIndex:indexPath];
@@ -97,7 +97,7 @@
     FItemFavorite *item = favorites[indexPath.row];
     switch ([[item typeID] intValue]) {
         case BOOKMARKCASEINT:
-            if (((FFavoriteCaseTableViewCell *) [tableView cellForRowAtIndexPath:indexPath]).enabled) {
+            if (((FIGalleryTableViewCell *) [tableView cellForRowAtIndexPath:indexPath]).enabled) {
                  [self openCaseWithID:[item itemID]];
             }
         break;

@@ -1,15 +1,15 @@
 //
-//  FFavoriteCaseTableViewCell.m
+//  FIGalleryTableViewCell.m
 //  fotona
 //
 //  Created by Janos on 10/10/16.
 //  Copyright © 2016 4egenus. All rights reserved.
 //
 
-#import "FFavoriteCaseTableViewCell.h"
+#import "FIGalleryTableViewCell.h"
 #import "FDB.h"
 
-@implementation FFavoriteCaseTableViewCell
+@implementation FIGalleryTableViewCell
 @synthesize caseToShow;
 @synthesize item;
 @synthesize parentIphone;

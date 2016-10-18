@@ -434,7 +434,7 @@ UIButton *tmp;
             [FDownloadManager shared].updateDelegate = self;
             [updateContent updateContent:parentiPhone];
         }
-        
+
     }
     
 }
