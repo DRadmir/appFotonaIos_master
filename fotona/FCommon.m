@@ -38,10 +38,23 @@
     return usr;
 }
 
+//TODO: dodat metodo ki preverja če je guest oz dummyuser/dummyguest -> vrne true oz false
++(BOOL)isGuest
+{
+    if([[FCommon getUser] isEqualToString:@"guest"] || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3 || [[FCommon getUser] caseInsensitiveCompare:@"dummyguest"] == NSOrderedSame ){
+        
+        return true;
+    }else
+    {
+        return false;
+    }
+    
+}
+
 
 +(UIImageView *)imageCutWithRect:(CGRect) rect
 {
-    UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
+    UIImageView *img=[[UIImageView alloc] initWithFrame:rect];
     img.layer.cornerRadius = img.frame.size.height /2;
     img.layer.masksToBounds = YES;
     img.layer.borderWidth = 0;

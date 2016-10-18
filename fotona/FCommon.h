@@ -13,7 +13,7 @@
 +(NSString *)getUser;
 
 +(UIImageView *)imageCutWithRect:(CGRect) rect;
-
++(BOOL)isGuest;
 
 
 @end

@@ -64,7 +64,7 @@
 #define CLOSEVIEW 0
 #define SETTINGSVIEW 2000;
 
-int cellNumber =12;
+int cellNumber =5;
 int e=0;
 
 int disclamerRotation = 1;
@@ -116,10 +116,18 @@ FNewsView *newsViewController;
     popover=[[UIPopoverController alloc] initWithContentViewController:searchVC];
     
     
-    cellNumber =12;
+    cellNumber =5;
     [self.collectionView registerNib:[UINib nibWithNibName:@"FCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"FCollectionViewCell"];
     [self.collectionView registerNib:[UINib nibWithNibName:@"NewsViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"NewsViewCell"];
     
+    if([[FCommon getUser] isEqualToString:@"guest"]){
+        cellNumber = 4;
+    }
+    else{
+        cellNumber = 5;
+    }
+    
+
     //swipe closing news
     
     UISwipeGestureRecognizer *swipeRecognizerAbout = [[UISwipeGestureRecognizer alloc]

@@ -55,11 +55,7 @@ UIButton *tmp;
         
         NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
         
-        if ([usrName isEqualToString:@""])
-        {
-            
-        }  else{
-            
+        if (![usrName isEqualToString:@""]){
             MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
             [parent.view addSubview:hud];
             hud.labelText = @"Updating content";
@@ -143,17 +139,14 @@ UIButton *tmp;
     
 }
 
+//začetek logina
 -(void)login:(id)sender
 {
     logintype = 2;
     tmp=(UIButton *)sender;
     if([ConnectionHelper isConnected])
     {
-        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
-        [parent.view addSubview:hud];
-        hud.labelText = @"Updating content";
-        [hud show:YES];
-        [self setDelegate];
+        [self updateStart];
         
     } else{
         logintype = 0;
@@ -170,7 +163,7 @@ UIButton *tmp;
     
 }
 
-
+//online login
 -(IBAction)loginOnFotona:(id)sender
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -272,7 +265,7 @@ UIButton *tmp;
             [self showUserFolder:[NSString stringWithFormat:@".%@",usr.username]];
             if(parentiPad != nil)
             {
-                [parentiPad showFeatured];
+                [parentiPad showFeatured];//pokliče konc
             } else
             {
                 [parentiPhone showFeatured];
@@ -304,6 +297,7 @@ UIButton *tmp;
     [operation start];
 }
 
+//offline login
 -(void)loginUserOffline
 {
     NSString *usrName=@"";
@@ -357,6 +351,8 @@ UIButton *tmp;
     }
 }
 
+
+//po updatu
 -(void)updateProcess{
     /*
      1-guest login
@@ -413,6 +409,7 @@ UIButton *tmp;
     }
 }
 
+
 -(void)loginUpdated{
     logintype = 0;
     if([ConnectionHelper isConnected])
@@ -454,6 +451,8 @@ UIButton *tmp;
     }
 }
 
+
+//kliče update
 -(void) setDelegate
 {
     if (![APP_DELEGATE updateInProgress]) {
@@ -628,7 +627,14 @@ UIButton *tmp;
     }
 }
 
-
+-(void)updateStart
+{
+    MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
+    [parent.view addSubview:hud];
+    hud.labelText = @"Updating content";//Test če je pravilno
+    [hud show:YES];
+    [self setDelegate];
+}
 
 
 @end
