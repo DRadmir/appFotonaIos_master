@@ -121,7 +121,7 @@ FNewsView *newsViewController;
     [self.collectionView registerNib:[UINib nibWithNibName:@"NewsViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"NewsViewCell"];
     
     if([[FCommon getUser] isEqualToString:@"guest"]){
-        cellNumber = 4;
+        cellNumber = 5;
     }
     else{
         cellNumber = 5;
