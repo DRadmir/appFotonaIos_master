@@ -278,10 +278,11 @@
                             [temp addObject: img];
                             break;
                         } else {
-                            img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:featured]]];
+                            img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:featured]]];//fetching image from link
                             if (img != nil){
                                 [temp addObject: img];
-                            } else {
+                            }                            
+                            else {
                                 img = [UIImage imageNamed:@"featured_news"];
                                 [temp addObject: img];
                                 break;
@@ -298,7 +299,7 @@
             } else {
                 for (int i=0; i<[sf localImages].count; i++){
                     NSString * header =[[sf localImages] objectAtIndex:i];
-                    img = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@%@",docDir,header]];
+                    img = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@%@",docDir,header]];//fetching image from link
                     if (img != nil){
                         [temp addObject: img];
                     } else {

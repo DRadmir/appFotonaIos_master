@@ -45,6 +45,10 @@
                                 <fontDescription key="fontDescription" name="HelveticaNeue-LightItalic" family="Helvetica Neue" pointSize="20"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="featured_news.png" translatesAutoresizingMaskIntoConstraints="NO" id="xK6-hH-pK9">
+                                <frame key="frameInset" minY="36" width="345" height="196"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="featured_news.png" translatesAutoresizingMaskIntoConstraints="NO" id="sDv-iI-Ukd"/>
                         </subviews>
                         <constraints>
@@ -71,7 +75,7 @@
             </constraints>
             <connections>
                 <outlet property="newsDate" destination="FN4-H6-4JN" id="ny6-Ny-Kkr"/>
-                <outlet property="newsImage" destination="sDv-iI-Ukd" id="TBV-yQ-gQ3"/>
+                <outlet property="newsImage" destination="sDv-iI-Ukd" id="X5w-Fo-ehP"/>
                 <outlet property="newsNew" destination="cO2-nn-Wsh" id="alG-2X-3xT"/>
                 <outlet property="newsTitle" destination="5gw-ol-lXh" id="GZ4-9i-toK"/>
                 <outlet property="newsView" destination="1xB-Jf-F75" id="FXr-sm-rtc"/>
