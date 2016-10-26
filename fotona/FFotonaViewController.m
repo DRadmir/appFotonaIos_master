@@ -15,7 +15,7 @@
 #import "AFNetworking.h"
 #import "IIViewDeckController.h"
 #import "NSString+HTML.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import <AVFoundation/AVFoundation.h>
 #import "GEMainMenuCell.h"
 #import "FSettingsViewController.h"
@@ -552,25 +552,7 @@ NSString *currentVideoGalleryId;
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and caseID=%@",caseID]];
     while([results next]) {
-        f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
+        f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
@@ -747,11 +729,11 @@ NSString *currentVideoGalleryId;
 
 -(IBAction)openVideo:(id)sender
 {
-    FVideo *vid=[videos objectAtIndex:[sender tag]];
+    FMedia *vid=[videos objectAtIndex:[sender tag]];
      [self playVideo:vid];
 }
 
--(void)openVideoFromSearch:(FVideo *)video
+-(void)openVideoFromSearch:(FMedia *)video
 {
     if (!self.viewDeckController.leftController.view.isHidden) {
         CGRect newFrame = fotonaImg.frame;
@@ -766,7 +748,7 @@ NSString *currentVideoGalleryId;
     [self playVideo:video];
 }
 
--(void) playVideo: (FVideo *) video{
+-(void) playVideo: (FMedia *) video{
     [FGoogleAnalytics writeGAForItem:[video title] andType:GAFOTONAVIDEOINT];
     BOOL downloaded = YES;
     for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
@@ -860,7 +842,7 @@ NSString *currentVideoGalleryId;
     [[cell image] setClipsToBounds:YES];
     [[cell image] setContentMode:UIViewContentModeCenter];
     
-    FVideo *vid= [videoArray objectAtIndex:indexPath.row];
+    FMedia *vid= [videoArray objectAtIndex:indexPath.row];
     
     [[cell titleLbl] setText:vid.title]; //text under video
     [cell.titleLbl setNumberOfLines:2];
@@ -909,7 +891,7 @@ NSString *currentVideoGalleryId;
     openVideoGal = YES;
     [self.viewDeckController closeLeftView];
     videoArray = [item getVideos];
-    FVideo *vid=[videoArray objectAtIndex:[indexPath row]];
+    FMedia *vid=[videoArray objectAtIndex:[indexPath row]];
     
     [self playVideo:vid];
 }
@@ -926,29 +908,19 @@ NSString *currentVideoGalleryId;
 
 - (void) refreshCell:(int) index{
     if (videoArray.count >0) {
-        FVideo *video=[[FVideo alloc] init];
+        FMedia *video;
         FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
         [database open];
         FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%d order by sort",index]];
         while([results next]) {
-            [video setItemID:[results stringForColumn:@"mediaID"]];
-            [video setTitle:[results stringForColumn:@"title"]];
-            [video setPath:[results stringForColumn:@"path"]];
-            [video setLocalPath:[results stringForColumn:@"localPath"]];
-            [video setVideoGalleryID:[results stringForColumn:@"galleryID"]];
-            [video setDescription:[results stringForColumn:@"description"]];
-            [video setTime:[results stringForColumn:@"time"]];
-            [video setVideoImage:[results stringForColumn:@"videoImage"]];
-            [video setSort:[results stringForColumn:@"sort"]];
-            [video setUserType:[results stringForColumn:@"userType"]];
-            [video setUserSubType:[results stringForColumn:@"userSubType"]];
+            video = [[FMedia alloc] initWithDictionary:[results resultDictionary]];
         }
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
         [database close];
         
         bool contains = false;
         int indexArray = -1;
-        for (FVideo* v in videoArray) {
+        for (FMedia* v in videoArray) {
             if ([v.itemID isEqualToString:video.itemID]) {
                 contains = true;
                 indexArray = [videoArray indexOfObject:v];
@@ -970,29 +942,19 @@ NSString *currentVideoGalleryId;
 
 - (void) refreshCellUnbookmark:(int) index{
     if (videoArray.count >0) {
-        FVideo *video=[[FVideo alloc] init];
+        FMedia *video;
         FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
         [database open];
         FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%d order by sort",index]];
         while([results next]) {
-            [video setItemID:[results stringForColumn:@"mediaID"]];
-            [video setTitle:[results stringForColumn:@"title"]];
-            [video setPath:[results stringForColumn:@"path"]];
-            [video setLocalPath:[results stringForColumn:@"localPath"]];
-            [video setVideoGalleryID:[results stringForColumn:@"galleryID"]];
-            [video setDescription:[results stringForColumn:@"description"]];
-            [video setTime:[results stringForColumn:@"time"]];
-            [video setVideoImage:[results stringForColumn:@"videoImage"]];
-            [video setSort:[results stringForColumn:@"sort"]];
-            [video setUserType:[results stringForColumn:@"userType"]];
-            [video setUserSubType:[results stringForColumn:@"userSubType"]];
+            video = [[FMedia alloc] initWithDictionary:[results resultDictionary]];
         }
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
         [database close];
         
         bool contains = false;
         int indexArray = -1;
-        for (FVideo* v in videoArray) {
+        for (FMedia* v in videoArray) {
             if ([v.itemID isEqualToString:video.itemID]) {
                 contains = true;
                 indexArray = [videoArray indexOfObject:v];
@@ -1016,7 +978,7 @@ NSString *currentVideoGalleryId;
 - (void) refreshVideoCells{
     videoArray = [item getVideos];
     for (int i=0; i<videoArray.count; i++) {
-        FVideo * vid = videoArray[i];
+        FMedia * vid = videoArray[i];
         [self refreshCellUnbookmark:[vid.itemID intValue]];
     }
 }
@@ -1063,14 +1025,14 @@ NSString *currentVideoGalleryId;
     {
         int activeQueueIndex = i%[activeQueues count];
         dispatch_async([activeQueues objectAtIndex:activeQueueIndex], ^{
-            FVideo *vid=[videosArray objectAtIndex:i];
+            FMedia *vid=[videosArray objectAtIndex:i];
             //id of image inside preloadGalleryMoviesImages
             NSString *videoKey = [self getpreloadGalleryMoviesImagesKeyWithGalleryId:currentVideoGalleryId videoId:[[videosArray objectAtIndex:i] itemID]];
             
             //image is not default
             if ([preloadGalleryMoviesImages objectForKey:videoKey] != self.defaultVideoImage) {
                 if([APP_DELEGATE connectedToInternet]){
-                    NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid videoImage]];
+                    NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid mediaImage]];
                     UIImage *imgNew = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
                     if (imgNew!=nil) {
                         NSData *data1 = UIImagePNGRepresentation(imgNew);
@@ -1097,13 +1059,13 @@ NSString *currentVideoGalleryId;
             
             
             UIImage *img;
-            NSArray *pathComp=[[vid videoImage] pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[vid videoImage] lastPathComponent]];
+            NSArray *pathComp=[[vid mediaImage] pathComponents];
+            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[vid mediaImage] lastPathComponent]];
             if ([[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
                 NSData *data=[NSData dataWithContentsOfFile:pathTmp];
                 img = [UIImage imageWithData:data];
             } else{
-                NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid videoImage]];
+                NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid mediaImage]];
                 img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
             }
             

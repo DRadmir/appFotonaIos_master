@@ -66,13 +66,31 @@
 }
 
 +(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController{
-
     NSURL *videoURL=[NSURL URLWithString:url];
     AVQueuePlayer * player = [[AVQueuePlayer alloc] initWithURL:videoURL];
     AVPlayerViewController *controller = [[AVPlayerViewController alloc] init];
     controller.player = player;
     [viewController presentViewController:controller animated:YES completion:nil];
     [player play];
+}
+
++(NSString *)arrayToString:(NSMutableArray *)array withSeparator:(NSString *)separator{
+    if ([array count] > 0) {
+        NSString *string = array[0];
+        for (int i= 1; i<array.count; i++) {
+            string = [NSString stringWithFormat:@"%@%@%@",string, separator, array[i]];
+        }
+        return string;
+    }
+    return @"";
+}
+
++(NSArray *)stringToArray:(NSString *)string withSeparator:(NSString *)separator{
+    NSArray *array = [[NSArray alloc] init];
+    if (![string isEqualToString:@""]) {
+        array = [string componentsSeparatedByString:separator];
+    }
+    return array;
 }
 
 @end

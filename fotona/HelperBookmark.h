@@ -7,7 +7,7 @@
 //
 
 #import "FCase.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FFotonaMenu.h"
 
 @interface HelperBookmark : NSObject
@@ -17,7 +17,7 @@
 + (BOOL) bookmarked: (int) itemID withType:(NSString *)type;
 
 + (void)bookmarkCase:(FCase*) currentCase forCategory:(int) category;
-+ (BOOL) bookmarkVideo: (FVideo *) video;
++ (BOOL) bookmarkVideo: (FMedia *) video;
 + (void) bookmarkPDF: (FFotonaMenu *)menu;
 
 + (void) cancelBookmark;

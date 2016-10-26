@@ -82,7 +82,7 @@
     //    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"pushType"];
     //    [[NSUserDefaults standardUserDefaults] synchronize];
     
-    
+    [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound categories:nil]];
     [application registerForRemoteNotificationTypes: UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
     application.applicationIconBadgeNumber=0;
     
@@ -472,7 +472,15 @@
             if ([lastUpdate isEqualToString:@"2.4"]){
                 FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
                 [database open];
+                //Favorites
                 [database executeUpdate:@"CREATE TABLE UserFavorites (userFavoriteID INTEGER PRIMARY KEY, username TEXT NOT NULL, documentID INTEGER NOT NULL, typeID INTEGER NOT NULL);"];
+                //Media
+                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN userPermissions TEXT"];
+                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN active TEXT"];
+                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN deleted TEXT"];
+                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN download TEXT"];
+                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN fileSize TEXT"];
+                [database executeUpdate:@"ALTER TABLE Media REMOVE COLUMN galleryID TEXT"];
                 [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
                 [database close];
                 [defaults setObject:@"3.0" forKey:@"DBLastUpdate"];
@@ -538,186 +546,194 @@
 
 -(NSString *)timestampToDateString:(NSString *)timestamp
 {
-    timestamp=[[[[timestamp componentsSeparatedByString:@"("] objectAtIndex:1] componentsSeparatedByString:@")"] objectAtIndex:0];
-    NSDate*d=[NSDate dateWithTimeIntervalSince1970:([timestamp longLongValue] / 1000)];
+    //timestamp=[[[[timestamp componentsSeparatedByString:@"("] objectAtIndex:1] componentsSeparatedByString:@")"] objectAtIndex:0];
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+     [dateFormat setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss"];
+    //NSDate*d=[NSDate dateWithTimeIntervalSince1970:([timestamp longLongValue] / 1000)];
+    NSDate *d  = [dateFormat dateFromString:timestamp];
     [dateFormat setDateFormat:@"dd.MM.yyyy"];
     
     return [dateFormat stringFromDate:d];
 }
 
 
+-(void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings{
+    [application registerForRemoteNotifications];
+    
+}
 
-//- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
-//#if !TARGET_IPHONE_SIMULATOR
-//    
-//    //    NSLog(@"Did register for remote notifications: %@", devToken);
-//    // Get Bundle Info for Remote Registration (handy if you have more than one app)
-//    NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
-//    NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-//    
-//    // Check what Notifications the user has turned on.  We registered for all three, but they may have manually disabled some or all of them.
-//    NSUInteger rntypes = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
-//    
-//    // Set the defaults to disabled unless we find otherwise...
-//    NSString *pushBadge = @"enabled";
-//    NSString *pushAlert = @"enabled";
-//    NSString *pushSound = @"enabled";
-//    
-//    // Check what Registered Types are turned on. This is a bit tricky since if two are enabled, and one is off, it will return a number 2... not telling you which
-//    // one is actually disabled. So we are literally checking to see if rnTypes matches what is turned on, instead of by number. The "tricky" part is that the
-//    // single notification types will only match if they are the ONLY one enabled.  Likewise, when we are checking for a pair of notifications, it will only be
-//    // true if those two notifications are on.  This is why the code is written this way
-//    if(rntypes == UIRemoteNotificationTypeBadge){
-//        pushBadge = @"enabled";
-//    }
-//    else if(rntypes == UIRemoteNotificationTypeAlert){
-//        pushAlert = @"enabled";
-//    }
-//    else if(rntypes == UIRemoteNotificationTypeSound){
-//        pushSound = @"enabled";
-//    }
-//    else if(rntypes == ( UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert)){
-//        pushBadge = @"enabled";
-//        pushAlert = @"enabled";
-//    }
-//    else if(rntypes == ( UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)){
-//        pushBadge = @"enabled";
-//        pushSound = @"enabled";
-//    }
-//    else if(rntypes == ( UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)){
-//        pushAlert = @"enabled";
-//        pushSound = @"enabled";
-//    }
-//    else if(rntypes == ( UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)){
-//        pushBadge = @"enabled";
-//        pushAlert = @"enabled";
-//        pushSound = @"enabled";
-//    }
-//    
-//    // Get the users Device Model, Display Name, Unique ID, Token & Version Number
-//    UIDevice *dev = [UIDevice currentDevice];
-//    NSString *deviceUuid;
-//    NSString *deviceName = dev.name;
-//    NSString *deviceModel = dev.model;
-//    NSString *deviceSystemVersion = dev.systemVersion;
-//    if ([dev respondsToSelector:@selector(identifierForVendor)])
-//    {
-//        //        deviceUuid = dev.uniqueIdentifier;
-//        NSUUID *uuid = [[UIDevice currentDevice] identifierForVendor];
-//        deviceUuid = [uuid UUIDString];
-//    }
-//    else {
-//        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//        id uuid = [defaults objectForKey:@"deviceUuid"];
-//        if (uuid)
-//            deviceUuid = (NSString *)uuid;
-//        else {
-//            deviceUuid = (NSString *)CFBridgingRelease(CFUUIDCreateString(NULL, CFUUIDCreate(NULL)));
-//            [defaults setObject:deviceUuid forKey:@"deviceUuid"];
-//        }
-//    }
-//    // Prepare the Device Token for Registration (remove spaces and < >)
-//    NSString *deviceToken = [[[[devToken description]
-//                               stringByReplacingOccurrencesOfString:@"<"withString:@""]
-//                              stringByReplacingOccurrencesOfString:@">" withString:@""]
-//                             stringByReplacingOccurrencesOfString: @" " withString: @""];
-//    
-//    
-//    
-//    
-//    NSString *requestData;
-//    
-//    requestData =[NSString stringWithFormat:@"{device:{\"deviceID\":null,\"appname\":\"%@\",\"appversion\":\"%@\",\"deviceuid\":\"%@\",\"devicetoken\":\"%@\",\"devicename\":\"%@\",\"devicemodel\":\"%@\",\"deviceversion\":\"%@\",\"pushbadge\":true,\"pushalert\":true,\"pushsound\":true,\"active\":true},\"access_token\":\"%@\"}",appName,appVersion,deviceUuid,deviceToken,deviceName,deviceModel,deviceSystemVersion,globalAccessToken];
-//    //
-//    
-//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@WriteDevice",webService]];
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-//    
-//    [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
-//    [request setHTTPMethod:@"POST"];
-//    [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-//    
-//    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-//    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        // I get response as XML here and parse it in a function
-//        NSLog(@"Push success %@",[operation responseString]);
-//        
-//    }
-//                                     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//                                         NSLog(@"Push failed %@",error.localizedDescription);
-//                                         
-//                                     }];
-//    
-//    [operation start];
-//    
-//    
-//    
-//#endif
-//}
-//
-//
-//
-///**
-// * Remote Notification Received while application was open.
-// */
-//- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-//    
-//#if !TARGET_IPHONE_SIMULATOR
-//    
-//    NSLog(@"remote notification: %@",[userInfo description]);
-//    NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
-//    
-//    NSString *alert = [apsInfo objectForKey:@"alert"];
-//    NSLog(@"Received Push Alert: %@", alert);
-//    
-//    NSString *sound = [apsInfo objectForKey:@"sound"];
-//    NSLog(@"Received Push Sound: %@", sound);
-//    //AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-//    
-//    NSString *badge = [apsInfo objectForKey:@"badge"];
-//    NSLog(@"Received Push Badge: %@", badge);
-//    application.applicationIconBadgeNumber = [[apsInfo objectForKey:@"badge"] integerValue];
-//    
-//    [[FUpdateContent shared] updateContent:[self.window rootViewController]];
-//    
-//    if (application.applicationState == UIApplicationStateActive ) {
-//        NSLog(@"app is active");
-//        if ([[userInfo valueForKey:@"type"] isEqualToString:@"news"]) {
-//            [self setNewNews:YES];
-//            [[NSUserDefaults standardUserDefaults] setValue:@"news" forKey:@"pushType"];
-//            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
-//            
-//        }else
-//        {
-//            [[NSUserDefaults standardUserDefaults] setValue:@"case" forKey:@"pushType"];
-//            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
-//        }
-//        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"New notification!" message:@"" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"View", nil];
-//        [av setTag:100];
-//        [av show];
-//    }else
-//    {
-//        
-//        if ([[userInfo valueForKey:@"type"] isEqualToString:@"news"]) {
-//            [self setNewNews:YES];
-//            [[NSUserDefaults standardUserDefaults] setValue:@"news" forKey:@"pushType"];
-//            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
-//            
-//        }else
-//        {
-//            [[NSUserDefaults standardUserDefaults] setValue:@"case" forKey:@"pushType"];
-//            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
-//        }
-//        [self showPushNotificationFromViewController:nil];
-//    }
-//    
-//#endif
-//}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+#if !TARGET_IPHONE_SIMULATOR
+    
+    //    NSLog(@"Did register for remote notifications: %@", devToken);
+    // Get Bundle Info for Remote Registration (handy if you have more than one app)
+    NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+    NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    
+    // Check what Notifications the user has turned on.  We registered for all three, but they may have manually disabled some or all of them.
+    NSUInteger rntypes = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
+    
+    // Set the defaults to disabled unless we find otherwise...
+    NSString *pushBadge = @"enabled";
+    NSString *pushAlert = @"enabled";
+    NSString *pushSound = @"enabled";
+    
+    // Check what Registered Types are turned on. This is a bit tricky since if two are enabled, and one is off, it will return a number 2... not telling you which
+    // one is actually disabled. So we are literally checking to see if rnTypes matches what is turned on, instead of by number. The "tricky" part is that the
+    // single notification types will only match if they are the ONLY one enabled.  Likewise, when we are checking for a pair of notifications, it will only be
+    // true if those two notifications are on.  This is why the code is written this way
+    if(rntypes == UIRemoteNotificationTypeBadge){
+        pushBadge = @"enabled";
+    }
+    else if(rntypes == UIRemoteNotificationTypeAlert){
+        pushAlert = @"enabled";
+    }
+    else if(rntypes == UIRemoteNotificationTypeSound){
+        pushSound = @"enabled";
+    }
+    else if(rntypes == ( UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert)){
+        pushBadge = @"enabled";
+        pushAlert = @"enabled";
+    }
+    else if(rntypes == ( UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)){
+        pushBadge = @"enabled";
+        pushSound = @"enabled";
+    }
+    else if(rntypes == ( UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)){
+        pushAlert = @"enabled";
+        pushSound = @"enabled";
+    }
+    else if(rntypes == ( UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)){
+        pushBadge = @"enabled";
+        pushAlert = @"enabled";
+        pushSound = @"enabled";
+    }
+    
+    // Get the users Device Model, Display Name, Unique ID, Token & Version Number
+    UIDevice *dev = [UIDevice currentDevice];
+    NSString *deviceUuid;
+    NSString *deviceName = dev.name;
+    NSString *deviceModel = dev.model;
+    NSString *deviceSystemVersion = dev.systemVersion;
+    if ([dev respondsToSelector:@selector(identifierForVendor)])
+    {
+        //        deviceUuid = dev.uniqueIdentifier;
+        NSUUID *uuid = [[UIDevice currentDevice] identifierForVendor];
+        deviceUuid = [uuid UUIDString];
+    }
+    else {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        id uuid = [defaults objectForKey:@"deviceUuid"];
+        if (uuid)
+            deviceUuid = (NSString *)uuid;
+        else {
+            deviceUuid = (NSString *)CFBridgingRelease(CFUUIDCreateString(NULL, CFUUIDCreate(NULL)));
+            [defaults setObject:deviceUuid forKey:@"deviceUuid"];
+        }
+    }
+    // Prepare the Device Token for Registration (remove spaces and < >)
+    NSString *deviceToken = [[[[devToken description]
+                               stringByReplacingOccurrencesOfString:@"<"withString:@""]
+                              stringByReplacingOccurrencesOfString:@">" withString:@""]
+                             stringByReplacingOccurrencesOfString: @" " withString: @""];
+    
+    
+    
+    
+    NSString *requestData;
+    
+    requestData =[NSString stringWithFormat:@"{\"deviceID\":null,\"appname\":\"%@\",\"appversion\":\"%@\",\"deviceuid\":\"%@\",\"devicetoken\":\"%@\",\"devicename\":\"%@\",\"devicemodel\":\"%@\",\"deviceversion\":\"%@\",\"pushbadge\":true,\"pushalert\":true,\"pushsound\":true,\"active\":true}",appName,appVersion,deviceUuid,deviceToken,deviceName,deviceModel,deviceSystemVersion];
+    //
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, LINKWRITEDEVICE]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    
+    [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setHTTPMethod:@"POST"];
+    [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:globalAccessToken forHTTPHeaderField:@"access_key"];
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        // I get response as XML here and parse it in a function
+        NSLog(@"Push success %@",[operation responseString]);
+        
+    }
+                                     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                         NSLog(@"Push failed %@",error.localizedDescription);
+                                         
+                                     }];
+    
+    [operation start];
+    
+    
+    
+#endif
+}
+
+
+
+/**
+ * Remote Notification Received while application was open.
+ */
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    
+#if !TARGET_IPHONE_SIMULATOR
+    
+    NSLog(@"remote notification: %@",[userInfo description]);
+    NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
+    
+    NSString *alert = [apsInfo objectForKey:@"alert"];
+    NSLog(@"Received Push Alert: %@", alert);
+    
+    NSString *sound = [apsInfo objectForKey:@"sound"];
+    NSLog(@"Received Push Sound: %@", sound);
+    //AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    
+    NSString *badge = [apsInfo objectForKey:@"badge"];
+    NSLog(@"Received Push Badge: %@", badge);
+    application.applicationIconBadgeNumber = [[apsInfo objectForKey:@"badge"] integerValue];
+    
+    [[FUpdateContent shared] updateContent:[self.window rootViewController]];
+    
+    if (application.applicationState == UIApplicationStateActive ) {
+        NSLog(@"app is active");
+        if ([[userInfo valueForKey:@"type"] isEqualToString:@"news"]) {
+            [self setNewNews:YES];
+            [[NSUserDefaults standardUserDefaults] setValue:@"news" forKey:@"pushType"];
+            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+        }else
+        {
+            [[NSUserDefaults standardUserDefaults] setValue:@"case" forKey:@"pushType"];
+            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"New notification!" message:@"" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"View", nil];
+        [av setTag:100];
+        [av show];
+    }else
+    {
+        
+        if ([[userInfo valueForKey:@"type"] isEqualToString:@"news"]) {
+            [self setNewNews:YES];
+            [[NSUserDefaults standardUserDefaults] setValue:@"news" forKey:@"pushType"];
+            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+        }else
+        {
+            [[NSUserDefaults standardUserDefaults] setValue:@"case" forKey:@"pushType"];
+            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        [self showPushNotificationFromViewController:nil];
+    }
+    
+#endif
+}
 
 -(void)alertNotice:(NSString *)title withMSG:(NSString *)msg cancleButtonTitle:(NSString *)cancleTitle otherButtonTitle:(NSString *)otherTitle{
     UIAlertView *alert;
@@ -920,28 +936,13 @@
 
 -(FCase *)getCase:(NSString *)caseID
 {
-    FCase *f=[[FCase alloc] init];
+    FCase *f;
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and caseID=%@ limit 1",caseID]];
     while([results next]) {
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
+        f = [[FCase alloc] initWithDictionary:[results resultDictionary]];
     }
     [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];

@@ -15,9 +15,10 @@
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "UIColor+Hex.h"
 #import "FHelperRequest.h"
+#import "FGoogleAnalytics.h"
 
 @interface FICasebookMenuViewController ()
 {
@@ -116,6 +117,7 @@
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     enabled = true;
+    [FGoogleAnalytics writeGAForItem:[self title] andType:GACASEMENUINT];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -430,14 +432,14 @@
                                                                                                    error:&jsonError]];
                 NSMutableArray *imgs = [[NSMutableArray alloc] init];
                 for (NSDictionary *imgLink in [caseObj images]) {
-                    FImage * img = [[FImage alloc] initWithDictionary:imgLink];
+                    FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
                     
                     [imgs addObject:img];
                 }
                 [caseObj setImages:imgs];
                 NSMutableArray *videos = [[NSMutableArray alloc] init];
                 for (NSDictionary *videoLink in [caseObj video]) {
-                    FVideo * videoTemp = [[FVideo alloc] initWithDictionary:videoLink];
+                    FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink forMediType:MEDIAVIDEO];
                     
                     [videos addObject:videoTemp];
                 }

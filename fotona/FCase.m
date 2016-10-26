@@ -7,7 +7,7 @@
 
 #import "FCase.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FMDatabase.h"
 
 @implementation FCase
@@ -21,10 +21,8 @@
 @synthesize procedure;
 @synthesize results;
 @synthesize references;
-@synthesize parametars;
+@synthesize parameters;
 @synthesize date;
-@synthesize galleryID;
-@synthesize videoGalleryID;
 @synthesize images;
 @synthesize video;
 @synthesize active;
@@ -33,6 +31,9 @@
 @synthesize authorID;
 @synthesize bookmark;
 @synthesize coverflow;
+@synthesize deleted;
+@synthesize download;
+@synthesize userPermissions;
 
 //befor saving into BD
 -(id)initWithDictionaryDB:(NSDictionary *)dic
@@ -51,16 +52,14 @@
         [self setResults:[dic valueForKey:@"results"]];
         [self setReferences:[dic valueForKey:@"references"]];
         [self setDate:[dic valueForKey:@"date"]];
-        [self setParametars:[dic valueForKey:@"parameters"]];
-        [self setGalleryID:[dic valueForKey:@"galleryID"]];
-        [self setVideoGalleryID:[dic valueForKey:@"videoGalleryID"]];
+        [self setParameters:[dic valueForKey:@"parameters"]];
         if ([dic objectForKey:@"images"]==[NSNull null]) {
             images=[[NSMutableArray alloc] init];
         }else{
             NSArray *tmp=[dic objectForKey:@"images"];
             NSMutableArray *imgs=[[NSMutableArray alloc] init];
             for (NSDictionary *dic in tmp) {
-                FImage *img=[[FImage alloc] initWithDictionary:dic];
+                FImage *img=[[FImage alloc] initWithDictionaryFromServer:dic];
                 [imgs addObject:img];
             }
             [self setImages:imgs];
@@ -78,14 +77,24 @@
             [self setCategories:[dic objectForKey:@"categories"]];
         }
         [self setAuthorID:[dic valueForKey:@"authorID"]];
-
+        
         if ([[dic valueForKey:@"allowInCoverFlow"] boolValue]) {
             [self setCoverflow:@"1"];
         } else {
-           [self setCoverflow:@"0"];
+            [self setCoverflow:@"0"];
         }
-        
-        
+        if ([[dic valueForKey:@"deleted"] boolValue]) {
+            [self setDeleted:@"1"];
+        } else {
+            [self setDeleted:@"0"];
+        }
+        if ([[dic valueForKey:@"download"] boolValue]) {
+            [self setDownload:@"1"];
+        } else {
+            [self setDownload:@"0"];
+        }
+        [self setGalleryItemVideoIDs:[FCommon arrayToString:[dic valueForKey:@"galleryItemVideoIDs"] withSeparator:@","]];
+        [self setGalleryItemImagesIDs:[FCommon arrayToString:[dic valueForKey:@"galleryItemImagesIDs"] withSeparator:@","]];
     }
     
     
@@ -108,22 +117,18 @@
         [self setResults:[dic valueForKey:@"results"]];
         [self setReferences:[dic valueForKey:@"references"]];
         [self setDate:[dic valueForKey:@"date"]];
-        [self setParametars:[dic valueForKey:@"parameters"]];
-        [self setGalleryID:[dic valueForKey:@"galleryID"]];
-        [self setVideoGalleryID:[dic valueForKey:@"videoGalleryID"]];
+        [self setParameters:[dic valueForKey:@"parameters"]];
         if ([dic objectForKey:@"images"]== nil || [dic objectForKey:@"images"]== (id)[NSNull null] ) {
             [self setImages:[self getImages]];
         }else{
             NSArray *tmp=[dic objectForKey:@"images"];
-           
-                NSMutableArray *imgs=[[NSMutableArray alloc] init];
-                for (NSDictionary *dicImg in tmp) {
-                    FImage *img=[[FImage alloc] initWithDictionary:dicImg];
-                    [imgs addObject:img];
-                }
-                [self setImages:imgs];
             
-            
+            NSMutableArray *imgs=[[NSMutableArray alloc] init];
+            for (NSDictionary *dicImg in tmp) {
+                FImage *img=[[FImage alloc] initWithDictionaryFromDB:dicImg];
+                [imgs addObject:img];
+            }
+            [self setImages:imgs];
         }
         if ([dic objectForKey:@"videos"]==[NSNull null]) {
             [self setVideo:[self getVideos]];
@@ -132,7 +137,7 @@
             NSArray *tmp=[dic objectForKey:@"videos"];
             NSMutableArray *videos=[[NSMutableArray alloc] init];
             for (NSDictionary *dicVid in tmp) {
-                FVideo *vid=[[FVideo alloc] initWithDictionary:dicVid];
+                FMedia *vid=[[FMedia alloc] initWithDictionary:dicVid];
                 [videos addObject:vid];
             }
             [self setVideo:videos];
@@ -150,6 +155,12 @@
         if (self.coverflow == nil) {
             [self setCoverflow:[dic valueForKey:@"allowInCoverFlow"]];
         }
+        [self setDeleted:[dic valueForKey:@"deleted"]];
+       
+        [self setDownload:[dic valueForKey:@"download"]];
+       
+        [self setGalleryItemVideoIDs:[dic valueForKey:@"galleryItemVideoIDs"]];
+        [self setGalleryItemImagesIDs:[dic valueForKey:@"galleryItemImagesIDs"]];
     }
     
     
@@ -159,46 +170,41 @@
 -(NSMutableArray *)getImages
 {
     NSMutableArray *arr=[[NSMutableArray alloc] init];
-    if([self galleryID] != (id)[NSNull null]) {
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *result = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where galleryID=%@ order by sort;",self.galleryID]];
-    while([result next]) {
-        FImage *f=[[FImage alloc] init];
-        [f setItemID:[result stringForColumn:@"mediaID"]];
-        [f setTitle:[result stringForColumn:@"title"]];
-        [f setPath:[result stringForColumn:@"path"]];
-        [f setDescription:[result stringForColumn:@"description"]];
-        [f setLocalPath:[result stringForColumn:@"localPath"]];
-        [f setGalleryID:[result stringForColumn:@"galleryID"]];
-        [arr addObject:f];
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
+    NSArray *imagesArray = [FCommon stringToArray:[self galleryItemImagesIDs] withSeparator:@","];
+    if(imagesArray != nil  && [imagesArray count] != 0 ){
+        FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+        [database open];
+        for (NSString *imgId in imagesArray) {
+            FMResultSet *result = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@;",imgId]];
+            while([result next]) {
+                FImage *f=[[FImage alloc] initWithDictionaryFromDB:[result resultDictionary]];
+                [arr addObject:f];
+            }
         }
+        
+        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+        [database close];
+    }
     return arr;
 }
 
 -(NSMutableArray *)getVideos
 {
     NSMutableArray *arr=[[NSMutableArray alloc] init];
-    if([self videoGalleryID] != (id)[NSNull null]  ){
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *result = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where galleryID=%@;",self.videoGalleryID]];
-    while([result next]) {
-        FVideo *f=[[FVideo alloc] init];
-        [f setItemID:[result stringForColumn:@"mediaID"]];
-        [f setTitle:[result stringForColumn:@"title"]];
-        [f setPath:[result stringForColumn:@"path"]];
-        [f setLocalPath:[result stringForColumn:@"localPath"]];
-        [f setVideoGalleryID:[result stringForColumn:@"galleryID"]];
-        [f setUserType:[result stringForColumn:@"userType"]];
-        [f setUserSubType:[result stringForColumn:@"userSubType"]];
-        [arr addObject:f];
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
+    NSArray *videosArray = [FCommon stringToArray:[self galleryItemVideoIDs] withSeparator:@","];
+    if(videosArray!= nil  && [videosArray count] != 0 ){
+        FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+        [database open];
+        for (NSString *vidId in videosArray) {
+            FMResultSet *result = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@;",vidId]];
+            while([result next]) {
+                FMedia *f=[[FMedia alloc] initWithDictionary:[result resultDictionary]];
+                [arr addObject:f];
+            }
+        }
+        
+        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+        [database close];
     }
     return arr;
 }
@@ -206,11 +212,11 @@
 -(NSMutableArray *)parseImages
 {
     NSMutableArray *tmpImgs=[[NSMutableArray alloc] init];
-//    NSArray *imgsArr=[NSJSONSerialization JSONObjectWithData:[imgs dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+    //    NSArray *imgsArr=[NSJSONSerialization JSONObjectWithData:[imgs dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
     
     if (self.images.count>0) {
         for (NSDictionary *imgDic in self.images) {
-            FImage *img=[[FImage alloc] initWithDictionary:imgDic];
+            FImage *img=[[FImage alloc] initWithDictionaryFromServer:imgDic];
             [tmpImgs addObject:img];
         }
     }
@@ -222,7 +228,7 @@
     NSMutableArray *tmpVideos=[[NSMutableArray alloc] init];
     if (self.video.count>0) {
         for (NSDictionary *videDic in self.video) {
-            FVideo *v=[[FVideo alloc] initWithDictionary:videDic];
+            FMedia *v=[[FMedia alloc] initWithDictionary:videDic ];//TODO: pogledat ali je iz baze ali iz serverja
             [tmpVideos addObject:v];
         }
     }

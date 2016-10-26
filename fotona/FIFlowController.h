@@ -22,7 +22,7 @@
 #import "FIVideoGalleryViewController.h"
 #import "FIBaseView.h"
 #import "FCase.h"
-#import "FVideo.h"
+#import "FMedia.h"
 
 
 @interface FIFlowController : NSObject
@@ -61,7 +61,7 @@
 @property (nonatomic) BOOL videoSearch;
 
 @property(strong, nonatomic) NSString* videoGal;
-@property(strong, nonatomic) FVideo* vidToOpen;
+@property(strong, nonatomic) FMedia* vidToOpen;
 
 @property(nonatomic) BOOL openPDF;
 @property(strong, nonatomic) FFotonaMenu* pdfToOpen;

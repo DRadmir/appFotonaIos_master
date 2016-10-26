@@ -85,11 +85,8 @@ UIButton *tmp;
                 [parentiPhone.textFieldPass setText:[SFHFKeychainUtils getPasswordForUsername:usrName andServiceName:@"fotona" error:nil]];
                 [self loginUpdated];
             }
-            
         }
-        
     }
-    
 }
 
 -(void)guest:(id)sender

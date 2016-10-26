@@ -7,7 +7,7 @@
 //
 
 #import "FIGalleryController.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FImage.h"
 #import <AVFoundation/AVFoundation.h>
 #import "FNews.h"
@@ -33,7 +33,7 @@
     videosArray = videos;
     
     for (int i=0;i<[videos count];i++) {
-        FVideo *vid=[videos objectAtIndex:i];
+        FMedia *vid=[videos objectAtIndex:i];
         UIButton *tmpImg=[UIButton buttonWithType:UIButtonTypeCustom];
         [tmpImg setFrame:CGRectMake(x, 0, imgSize-30, imgSize-30)];
         [tmpImg.imageView setContentMode:UIViewContentModeScaleAspectFill];
@@ -54,21 +54,22 @@
             AVAssetImageGenerator *generate1 = [[AVAssetImageGenerator alloc] initWithAsset:asset1];
             generate1.appliesPreferredTrackTransform = YES;
             NSError *err = NULL;
-            CMTime time = CMTimeMakeWithSeconds([vid.time integerValue], 1);
-            CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
-            UIImage *one = [[UIImage alloc] initWithCGImage:oneRef];
-            UIImage *image=one;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                //code to be executed on the main thread when background task is finished
-                [tmpImg setImage:image forState:UIControlStateNormal];
-                [tmpImg addTarget:self action:@selector(openVideo:) forControlEvents:UIControlEventTouchUpInside];
-                [scrollView addSubview:tmpImg];
-                UILabel *videoName=[[UILabel alloc] initWithFrame:CGRectMake(x-(imgSize-20), imgSize-30, imgSize-40, 20)];
-                [videoName setFont:[UIFont fontWithName:@"HelveticaNeue" size:15]];
-                [videoName setText:vid.title];
-                [videoName setTextAlignment:NSTextAlignmentCenter];
-                [scrollView addSubview:videoName];
-            });
+            //TODO: dela sliko vn ali jo rabi?????
+//            CMTime time = CMTimeMakeWithSeconds([vid.time integerValue], 1);
+//            CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
+//            UIImage *one = [[UIImage alloc] initWithCGImage:oneRef];
+//            UIImage *image=one;
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                //code to be executed on the main thread when background task is finished
+//                [tmpImg setImage:image forState:UIControlStateNormal];
+//                [tmpImg addTarget:self action:@selector(openVideo:) forControlEvents:UIControlEventTouchUpInside];
+//                [scrollView addSubview:tmpImg];
+//                UILabel *videoName=[[UILabel alloc] initWithFrame:CGRectMake(x-(imgSize-20), imgSize-30, imgSize-40, 20)];
+//                [videoName setFont:[UIFont fontWithName:@"HelveticaNeue" size:15]];
+//                [videoName setText:vid.title];
+//                [videoName setTextAlignment:NSTextAlignmentCenter];
+//                [scrollView addSubview:videoName];
+//            });
         });
     }
     
@@ -243,7 +244,7 @@
 
 -(IBAction)openVideo:(id)sender
 {
-    FVideo *vid=[videosArray objectAtIndex:[sender tag]];
+    FMedia *vid=[videosArray objectAtIndex:[sender tag]];
     if (![vid.localPath isEqualToString:@""]) {
         [FCommon playVideoFromURL:vid.localPath onViewController:parent];
     }else

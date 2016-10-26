@@ -7,7 +7,7 @@
 #import "NSString+HTML.h"
 #import "FUpdateContent.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FAuthor.h"
 #import "FGalleryViewController.h"
 #import <AVFoundation/AVFoundation.h>
@@ -715,7 +715,7 @@ NSMutableDictionary *preloadMoviesImages2;
             vidArr = [currentCase video];
         }
         for (int i=0;i<[vidArr count];i++) {
-            FVideo *vid=[vidArr objectAtIndex:i];
+            FMedia *vid=[vidArr objectAtIndex:i];
             UIButton *tmpImg=[UIButton buttonWithType:UIButtonTypeCustom];
             [tmpImg setFrame:CGRectMake(x, 0, 200, 200)];
             [tmpImg.imageView setContentMode:UIViewContentModeScaleAspectFill];
@@ -838,8 +838,8 @@ NSMutableDictionary *preloadMoviesImages2;
     int allDataObjectAtIndex0Count=0;
     
     int y=0;
-    if (currentCase.parametars && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
-        NSArray*allData=[NSJSONSerialization JSONObjectWithData:[currentCase.parametars dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+    if (currentCase.parameters && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
+        NSArray*allData=[NSJSONSerialization JSONObjectWithData:[currentCase.parameters dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
         
         
         NSMutableArray *allDataM=[allData mutableCopy];
@@ -1053,7 +1053,7 @@ NSMutableDictionary *preloadMoviesImages2;
             [fileManager removeItemAtPath:pathTmp error:&error];
         }
     } else if (t==1){
-        for (FVideo *vid in array) {
+        for (FMedia *vid in array) {
             NSArray *pathComp=[vid.path pathComponents];
             NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
             NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -1154,7 +1154,7 @@ NSMutableDictionary *preloadMoviesImages2;
 
 -(IBAction)openVideo:(id)sender
 {
-    FVideo *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
+    FMedia *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
     BOOL downloaded = YES;
     for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
         downloaded = [download checkDownload:vid.localPath];
@@ -1253,26 +1253,7 @@ NSMutableDictionary *preloadMoviesImages2;
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and bookmark=1 order by title"]];
     while([results next]) {
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        //[cases addObject:f];
+        FCase *f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
         if ([APP_DELEGATE checkGuest]) {
             if ([f.allowedForGuests isEqualToString:@"1"]) {
                 [cases addObject:f];
@@ -1734,7 +1715,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     [[cell image] setClipsToBounds:YES];
     [[cell image] setContentMode:UIViewContentModeCenter];
     
-    FVideo *vid= [videoArray objectAtIndex:indexPath.row];
+    FMedia *vid= [videoArray objectAtIndex:indexPath.row];
     [[cell titleLbl] setText:vid.title]; //text under video
     [cell.titleLbl setNumberOfLines:2];
     //[cell.titleLbl sizeToFit];
@@ -1772,7 +1753,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
 
 -(void)collectionView:(UICollectionView *)collectionView2 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    FVideo *vid=[videoArray objectAtIndex:[indexPath row]];
+    FMedia *vid=[videoArray objectAtIndex:[indexPath row]];
     BOOL downloaded = YES;
     for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
         downloaded = [download checkDownload:vid.localPath];
@@ -1825,22 +1806,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         FMResultSet *results2 = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%d order by sort",videoId]];
         
         while([results2 next]) {
-            FVideo *f=[[FVideo alloc] init];
-            [f setItemID:[results2 stringForColumn:@"mediaID"]];
-            [f setTitle:[results2 stringForColumn:@"title"]];
-            [f setPath:[results2 stringForColumn:@"path"]];
-            [f setLocalPath:[results2 stringForColumn:@"localPath"]];
-            [f setVideoGalleryID:[results2 stringForColumn:@"galleryID"]];
-            [f setDescription:[results2 stringForColumn:@"description"]];
-            [f setTime:[results2 stringForColumn:@"time"]];
-            [f setVideoImage:[results2 stringForColumn:@"videoImage"]];
-            [f setSort:[results2 stringForColumn:@"sort"]];
-            [f setUserType:[results2 stringForColumn:@"userType"]];
-            [f setUserSubType:[results2 stringForColumn:@"userSubType"]];
-            
-//            if ([f checkVideoForUser]) {
-//                [videosTmp addObject:f];
-//            }
+            FMedia *f=[[FMedia alloc] initWithDictionary:[results2 resultDictionary]];
             [videosTmp addObject:f];
         }
         
@@ -1872,18 +1838,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         FMResultSet *results2 = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ order by sort",vidID]];
         
         while([results2 next]) {
-            FVideo *f=[[FVideo alloc] init];
-            [f setItemID:[results2 stringForColumn:@"mediaID"]];
-            [f setTitle:[results2 stringForColumn:@"title"]];
-            [f setPath:[results2 stringForColumn:@"path"]];
-            [f setLocalPath:[results2 stringForColumn:@"localPath"]];
-            [f setVideoGalleryID:[results2 stringForColumn:@"galleryID"]];
-            [f setDescription:[results2 stringForColumn:@"description"]];
-            [f setTime:[results2 stringForColumn:@"time"]];
-            [f setVideoImage:[results2 stringForColumn:@"videoImage"]];
-            [f setSort:[results2 stringForColumn:@"sort"]];
-            [f setUserType:[results2 stringForColumn:@"userType"]];
-            [f setUserSubType:[results2 stringForColumn:@"userSubType"]];
+            FMedia *f=[[FMedia alloc] initWithDictionary:[results2 resultDictionary]];
             
             if ([f checkVideoForCategory:videoCategory]) {
                 [videosTmp addObject:f];
@@ -1902,6 +1857,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
 
 -(BOOL)checkFotona:(NSString *)f andCategory:(NSString *)category
 {
+    //TODO predelava za pravice
     BOOL check=NO;
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
@@ -1937,18 +1893,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         FMResultSet *results2 = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ order by sort",vidID]];
         
         while([results2 next]) {
-            FVideo *f=[[FVideo alloc] init];
-            [f setItemID:[results2 stringForColumn:@"mediaID"]];
-            [f setTitle:[results2 stringForColumn:@"title"]];
-            [f setPath:[results2 stringForColumn:@"path"]];
-            [f setLocalPath:[results2 stringForColumn:@"localPath"]];
-            [f setVideoGalleryID:[results2 stringForColumn:@"galleryID"]];
-            [f setDescription:[results2 stringForColumn:@"description"]];
-            [f setTime:[results2 stringForColumn:@"time"]];
-            [f setVideoImage:[results2 stringForColumn:@"videoImage"]];
-            [f setSort:[results2 stringForColumn:@"sort"]];
-            [f setUserType:[results2 stringForColumn:@"userType"]];
-            [f setUserSubType:[results2 stringForColumn:@"userSubType"]];
+            FMedia *f=[[FMedia alloc] initWithDictionary:[results2 resultDictionary]];
             
             if ([f checkVideoForCategory:categ]) {
                 [videosTmp addObject:f];
@@ -2007,7 +1952,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     NSString *lastUpdate=[[NSUserDefaults standardUserDefaults] objectForKey:@"thubnailsLastUpdate"];
     for (int i=0;i<[videosArray2 count];i++)
     {
-        FVideo *vid=[videosArray2 objectAtIndex:i];
+        FMedia *vid=[videosArray2 objectAtIndex:i];
         int activeQueueIndex = i%[activeQueues2 count];
         dispatch_async([activeQueues2 objectAtIndex:activeQueueIndex], ^{
             
@@ -2019,7 +1964,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
                     if ([APP_DELEGATE connectedToInternet]) {
                         
                         
-                        NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid videoImage]];
+                        NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid mediaImage]];
                         UIImage *imgNew = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
                         CGSize size = CGSizeMake(300, 167);
                         UIGraphicsBeginImageContext(size);
@@ -2049,7 +1994,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
                 }
             }
             
-            FVideo *vid=[videosArray2 objectAtIndex:i];
+            FMedia *vid=[videosArray2 objectAtIndex:i];
             
             if ([preloadMoviesImages2 count] <= i) {
                 success++;
@@ -2061,15 +2006,15 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIImage *img;
-                NSArray *pathComp=[[vid videoImage] pathComponents];
-                NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[vid videoImage] lastPathComponent]];
+                NSArray *pathComp=[[vid mediaImage] pathComponents];
+                NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[vid mediaImage] lastPathComponent]];
                 NSFileManager *fileManager = [NSFileManager defaultManager];
                 NSError *error;
                 if ([[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
                     NSData *data=[NSData dataWithContentsOfFile:pathTmp];
                     img = [UIImage imageWithData:data];
                 } else{
-                    NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid videoImage]];
+                    NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid mediaImage]];
                     img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
                 }
                 if (img!=nil) {

@@ -7,7 +7,7 @@
 //
 
 #import "FFotonaMenu.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FMDatabase.h"
 #import "FDB.h"
 
@@ -19,93 +19,125 @@
 @synthesize description;
 @synthesize text;
 @synthesize caseID;
-@synthesize pdfSrc;
 @synthesize externalLink;
-@synthesize videoGalleryID;
-@synthesize videos;
+@synthesize videoArray;
+@synthesize pdfArray;
 @synthesize active;
-@synthesize allowedUserSubTypes;
-@synthesize allowedUserTypes;
 @synthesize videosDicArr;
 @synthesize iconName;
 @synthesize sort;
 @synthesize bookmark;
-
+@synthesize userPermissions;
+@synthesize galleryItems;
 @synthesize sortInt;
+@synthesize deleted;
 
--(id)initWithDictionary:(NSDictionary *)dic
+-(id)initWithDictionaryFromServer:(NSDictionary *)dic
 {
+    NSLog(@"%@",[dic objectForKey:@"videos"]);
     self=[super init];
     if (self) {
-        [self setCategoryID:[dic objectForKey:@"categoryID"]];
-        [self setCategoryIDPrev:[dic objectForKey:@"categoryIDPrev"]];
-        [self setTitle:[dic objectForKey:@"title"]];
-        [self setFotonaCategoryType:[dic objectForKey:@"fotonaCategoryType"]];
-        [self setDescription:[dic objectForKey:@"description"]];
-        [self setText:[dic objectForKey:@"text"]];
-        [self setCaseID:[dic objectForKey:@"caseID"]];
-        [self setPdfSrc:[dic objectForKey:@"pdfSrc"]];
-        [self setExternalLink:[dic objectForKey:@"externalLink"]];
-        [self setVideoGalleryID:[dic objectForKey:@"videoGalleryID"]];
-        
+        [self initCommon:dic];
+        [self setExternalLink:[dic objectForKey:@"link"]];
+
         if (![[dic objectForKey:@"videos"] isEqual:[NSNull null]] && ![[dic objectForKey:@"videos"] isKindOfClass:[NSString class]]) {
             [self setVideosDicArr:[dic objectForKey:@"videos"]];
         }else
         {
             self.videosDicArr=[[NSArray alloc] init];
         }
-        [self parseVideos:videosDicArr];
-        [self setActive:[dic objectForKey:@"active"]];
-        [self setAllowedUserTypes:[dic objectForKey:@"allowedUserTypes"]];
-        [self setAllowedUserSubTypes:[dic objectForKey:@"allowedUserSubTypes"]];
-        [self setIconName:[dic objectForKey:@"fotonaImageType"]];
-        [self setSort:[dic objectForKey:@"sort"]];
-        [self setBookmark:[dic objectForKey:@"isBookmark"]];
+        [self parseVideos:videosDicArr isFromServer:YES];
+        //TODO: parsanje pdfov
+        if (![[dic objectForKey:@"pdfs"] isEqual:[NSNull null]] && ![[dic objectForKey:@"pdfs"] isKindOfClass:[NSString class]]) {
+           // [self setVideosDicArr:[dic objectForKey:@"videos"]];
+        }else
+        {
+            //self.videosDicArr=[[NSArray alloc] init];
+        }
+        [self parseVideos:videosDicArr isFromServer:YES];
+        
+        [self setGalleryItems:[FCommon arrayToString:[dic objectForKey:@"galleryItemIDs"] withSeparator:@","]];
     }
     
     return self;
 }
 
 
--(void)updateVideos
+
+-(id)initWithDictionary:(NSDictionary *)dic
 {
-    self.videos=[[NSMutableArray alloc] init];
-    [self parseVideos:videosDicArr];
+    self=[super init];
+    if (self) {
+        
+        [self initCommon:dic];
+        [self setExternalLink:[dic objectForKey:@"externalLink"]];
+        if (![[dic objectForKey:@"videos"] isEqual:[NSNull null]] && ![[dic objectForKey:@"videos"] isKindOfClass:[NSString class]]) {
+            [self setVideosDicArr:[dic objectForKey:@"videos"]];
+        }else
+        {
+            self.videosDicArr=[[NSArray alloc] init];
+        }
+        [self parseVideos:videosDicArr isFromServer:NO];
+        
+        //TODO: parsanje pdfov
+        if (![[dic objectForKey:@"pdfs"] isEqual:[NSNull null]] && ![[dic objectForKey:@"pdfs"] isKindOfClass:[NSString class]]) {
+            // [self setVideosDicArr:[dic objectForKey:@"videos"]];
+        }else
+        {
+            //self.videosDicArr=[[NSArray alloc] init];
+        }
+        [self parseVideos:videosDicArr isFromServer:YES];
+        
+        [self setGalleryItems:[dic objectForKey:@"galleryItemIDs"]];
+    }
+    
+    return self;
 }
 
--(void)parseVideos:(NSArray *)arrVideos
+-(void) initCommon:(NSDictionary *) dic {
+    [self setCategoryID:[dic objectForKey:@"categoryID"]];
+    [self setCategoryIDPrev:[dic objectForKey:@"categoryIDPrev"]];
+    [self setTitle:[dic objectForKey:@"title"]];
+    [self setFotonaCategoryType:[dic objectForKey:@"fotonaCategoryType"]];
+    [self setIconName:[dic objectForKey:@"fotonaImageType"]];
+    [self setCaseID:[dic objectForKey:@"caseID"]];
+    [self setDescription:[dic objectForKey:@"description"]];
+    [self setText:[dic objectForKey:@"text"]];
+    [self setActive:[dic objectForKey:@"active"]];
+    [self setDeleted:[dic objectForKey:@"deleted"]];
+    [self setSort:[dic objectForKey:@"sort"]];
+    [self setBookmark:[dic objectForKey:@"isBookmark"]];
+    [self setUserPermissions:[dic objectForKey:@"userPermissions"]];
+}
+
+
+-(void)updateVideos
+{
+    self.videoArray=[[NSMutableArray alloc] init];
+    [self parseVideos:videosDicArr isFromServer:true];
+}
+
+-(void)parseVideos:(NSArray *)arrVideos isFromServer:(BOOL) server
 {
     if (![arrVideos isEqual:[NSNull null]]) {
         for (NSDictionary *dicVideo in arrVideos) {
-            FVideo *video=[[FVideo alloc] initWithDictionary:dicVideo];
-                   [self.videos addObject:video];
+            FMedia *video;
+            if (server) {
+                video=[[FMedia alloc] initWithDictionaryFromServer:dicVideo forMediType:MEDIAVIDEO];
+            } else {
+                 video=[[FMedia alloc] initWithDictionary:dicVideo];
+            }
+           
+            [self.videoArray addObject:video];
         }
     }
 }
 
 
--(void)insertIntoDB:(NSMutableArray *)video
-{
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    for (FVideo *v in video) {
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where galleryID=%@;",self.videoGalleryID]];
-        BOOL flag=NO;
-        while([results next]) {
-            flag=YES;
-        }
-        
-        if (!flag) {
-            [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,bookmark,videoImage,sort,userType,userSubType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",v.itemID,self.videoGalleryID,v.title,v.path,@"",v.description,@"1",@"0",v.videoImage,v.sort,v.userType,v.userSubType];
-        }
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
+
 -(NSMutableArray *)getVideos
 {
-    return [FDB getVideosWithGallery:self.videoGalleryID];
-
+    return [FDB getVideosFromArray:[FCommon stringToArray:[self galleryItems] withSeparator:@","]];    
 }
 
 -(NSDate *) formateDate:(NSString *) stringDate{

@@ -13,7 +13,7 @@
 #import "NSString+HTML.h"
 #import "FUpdateContent.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FAuthor.h"
 #import "FGalleryViewController.h"
 #import <AVFoundation/AVFoundation.h>
@@ -732,7 +732,7 @@
             vidArr = [currentCase video];
         }
         for (int i=0;i<[vidArr count];i++) {
-            FVideo *vid=[vidArr objectAtIndex:i];
+            FMedia *vid=[vidArr objectAtIndex:i];
             UIButton *tmpImg=[UIButton buttonWithType:UIButtonTypeCustom];
             [tmpImg setFrame:CGRectMake(x, 0, 200, 200)];
             [tmpImg.imageView setContentMode:UIViewContentModeScaleAspectFill];
@@ -753,27 +753,28 @@
                 AVAssetImageGenerator *generate1 = [[AVAssetImageGenerator alloc] initWithAsset:asset1];
                 generate1.appliesPreferredTrackTransform = YES;
                 NSError *err = NULL;
-                CMTime time = CMTimeMakeWithSeconds([vid.time integerValue], 1);
-                CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
-                UIImage *one = [[UIImage alloc] initWithCGImage:oneRef];
-                UIImage *image=one;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    //code to be executed on the main thread when background task is finished
-                    [tmpImg setImage:image forState:UIControlStateNormal];
-                    //                    UIImageView *expandImg=[[UIImageView alloc] initWithFrame:CGRectMake(tmpImg.frame.size.width-25, tmpImg.frame.size.height-25, 60, 60)];
-                    //                    expandImg.center = CGPointMake(tmpImg.frame.size.width / 2, tmpImg.frame.size.height / 2);
-                    //
-                    //                    [expandImg setImage:[UIImage imageNamed:@"playVideo"]];
-                    //                    [tmpImg addSubview:expandImg];
-                    [tmpImg setTag:i];
-                    [tmpImg addTarget:self action:@selector(openVideo:) forControlEvents:UIControlEventTouchUpInside];
-                    [imagesScroll addSubview:tmpImg];
-                    UILabel *videoName=[[UILabel alloc] initWithFrame:CGRectMake(x-210, 200, 190, 20)];
-                    [videoName setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
-                    [videoName setText:vid.title];
-                    [videoName setTextAlignment:NSTextAlignmentCenter];
-                    [imagesScroll addSubview:videoName];
-                });
+                //TODO: tuki vleče sliko vn, ali jo rabi????????
+//                CMTime time = CMTimeMakeWithSeconds([vid.time integerValue], 1);
+//                CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
+//                UIImage *one = [[UIImage alloc] initWithCGImage:oneRef];//TODO: tuki vleče sliko vn, ali jo rabi????????
+//                UIImage *image=one;
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    //code to be executed on the main thread when background task is finished
+//                    [tmpImg setImage:image forState:UIControlStateNormal];
+//                    //                    UIImageView *expandImg=[[UIImageView alloc] initWithFrame:CGRectMake(tmpImg.frame.size.width-25, tmpImg.frame.size.height-25, 60, 60)];
+//                    //                    expandImg.center = CGPointMake(tmpImg.frame.size.width / 2, tmpImg.frame.size.height / 2);
+//                    //
+//                    //                    [expandImg setImage:[UIImage imageNamed:@"playVideo"]];
+//                    //                    [tmpImg addSubview:expandImg];
+//                    [tmpImg setTag:i];
+//                    [tmpImg addTarget:self action:@selector(openVideo:) forControlEvents:UIControlEventTouchUpInside];
+//                    [imagesScroll addSubview:tmpImg];
+//                    UILabel *videoName=[[UILabel alloc] initWithFrame:CGRectMake(x-210, 200, 190, 20)];
+//                    [videoName setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
+//                    [videoName setText:vid.title];
+//                    [videoName setTextAlignment:NSTextAlignmentCenter];
+//                    [imagesScroll addSubview:videoName];
+//                });
             });
         }
         
@@ -851,8 +852,8 @@
     int allDataObjectAtIndex0Count=0;
     
     int y=0;
-    if (currentCase.parametars && currentCase.parametars != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
-        NSArray*allData=[NSJSONSerialization JSONObjectWithData:[currentCase.parametars dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+    if (currentCase.parameters && currentCase.parameters != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
+        NSArray*allData=[NSJSONSerialization JSONObjectWithData:[currentCase.parameters dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
         
         
         NSMutableArray *allDataM=[allData mutableCopy];
@@ -1115,7 +1116,7 @@
             for (FImage *img in m) {
                 NSArray *pathComp=[img.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-                [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,sort) VALUES (?,?,?,?,?,?,?,?,?)",img.itemID,img.galleryID,img.title,img.path,pathTmp,img.description,@"0",@"0",img.sort];
+                [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,sort, deleted, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?)",img.itemID,img.title,img.path,pathTmp,img.description,@"0",@"0",img.sort, img.deleted, img.fileSize];
                 //                [img downloadFile:img.path inFolder:@"/.Cases"];
                 [links addObject:img.path];
             }
@@ -1126,10 +1127,10 @@
         }else if(type==1){
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
-            for (FVideo *vid in m) {
+            for (FMedia *vid in m) {
                 NSArray *pathComp=[vid.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,time,videoImage,sort, userType,userSubType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.videoGalleryID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.videoImage,vid.sort, vid.userType,vid.userSubType];
+                [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,time,mediaImage,sort, active, deleted, download, fileSize, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.mediaImage,vid.sort, vid.active, vid.deleted, vid.download, vid.filesize, vid.userPermissions];
                 //                [vid downloadFile:vid.path inFolder:@"/.Cases"];
                 [links addObject:vid.path];
             }
@@ -1153,7 +1154,7 @@
             [fileManager removeItemAtPath:pathTmp error:&error];
         }
     } else if (t==1){
-        for (FVideo *vid in array) {
+        for (FMedia *vid in array) {
             NSArray *pathComp=[vid.path pathComponents];
             NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
             NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -1290,7 +1291,7 @@
 
 -(IBAction)openVideo:(id)sender
 {
-    FVideo *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
+    FMedia *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
     if (![vid.localPath isEqualToString:@""]) {
         [FCommon playVideoFromURL:vid.localPath onViewController:self];
     }else
@@ -1405,25 +1406,7 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT c.* FROM Cases as c,CasesInCategories as cic where cic.categorieID=%@ and cic.caseID=c.caseID",catID]];
     while([results next]) {
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
+        FCase *f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
         //[cases addObject:f];
         if ([APP_DELEGATE checkGuest]) {
             if ([f.allowedForGuests isEqualToString:@"1"]) {
@@ -1466,25 +1449,8 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where authorID=%@",authorID]];
     while([results next]) {
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
+        FCase *f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
+        
         //[cases addObject:f];
         if ([APP_DELEGATE checkGuest]) {
             if ([f.allowedForGuests isEqualToString:@"1"]) {

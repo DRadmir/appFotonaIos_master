@@ -16,9 +16,10 @@
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FDB.h"
 #import "FHelperRequest.h"
+#import "FGoogleAnalytics.h"
 
 @interface FCaseMenuViewController ()
 
@@ -105,6 +106,11 @@ NSString *count = @"";
     [[self.navigationController navigationBar] addSubview:menuTitle];
     updateCounter=0;
     success=0;
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [FGoogleAnalytics writeGAForItem:[self title] andType:GACASEMENUINT];
 }
 
 -(void)backBtn:(id)sender
@@ -424,14 +430,14 @@ NSString *count = @"";
                                                                                                            error:&jsonError]];
                         NSMutableArray *imgs = [[NSMutableArray alloc] init];
                         for (NSDictionary *imgLink in [caseObj images]) {
-                            FImage * img = [[FImage alloc] initWithDictionary:imgLink];
+                            FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
                             
                             [imgs addObject:img];
                         }
                         [caseObj setImages:imgs];
                         NSMutableArray *videos = [[NSMutableArray alloc] init];
                         for (NSDictionary *videoLink in [caseObj video]) {
-                            FVideo * videoTemp = [[FVideo alloc] initWithDictionary:videoLink];
+                            FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink forMediType:MEDIAVIDEO];
                             
                             [videos addObject:videoTemp];
                         }
@@ -585,7 +591,7 @@ NSString *count = @"";
         [f setProcedure:[results stringForColumn:@"procedure"]];
         [f setResults:[results stringForColumn:@"results"]];
         [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
+        [f setParameters:[results stringForColumn:@"parameters"]];
         [f setDate:[results stringForColumn:@"date"]];
         [f setGalleryID:[results stringForColumn:@"galleryID"]];
         [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
@@ -626,7 +632,7 @@ NSString *count = @"";
         [f setProcedure:[results stringForColumn:@"procedure"]];
         [f setResults:[results stringForColumn:@"results"]];
         [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
+        [f setParameters:[results stringForColumn:@"parameters"]];
         [f setDate:[results stringForColumn:@"date"]];
         [f setGalleryID:[results stringForColumn:@"galleryID"]];
         [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];

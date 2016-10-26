@@ -11,11 +11,11 @@
 #import <QuickLook/QuickLook.h>
 #import "FDLabelView.h"
 #import "Bubble.h"
-#import "FVideo.h"
+#import "FMedia.h"
 
 @interface FFotonaViewController : UIViewController <UITableViewDelegate,UITableViewDataSource,UIWebViewDelegate,QLPreviewControllerDelegate,QLPreviewControllerDataSource,UISearchBarDelegate,UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, BubbleDelegate>
 {
-//UIImagePickerControllerDelegate,
+    //UIImagePickerControllerDelegate,
     
     IBOutlet UIWebView *webView;
     
@@ -47,7 +47,7 @@
     IBOutlet UIView *webContentView;
     
     UIImage *imageToSave;
-//    UIImagePickerController *imagePicker;
+    //    UIImagePickerController *imagePicker;
     NSString *imageName;
     
     
@@ -96,15 +96,15 @@
 - (IBAction)openSettings:(id)sender;
 - (IBAction)closeSettings:(id)sender;
 
-- (void) refreshCell:(int) index;
-- (void) refreshCellUnbookmark:(int) index;
-- (void) refreshVideoCells;
+-(void) refreshCell:(int) index;
+-(void) refreshCellUnbookmark:(int) index;
+-(void) refreshVideoCells;
 
-- (void) refreshMenu:(NSString *)link;
+-(void) refreshMenu:(NSString *)link;
 
--(void)openVideoFromSearch:(FVideo *)video;
+-(void)openVideoFromSearch:(FMedia *)video;
 
-- (void) setOpenGal: (BOOL) og;
+-(void) setOpenGal: (BOOL) og;
 -(void) setPDF:(FFotonaMenu *)PDF;
 -(void) openPDFFromSearch;
 @end

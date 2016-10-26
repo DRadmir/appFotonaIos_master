@@ -821,7 +821,7 @@ FNewsView *newsViewController;
         [f setProcedure:[results stringForColumn:@"procedure"]];
         [f setResults:[results stringForColumn:@"results"]];
         [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
+        [f setParameters:[results stringForColumn:@"parameters"]];
         [f setDate:[results stringForColumn:@"date"]];
         [f setGalleryID:[results stringForColumn:@"galleryID"]];
         [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];

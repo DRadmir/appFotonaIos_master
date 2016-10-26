@@ -12,18 +12,21 @@
 
 @implementation FImage
 @synthesize itemID;
-@synthesize galleryID;
 @synthesize title;
 @synthesize path;
 @synthesize localPath;
 @synthesize description;
+@synthesize deleted;
+@synthesize fileSize;
+@synthesize sort;
 
--(id)initWithDictionary:(NSDictionary *)dic
+
+
+-(id)initWithDictionaryFromServer:(NSDictionary *)dic
 {
     self=[super init];
     if (self) {
         [self setItemID:[dic valueForKey:@"itemID"]];
-        [self setGalleryID:[dic valueForKey:@"galleryID"]];
         [self setTitle:[dic valueForKey:@"title"]];
         [self setPath:[dic valueForKey:@"path"]];
         [self setPath:[self.path stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
@@ -34,10 +37,37 @@
             [self setDescription:[dic valueForKey:@"description"]];
         }
         [self setSort:[dic valueForKey:@"sort"]];
+        [self setDeleted:[dic valueForKey:@"deleted"]];
+        [self setFileSize:[dic valueForKey:@"fileSize"]];
     }
     
     return self;
 }
+
+-(id)initWithDictionaryFromDB:(NSDictionary *)dic
+{
+    self=[super init];
+    if (self) {
+        [self setItemID:[dic valueForKey:@"itemID"]];
+        [self setTitle:[dic valueForKey:@"title"]];
+        [self setPath:[dic valueForKey:@"path"]];
+        [self setPath:[self.path stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
+        [self setLocalPath:@""];
+        if ([dic valueForKey:@"description"]== nil || [dic valueForKey:@"description"]== (id)[NSNull null] ) {
+            [self setDescription:@""];
+        }else{
+            [self setDescription:[dic valueForKey:@"description"]];
+        }
+        [self setSort:[dic valueForKey:@"sort"]];
+        [self setDeleted:[dic valueForKey:@"deleted"]];
+        [self setFileSize:[dic valueForKey:@"fileSize"]];
+        [self setLocalPath:[dic valueForKey:@"localPath"]];
+    }
+    
+    return self;
+}
+
+
 
 -(void)downloadFile:(NSString *)fileUrl inFolder:(NSString *)folder
 {

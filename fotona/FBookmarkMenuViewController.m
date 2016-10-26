@@ -622,25 +622,7 @@ NSString *categoryMenu = @"";
         }
         
         if (flag) {
-            FCase *f=[[FCase alloc] init];
-            [f setCaseID:[results stringForColumn:@"caseID"]];
-            [f setTitle:[results stringForColumn:@"title"]];
-            [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-            [f setName:[results stringForColumn:@"name"]];
-            [f setImage:[results stringForColumn:@"image"]];
-            [f setIntroduction:[results stringForColumn:@"introduction"]];
-            [f setProcedure:[results stringForColumn:@"procedure"]];
-            [f setResults:[results stringForColumn:@"results"]];
-            [f setReferences:[results stringForColumn:@"references"]];
-            [f setParametars:[results stringForColumn:@"parameters"]];
-            [f setDate:[results stringForColumn:@"date"]];
-            [f setGalleryID:[results stringForColumn:@"galleryID"]];
-            [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-            [f setActive:[results stringForColumn:@"active"]];
-            [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-            [f setAuthorID:[results stringForColumn:@"authorID"]];
-            [f setBookmark:[results stringForColumn:@"isBookmark"]];
-            [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
+            FCase *f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
             if (![categoryMenu isEqualToString:@"0"]) {
                 if ([f.coverTypeID isEqualToString:categoryMenu])
                     [cases addObject:f];
@@ -674,21 +656,7 @@ NSString *categoryMenu = @"";
         FMResultSet *results = [database executeQuery:@"SELECT * FROM FotonaMenu where categoryID=? and active=1" withArgumentsInArray:[NSArray arrayWithObjects:docID, nil]];
         
         while([results next]) {
-            FFotonaMenu *f=[[FFotonaMenu alloc] init];
-            [f setCategoryID:[results stringForColumn:@"categoryID"]];
-            [f setCategoryIDPrev:[results stringForColumn:@"categoryIDPrev"]];
-            [f setTitle:[results stringForColumn:@"title"]];
-            [f setFotonaCategoryType:[results stringForColumn:@"fotonaCategoryType"]];
-            [f setDescription:[results stringForColumn:@"description"]];
-            [f setText:[results stringForColumn:@"text"]];
-            [f setCaseID:[results stringForColumn:@"caseID"]];
-            [f setPdfSrc:[results stringForColumn:@"pdfSrc"]];
-            [f setExternalLink:[results stringForColumn:@"externalLink"]];
-            [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-            [f setActive:[results stringForColumn:@"active"]];
-            [f setSort:[results stringForColumn:@"sort"]];
-            [f setIconName:[results stringForColumn:@"icon"]];
-            [f setBookmark:[results stringForColumn:@"isBookmark"]];
+            FFotonaMenu *f=[[FFotonaMenu alloc] initWithDictionary:[results resultDictionary]];
             
             if (![categoryMenu isEqualToString:@"0"]) {
                 if ([self checkFotonaForUser:f andCategory:categoryMenu]) {
@@ -706,6 +674,7 @@ NSString *categoryMenu = @"";
 
 -(BOOL)checkFotonaForUser:(FFotonaMenu *)f andCategory:(NSString *)category
 {
+    //TODO predelava za pravice
     BOOL check=NO;
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];

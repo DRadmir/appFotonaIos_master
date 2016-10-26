@@ -13,6 +13,7 @@
 @synthesize categoryIDPrev;
 @synthesize title;
 @synthesize sort;
+@synthesize deleted;
 
 -(id)initWithDictionary:(NSDictionary *)dic
 {
@@ -23,9 +24,8 @@
         [self setTitle:[dic valueForKey:@"title"]];
         [self setSort:[dic valueForKey:@"sort"]];
         [self setActive:[dic valueForKey:@"active"]];
+        [self setDeleted:[dic valueForKey:@"deleted"]];
     }
-    
-    
     return self;
 }
 

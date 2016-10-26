@@ -393,8 +393,8 @@
                             [fileManager removeItemAtPath:downloadFilename error:&error];
                             
                             //                            downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[results2 stringForColumn:@"videoImage"]];
-                            NSArray *pathComp=[[results2 stringForColumn:@"videoImage"] pathComponents];
-                            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[results2 stringForColumn:@"videoImage"] lastPathComponent]];
+                            NSArray *pathComp=[[results2 stringForColumn:@"mediaImage"] pathComponents];
+                            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[results2 stringForColumn:@"mediaImage"] lastPathComponent]];
                             [fileManager removeItemAtPath:pathTmp error:&error];
                             x++;
                         }
@@ -448,7 +448,7 @@
                             }
                             else{
                                 [localDatabase executeUpdate:@"DELETE FROM Cases WHERE caseID=?",selected.caseID];
-                                [localDatabase executeUpdate:@"INSERT INTO Cases (caseID,title, coverTypeID,name,image,active,authorID,isBookmark,alloweInCoverFlow,galleryID,videoGalleryID) VALUES (?,?,?,?,?,?,?,?,?,?,?)",selected.caseID,selected.title,selected.coverTypeID,selected.name,selected.image,selected.active,selected.authorID,@"0",selected.coverflow, selected.galleryID,selected.videoGalleryID];
+                                [localDatabase executeUpdate:@"INSERT INTO Cases (caseID,title, coverTypeID,name,image,active,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?)",selected.caseID,selected.title,selected.coverTypeID,selected.name,selected.image,selected.active,selected.authorID,@"0",selected.coverflow,selected.deleted, selected.download, selected.userPermissions];
                                 [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
                                 x+=[selected getImages].count-1;
                                 x+=[selected getVideos].count-1;

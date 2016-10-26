@@ -10,7 +10,7 @@
 #import "FCase.h"
 #import "FFotonaMenu.h"
 #import "FAuthor.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FMDatabase.h"
 
 @interface FDB : NSObject
@@ -49,10 +49,10 @@
 
 
 +(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
-+(NSMutableArray *)getVideosWithGallery:(NSString *)videoGalleryID;
++(NSMutableArray *)getVideosFromArray:(NSString *)videoGalleryID;
 +(NSMutableArray *)getVideoswithCategory:(NSString *)videoCategory;
-+(void)removeBookmarkedVideo:(FVideo *)videoToRemove;
-+(FVideo *)getVideoWithId:(NSString *) videoId;
++(void)removeBookmarkedVideo:(FMedia *)videoToRemove;
++(FMedia *)getVideoWithId:(NSString *) videoId;
 
 
 +(NSMutableArray *)getFotonaMenu:(NSString *)catID;
@@ -68,9 +68,13 @@
 +(BOOL)checkIfBookmarkedForDocumentID:(NSString *)documentID andType:(NSString *)type;
 +(void)removeFromBookmarkForDocumentID:(NSString *)documentID;
 
++(void)addMedia:(NSMutableArray *)m withType:(int)type andDownload:(BOOL) toDownload;
++(void) deleteMedia:(NSMutableArray *)mediaArray andType:(NSString *) type;
+
 
 +(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(void) removeFromFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(BOOL) checkIfFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(NSMutableArray *) getAllFavoritesForUser;
+
 @end

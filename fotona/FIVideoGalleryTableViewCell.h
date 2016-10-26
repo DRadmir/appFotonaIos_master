@@ -6,8 +6,14 @@
 //  Copyright © 2016 4egenus. All rights reserved.
 //
 
+
+
+
+
+//TODO odstrant ta dva classa
+
 #import <UIKit/UIKit.h>
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FIVideoGalleryViewController.h"
 
 @interface FIVideoGalleryTableViewCell : UITableViewCell <UIActionSheetDelegate>
@@ -18,7 +24,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblVideoTitle;
 @property (strong, nonatomic) FIVideoGalleryViewController *parent;
 
-@property (strong, nonatomic) FVideo *video;
+@property (strong, nonatomic) FMedia *video;
 
 -(void)fillCell;
 - (IBAction)addToBookmark:(id)sender;

@@ -48,11 +48,11 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-   [favoriteTableView reloadData];
+    [favoriteTableView reloadData];
     
     updateCounter = 0;
     success = 0;
-     [FGoogleAnalytics writeGAForItem:nil andType:GAFAVORITETABINT];
+    [FGoogleAnalytics writeGAForItem:nil andType:GAFAVORITETABINT];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -64,9 +64,8 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-     return 182;
+    return 182;
 }
-
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -78,8 +77,8 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     FItemFavorite *item = favorites[indexPath.row];
-       
-    if ([[item typeID] intValue] == [BOOKMARKCASE intValue]) {
+    
+    if ([[item typeID] intValue] == BOOKMARKCASEINT) {
         
         FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
         FCase *caseToShow = [FDB getCaseWithID:[item itemID]];
@@ -88,8 +87,15 @@
         [cell setParentIphone:self];
         [cell setContentForCase:caseToShow];
         return cell;
+    } else {
+        if ([[item typeID] intValue] == BOOKMARKVIDEOINT) {
+            
+            FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
+            [cell setContentForFotona:item];
+            return cell;
+        }
     }
-    return [[UITableViewCell alloc] init];    return [[UITableViewCell alloc] init];
+    return [[UITableViewCell alloc] init];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -98,10 +104,10 @@
     switch ([[item typeID] intValue]) {
         case BOOKMARKCASEINT:
             if (((FIGalleryTableViewCell *) [tableView cellForRowAtIndexPath:indexPath]).enabled) {
-                 [self openCaseWithID:[item itemID]];
+                [self openCaseWithID:[item itemID]];
             }
-        break;
-            
+            break;
+          
         default:
             break;
     }
@@ -131,7 +137,7 @@
         [self openCase:caseToOpen];
     } else{
         if([APP_DELEGATE connectedToInternet]){
-             NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:caseID onView: self.view];
+            NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:caseID onView: self.view];
             AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
             [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                 // I get response as XML here and parse it in a function
@@ -145,7 +151,7 @@
                                                                                                    error:&jsonError]];
                 NSMutableArray *imgs = [[NSMutableArray alloc] init];
                 for (NSDictionary *imgLink in [caseObj images]) {
-                    FImage * img = [[FImage alloc] initWithDictionary:imgLink];
+                    FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
                     
                     [imgs addObject:img];
                 }
@@ -190,7 +196,7 @@
     }
     flow.lastIndex = 3;
     [flow.tabControler setSelectedIndex:3];
-
+    
 }
 
 #pragma mark - HUD

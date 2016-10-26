@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FBookmarkViewController.h"
 #import "FFotonaViewController.h"
 
@@ -22,7 +22,7 @@
 @property (nonatomic,retain) FBookmarkViewController *parent;
 @property (nonatomic,retain) FFotonaViewController *parentFotona;
 
-@property (nonatomic, retain) FVideo* video;
+@property (nonatomic, retain) FMedia* video;
 
 
 @end

@@ -18,10 +18,8 @@
 @property (nonatomic, retain) NSString *procedure;
 @property (nonatomic, retain) NSString *results;
 @property (nonatomic, retain) NSString *references;
-@property (nonatomic, retain) NSString *parametars;
+@property (nonatomic, retain) NSString *parameters;
 @property (nonatomic, retain) NSString *date;
-@property (nonatomic, retain) NSString *galleryID;
-@property (nonatomic, retain) NSString *videoGalleryID;
 @property (nonatomic, retain) NSMutableArray *images;
 @property (nonatomic, retain) NSMutableArray *video;
 @property (nonatomic, retain) NSString *active;
@@ -30,6 +28,12 @@
 @property (nonatomic, retain) NSString *authorID;
 @property (nonatomic, retain) NSString *bookmark;
 @property (nonatomic, retain) NSString *coverflow;
+
+@property (nonatomic, retain) NSString *deleted;
+@property (nonatomic, retain) NSString *download;
+@property (nonatomic, retain) NSString *userPermissions;
+@property (nonatomic, retain) NSString *galleryItemVideoIDs;
+@property (nonatomic, retain) NSString *galleryItemImagesIDs;
 
 -(id)initWithDictionary:(NSDictionary *)dic;
 -(id)initWithDictionaryDB:(NSDictionary *)dic;

@@ -25,56 +25,56 @@
                         <color key="textColor" red="0.21191233396530151" green="0.21190600097179413" blue="0.21190959215164185" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HSe-ao-sgL" userLabel="Button2">
+                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HSe-ao-sgL" userLabel="Button2">
                         <constraints>
-                            <constraint firstAttribute="width" constant="19" id="Ikc-Qg-Ipo"/>
+                            <constraint firstAttribute="width" constant="23" id="Ikc-Qg-Ipo"/>
                         </constraints>
-                        <state key="normal" image="orange.png">
+                        <state key="normal" backgroundImage="event_aesthetics_gray">
                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
                             <action selector="selectCategory:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="dMc-4d-RBN"/>
                         </connections>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GW1-8B-TGW" userLabel="Button1">
+                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GW1-8B-TGW" userLabel="Button1">
                         <constraints>
-                            <constraint firstAttribute="width" constant="19" id="EXO-aV-F2y"/>
+                            <constraint firstAttribute="width" constant="23" id="EXO-aV-F2y"/>
                         </constraints>
-                        <state key="normal" image="pink.png">
+                        <state key="normal" backgroundImage="event_gyno_gray">
                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
                             <action selector="selectCategory:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="GqC-oI-6yr"/>
                         </connections>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hCr-CU-Q1t" userLabel="Button3">
+                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hCr-CU-Q1t" userLabel="Button3">
                         <constraints>
-                            <constraint firstAttribute="width" constant="19" id="ILk-yR-O3U"/>
+                            <constraint firstAttribute="width" constant="23" id="ILk-yR-O3U"/>
                         </constraints>
-                        <state key="normal" image="blue.png">
+                        <state key="normal" backgroundImage="event_dental_gray">
                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
                             <action selector="selectCategory:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="xVE-ZS-FpL"/>
                         </connections>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h5W-md-dyv" userLabel="Button4">
+                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h5W-md-dyv" userLabel="Button4">
                         <constraints>
-                            <constraint firstAttribute="width" constant="19" id="czE-2S-TrB"/>
+                            <constraint firstAttribute="width" constant="23" id="czE-2S-TrB"/>
                         </constraints>
-                        <state key="normal" image="green.png">
+                        <state key="normal" backgroundImage="event_surgery_gray">
                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
                             <action selector="selectCategory:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="ZtG-4Q-By3"/>
                         </connections>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yvJ-pK-gRY" userLabel="Button5">
+                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yvJ-pK-gRY" userLabel="Button5">
                         <constraints>
-                            <constraint firstAttribute="width" constant="19" id="0gz-l8-9jX"/>
-                            <constraint firstAttribute="height" constant="19" id="Skb-dB-oKp"/>
+                            <constraint firstAttribute="width" constant="23" id="0gz-l8-9jX"/>
+                            <constraint firstAttribute="height" constant="23" id="Skb-dB-oKp"/>
                         </constraints>
-                        <state key="normal" image="all.png">
+                        <state key="normal" backgroundImage="event_all_red">
                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
@@ -91,25 +91,25 @@
                 <constraints>
                     <constraint firstItem="3dt-ej-3Mt" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="31i-Ry-Ipd"/>
                     <constraint firstItem="h5W-md-dyv" firstAttribute="firstBaseline" secondItem="yvJ-pK-gRY" secondAttribute="firstBaseline" id="39S-lQ-VT5"/>
-                    <constraint firstAttribute="trailing" secondItem="GW1-8B-TGW" secondAttribute="trailing" constant="10" id="6H0-g1-tPk"/>
+                    <constraint firstAttribute="trailing" secondItem="GW1-8B-TGW" secondAttribute="trailing" constant="8" id="6H0-g1-tPk"/>
                     <constraint firstItem="HSe-ao-sgL" firstAttribute="firstBaseline" secondItem="hCr-CU-Q1t" secondAttribute="firstBaseline" id="Aui-SE-SGW"/>
                     <constraint firstItem="GW1-8B-TGW" firstAttribute="centerY" secondItem="xPb-00-G19" secondAttribute="centerY" id="Bth-cP-7p0"/>
                     <constraint firstItem="xPb-00-G19" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="EOs-p2-X3s"/>
                     <constraint firstItem="hCr-CU-Q1t" firstAttribute="baseline" secondItem="HSe-ao-sgL" secondAttribute="baseline" id="Gih-aq-R7z"/>
-                    <constraint firstItem="hCr-CU-Q1t" firstAttribute="leading" secondItem="h5W-md-dyv" secondAttribute="trailing" constant="24" id="IAl-OQ-8NV"/>
-                    <constraint firstItem="GW1-8B-TGW" firstAttribute="leading" secondItem="HSe-ao-sgL" secondAttribute="trailing" constant="25" id="K16-IU-z79"/>
+                    <constraint firstItem="hCr-CU-Q1t" firstAttribute="leading" secondItem="h5W-md-dyv" secondAttribute="trailing" constant="22" id="IAl-OQ-8NV"/>
+                    <constraint firstItem="GW1-8B-TGW" firstAttribute="leading" secondItem="HSe-ao-sgL" secondAttribute="trailing" constant="23" id="K16-IU-z79"/>
                     <constraint firstAttribute="bottom" secondItem="3dt-ej-3Mt" secondAttribute="bottom" id="Ngp-CC-pUu"/>
-                    <constraint firstItem="HSe-ao-sgL" firstAttribute="leading" secondItem="hCr-CU-Q1t" secondAttribute="trailing" constant="24" id="Ocu-Dc-EZU"/>
+                    <constraint firstItem="HSe-ao-sgL" firstAttribute="leading" secondItem="hCr-CU-Q1t" secondAttribute="trailing" constant="22" id="Ocu-Dc-EZU"/>
                     <constraint firstItem="3dt-ej-3Mt" firstAttribute="top" secondItem="xPb-00-G19" secondAttribute="bottom" constant="11" id="U5l-WN-hOQ"/>
                     <constraint firstItem="HSe-ao-sgL" firstAttribute="firstBaseline" secondItem="GW1-8B-TGW" secondAttribute="firstBaseline" id="U9N-iI-DIw"/>
                     <constraint firstItem="hCr-CU-Q1t" firstAttribute="baseline" secondItem="h5W-md-dyv" secondAttribute="baseline" id="VVy-v7-yG4"/>
                     <constraint firstItem="yvJ-pK-gRY" firstAttribute="top" secondItem="h5W-md-dyv" secondAttribute="top" id="d7U-wW-FL6"/>
                     <constraint firstItem="hCr-CU-Q1t" firstAttribute="top" secondItem="h5W-md-dyv" secondAttribute="top" id="g8y-ly-876"/>
                     <constraint firstItem="GW1-8B-TGW" firstAttribute="top" secondItem="HSe-ao-sgL" secondAttribute="top" id="gV7-In-suC"/>
-                    <constraint firstItem="h5W-md-dyv" firstAttribute="leading" secondItem="yvJ-pK-gRY" secondAttribute="trailing" constant="24" id="gf9-QW-ed6"/>
+                    <constraint firstItem="h5W-md-dyv" firstAttribute="leading" secondItem="yvJ-pK-gRY" secondAttribute="trailing" constant="22" id="gf9-QW-ed6"/>
                     <constraint firstAttribute="trailing" secondItem="3dt-ej-3Mt" secondAttribute="trailing" id="jhn-Ea-eKU"/>
                     <constraint firstItem="h5W-md-dyv" firstAttribute="firstBaseline" secondItem="hCr-CU-Q1t" secondAttribute="firstBaseline" id="nRo-cY-0by"/>
-                    <constraint firstItem="GW1-8B-TGW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="4" id="q50-1x-5Ka"/>
+                    <constraint firstItem="GW1-8B-TGW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="2" id="q50-1x-5Ka"/>
                     <constraint firstItem="HSe-ao-sgL" firstAttribute="baseline" secondItem="GW1-8B-TGW" secondAttribute="baseline" id="whY-MI-HNu"/>
                     <constraint firstItem="yvJ-pK-gRY" firstAttribute="baseline" secondItem="h5W-md-dyv" secondAttribute="baseline" id="xSz-td-Te4"/>
                     <constraint firstItem="hCr-CU-Q1t" firstAttribute="top" secondItem="HSe-ao-sgL" secondAttribute="top" id="yVd-eH-a5G"/>
@@ -128,10 +128,10 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="all.png" width="13" height="13"/>
-        <image name="blue.png" width="13" height="13"/>
-        <image name="green.png" width="13" height="13"/>
-        <image name="orange.png" width="13" height="13"/>
-        <image name="pink.png" width="13" height="13"/>
+        <image name="event_aesthetics_gray" width="45" height="45"/>
+        <image name="event_all_red" width="45" height="45"/>
+        <image name="event_dental_gray" width="45" height="45"/>
+        <image name="event_gyno_gray" width="45" height="45"/>
+        <image name="event_surgery_gray" width="45" height="45"/>
     </resources>
 </document>

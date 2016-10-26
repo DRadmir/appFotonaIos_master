@@ -20,11 +20,6 @@
 
 @property (nonatomic, retain) NSMutableArray *items;
 
-//@property (strong, nonatomic) IBOutlet UIImageView *imageDot;
-//@property (strong, nonatomic) IBOutlet UILabel *lblTitle;
-//@property (strong, nonatomic) IBOutlet UILabel *lblDate;
-//@property (strong, nonatomic) IBOutlet UILabel *lblLocation;
-//@property (strong, nonatomic) IBOutlet UIView *viewEvent;
 
 @property (strong, nonatomic) NSArray *events;
 

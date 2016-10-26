@@ -13,6 +13,7 @@
 #import "FDownloadManager.h"
 #import "FIFlowController.h"
 #import "FGoogleAnalytics.h"
+#import "FIGalleryTableViewCell.h"
 
 
 @interface FIVideoGalleryViewController ()
@@ -65,8 +66,7 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     preloadGalleryMoviesImages = [[NSMutableDictionary alloc] init];
     lastGallery = @"";
     
-    self.videoGalleryTableView.estimatedRowHeight = 360;
-    self.videoGalleryTableView.rowHeight = UITableViewAutomaticDimension;
+
     
     [self.videoGalleryTableView setNeedsLayout];
     [self.videoGalleryTableView layoutIfNeeded];
@@ -129,7 +129,7 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     
 }
 
--(void) openVideo:(FVideo *) video
+-(void) openVideo:(FMedia *) video
 {
     [FGoogleAnalytics writeGAForItem:[video title] andType:GAFOTONAVIDEOINT];
     BOOL downloaded = YES;
@@ -146,17 +146,14 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     }else
     {
         if([APP_DELEGATE connectedToInternet]){
-            FVideo *vid=[videoArray objectAtIndex:1];
+            FMedia *vid=[videoArray objectAtIndex:1];
             [FCommon playVideoFromURL:vid.path onViewController:self];
         } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [av show];
         }
     }
-    
 }
-
-
 
 
 #pragma mark - TableView
@@ -172,7 +169,7 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     {
         videoArray = [FDB getVideosWithGallery:galleryID];
     }
-    FVideo *vid=[videoArray objectAtIndex:[indexPath row]];
+    FMedia *vid=[videoArray objectAtIndex:[indexPath row]];
     [self openVideo:vid];
     
 }
@@ -180,27 +177,26 @@ NSMutableDictionary *preloadGalleryMoviesImages;
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+    FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
+    [cell setContentForVideo:videoArray[indexPath.row]];
+  
+//    FIVideoGalleryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"videoGalleryTableViewCell"];
+//    cell.video = videoArray[indexPath.row];
+//    [cell fillCell];
+//    cell.parent = self;
+//    
+//    [[cell imgVideoThumbnail] setClipsToBounds:YES];
+//    //[[cell imgVideoThumbnail] setContentMode:UIViewContentModeCenter];
+//    
+//    FVideo *vid= [videoArray objectAtIndex:indexPath.row];
+//    
+//    [cell setVideo:vid];
+//    NSString *videoKey = [self getpreloadGalleryMoviesImagesKeyWithGalleryId:galleryID videoId:vid.itemID];
+//    UIImage *img = [preloadGalleryMoviesImages objectForKey:videoKey];
+//    [[cell imgVideoThumbnail] setImage:img];
     
-    
-    
-    
-    FIVideoGalleryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"videoGalleryTableViewCell"];
-    cell.video = videoArray[indexPath.row];
-    [cell fillCell];
-    cell.parent = self;
-    
-    [[cell imgVideoThumbnail] setClipsToBounds:YES];
-    //[[cell imgVideoThumbnail] setContentMode:UIViewContentModeCenter];
-    
-    FVideo *vid= [videoArray objectAtIndex:indexPath.row];
-    
-    [cell setVideo:vid];
-    NSString *videoKey = [self getpreloadGalleryMoviesImagesKeyWithGalleryId:galleryID videoId:vid.itemID];
-    UIImage *img = [preloadGalleryMoviesImages objectForKey:videoKey];
-    [[cell imgVideoThumbnail] setImage:img];
-    
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    
+   // [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    NSLog(@"%f", cell.frame.size.width);
     return cell;
 }
 
@@ -219,9 +215,14 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     return CGFLOAT_MIN;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 182;
+}
+
 #pragma mark - Getting Images
 
--(void)preloadMoviesImageFI:(NSMutableArray *)videosArray videoGalleryId:(NSString *)galleryId
+-(void)preloadMoviesImageFI:(NSMutableArray *)videosArray videoGalleryId:(NSString *)galleryId//TODO: preselt to v svoj fail, pa tm nrdit de dobi not UITABLEVIEWcell in pol poklicat nazaj na celico eno metodo nekak
 {
     NSMutableDictionary *temp;
     if ([APP_DELEGATE videoImages]==nil) {
@@ -256,14 +257,14 @@ NSMutableDictionary *preloadGalleryMoviesImages;
     {
         int activeQueueIndex = i%[activeQueues count];
         dispatch_async([activeQueues objectAtIndex:activeQueueIndex], ^{
-            FVideo *vid=[videosArray objectAtIndex:i];
+            FMedia *vid=[videosArray objectAtIndex:i];
             //id of image inside preloadGalleryMoviesImages
             NSString *videoKey = [self getpreloadGalleryMoviesImagesKeyWithGalleryId:galleryID videoId:[[videosArray objectAtIndex:i] itemID]];
             
             //image is not default
             if ([preloadGalleryMoviesImages objectForKey:videoKey] != self.defaultVideoImage) {
                 if([APP_DELEGATE connectedToInternet]){
-                    NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid videoImage]];
+                    NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid mediaImage]];
                     UIImage *imgNew = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
                     if (imgNew!=nil) {
                         NSData *data1 = UIImagePNGRepresentation(imgNew);
@@ -289,13 +290,13 @@ NSMutableDictionary *preloadGalleryMoviesImages;
             }
             
             UIImage *img;
-            NSArray *pathComp=[[vid videoImage] pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[vid videoImage] lastPathComponent]];
+            NSArray *pathComp=[[vid mediaImage] pathComponents];
+            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[vid mediaImage] lastPathComponent]];
             if ([[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
                 NSData *data=[NSData dataWithContentsOfFile:pathTmp];
                 img = [UIImage imageWithData:data];
             } else{
-                NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid videoImage]];
+                NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid mediaImage]];
                 img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
             }
             
@@ -317,19 +318,20 @@ NSMutableDictionary *preloadGalleryMoviesImages;
                 [temp setValue:img forKey:videoKey];
                 [APP_DELEGATE setVideoImages:temp];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                FIVideoGalleryTableViewCell *cell = (FIVideoGalleryTableViewCell *)[videoGalleryTableView cellForRowAtIndexPath:tableIndexPath];
+                FIGalleryTableViewCell *cell = (FIGalleryTableViewCell *)[videoGalleryTableView cellForRowAtIndexPath:tableIndexPath];
+//                FIVideoGalleryTableViewCell *cell = (FIVideoGalleryTableViewCell *)[videoGalleryTableView cellForRowAtIndexPath:tableIndexPath];
                 if (cell)
                 {
-                    [[cell imgVideoThumbnail] setImage:img];//iconImage];
+//                    [[cell imgVideoThumbnail] setImage:img];
+                    [cell refreshVideoThumbnail:img];
                 }
                 NSMutableArray* indexArray = [NSMutableArray array];
                 [indexArray addObject:tableIndexPath];
                 
-                    [videoGalleryTableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
+                   // [videoGalleryTableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
                 });
             }
         });
-        
     }
     
     NSString *today=[FCommon currentTimeInLjubljana];
@@ -346,7 +348,7 @@ NSMutableDictionary *preloadGalleryMoviesImages;
 
 -(void)reloadCells:(NSString *)videoToReload
 {
-    for (FVideo *vid in videoArray) {
+    for (FMedia *vid in videoArray) {
         if ([videoToReload isEqualToString:vid.itemID]) {
             [self loadGallery];
             [self.videoGalleryTableView reloadData];

@@ -17,8 +17,6 @@
 @synthesize link;
 @synthesize src;
 @synthesize active;
-@synthesize allowedUserTypes;
-@synthesize allowedUserSubTypes;
 @synthesize bookmark;
 
 -(id)initWithDictionary:(NSDictionary *)dic

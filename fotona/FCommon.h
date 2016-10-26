@@ -17,4 +17,7 @@
 +(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController;
 
 +(BOOL) isGuest;
+
++(NSString *)arrayToString:(NSMutableArray *) array withSeparator:(NSString *) separator;
++(NSArray *)stringToArray:(NSString *) string withSeparator:(NSString *)separator;
 @end

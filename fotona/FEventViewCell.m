@@ -19,6 +19,7 @@
 @synthesize dotImg;
 
 - (void)awakeFromNib {
+    
     // Initialization code
 }
 

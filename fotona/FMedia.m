@@ -1,46 +1,73 @@
 //
-//  FVideo.m
+//  FMedia.m
 //  Fotona
 //
 //  Created by Dejan Krstevski on 4/2/14.
 //  Copyright (c) 2014 Dejan Krstevski. All rights reserved.
 //
 
-#import "FVideo.h"
+#import "FMedia.h"
 #import "AFNetworking.h"
 #import "FMDatabase.h"
 
-@implementation FVideo
+@implementation FMedia
 @synthesize itemID;
-@synthesize videoGalleryID;
 @synthesize title;
 @synthesize path;
 @synthesize description;
 @synthesize localPath;
-@synthesize videoImage;
+@synthesize mediaImage;
 @synthesize sort;
-@synthesize dateUpdated;
-@synthesize userSubType;
-@synthesize userType;
+@synthesize userPermissions;
+@synthesize deleted;
+@synthesize filesize;
+@synthesize download;
+@synthesize mediaType;
+@synthesize time;//TODO: preverit ali ga rabim
+
+-(id)initWithDictionaryFromServer:(NSDictionary *)dic forMediType: (NSString *)type
+{
+    self=[super init];
+    if (self) {
+        [self setItemID:[dic valueForKey:@"customGalleryItemID"]];
+        [self setTitle:[dic valueForKey:@"title"]];
+        [self setPath:[dic valueForKey:@"path"]];
+        [self setPath:[self.path stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
+        [self setLocalPath:@""];
+        [self setDescription:[dic valueForKey:@"description"]];
+        [self setMediaImage:[dic valueForKey:@"mediaImage"]];
+        [self setSort:[dic valueForKey:@"sort"]];
+        [self setDeleted:[dic valueForKey:@"deleted"]];
+        [self setFilesize:[dic valueForKey:@"fileSize"]];
+        [self setUserPermissions:[dic valueForKey:@"userPermissions"]];
+        [self setDownload:[dic valueForKey:@"download"]];
+        [self setTime:[dic valueForKey:@"imageCapturedTime"]];
+        [self setMediaType:type];
+    }
+    return self;
+}
+
 
 -(id)initWithDictionary:(NSDictionary *)dic
 {
     self=[super init];
     if (self) {
         [self setItemID:[dic valueForKey:@"itemID"]];
-        [self setVideoGalleryID:[dic valueForKey:@"galleryID"]];
         [self setTitle:[dic valueForKey:@"title"]];
         [self setPath:[dic valueForKey:@"path"]];
         [self setPath:[self.path stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
-        [self setLocalPath:@""];
+        [self setLocalPath:[dic valueForKey:@"localPath"]];
         [self setDescription:[dic valueForKey:@"description"]];
         [self setBookmark:[dic valueForKey:@"bookmark"]];
-        [self setTime:[dic valueForKey:@"cropedTime"]];
-        [self setVideoImage:[dic valueForKey:@"videoImage"]];
+        [self setMediaImage:[dic valueForKey:@"mediaImage"]];
         [self setSort:[dic valueForKey:@"sort"]];
-        [self setDateUpdated:[self formateDate:[dic valueForKey:@"dateUpdated"]]];
-        [self setUserSubType:[dic valueForKey:@"allowedUserSubTypes"]];
-        [self setUserType:[dic valueForKey:@"allowedUserTypes"]];
+        [self setDeleted:[dic valueForKey:@"deleted"]];
+        [self setFilesize:[dic valueForKey:@"fileSize"]];
+        [self setUserPermissions:[dic valueForKey:@"userPermissions"]];
+        [self setDownload:[dic valueForKey:@"download"]];
+        [self setActive:[dic valueForKey:@"active"]];
+        [self setMediaType:[dic valueForKey:@"mediaType"]];
+        [self setTime:[dic valueForKey:@"mediaType"]];
     }
     return self;
 }

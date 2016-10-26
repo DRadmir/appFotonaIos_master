@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FVideo.h"
+#import "FMedia.h"
 
 @interface FIVideoGalleryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
@@ -19,6 +19,6 @@
 
 -(void) loadGallery;
 -(void) reloadCells:(NSString *)videoToReload;
--(void) openVideo:(FVideo *) video;
+-(void) openVideo:(FMedia *) video;
 
 @end

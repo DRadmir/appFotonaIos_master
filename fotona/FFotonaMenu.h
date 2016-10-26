@@ -14,21 +14,21 @@
 @property (nonatomic,retain) NSString *description;
 @property (nonatomic,retain) NSString *text;
 @property (nonatomic,retain) NSString *caseID;
-@property (nonatomic,retain) NSString *pdfSrc;
 @property (nonatomic,retain) NSString *externalLink;
-@property (nonatomic,retain) NSString *videoGalleryID;
-@property (nonatomic,retain) NSMutableArray *videos;
+@property (nonatomic,retain) NSMutableArray *videoArray;
+@property (nonatomic,retain) NSMutableArray *pdfArray;
 @property (nonatomic,retain) NSString *active;
 @property (nonatomic,retain) NSString *iconName;
 @property (nonatomic,retain) NSString *sort;
-@property (nonatomic,retain) NSMutableArray *allowedUserTypes;
-@property (nonatomic,retain) NSMutableArray* allowedUserSubTypes;
 @property (nonatomic,retain) NSString *bookmark;
+@property (nonatomic,retain) NSString *galleryItems;
+@property (nonatomic,retain) NSString *userPermissions;
+@property (nonatomic,retain) NSString *deleted;
 @property (nonatomic) int sortInt;
-
 @property (nonatomic, retain) NSArray *videosDicArr;
 
 -(id)initWithDictionary:(NSDictionary *)dic;
+-(id)initWithDictionaryFromServer:(NSDictionary *)dic;
 -(void)updateVideos;
 -(NSMutableArray *)getVideos;
 @end
