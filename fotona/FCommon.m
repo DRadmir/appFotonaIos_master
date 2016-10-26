@@ -75,4 +75,30 @@
     [player play];
 }
 
++ (BOOL)userPermission:(NSString*)array{
+    NSArray *ary = [array componentsSeparatedByString:@";"];
+    int ut = [[APP_DELEGATE currentLogedInUser].userType intValue];
+    
+    if ((ut == 0 ) || (ut == 3 ))
+    {
+        if ([[ary objectAtIndex:ut] intValue] == ut) {
+            return true;
+        }
+    }
+    else{
+        NSArray *subtypes = [APP_DELEGATE currentLogedInUser].userTypeSubcategory;
+        NSArray *arySubPermissions = [[ary objectAtIndex:ut] componentsSeparatedByString:@","];
+        for (NSString *subType in subtypes) {
+            NSString *st = [NSString stringWithFormat:@"%@",subType];
+            if ([arySubPermissions containsObject:st]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+
+
 @end
