@@ -77,4 +77,5 @@
 
 - (void)setNewsReaded:(NSString *)nID;
 
+
 @end

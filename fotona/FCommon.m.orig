@@ -74,6 +74,27 @@
     [player play];
 }
 
+<<<<<<< HEAD
++(NSString *)arrayToString:(NSMutableArray *)array withSeparator:(NSString *)separator{
+    if ([array count] > 0) {
+        NSString *string = array[0];
+        for (int i= 1; i<array.count; i++) {
+            string = [NSString stringWithFormat:@"%@%@%@",string, separator, array[i]];
+        }
+        return string;
+    }
+    return @"";
+}
+
++(NSArray *)stringToArray:(NSString *)string withSeparator:(NSString *)separator{
+    NSArray *array = [[NSArray alloc] init];
+    if (![string isEqualToString:@""]) {
+        array = [string componentsSeparatedByString:separator];
+    }
+    return array;
+}
+
+=======
 + (BOOL)userPermission:(NSString*)array{
     NSArray *ary = [array componentsSeparatedByString:@";"];
     int ut = [[APP_DELEGATE currentLogedInUser].userType intValue];
@@ -100,23 +121,5 @@
 
 
 
-+(NSString *)arrayToString:(NSMutableArray *)array withSeparator:(NSString *)separator{
-    if ([array count] > 0) {
-        NSString *string = array[0];
-        for (int i= 1; i<array.count; i++) {
-            string = [NSString stringWithFormat:@"%@%@%@",string, separator, array[i]];
-        }
-        return string;
-    }
-    return @"";
-}
-
-+(NSArray *)stringToArray:(NSString *)string withSeparator:(NSString *)separator{
-    NSArray *array = [[NSArray alloc] init];
-    if (![string isEqualToString:@""]) {
-        array = [string componentsSeparatedByString:separator];
-    }
-    return array;
-}
-
+>>>>>>> b79a7f9b393b729b0f302d2432b6f9caf597f1b5
 @end

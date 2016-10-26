@@ -111,9 +111,9 @@ UIButton *tmp;
         if (![usrName isEqualToString:@""])
         {
             //TODO: dodat zapisovanje uporabnika
-            FUser *guest=[[FUser alloc] init];
-            [guest setUsername:usrName];
-            [APP_DELEGATE setCurrentLogedInUser:guest];
+//            FUser *guest=[[FUser alloc] init];
+//            [guest setUsername:usrName];
+//            [APP_DELEGATE setCurrentLogedInUser:guest];
             
         [login autoLogin];
         }
@@ -272,9 +272,21 @@ UIButton *tmp;
     } else
     {
         [self prepareTabBarController];
-        [self.navigationController pushViewController:[APP_DELEGATE tabBar] animated:YES];
+        
+        //check if tabbar is already on stack else add
+        //TODO: če bo čas se pregleda zakaj se 2 pokliče ta del po 2 istem loginu
+        BOOL addTabbar = YES;
+        for (UIView *child in [[self navigationController] childViewControllers]) {
+            if ([child isKindOfClass:[UITabBarController class]]) {
+                addTabbar = NO;
+                break;
+            }
+        }
+        
+        if (addTabbar) {
+            [self.navigationController pushViewController:[APP_DELEGATE tabBar] animated:YES];
+        }
     }
-
 }
 
 //adding tabs to tabcontroler

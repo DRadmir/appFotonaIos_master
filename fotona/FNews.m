@@ -181,7 +181,7 @@
             if ([tempA count]<1) {
                 UIImage *img =[UIImage imageNamed:@"featured_news"];
                 [tempA addObject:img];
-            }
+                }
             [self setImages:tempA];
         } else {
             [self setImages:nil];
@@ -257,7 +257,7 @@
             } else {
                 NSString * header =[[newsArray objectAtIndex:startIndex+c] headerImageLink];
                 if (header == nil || [header isEqualToString:@""] || (![APP_DELEGATE connectedToInternet])) {
-                    img = [UIImage imageNamed:@"related_news"];
+                    img = [UIImage imageNamed:@"related_news"]; 
                 } else {
                     NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",  header];
                     img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
@@ -278,10 +278,12 @@
                             [temp addObject: img];
                             break;
                         } else {
-                            img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:featured]]];
+                            img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:featured]]];//fetching image from link
                             if (img != nil){
                                 [temp addObject: img];
-                            } else {
+                                
+                            }
+                            else {
                                 img = [UIImage imageNamed:@"featured_news"];
                                 [temp addObject: img];
                                 break;
@@ -298,7 +300,7 @@
             } else {
                 for (int i=0; i<[sf localImages].count; i++){
                     NSString * header =[[sf localImages] objectAtIndex:i];
-                    img = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@%@",docDir,header]];
+                    img = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@%@",docDir,header]];//fetching image from link
                     if (img != nil){
                         [temp addObject: img];
                     } else {

@@ -103,7 +103,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     int newsCount = 5;
     
     if([FCommon isGuest]){
-        newsCount = 4;
+        newsCount = 5;
     }
     else{
         newsCount = 5;

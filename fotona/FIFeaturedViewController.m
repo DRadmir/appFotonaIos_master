@@ -60,7 +60,7 @@
     [super viewDidLoad];
     carouselHeight.constant = [[UIScreen mainScreen] bounds].size.width / 2.279;
     
-    newsCount = 12;
+    newsCount = 5;
     extraNews = 4;
     newsSelected = 0;
     
@@ -209,14 +209,16 @@
     }
     if (indexPath.row > newsCount - 1) {
         
-        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:hud];
-        hud.labelText = @"Loading...";
-        //        [[MBProgressHUD showHUDAddedTo:self.view animated:YES]  setLabelText:@"Loading"];
-        [hud show:YES];
+//        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
+//        [self.view addSubview:hud];
+//        hud.labelText = @"Loading...";
+//        //        [[MBProgressHUD showHUDAddedTo:self.view animated:YES]  setLabelText:@"Loading"];
+//        [hud show:YES];
+        
+        
         CGPoint offset = self.tableViewFeatured.contentOffset;
         offset.y-=10;
-        self.tableViewFeatured.scrollEnabled =NO;
+//        self.tableViewFeatured.scrollEnabled =NO;
         [self.tableViewFeatured setContentOffset:offset animated:NO];
         int l = 4;
         if (newsCount + l > newsArray.count) {
@@ -227,9 +229,20 @@
         dispatch_async(queue, ^{
             newsArray = [FNews getImages:newsArray fromStart:indexPath.row forNumber:l];
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.tableViewFeatured.scrollEnabled  = YES;
-                [self.tableViewFeatured reloadData];
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+//                self.tableViewFeatured.scrollEnabled  = YES;
+//                [self.tableViewFeatured reloadData];
+//                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                
+                
+                NSMutableArray *rowsToReload =[[NSMutableArray alloc] init];
+                
+                for (int i = 0; i < l; i++){
+                    NSIndexPath* index = [NSIndexPath indexPathForRow:indexPath.row+i inSection:indexPath.section];
+                    [rowsToReload addObject:index];
+                    
+               }
+               [tableViewFeatured reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
+                
             });
         });
         

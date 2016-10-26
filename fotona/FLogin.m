@@ -49,44 +49,38 @@ UIButton *tmp;
  */
 -(void)autoLogin
 {
+    UIButton *sender;
+     NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
+    if(parentiPad != nil)
+    {
+        if ([usrName isEqualToString:@"guest"]) {
+            [self guest:parentiPad.loginGuestBtn];
+        }else{
+            [parentiPad.username setText:usrName];
+            [parentiPad.password setText:[SFHFKeychainUtils getPasswordForUsername:usrName andServiceName:@"fotona" error:nil]];
+            sender = parentiPad.loginBtn;
+        }
+    } else
+    {
+        if ([usrName isEqualToString:@"guest"]) {
+            [self guest:parentiPhone.btnGuest];
+        }else{
+            [parentiPhone.textFieldUser setText:usrName];
+            [parentiPhone.textFieldPass setText:[SFHFKeychainUtils getPasswordForUsername:usrName andServiceName:@"fotona" error:nil]];
+            sender = parentiPhone.btnLogin;
+        }
+    }
+
     logintype = 3;
     if([ConnectionHelper isConnected])
     {
-        
-        NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        
-        if (![usrName isEqualToString:@""]){
-            MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
-            [parent.view addSubview:hud];
-            hud.labelText = @"Updating content";
-            [hud show:YES];
-        }
-        
-        [self setDelegate];
-        
+        [self loginOnFotona:sender];
     } else{
         logintype = 0;
-        NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if(parentiPad != nil)
-        {
-            if ([usrName isEqualToString:@"guest"]) {
-                [self guest:parentiPad.loginGuestBtn];
-            }else{
-                [parentiPad.username setText:usrName];
-                [parentiPad.password setText:[SFHFKeychainUtils getPasswordForUsername:usrName andServiceName:@"fotona" error:nil]];
-                [self login:parentiPad.loginBtn];
-            }
-        } else
-        {
-            if ([usrName isEqualToString:@"guest"]) {
-                [self guest:parentiPhone.btnGuest];
-            }else{
-                [parentiPhone.textFieldUser setText:usrName];
-                [parentiPhone.textFieldPass setText:[SFHFKeychainUtils getPasswordForUsername:usrName andServiceName:@"fotona" error:nil]];
-                [self loginUpdated];
-            }
-        }
+        [self loginUserOffline];
+        
     }
+    
 }
 
 -(void)guest:(id)sender
@@ -383,7 +377,6 @@ UIButton *tmp;
     {
         [parentiPhone showFeatured];
     }
-    
 }
 
 -(void)autoLoginUpdated
@@ -588,11 +581,16 @@ UIButton *tmp;
 -(void)updateStart
 {
     [MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
+    if([ConnectionHelper isConnected]){  //preverjanje če je internet
     MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
     [parent.view addSubview:hud];
     hud.labelText = @"Updating content";
     [hud show:YES];
     [self setDelegate];
+    }
+    else{
+        [parentiPad showFeatured]; //če ga ni se pokliče showfeatured
+    }
 }
 
 

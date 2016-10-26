@@ -21,7 +21,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
@@ -32,20 +32,19 @@
         self.lblAbout.text = NSLocalizedString(@"ABOUTSHORT", nil);
     }else
     {
-    self.lblTitleNewsCell.text = self.news.title;
-    self.lblDateNewsCell.text = [HelperDate formatedDate:self.news.nDate];
-    [self.imgViewNewsCell setContentMode:UIViewContentModeScaleAspectFill];
-    [self.imgViewNewsCell setClipsToBounds:true];
-    if (self.related)
-    {
-        self.signNewNewsCell.hidden = true;
-        self.imgViewNewsCell.image =[self.news headerImage];
-    } else
-    {
-        self.signNewNewsCell.hidden = self.news.isReaded;
-        self.imgViewNewsCell.image =[[self.news images] objectAtIndex:0];
-    }
-    
+        self.lblTitleNewsCell.text = self.news.title;
+        self.lblDateNewsCell.text = [HelperDate formatedDate:self.news.nDate];
+        [self.imgViewNewsCell setContentMode:UIViewContentModeScaleAspectFill];
+        [self.imgViewNewsCell setClipsToBounds:true];
+        if (self.related)
+        {
+            self.signNewNewsCell.hidden = true;
+            self.imgViewNewsCell.image =[self.news headerImage];
+        } else
+        {
+            self.signNewNewsCell.hidden = self.news.isReaded;
+            self.imgViewNewsCell.image =[[self.news images] objectAtIndex:0];
+        }
     }
 }
 

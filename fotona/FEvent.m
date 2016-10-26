@@ -138,24 +138,33 @@
     return self;
 }
 
+/*barve pik
+ modra - dentestry
+ orangna - aestewtichs
+ roya - gyno
+ yelena - surgery
+ siva - all*/
+
+
+
 - (NSString *)getDot{
     int c = [[[self eventcategories] objectAtIndex:0] integerValue];
     switch (c) {
         case 1:
-            return @"blue.png";
+            return @"event_dental_red.pdf";
             break;
             
         case 2:
-            return @"orange.png";
+            return @"event_aesthetics_red.pdf";
             break;
         case 3:
-            return @"pink.png";
+            return @"event_gyno_red.pdf";
             break;
         case 4:
-            return @"green.png";
+            return @"event_surgery_red.pdf";
             break;
         default:
-            return @"all.png";
+            return @"event_all_red.pdf";
             break;
     }
 }

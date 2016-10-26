@@ -16,12 +16,6 @@
                 <frame key="frameInset" width="600" height="102"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="related_news.png" translatesAutoresizingMaskIntoConstraints="NO" id="Kef-El-Zjl">
-                        <constraints>
-                            <constraint firstAttribute="width" constant="73" id="nGx-3b-3NV"/>
-                            <constraint firstAttribute="width" secondItem="Kef-El-Zjl" secondAttribute="height" multiplier="1:1" id="sxY-Pk-7Ki"/>
-                        </constraints>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mwp-Ws-G9U">
                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
                         <color key="textColor" red="0.36767482757568359" green="0.36766383051872253" blue="0.36767005920410156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -42,20 +36,35 @@
                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                         <textInputTraits key="textInputTraits"/>
                     </textField>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="featured_news.png" translatesAutoresizingMaskIntoConstraints="NO" id="cQa-pX-Ol5">
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="cQa-pX-Ol5" secondAttribute="height" multiplier="1:1" id="b8h-ZV-SIU"/>
+                            <constraint firstAttribute="width" constant="73" id="vUk-22-YbA"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="featured_news.png" translatesAutoresizingMaskIntoConstraints="NO" id="Kef-El-Zjl">
+                        <constraints>
+                            <constraint firstAttribute="width" constant="73" id="nGx-3b-3NV"/>
+                            <constraint firstAttribute="width" secondItem="Kef-El-Zjl" secondAttribute="height" multiplier="1:1" id="sxY-Pk-7Ki"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="D61-P2-scr" secondAttribute="trailing" constant="8" id="2TL-t8-cfF"/>
                     <constraint firstItem="FgT-3T-8Ac" firstAttribute="leading" secondItem="Mwp-Ws-G9U" secondAttribute="trailing" id="4As-uk-715"/>
+                    <constraint firstItem="cQa-pX-Ol5" firstAttribute="centerY" secondItem="Kef-El-Zjl" secondAttribute="centerY" id="56S-vt-2Fo"/>
                     <constraint firstItem="Mwp-Ws-G9U" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="19" id="5b7-oi-AlW"/>
                     <constraint firstAttribute="bottom" secondItem="D61-P2-scr" secondAttribute="bottom" constant="19" id="8B2-Kg-xgL"/>
+                    <constraint firstItem="cQa-pX-Ol5" firstAttribute="centerX" secondItem="Kef-El-Zjl" secondAttribute="centerX" id="AIt-7b-ogE"/>
                     <constraint firstItem="D61-P2-scr" firstAttribute="top" secondItem="Mwp-Ws-G9U" secondAttribute="bottom" constant="7" id="B4o-EY-YGu"/>
+                    <constraint firstItem="cQa-pX-Ol5" firstAttribute="width" secondItem="cQa-pX-Ol5" secondAttribute="height" multiplier="1:1" id="Jey-Se-Adk"/>
                     <constraint firstItem="Kef-El-Zjl" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="LaW-KI-Y6a"/>
                     <constraint firstItem="D61-P2-scr" firstAttribute="top" secondItem="FgT-3T-8Ac" secondAttribute="bottom" constant="7" id="Lrw-pV-m6w"/>
                     <constraint firstAttribute="trailing" secondItem="FgT-3T-8Ac" secondAttribute="trailing" constant="8" id="bFN-cF-bKO"/>
-                    <constraint firstItem="Mwp-Ws-G9U" firstAttribute="leading" secondItem="Kef-El-Zjl" secondAttribute="trailing" constant="9" id="gPf-AD-BZT"/>
-                    <constraint firstItem="D61-P2-scr" firstAttribute="leading" secondItem="Kef-El-Zjl" secondAttribute="trailing" constant="9" id="khO-h8-PzK"/>
+                    <constraint firstItem="Mwp-Ws-G9U" firstAttribute="leading" secondItem="Kef-El-Zjl" secondAttribute="trailing" constant="8" id="gPf-AD-BZT"/>
+                    <constraint firstItem="D61-P2-scr" firstAttribute="leading" secondItem="Kef-El-Zjl" secondAttribute="trailing" constant="8" id="khO-h8-PzK"/>
                     <constraint firstItem="FgT-3T-8Ac" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="19" id="xBw-8Q-AFb"/>
-                    <constraint firstItem="Kef-El-Zjl" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="11" id="zzP-ar-qHH"/>
+                    <constraint firstItem="Kef-El-Zjl" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="zzP-ar-qHH"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
@@ -65,7 +74,7 @@
                 <outlet property="lblTitleNewsCell" destination="D61-P2-scr" id="hfQ-Xm-QaM"/>
                 <outlet property="signNewNewsCell" destination="FgT-3T-8Ac" id="uy5-fa-p73"/>
             </connections>
-            <point key="canvasLocation" x="106" y="324.5"/>
+            <point key="canvasLocation" x="106" y="354.5"/>
         </tableViewCell>
         <tableViewCell contentMode="scaleToFill" restorationIdentifier="FIFeaturedNewsTableViewCellTop" selectionStyle="default" indentationWidth="10" reuseIdentifier="FIFeaturedNewsTableViewCell" rowHeight="140" id="Q2q-B2-5Fc" customClass="FIFeaturedNewsTableViewCell">
             <rect key="frame" x="0.0" y="0.0" width="600" height="140"/>
@@ -74,12 +83,6 @@
                 <frame key="frameInset" width="600" height="139"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="related_news.png" translatesAutoresizingMaskIntoConstraints="NO" id="NVj-Xa-TvR">
-                        <constraints>
-                            <constraint firstAttribute="width" secondItem="NVj-Xa-TvR" secondAttribute="height" multiplier="1:1" id="Tym-UY-vvW"/>
-                            <constraint firstAttribute="width" constant="73" id="r44-gG-O13"/>
-                        </constraints>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="58h-py-xVh">
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="XCg-E3-ux6"/>
@@ -112,18 +115,35 @@
                         <color key="textColor" red="0.21191233396530151" green="0.21190600097179413" blue="0.21190959215164185" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="featured_news.png" translatesAutoresizingMaskIntoConstraints="NO" id="yZN-iQ-dTg">
+                        <frame key="frameInset" minX="12" minY="46" width="73" height="73"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="73" id="TaG-LU-5vq"/>
+                            <constraint firstAttribute="width" secondItem="yZN-iQ-dTg" secondAttribute="height" multiplier="1:1" id="b10-UQ-vts"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="featured_news.png" translatesAutoresizingMaskIntoConstraints="NO" id="NVj-Xa-TvR">
+                        <frame key="frameInset" minX="12" minY="46" width="73" height="73"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="NVj-Xa-TvR" secondAttribute="height" multiplier="1:1" id="Tym-UY-vvW"/>
+                            <constraint firstAttribute="width" constant="73" id="r44-gG-O13"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="bLA-mw-kCh" secondAttribute="trailing" constant="8" id="13x-du-sAA"/>
                     <constraint firstAttribute="bottom" secondItem="bLA-mw-kCh" secondAttribute="bottom" constant="20" id="87v-PH-GWS"/>
                     <constraint firstItem="cQs-y0-41t" firstAttribute="top" secondItem="dh8-yG-kYx" secondAttribute="top" constant="11" id="DtF-pa-TCS"/>
+                    <constraint firstItem="yZN-iQ-dTg" firstAttribute="centerY" secondItem="NVj-Xa-TvR" secondAttribute="centerY" id="HGo-jW-2DS"/>
                     <constraint firstItem="bLA-mw-kCh" firstAttribute="top" secondItem="q46-uQ-ohL" secondAttribute="bottom" constant="7" id="I2g-ym-75o"/>
                     <constraint firstItem="q46-uQ-ohL" firstAttribute="top" secondItem="dh8-yG-kYx" secondAttribute="top" constant="55" id="SZV-Uw-hXs"/>
                     <constraint firstItem="58h-py-xVh" firstAttribute="leading" secondItem="NVj-Xa-TvR" secondAttribute="trailing" constant="9" id="SiV-Em-8AJ"/>
                     <constraint firstItem="q46-uQ-ohL" firstAttribute="leading" secondItem="58h-py-xVh" secondAttribute="trailing" constant="-2" id="Xe9-RE-JvP"/>
                     <constraint firstAttribute="trailing" secondItem="q46-uQ-ohL" secondAttribute="trailing" constant="8" id="YZk-9M-BC7"/>
                     <constraint firstItem="cQs-y0-41t" firstAttribute="leading" secondItem="dh8-yG-kYx" secondAttribute="leading" constant="11" id="bD4-CB-R6I"/>
+                    <constraint firstItem="yZN-iQ-dTg" firstAttribute="width" secondItem="yZN-iQ-dTg" secondAttribute="height" multiplier="1:1" id="hK3-S5-dEx"/>
                     <constraint firstItem="bLA-mw-kCh" firstAttribute="top" secondItem="58h-py-xVh" secondAttribute="bottom" constant="7" id="rok-QI-1i8"/>
+                    <constraint firstItem="yZN-iQ-dTg" firstAttribute="centerX" secondItem="NVj-Xa-TvR" secondAttribute="centerX" id="tZ7-pe-dKa"/>
                     <constraint firstItem="NVj-Xa-TvR" firstAttribute="top" secondItem="cQs-y0-41t" secondAttribute="bottom" constant="18" id="zGq-uq-t1O"/>
                     <constraint firstItem="bLA-mw-kCh" firstAttribute="leading" secondItem="NVj-Xa-TvR" secondAttribute="trailing" constant="9" id="zfd-2L-Lcy"/>
                     <constraint firstItem="NVj-Xa-TvR" firstAttribute="leading" secondItem="dh8-yG-kYx" secondAttribute="leading" constant="11" id="zh8-CG-Dg6"/>
@@ -136,7 +156,7 @@
                 <outlet property="lblTitleNewsCell" destination="bLA-mw-kCh" id="hAI-DG-mhy"/>
                 <outlet property="signNewNewsCell" destination="q46-uQ-ohL" id="mJK-jw-Hqf"/>
             </connections>
-            <point key="canvasLocation" x="106" y="578"/>
+            <point key="canvasLocation" x="106" y="566"/>
         </tableViewCell>
         <tableViewCell contentMode="scaleToFill" restorationIdentifier="FIAboutNewsTableViewCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="FIFeaturedNewsTableViewCell" rowHeight="140" id="Od3-hZ-3Ac" customClass="FIFeaturedNewsTableViewCell">
             <rect key="frame" x="0.0" y="0.0" width="600" height="140"/>
@@ -145,7 +165,8 @@
                 <frame key="frameInset" width="600" height="139"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gG5-l2-cFW">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gG5-l2-cFW">
+                        <frame key="frameInset" width="1000" height="1000"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="78" id="Nxl-IY-2JJ"/>
                         </constraints>
@@ -153,7 +174,8 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="About" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ygb-q7-Ibf">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" misplaced="YES" text="About" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ygb-q7-Ibf">
+                        <frame key="frameInset" width="1000" height="1000"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="147" id="24w-BG-ZwQ"/>
                             <constraint firstAttribute="height" constant="22" id="Alt-b8-K4A"/>
@@ -176,10 +198,10 @@
                 <outlet property="contentView" destination="kce-q5-3RK" id="kPz-Wc-1qt"/>
                 <outlet property="lblAbout" destination="gG5-l2-cFW" id="QQW-HO-B3f"/>
             </connections>
-            <point key="canvasLocation" x="106" y="791"/>
+            <point key="canvasLocation" x="106" y="792"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="related_news.png" width="43" height="43"/>
+        <image name="featured_news.png" width="345" height="200"/>
     </resources>
 </document>
