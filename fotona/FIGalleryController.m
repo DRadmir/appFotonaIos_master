@@ -54,22 +54,21 @@
             AVAssetImageGenerator *generate1 = [[AVAssetImageGenerator alloc] initWithAsset:asset1];
             generate1.appliesPreferredTrackTransform = YES;
             NSError *err = NULL;
-            //TODO: dela sliko vn ali jo rabi?????
-//            CMTime time = CMTimeMakeWithSeconds([vid.time integerValue], 1);
-//            CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
-//            UIImage *one = [[UIImage alloc] initWithCGImage:oneRef];
-//            UIImage *image=one;
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                //code to be executed on the main thread when background task is finished
-//                [tmpImg setImage:image forState:UIControlStateNormal];
-//                [tmpImg addTarget:self action:@selector(openVideo:) forControlEvents:UIControlEventTouchUpInside];
-//                [scrollView addSubview:tmpImg];
-//                UILabel *videoName=[[UILabel alloc] initWithFrame:CGRectMake(x-(imgSize-20), imgSize-30, imgSize-40, 20)];
-//                [videoName setFont:[UIFont fontWithName:@"HelveticaNeue" size:15]];
-//                [videoName setText:vid.title];
-//                [videoName setTextAlignment:NSTextAlignmentCenter];
-//                [scrollView addSubview:videoName];
-//            });
+            CMTime time = CMTimeMakeWithSeconds([vid.time integerValue], 1);
+            CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
+            UIImage *one = [[UIImage alloc] initWithCGImage:oneRef];
+            UIImage *image=one;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //code to be executed on the main thread when background task is finished
+                [tmpImg setImage:image forState:UIControlStateNormal];
+                [tmpImg addTarget:self action:@selector(openVideo:) forControlEvents:UIControlEventTouchUpInside];
+                [scrollView addSubview:tmpImg];
+                UILabel *videoName=[[UILabel alloc] initWithFrame:CGRectMake(x-(imgSize-20), imgSize-30, imgSize-40, 20)];
+                [videoName setFont:[UIFont fontWithName:@"HelveticaNeue" size:15]];
+                [videoName setText:vid.title];
+                [videoName setTextAlignment:NSTextAlignmentCenter];
+                [scrollView addSubview:videoName];
+            });
         });
     }
     
@@ -246,10 +245,10 @@
 {
     FMedia *vid=[videosArray objectAtIndex:[sender tag]];
     if (![vid.localPath isEqualToString:@""]) {
-        [FCommon playVideoFromURL:vid.localPath onViewController:parent];
+        [FCommon playVideoFromURL:vid.localPath onViewController:parent localSaved:YES];
     }else
     {
-        [FCommon playVideoFromURL:vid.path onViewController:parent];
+        [FCommon playVideoFromURL:vid.path onViewController:parent localSaved:NO];
     }
     
 }

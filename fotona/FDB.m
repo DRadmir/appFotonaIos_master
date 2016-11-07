@@ -14,6 +14,7 @@
 #import "FMedia.h"
 #import "FDownloadManager.h"
 #import "FItemFavorite.h"
+#import "FMediaManager.h"
 
 
 @implementation FDB
@@ -116,33 +117,8 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and alloweInCoverFlow=1"]];
     while([results next]) {
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParameters:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        [f setDeleted:[results stringForColumn:@"deleted"]];
-        [f setDownload:[results stringForColumn:@"download"]];
-        [f setUserPermissions:[results stringForColumn:@"userPermissions"]];
-        [f setDeleted:[results stringForColumn:@"deleted"]];
-        
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [cases addObject:f];
-            }
-        } else {
+        FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
+        if ([FCommon userPermission:[f userPermissions]]) {
             [cases addObject:f];
         }
     }
@@ -164,14 +140,15 @@
 {
     NSMutableArray *tmp=[[NSMutableArray alloc] init];
     
-    FMResultSet *results;
-    if ([APP_DELEGATE checkGuest]) {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt]];
-    } else {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and allowedForGuests=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt]];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and allowedForGuests=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt];
+    
+    if (![APP_DELEGATE connectedToInternet]) {
+        query = [NSString stringWithFormat:@"%@ AND (isBookmark=1 OR alloweInCoverFlow=1)",query];
     }
+    FMResultSet *results= [database executeQuery:query];
+
     while([results next]) {
-        FCase *f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
+        FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
         [tmp addObject:f];
     }
     return tmp;
@@ -184,15 +161,11 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and caseID=%@",caseID]];
     while([results next]) {
-        f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
+        f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    if ([APP_DELEGATE checkGuest]) {
-        if ([f.allowedForGuests isEqualToString:@"1"]) {
-            return f;
-        }
-    } else {
+    if ([FCommon userPermission:[f userPermissions]]) {
         return f;
     }
     return nil;
@@ -204,15 +177,11 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where caseID=%@",caseID]];
     while([results next]) {
-        f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
+        f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    if ([APP_DELEGATE checkGuest]) {
-        if ([f.allowedForGuests isEqualToString:@"1"]) {
-            return f;
-        }
-    } else {
+    if ([FCommon userPermission:[f userPermissions]]) {
         return f;
     }
     return nil;
@@ -225,12 +194,8 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT c.* FROM Cases as c,CasesInCategories as cic where cic.categorieID=%@ and cic.caseID=c.caseID and c.active=1",catID]];
     while([results next]) {
-        FCase *f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [cases addObject:f];
-            }
-        } else {
+        FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
+        if ([FCommon userPermission:[f userPermissions]]) {
             [cases addObject:f];
         }
     }
@@ -245,12 +210,8 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and authorID=%@",authorID]];
     while([results next]) {
-        FCase *f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [cases addObject:f];
-            }
-        } else {
+        FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
+        if ([FCommon userPermission:[f userPermissions]]) {
             [cases addObject:f];
         }
     }
@@ -275,7 +236,7 @@
         }
         
         if (flag) {
-            FCase *f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
+            FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
             if (![category isEqualToString:@"0"]) {
                 if ([f.coverTypeID isEqualToString:category])
                     [cases addObject:f];
@@ -316,8 +277,8 @@
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
             [database close];
             
-            [self deleteMediaForCaseGalleryID:caseToRemove.galleryID withArray:caseToRemove.images andType:0];
-            [self deleteMediaForCaseGalleryID:caseToRemove.videoGalleryID withArray:caseToRemove.video andType:1];
+            [FMediaManager deleteMedia:caseToRemove.images andType:0 andFromDB:YES];
+            [FMediaManager deleteMedia:caseToRemove.video andType:1 andFromDB:YES];
         }
     }
     UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -325,6 +286,13 @@
 }
 
 
++(void)removeCaseWithID:(NSString *)fotonaID{
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    [database executeUpdate:@"DELETE FROM Cases WHERE caseID=? ",fotonaID];
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+}
 
 #pragma mark - Case Category
 
@@ -397,7 +365,7 @@
         return [first compare:second];
     }];
     
-    [APP_DELEGATE setEventArray:eventsArray];
+    [APP_DELEGATE setEventArray:[eventsArray mutableCopy]];
     
     return eventsArray;
 }
@@ -548,19 +516,18 @@
 
 +(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database{
     NSMutableArray *tmpVideo=[[NSMutableArray alloc] init];
-    //TODO predelava za pravice
     FMResultSet *results;
-    
-    if ([[[APP_DELEGATE currentLogedInUser] userTypeSubcategory] count]>0) {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT res.* FROM (SELECT m.*, fm.categoryID  FROM Media m LEFT JOIN FotonaMenu fm  ON  m.galleryID = fm.videoGalleryID where m.mediaType=1 and fm.active=1 and (m.title like '%%%@%%')) as res LEFT JOIN FotonaMenuForUserSubType fust ON fust.fotonaID=res.categoryID WHERE fust.userSubType IN %@",searchTxt,[[APP_DELEGATE currentLogedInUser] userTypeSubcategory]]];
+    if ([APP_DELEGATE connectedToInternet]) {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 and m.active=1 and (m.title like '%%%@%%')",searchTxt]];
+    } else {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%')",searchTxt]];
     }
-    else{
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT res.* FROM (SELECT m.*, fm.categoryID  FROM Media m LEFT JOIN FotonaMenu fm  ON  m.galleryID = fm.videoGalleryID where m.mediaType=1 and fm.active=1 and (m.title like '%%%@%%')) LEFT JOIN FotonaMenuForUserType fut ON fut.fotonaID=res.categoryID WHERE fut.userType=%@",searchTxt,[[APP_DELEGATE currentLogedInUser] userType]]];
-    }
-    
     while([results next]) {
         FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];
-        [tmpVideo addObject:f];
+        if ([FCommon userPermission:[f userPermissions]]) {
+            [tmpVideo addObject:f];
+        }
+        
     }
     
     return tmpVideo;
@@ -577,20 +544,10 @@
         FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ order by sort",vId]];
         while([results next]) {
             FMedia *f= [[FMedia alloc] initWithDictionary:[results resultDictionary]];
-            
-            //            if (f.videoGalleryID != nil) {
-            //                FMResultSet *resultsFC= [database executeQuery:[NSString stringWithFormat:@"SELECT categoryID FROM FotonaMenu where active=1 and videoGalleryID=%@",f.videoGalleryID]];
-            //
-            //                NSString *fCategory = @"";
-            //                while([resultsFC next]) {
-            //                    fCategory = [resultsFC stringForColumn:@"categoryID"];
-            //                }
-            //
-            //                if ([self checkFotonaForUserSearch:fCategory]) {
-            [videosTmp addObject:f];
-            //                }
-            //            }
-            //TODO: dodat preverjanje pravic
+  
+            if ([FCommon userPermission:[f userPermissions]]) {
+                [videosTmp addObject:f];
+            }
         }
         
     }
@@ -620,7 +577,7 @@
         while([results2 next]) {
             FMedia *f=[[FMedia alloc] initWithDictionary:[results2 resultDictionary]];
             
-            if ([f checkVideoForCategory:videoCategory]) {
+            if ([FCommon checkItemPermissions:[f userPermissions] ForCategory:videoCategory]) {
                 [videosTmp addObject:f];
             }
         }
@@ -629,7 +586,7 @@
     [database close];
     
     NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"title"  ascending:YES];
-    videosTmp=[videosTmp sortedArrayUsingDescriptors:[NSArray arrayWithObjects:descriptor,nil]];
+    videosTmp=[[videosTmp sortedArrayUsingDescriptors:[NSArray arrayWithObjects:descriptor,nil]] mutableCopy];
     return videosTmp;
 }
 
@@ -663,12 +620,12 @@
     [database close];
 }
 
-+(FMedia *)getVideoWithId:(NSString *) videoId{
++(FMedia *)getMediaWithId:(NSString *) videoId andType: (NSString *)mediaType{
     FMedia *video;
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    FMResultSet *results2 = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ and mediaType=1 order by sort",videoId]];
+    FMResultSet *results2 = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ and mediaType=%@ order by sort",videoId, mediaType]];
     while([results2 next]) {
         video = [[FMedia alloc] initWithDictionary:[results2 resultDictionary]];
     }
@@ -701,7 +658,7 @@
             flag=@"1";
         }
         [f setBookmark:flag];
-        BOOL checkFotona=[FDB checkFotonaForUser:f];
+        BOOL checkFotona=[FCommon userPermission:[f userPermissions]];
         if (checkFotona) {
             [menu addObject:f];
         }
@@ -716,132 +673,31 @@
 
 +(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database{
     NSMutableArray *tmpPDF=[[NSMutableArray alloc] init];
-    
     FMResultSet *results;
-    //TODO predelava za pravice
-    if ([[[APP_DELEGATE currentLogedInUser] userTypeSubcategory] count]>0) {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT fm.* FROM FotonaMenu fm LEFT JOIN FotonaMenuForUserSubType fust ON fust.fotonaID=fm.categoryID where fm.fotonaCategoryType = 6 and fm.active=1 and (fm.title like '%%%@%%') AND fust.userSubType IN %@",searchTxt,[[APP_DELEGATE currentLogedInUser] userTypeSubcategory]]];
+    if ([APP_DELEGATE connectedToInternet]) {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 and m.active=1 and (m.title like '%%%@%%')",searchTxt]];
+    } else {
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%')",searchTxt]];
     }
-    else{
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT fm.* FROM FotonaMenu fm LEFT JOIN FotonaMenuForUserType fut ON fut.fotonaID=fm.categoryID where fm.fotonaCategoryType = 6 and fm.active=1 and (fm.title like '%%%@%%') AND fut.userType=%@",searchTxt,[[APP_DELEGATE currentLogedInUser] userType]]];
-    }
-    while([results next]) {
-        FFotonaMenu *f=[[FFotonaMenu alloc] initWithDictionary:[results resultDictionary]];
-        [tmpPDF addObject:f];
+        while([results next]) {
+        FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];
+         if ([FCommon userPermission:[f userPermissions]]) {
+             [tmpPDF addObject:f];
+         }
     }
     
     return tmpPDF;
 }
 
-
-
-+(NSMutableArray *)getPDFForCategory:(NSString *)category
-{
-    NSMutableArray *menu=[[NSMutableArray alloc] init];
-    NSMutableArray *documents=[[NSMutableArray alloc] init];
++(void)removeFotonaMenuWithID:(NSString *)fotonaID{
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    
-    NSString *usr = [FCommon getUser];
-    
-    FMResultSet *resultsBookmarked =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=2" withArgumentsInArray:[NSArray arrayWithObjects:usr, nil]];
-    while([resultsBookmarked next]) {
-        [documents addObject:[resultsBookmarked objectForColumnName:@"documentID"]];
-    }
-    for (NSString *docID in documents) {
-        FMResultSet *results = [database executeQuery:@"SELECT * FROM FotonaMenu where categoryID=? and active=1" withArgumentsInArray:[NSArray arrayWithObjects:docID, nil]];
-        
-        while([results next]) {
-            FFotonaMenu *f=[[FFotonaMenu alloc] initWithDictionary:[results resultDictionary]];
-            
-            if (![category isEqualToString:@"0"]) {
-                if ([self checkFotonaForUser:f andCategory:category]) {
-                    [menu addObject:f];
-                }
-            } else {
-                [menu addObject:f];
-            }
-        }
-    }
+    [database executeUpdate:@"DELETE FROM FotonaMenu WHERE categoryID=? ",fotonaID];
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    return menu;
 }
 
 
-
-#pragma mark - User
-
-+(BOOL)checkFotonaForUserSearch:(NSString *)fc;
-{
-    BOOL check=NO;
-    
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    //TODO predelava za pravice
-    if ([[[APP_DELEGATE currentLogedInUser] userTypeSubcategory] count]>0) {
-        for (NSString *subType in [[APP_DELEGATE currentLogedInUser] userTypeSubcategory]) {
-            FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenuForUserSubType where fotonaID=%@ and userSubType=%@",fc,subType]];
-            while([results next]) {
-                check=YES;
-            }
-        }
-    }
-    else{
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenuForUserType where fotonaID=%@ and userType=%@",fc,[[APP_DELEGATE currentLogedInUser] userType]]];
-        while([results next]) {
-            check=YES;
-        }
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return check;
-}
-
-
-+(BOOL)checkFotonaForUser:(FFotonaMenu *)f
-{
-    BOOL check=NO;
-    //TODO predelava za pravice
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    
-    if ([[[APP_DELEGATE currentLogedInUser] userTypeSubcategory] count]>0) {
-        for (NSString *subType in [[APP_DELEGATE currentLogedInUser] userTypeSubcategory]) {
-            FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenuForUserSubType where fotonaID=%@ and userSubType=%@",f.categoryID,subType]];
-            while([results next]) {
-                check=YES;
-            }
-        }
-    }
-    else{
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenuForUserType where fotonaID=%@ and userType=%@",f.categoryID,[[APP_DELEGATE currentLogedInUser] userType]]];
-        while([results next]) {
-            check=YES;
-        }
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return check;
-}
-
-+(BOOL)checkFotonaForUser:(FFotonaMenu *)f andCategory:(NSString *)category
-{
-    BOOL check=NO;
-    //TODO predelava za pravice
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenuForUserSubType where fotonaID=%@ and userSubType=%@",f.categoryID,category]];
-    while([results next]) {
-        check=YES;
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return check;
-}
 
 #pragma mark - Check if bookmarked
 
@@ -906,16 +762,15 @@
                 }
                 NSArray *pathComp=[img.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-                //TODO: ko se shranjuje tenova local path treba pazit de se iz stare pobriše
                 if (!flag) {
                     
-                    [database executeUpdate:@"INSERT INTO Media (mediaID, title, path, localPath, description, mediaType,  fileSize, deleted, sort) VALUES (?,?,?,?,?,?,?,?,?,?)",img.itemID, img.title, img.path, pathTmp, img.description, @"0", img.fileSize, img.deleted, img.sort];
+                    [database executeUpdate:@"INSERT INTO Media (mediaID, title, path, localPath, description, mediaType,  fileSize, deleted, sort) VALUES (?,?,?,?,?,?,?,?,?)",img.itemID, img.title, img.path, pathTmp, img.description, @"0", img.fileSize, img.deleted, img.sort];
                     
                     
                 } else {
-                    [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,,fileSize=?, deleted=?, sort=?  where mediaID=?",img.title, img.path, pathTmp, img.description, @"0", img.fileSize, img.deleted, img.sort, img.itemID];
+                    [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,,fileSize=?, deleted=?, sort=? WHERE mediaID=? AND mediaType=0",img.title, img.path, pathTmp, img.description, @"0", img.fileSize, img.deleted, img.sort, img.itemID];
                 }
-                //TODO: nrdit de prever če že ostaja in jo zbrisat
+                //TODO: nrdit de prever če že obstaja in jo zbrisat
                 [links addObject:img.path];
             }
             
@@ -924,7 +779,7 @@
             }
             
         }else {
-            //TODO: pazit na pososdabljanje lokal patha
+            //TODO: pazit na posodabljanje lokal patha
             if (type==1){
                 for (FMedia *v in m) {
                     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where itemID=%@ AND mediaType=1;", v.itemID]];
@@ -934,9 +789,9 @@
                     }
                     
                     if (!flag) {
-                        [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  v.itemID,v.title,v.path,@"",v.description,@"1",@"0",v.mediaImage,v.sort,v.userPermissions, v.active, v.deleted, v.download, v.filesize];
+                        [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  v.itemID,v.title,v.path,@"",v.description,@"1",@"0",v.mediaImage,v.sort,v.userPermissions, v.active, v.deleted, v.download, v.filesize];
                     } else {
-                        [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaType=?,isBookmark=?,mediaImage=?,sort=?, userPermissons=?,active=?,deleted=?,download=?, fileSize=? where mediaID=?",v.title,v.path,@"",v.description,@"1",v.bookmark,v.mediaImage,v.sort,v.userPermissions, v.active, v.deleted, v.download, v.filesize,v.itemID];
+                        [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaType=?,isBookmark=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=? WHERE mediaID=? AND mediaType=1",v.title,v.path,@"",v.description,@"1",v.bookmark,v.mediaImage,v.sort,v.userPermissions, v.active, v.deleted, v.download, v.filesize,v.itemID];
                     }
                 }
             } else {
@@ -949,9 +804,9 @@
                         }
                         
                         if (!flag) {
-                            [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  p.itemID,p.title,p.path,@"",p.description,@"2",@"0",p.mediaImage,p.sort,p.userPermissions, p.active, p.deleted, p.download, p.filesize];
+                            [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  p.itemID,p.title,p.path,@"",p.description,@"2",@"0",p.mediaImage,p.sort,p.userPermissions, p.active, p.deleted, p.download, p.filesize];
                         } else {
-                            [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,isBookmark=?,mediaImage=?,sort=?, userPermissons=?,active=?,deleted=?,download=?, fileSize=? where mediaID=?",p.title,p.path,@"",p.description,@"0",p.mediaImage, p.sort, p.userPermissions, p.active, p.deleted, p.download, p.filesize,p.itemID];
+                            [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,isBookmark=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=? WHERE mediaID=? AND mediaType=2",p.title,p.path,@"",p.description,@"0",p.mediaImage, p.sort, p.userPermissions, p.active, p.deleted, p.download, p.filesize,p.itemID];
                         }
                     }
                 }
@@ -964,96 +819,124 @@
     
 }
 
-+(void)deleteMediaForCaseGalleryID:(NSString *)gID withArray:(NSMutableArray *)array andType:(int)t
-{
-    if (t==0) {
-        for (FImage *img in array) {
-            NSArray *pathComp=[img.path pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error;
-            [fileManager removeItemAtPath:pathTmp error:&error];
-        }
-    } else if (t==1){
-        for (FMedia *vid in array) {
-            NSArray *pathComp=[vid.path pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error;
-            [fileManager removeItemAtPath:pathTmp error:&error];
-        }
-    }
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    [database executeUpdate:@"delete from Media where galleryID=?",gID];
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
 
 
-+(void) deleteMedia:(NSMutableArray *)mediaArray andType:(NSString *) type{
++(void) updateMedia:(NSMutableArray *)mediaArray andType:(NSString *) type {
+    //TODO: brisat file če niso več nikjer bookmarkani iz baze pa ko je deleted
+    BOOL deleted = NO;
+    NSString *mediaType = @"-1";
+    FMedia *media;
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     if ([type isEqualToString:MEDIAIMAGE]) {
-        NSMutableArray *casesImages = [[NSMutableArray alloc] init];
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT galleryItemImagesIDs FROM Cases;"]];
-        while ([results next]) {
-            NSString *value = [results valueForKey:@"galleryItemImagesIDs"];
-            NSArray *images = [value componentsSeparatedByString:@","];
-            [casesImages addObject:images];
-        }
-        for (NSString *img in mediaArray) {
-            BOOL delete = true;
-            for (NSArray *imagesArray in casesImages){
-                if ([imagesArray containsObject:img]){
-                    delete = false;
-                    break;
+        for (FImage *img in mediaArray) {
+            if ([img deleted] || [[img deleted] isEqualToString:@"1"]) {
+                [database executeUpdate:@"DELETE FROM Media WHERE mediaID=? AND mediaType=0",[img itemID]];
+                [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[img itemID],[FCommon getUser],BOOKMARKCASE];
+                 [FMediaManager deleteImage:img];
+            } else {
+                FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media WHERE itemID=%@ AND mediaType=0;", img.itemID]];
+                BOOL exists = NO;
+                while ([results next]) {
+                    exists = YES;
                 }
-            }
-            
-            if (delete) {
-                [database executeUpdate:@"delete from Media where mediaID=? and mediaType=0",img];
+                NSArray *pathComp=[img.path pathComponents];
+                NSString *pathTmp = [[NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
+                if (!exists) {
+                    [database executeUpdate:@"INSERT INTO Media (mediaID, title, path, localPath, description, mediaType,  fileSize, deleted, sort) VALUES (?,?,?,?,?,?,?,?,?)",img.itemID, img.title, img.path, pathTmp, img.description, @"0", img.fileSize, img.deleted, img.sort];
+                } else {
+                    [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,,fileSize=?, deleted=?, sort=? WHERE mediaID=? AND mediaType=0",img.title, img.path, pathTmp, img.description, @"0", img.fileSize, img.deleted, img.sort, img.itemID];
+                }
             }
         }
     } else {
-        
         if ([type isEqualToString:MEDIAVIDEO]){
-            NSMutableArray *casesVideos = [[NSMutableArray alloc] init];
-            FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT galleryItemVideoIDs FROM Cases;"]];
-            while ([results next]) {
-                NSString *value = [results valueForKey:@"galleryItemVideoIDs"];
-                NSArray *videos = [value componentsSeparatedByString:@","];
-                [casesVideos addObject:videos];
-            }
-            for (NSString *vid in mediaArray) {
-                BOOL delete = true;
-                for (NSArray *videosArray in casesVideos){
-                    if ([videosArray containsObject:vid]){
-                        delete = false;
-                        break;
+            for (FMedia *vid in mediaArray) {
+                if ([[vid deleted] isEqualToString:@"1"]) {
+                    [database executeUpdate:@"DELETE FROM Media WHERE mediaID=? AND mediaType=1",[vid itemID]];
+                    [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[vid itemID],[FCommon getUser],BOOKMARKVIDEO];
+                     [FMediaManager deleteVideo:vid];
+                    deleted = YES;
+                    mediaType = MEDIAVIDEO;
+                    media = vid;
+                } else {
+                    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media WHERE mediaID=%@ AND mediaType=1;", vid.itemID]];
+                    BOOL exists = NO;
+                    while ([results next]) {
+                        exists = YES;
+                    }
+                    if (!exists) {
+                        [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  vid.itemID,vid.title,vid.path,@"",vid.description,@"1",@"0",vid.mediaImage,vid.sort,vid.userPermissions, vid.active, vid.deleted, vid.download, vid.filesize];
+                    } else {
+                        [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=? WHERE mediaID=? AND mediaType=1",vid.title,vid.path,@"",vid.description,vid.mediaImage, vid.sort, vid.userPermissions, vid.active, vid.deleted, vid.download, vid.filesize,vid.itemID];
                     }
                 }
-                
-                if (delete) {
-                    [database executeUpdate:@"delete from Media where mediaID=? and mediaType=1",vid];
-                }
             }
-
         } else{
-                if ([type isEqualToString:MEDIAPDF]){
-                    for (FMedia *pdf in mediaArray) {
-                        
+            if ([type isEqualToString:MEDIAPDF]){
+                for (FMedia *pdf in mediaArray) {
+                    if ([[pdf deleted] isEqualToString:@"1"]) {
+                        [database executeUpdate:@"DELETE FROM Media WHERE mediaID=? AND mediaType=2",[pdf itemID]];
+                        [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[pdf itemID],[FCommon getUser],BOOKMARKPDF];
+                         [FMediaManager deletePDF:pdf];
+                        deleted = YES;
+                        mediaType = MEDIAPDF;
+                        media = pdf;
+                    } else {
+                        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media WHERE mediaID=%@ AND mediaType=2;", pdf.itemID]];
+                        BOOL exists = NO;
+                        while ([results next]) {
+                            exists = YES;
+                        }
+                        if (!exists) {
+                            [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  pdf.itemID,pdf.title,pdf.path,@"",pdf.description,@"2",@"0",pdf.mediaImage,pdf.sort,pdf.userPermissions, pdf.active, pdf.deleted, pdf.download, pdf.filesize];
+                        } else {
+                            [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=? WHERE mediaID=? AND mediaType=2",pdf.title,pdf.path,@"",pdf.description,pdf.mediaImage, pdf.sort, pdf.userPermissions, pdf.active, pdf.deleted, pdf.download, pdf.filesize,pdf.itemID];
+                        }
                     }
+                }
             }
         }
     }
-
+    
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     
+    if (deleted) {
+        [self removeFromFavoritesItem:[[media itemID] intValue] ofType:BOOKMARKVIDEO];
+        if ([mediaType isEqualToString:MEDIAVIDEO]) {
+            [self removeBookmarkedVideo:media];
+        } else {
+            if ([mediaType isEqualToString:MEDIAPDF]) {
+                [self removeFromBookmarkForDocumentID:[media itemID]];
+            }
+        }
+    }
 }
 
 
++(NSMutableArray *)getMediaForGallery:(NSString *)galleryItems withMediType: (NSString *)mediaType{
+    NSMutableArray *videosTmp=[[NSMutableArray alloc] init];
+    NSArray *videoIDArray = [FCommon stringToArray:galleryItems withSeparator:@","];
+    if ([videoIDArray count] > 0) {
+        FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+        [database open];
+        for (NSString * vid in videoIDArray) {
+            FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaType=%@ AND mediaID=%@",mediaType, vid]];
+            while ([results next]) {
+                FMedia *video = [[FMedia alloc] initWithDictionary:[results resultDictionary]];
+                if ([FCommon userPermission:[video userPermissions]]) {
+                    [videosTmp addObject:video];
+                }
+                
+            }
+        }
+        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+        [database close];
+    }
+    
+    return videosTmp;
+}
 
 #pragma mark - Favorites
 

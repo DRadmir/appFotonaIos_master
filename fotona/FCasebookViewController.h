@@ -128,6 +128,4 @@
 -(void) openDisclaimer;
 - (void) refreshBookmarkBtn;
 
--(void)deleteMediaForCaseGalleryID:(NSString *)gID withArray:(NSMutableArray *)array andType:(int)t;
-
 @end

@@ -26,10 +26,10 @@
 
 -(void)setContentForCase:(FCase *)fcase;
 
--(void)setContentForFotona:(FItemFavorite *) fitem;
+-(void)setContentForFavorite:(FItemFavorite *)fitem forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath;
 
--(void)setContentForVideo:(FMedia *) video;
+-(void)setContentForMedia:(FMedia *) video;
 
--(void)refreshVideoThumbnail:(UIImage *)img;
+-(void)refreshMediaThumbnail:(UIImage *)img;
 
 @end

@@ -10,6 +10,8 @@
 
 @interface FHelperThumbnailImg : NSObject
 
-+(UIImage *) getThumbnailForVideo:(FMedia *)video;
 
+
++(void) getThumbnailForMedia:(FMedia *)media onTableView:(UITableView *)tableView withIndex:(NSIndexPath *)indexPath;
++(void) preloadImage:(NSMutableArray *)mediaArray mediaType:(NSString *)mediaType forTableView:(UITableView *)tableView onIndex:(NSIndexPath *) indexPath;
 @end

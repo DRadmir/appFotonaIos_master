@@ -141,7 +141,7 @@
                                 break;
                                 
                             case 2:
-                                newItems=[FDB getPDFForCategory:categories[category-1]];
+                               //TODOBOOKMARK: newItems=[FDB getPDFForCategory:categories[category-1]];
                                 [menuIcons addObject:@"documents"];
                                 break;
                             default:
@@ -348,7 +348,7 @@
                         } else
                         {
                             if (subMenu.subDocumentType ==2) {
-                                newItems=[FDB getPDFForCategory:categories[category-1]];
+                                //TODOBOOKMARK:newItems=[FDB getPDFForCategory:categories[category-1]];
                                 if (newItems.count>0){
                                     [flow.bookmarkMenuArray addObject:subMenu];
                                     [self.navigationController pushViewController:subMenu animated:YES];
@@ -613,7 +613,7 @@
             UITableViewRowAction *unbookmarkAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"Remove from Bookmarks"  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath){
                 [[newItems objectAtIndex:indexPath.row] setBookmark:@"0"];
                 [FDB removeFromBookmarkForDocumentID:[[newItems objectAtIndex:indexPath.row] categoryID]];
-                newItems=[FDB getPDFForCategory:categories[category-1]];
+                //TODOBOOKMARK:newItems=[FDB getPDFForCategory:categories[category-1]];
                 [tableView reloadData];
                 UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [av show];

@@ -128,7 +128,6 @@
 
 - (IBAction)closeMenu:(id)sender
 {
-    // [self.navigationController dismissViewControllerAnimated:true completion:nil];
     [self.navigationController popToRootViewControllerAnimated:true];
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.showMenu = false;
@@ -421,15 +420,9 @@
              NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[caseTemp caseID] onView:self.view];
             AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
             [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                // I get response as XML here and parse it in a function
-                
-                NSError *jsonError;
                 NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-                NSString *c = [dic objectForKey:@"d"];
-                NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
-                                                                                                 options:NSJSONReadingMutableContainers
-                                                                                                   error:&jsonError]];
+                NSArray *caseArray = [dic objectForKey:@"d"];
+                FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:caseArray[0]];
                 NSMutableArray *imgs = [[NSMutableArray alloc] init];
                 for (NSDictionary *imgLink in [caseObj images]) {
                     FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
@@ -449,8 +442,6 @@
                 [self removeHud];
                 caseToReturn = caseObj;
                 [self openCase];
-                
-                
             }
                                              failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                  NSLog(@"Cases failed %@",error.localizedDescription);
@@ -487,7 +478,6 @@
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.showMenu = false;
-    //[self.navigationController dismissViewControllerAnimated:true completion:nil];
     [self.navigationController popToRootViewControllerAnimated:true];
     parent.caseToOpen = caseToReturn;
     [parent openCase];

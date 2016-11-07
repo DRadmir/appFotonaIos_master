@@ -12,6 +12,7 @@
 #import "FMDatabase.h"
 #import "FIFlowController.h"
 #import "FIExternalLinkViewController.h"
+#import "FMediaManager.h"
 
 @interface FISettingsViewController ()
 
@@ -420,7 +421,7 @@
                         FMResultSet *selectedCases = [localDatabase executeQuery:@"SELECT * FROM Cases where caseID=?" withArgumentsInArray:@[[resultsBookmarked stringForColumn:@"documentID"]]];
                         FCase * selected;
                         while([selectedCases next]) {
-                            selected =  [[FCase alloc] initWithDictionary:[selectedCases resultDictionary]];
+                            selected =  [[FCase alloc] initWithDictionaryFromDB:[selectedCases resultDictionary]];
                         }
                         
                         if (!bookmarked) {
@@ -434,10 +435,10 @@
                                 [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
                                 x+=[selected getImages].count-1;
                                 x+=[selected getVideos].count-1;
-                                [[[FCasebookViewController alloc]init]  deleteMediaForCaseGalleryID:selected.galleryID withArray:[selected getImages] andType:0];
-                                [[[FCasebookViewController alloc]init] deleteMediaForCaseGalleryID:selected.videoGalleryID withArray:[selected getVideos] andType:1];
+                                [FMediaManager  deleteMedia:[selected getImages] andType:0 andFromDB:YES];
+                                [FMediaManager deleteMedia:[selected getVideos] andType:1 andFromDB:YES];
                                 [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseImages] withType:0];
-                                [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseVideos] withType:1];
+                                [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseVideosFromServer:NO] withType:1];
                             }
                             
                         }

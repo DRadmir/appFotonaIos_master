@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "FMedia.h"
 
-@interface FIVideoGalleryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface FIGalleryViewController : UIViewController <QLPreviewControllerDelegate,QLPreviewControllerDataSource,UITableViewDataSource, UITableViewDelegate>
 
-@property (strong, nonatomic) NSString* galleryID;
+@property (strong, nonatomic) NSString* galleryItems;
+@property (strong, nonatomic) NSString* galleryType;
 @property (strong, nonatomic) NSString* category;
 
 @property (strong, nonatomic) IBOutlet UITableView *videoGalleryTableView;

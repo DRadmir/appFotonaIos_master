@@ -40,7 +40,6 @@
     return usr;
 }
 
-//TODO: dodat metodo ki preverja če je guest oz dummyuser/dummyguest -> vrne true oz false
 +(BOOL)isGuest
 {
     if([[FCommon getUser] isEqualToString:@"guest"] || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3 || [[FCommon getUser] caseInsensitiveCompare:@"dummyguest"] == NSOrderedSame ){
@@ -65,8 +64,11 @@
     return img;
 }
 
-+(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController{
-    NSURL *videoURL=[NSURL URLWithString:url];
++(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController localSaved:(BOOL) isLocalSaved{
+     NSURL *videoURL=[NSURL URLWithString:url];
+    if (isLocalSaved) {
+        videoURL=[NSURL fileURLWithPath:url];
+    }
     AVQueuePlayer * player = [[AVQueuePlayer alloc] initWithURL:videoURL];
     AVPlayerViewController *controller = [[AVPlayerViewController alloc] init];
     controller.player = player;
@@ -74,8 +76,8 @@
     [player play];
 }
 
-+ (BOOL)userPermission:(NSString*)array{
-    NSArray *ary = [array componentsSeparatedByString:@";"];
++(BOOL)userPermission:(NSString*)permissions{
+    NSArray *ary = [permissions componentsSeparatedByString:@";"];
     int ut = [[APP_DELEGATE currentLogedInUser].userType intValue];
     
     if ((ut == 0 ) || (ut == 3 ))
@@ -97,11 +99,28 @@
     return false;
 }
 
++(BOOL)checkItemPermissions:(NSString *) permissions ForCategory:(NSString *)category
+{
+     NSArray *ary = [permissions componentsSeparatedByString:@";"];
+    int ut = [[APP_DELEGATE currentLogedInUser].userType intValue];
+    if ([category isEqualToString:@"0"]) {//all
+        return true;
+    } else //just one category
+    {
+        NSArray *arySubPermissions = [[ary objectAtIndex:ut] componentsSeparatedByString:@","];
+        if ([arySubPermissions containsObject: category]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 
 
 
 +(NSString *)arrayToString:(NSMutableArray *)array withSeparator:(NSString *)separator{
-    if ([array count] > 0) {
+    if (![array isKindOfClass:[NSNull class]] && [array count] > 0) {
         NSString *string = array[0];
         for (int i= 1; i<array.count; i++) {
             string = [NSString stringWithFormat:@"%@%@%@",string, separator, array[i]];

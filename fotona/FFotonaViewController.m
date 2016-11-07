@@ -318,7 +318,7 @@ NSString *currentVideoGalleryId;
         }
         if ([[clicked fotonaCategoryType] isEqualToString:@"6"]) {
             //pdf
-            [self downloadFile:[NSString stringWithFormat:@"%@",[clicked pdfSrc]] inFolder:@".PDF" type:6];
+           //TODO: [self downloadFile:[NSString stringWithFormat:@"%@",[clicked pdfSrc]] inFolder:@".PDF" type:6];
         }
         if ([[clicked fotonaCategoryType] isEqualToString:@"7"]) {
             //preloaded
@@ -523,21 +523,7 @@ NSString *currentVideoGalleryId;
     }
     
     while([results next]) {
-        FFotonaMenu *f=[[FFotonaMenu alloc] init];
-        [f setCategoryID:[results stringForColumn:@"categoryID"]];
-        [f setCategoryIDPrev:[results stringForColumn:@"categoryIDPrev"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setFotonaCategoryType:[results stringForColumn:@"fotonaCategoryType"]];
-        [f setDescription:[results stringForColumn:@"description"]];
-        [f setText:[results stringForColumn:@"text"]];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setPdfSrc:[results stringForColumn:@"pdfSrc"]];
-        [f setExternalLink:[results stringForColumn:@"externalLink"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setIconName:[results stringForColumn:@"icon"]];
+        FFotonaMenu *f=[[FFotonaMenu alloc] initWithDictionary:[results resultDictionary]];
         [menu addObject:f];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -552,15 +538,11 @@ NSString *currentVideoGalleryId;
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and caseID=%@",caseID]];
     while([results next]) {
-        f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
+        f=[[FCase alloc] initWithDictionaryFromServer:[results resultDictionary]];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    if ([APP_DELEGATE checkGuest]) {
-        if ([f.allowedForGuests isEqualToString:@"1"]) {
-            return f;
-        }
-    } else {
+    if ([FCommon userPermission:[f userPermissions]]) {
         return f;
     }
     return nil;
@@ -767,11 +749,11 @@ NSString *currentVideoGalleryId;
     [database close];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:video.localPath] && downloaded && flag) {
-       [FCommon playVideoFromURL:video.localPath onViewController:self];
+       [FCommon playVideoFromURL:video.localPath onViewController:self localSaved:YES];
     }else
     {
         if([APP_DELEGATE connectedToInternet]){
-            [FCommon playVideoFromURL:video.path onViewController:self];
+            [FCommon playVideoFromURL:video.path onViewController:self localSaved:NO];
         } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [av show];
@@ -1383,12 +1365,7 @@ NSString *currentVideoGalleryId;
 }
 
 -(void)refreshMenu:(NSString *)link{
-    link=[link stringByReplacingOccurrencesOfString:@"%20" withString:@" "];
-    if ([self.bookmarkMenu objectForKey:link]) {
-        FFotonaMenuViewController *menu = [self.bookmarkMenu objectForKey:link];
-        [menu refreshPDF:link];
-    }
-    
+    //TODO: stran, to je posodabljal menu po bookmarkanju pdfa
 }
 
 - (void) setOpenGal: (BOOL) og
@@ -1403,7 +1380,7 @@ NSString *currentVideoGalleryId;
 
 -(void) openPDFFromSearch{
     openPDF = false;
-    [self  downloadFileFromSearch:[NSString stringWithFormat:@"%@",[PDFToOpen pdfSrc]] inFolder:@".PDF" type:6 withCategoryID:[PDFToOpen categoryID]];
+    //TODO:[self  downloadFileFromSearch:[NSString stringWithFormat:@"%@",[PDFToOpen pdfSrc]] inFolder:@".PDF" type:6 withCategoryID:[PDFToOpen categoryID]];
 }
 
 @end

@@ -9,6 +9,7 @@
 #import "FMedia.h"
 #import "AFNetworking.h"
 #import "FMDatabase.h"
+#import "FIFlowController.h"
 
 @implementation FMedia
 @synthesize itemID;
@@ -31,16 +32,29 @@
     if (self) {
         [self setItemID:[dic valueForKey:@"customGalleryItemID"]];
         [self setTitle:[dic valueForKey:@"title"]];
-        [self setPath:[dic valueForKey:@"path"]];
-        [self setPath:[self.path stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
+        NSString *pathUpdated = [[dic valueForKey:@"path"] stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+        [self setPath:[pathUpdated stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
         [self setLocalPath:@""];
         [self setDescription:[dic valueForKey:@"description"]];
         [self setMediaImage:[dic valueForKey:@"mediaImage"]];
         [self setSort:[dic valueForKey:@"sort"]];
-        [self setDeleted:[dic valueForKey:@"deleted"]];
         [self setFilesize:[dic valueForKey:@"fileSize"]];
         [self setUserPermissions:[dic valueForKey:@"userPermissions"]];
-        [self setDownload:[dic valueForKey:@"download"]];
+        if ([[dic valueForKey:@"download"] boolValue]) {
+            [self setDownload:@"1"];
+        } else {
+            [self setDownload:@"0"];
+        }
+        if ([[dic valueForKey:@"deleted"] boolValue]) {
+            [self setDeleted:@"1"];
+        } else {
+            [self setDeleted:@"0"];
+        }
+        if ([[dic valueForKey:@"active"] boolValue]) {
+            [self setActive:@"1"];
+        } else {
+            [self setActive:@"0"];
+        }
         [self setTime:[dic valueForKey:@"imageCapturedTime"]];
         [self setMediaType:type];
     }
@@ -52,7 +66,7 @@
 {
     self=[super init];
     if (self) {
-        [self setItemID:[dic valueForKey:@"itemID"]];
+        [self setItemID:[dic valueForKey:@"mediaID"]];
         [self setTitle:[dic valueForKey:@"title"]];
         [self setPath:[dic valueForKey:@"path"]];
         [self setPath:[self.path stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
@@ -119,76 +133,40 @@
     return [dateFormater dateFromString:stringDate];
 }
 
-//če gleda glede na pravice na videu
-//-(BOOL)checkVideoForUser
-//{
-//    NSString *tempUser = [self.userType stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-//    tempUser = [tempUser stringByReplacingOccurrencesOfString:@"(" withString:@""];
-//    tempUser = [tempUser stringByReplacingOccurrencesOfString:@")" withString:@""];
-//    tempUser = [tempUser stringByReplacingOccurrencesOfString:@" " withString:@""];
-//    
-//    NSString *tempUserSub = [self.userSubType stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-//    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@"(" withString:@""];
-//    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@")" withString:@""];
-//    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@" " withString:@""];
-//    
-//   
-//
-//    if (tempUser.length > 0) {
-//        NSArray *userT =   [tempUser componentsSeparatedByString:@","];
-//        FUser *currentUser = [APP_DELEGATE currentLogedInUser];
-//        if (currentUser.userType.intValue == 2  ) {
-//             NSArray *userSubT =   [tempUserSub componentsSeparatedByString:@","];
-//            for (int i=0; i<currentUser.userTypeSubcategory.count; i++) {
-//                NSString *t = [NSString stringWithFormat:@"%@", currentUser.userTypeSubcategory[i]];
-//                if ([userSubT containsObject: t]) {
-//                    return true;
-//                }
-//            }
-//        } else{
-//            NSString *t = [NSString stringWithFormat:@"%@", currentUser.userType];
-//            if ([userT containsObject:t]) {
-//                return true;
-//            }
-//            
-//        }
-//    }
-//    
-//        return false;
-//    }
 
-
-
-
-
--(BOOL)checkVideoForCategory :(NSString *)category
++(void) openMedia:(FMedia *)media
 {
-    //dodat, da če je usertype na videu enak 0 in kategorija enako 0 ga doda
-    if ([category isEqualToString:@"0"]) {
-         NSString *tempUserSub = [self.userType stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-        tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@"(" withString:@""];
-        tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@")" withString:@""];
-        tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@" " withString:@""];
-        
-        NSArray *userSubT =   [tempUserSub componentsSeparatedByString:@","];
-        if ([userSubT containsObject: category]) {
-            return true;
-        }
-
-    } else
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.mediaToOpen = media;
+    flow.galToOpen = [NSString stringWithFormat:@"%@",[media itemID]];
+    flow.fromSearch = true;
+    if (flow.fotonaMenu != nil)
     {
-    NSString *tempUserSub = [self.userSubType stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@"(" withString:@""];
-    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@")" withString:@""];
-    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@" " withString:@""];
-
-            NSArray *userSubT =   [tempUserSub componentsSeparatedByString:@","];
-                if ([userSubT containsObject: category]) {
-                    return true;
-                }
+        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
     }
-    return false;
+    if (flow.lastIndex != 2) {
+        flow.lastIndex = 2;
+        [flow.tabControler setSelectedIndex:2];
+    } else {
+        [flow.fotonaTab openGalleryFromSearch:flow.galToOpen andReplace:YES andType:[media mediaType]];
+    }
+    
 }
+
++(NSString *) createLocalPathForLink:(NSString *)link andMediaType:(NSString *)mediaType{
+    NSString *local = @"";
+    if ([mediaType intValue] == [MEDIAVIDEO intValue]) {
+        NSArray *pathComp=[link pathComponents];
+        local=[[NSString stringWithFormat:@"%@/.Cases/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[link lastPathComponent]];
+    } else {
+        if ([mediaType intValue] == [MEDIAPDF intValue]) {
+            NSArray *pathComp=[link pathComponents];
+            local=[[NSString stringWithFormat:@"%@/.PDF/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[link lastPathComponent]];
+        }
+    }
+    return local;
+}
+
 
 
     @end

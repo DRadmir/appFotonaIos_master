@@ -18,6 +18,7 @@
 @synthesize src;
 @synthesize active;
 @synthesize bookmark;
+@synthesize userPermissions;
 
 -(id)initWithDictionary:(NSDictionary *)dic
 {
@@ -32,11 +33,8 @@
         [self setSrc:[dic valueForKey:@"src"]];
         [self setSrc:[self.src stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
         [self setActive:[dic valueForKey:@"active"]];
-        [self setAllowedUserTypes:[dic objectForKey:@"allowedUserTypes"]];
-        [self setAllowedUserSubTypes:[dic objectForKey:@"allowedUserSubTypes"]];
+        [self setUserPermissions:[dic valueForKey:@"userPermissions"]];
     }
-    
-    
     return self;
 }
 

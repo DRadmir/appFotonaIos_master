@@ -88,10 +88,10 @@
         [cell setContentForCase:caseToShow];
         return cell;
     } else {
-        if ([[item typeID] intValue] == BOOKMARKVIDEOINT) {
+        if ([[item typeID] intValue] == BOOKMARKVIDEOINT || [[item typeID] intValue] == BOOKMARKPDFINT) {
             
             FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
-            [cell setContentForFotona:item];
+            [cell setContentForFavorite:item forTableView:tableView onIndex:indexPath];
             return cell;
         }
     }
@@ -99,17 +99,19 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    //TODO: open differnet types of items
     FItemFavorite *item = favorites[indexPath.row];
-    switch ([[item typeID] intValue]) {
-        case BOOKMARKCASEINT:
-            if (((FIGalleryTableViewCell *) [tableView cellForRowAtIndexPath:indexPath]).enabled) {
+    if (((FIGalleryTableViewCell *) [tableView cellForRowAtIndexPath:indexPath]).enabled) {
+        switch ([[item typeID] intValue]) {
+            case BOOKMARKCASEINT:
                 [self openCaseWithID:[item itemID]];
-            }
-            break;
-          
-        default:
-            break;
+                break;
+            case BOOKMARKVIDEOINT:
+            case BOOKMARKPDFINT:
+                [self openMedia:[item itemID]  andType:[item typeID]];
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -146,7 +148,7 @@
                 NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
                 NSString *c = [dic objectForKey:@"d"];
                 NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
+                FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
                                                                                                  options:NSJSONReadingMutableContainers
                                                                                                    error:&jsonError]];
                 NSMutableArray *imgs = [[NSMutableArray alloc] init];
@@ -158,7 +160,7 @@
                 [caseObj setImages:imgs];
                 NSMutableArray *videos = [[NSMutableArray alloc] init];
                 for (NSDictionary *videoLink in [caseObj video]) {
-                    FVideo * videoTemp = [[FVideo alloc] initWithDictionary:videoLink];
+                    FMedia * videoTemp = [[FMedia alloc] initWithDictionary:videoLink];
                     
                     [videos addObject:videoTemp];
                 }
@@ -197,6 +199,11 @@
     flow.lastIndex = 3;
     [flow.tabControler setSelectedIndex:3];
     
+}
+
+-(void)openMedia:(NSString *)mediaID  andType:(NSString *)mediaType{
+    FMedia *media = [FDB getMediaWithId:mediaID andType:mediaType];
+    [FMedia openMedia:media];
 }
 
 #pragma mark - HUD

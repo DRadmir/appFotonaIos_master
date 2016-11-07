@@ -21,6 +21,7 @@
 #import "FNewsView.h"
 #import "HelperString.h"
 #import "FDB.h"
+#import "FMediaManager.h"
 
 @interface FBookmarkViewController ()
 {
@@ -743,11 +744,6 @@ NSMutableDictionary *preloadMoviesImages2;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     //code to be executed on the main thread when background task is finished
                     [tmpImg setImage:image forState:UIControlStateNormal];
-                    //                    UIImageView *expandImg=[[UIImageView alloc] initWithFrame:CGRectMake(tmpImg.frame.size.width-25, tmpImg.frame.size.height-25, 60, 60)];
-                    //                    expandImg.center = CGPointMake(tmpImg.frame.size.width / 2, tmpImg.frame.size.height / 2);
-                    //
-                    //                    [expandImg setImage:[UIImage imageNamed:@"playVideo"]];
-                    //                    [tmpImg addSubview:expandImg];
                     [tmpImg setTag:i];
                     [tmpImg addTarget:self action:@selector(openVideo:) forControlEvents:UIControlEventTouchUpInside];
                     [imagesScroll addSubview:tmpImg];
@@ -1032,8 +1028,8 @@ NSMutableDictionary *preloadMoviesImages2;
             [database executeUpdate:@"INSERT INTO Cases (caseID,title,name,active,authorID,isBookmark,alloweInCoverFlow) VALUES (?,?,?,?,?,?,?)",currentCase.caseID,currentCase.title,currentCase.name,currentCase.active,currentCase.authorID,@"0",currentCase.coverflow];
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
             [database close];
-            [self deleteMediaForCaseGalleryID:currentCase.galleryID withArray:currentCase.images andType:0];
-            [self deleteMediaForCaseGalleryID:currentCase.videoGalleryID withArray:currentCase.video andType:1];
+            [FMediaManager deleteMedia:currentCase.images andType:0 andFromDB:YES];
+            [FMediaManager deleteMedia:currentCase.video andType:1 andFromDB:YES];
         }
         
     }
@@ -1042,32 +1038,6 @@ NSMutableDictionary *preloadMoviesImages2;
     
 }
 
--(void)deleteMediaForCaseGalleryID:(NSString *)gID withArray:(NSMutableArray *)array andType:(int)t
-{
-    if (t==0) {
-        for (FImage *img in array) {
-            NSArray *pathComp=[img.path pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error;
-            [fileManager removeItemAtPath:pathTmp error:&error];
-        }
-    } else if (t==1){
-        for (FMedia *vid in array) {
-            NSArray *pathComp=[vid.path pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error;
-            [fileManager removeItemAtPath:pathTmp error:&error];
-        }
-    }
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    [database executeUpdate:@"delete from Media where galleryID=?",gID];
-    
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
 
 
 - (IBAction)openSettings:(id)sender {
@@ -1160,7 +1130,7 @@ NSMutableDictionary *preloadMoviesImages2;
         downloaded = [download checkDownload:vid.localPath];
     }
     if (![vid.localPath isEqualToString:@""] && downloaded) {
-        [FCommon playVideoFromURL:vid.localPath onViewController:self];
+        [FCommon playVideoFromURL:vid.localPath onViewController:self localSaved:YES];
     }else
     {
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"FILEDOWNLOAD", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -1253,12 +1223,8 @@ NSMutableDictionary *preloadMoviesImages2;
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and bookmark=1 order by title"]];
     while([results next]) {
-        FCase *f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [cases addObject:f];
-            }
-        } else {
+        FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
+        if ([FCommon userPermission:[f userPermissions]]) {
             [cases addObject:f];
         }
     }
@@ -1740,8 +1706,8 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     
     
     
-    NSString *videoKey = [self getpreloadGalleryMoviesImagesKeyWithGalleryId:[[videoArray objectAtIndex:indexPath.row] videoGalleryID] videoId:[[videoArray objectAtIndex:indexPath.row] itemID]];//[self getPreloadMoviesImagesKeyWithVideoId:indexPath.row];
-    [[cell image] setImage:[preloadMoviesImages2 objectForKey:videoKey]];
+   //TODOBOOKMARK: NSString *videoKey = [self getpreloadGalleryMoviesImagesKeyWithGalleryId:[[videoArray objectAtIndex:indexPath.row] videoGalleryID] videoId:[[videoArray objectAtIndex:indexPath.row] itemID]];//[self getPreloadMoviesImagesKeyWithVideoId:indexPath.row];
+   //TODOBOOKMARK: [[cell image] setImage:[preloadMoviesImages2 objectForKey:videoKey]];
     
     [ cell setParent:self];
     return cell;
@@ -1760,7 +1726,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     }
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:vid.localPath] && downloaded) {
-        [FCommon playVideoFromURL:vid.localPath onViewController:self];
+        [FCommon playVideoFromURL:vid.localPath onViewController:self localSaved:YES];
     }else
     {
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"FILEDOWNLOAD", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -1840,7 +1806,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         while([results2 next]) {
             FMedia *f=[[FMedia alloc] initWithDictionary:[results2 resultDictionary]];
             
-            if ([f checkVideoForCategory:videoCategory]) {
+            if ([FCommon checkItemPermissions:[f userPermissions] ForCategory:videoCategory]) {
                 [videosTmp addObject:f];
             }
             
@@ -1853,24 +1819,6 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     videosTmp=[videosTmp sortedArrayUsingDescriptors:[NSArray arrayWithObjects:descriptor,nil]];
     videoArray = videosTmp;
     return videosTmp;
-}
-
--(BOOL)checkFotona:(NSString *)f andCategory:(NSString *)category
-{
-    //TODO predelava za pravice
-    BOOL check=NO;
-    
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenuForUserSubType where fotonaID=%@ and userSubType=%@",f,category]];
-    while([results next]) {
-        NSLog(@"%@, %@",[results stringForColumn:@"fotonaID"],[results stringForColumn:@"userSubType"]);
-        check=YES;
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return check;
 }
 
 
@@ -1895,7 +1843,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         while([results2 next]) {
             FMedia *f=[[FMedia alloc] initWithDictionary:[results2 resultDictionary]];
             
-            if ([f checkVideoForCategory:categ]) {
+            if ([FCommon checkItemPermissions:[f userPermissions] ForCategory:categ]) {
                 [videosTmp addObject:f];
             }
             
@@ -1931,15 +1879,16 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     //default video image
     for (int i=0;i<[videosArray2 count];i++)
     {
-        NSString *videoKey2 =[self getpreloadGalleryMoviesImagesKeyWithGalleryId:[[videosArray2 objectAtIndex:i] videoGalleryID]videoId:[[videosArray2 objectAtIndex:i] itemID]]; //[self getPreloadMoviesImagesKeyWithVideoId:(NSInteger)i];
-        if (![preloadMoviesImages2 objectForKey:videoKey2]) {
-            if (![temp objectForKey:videoKey2]) {
-                [preloadMoviesImages2 setValue:[self defaultVideoImage] forKey:videoKey2];
-            } else{
-                [preloadMoviesImages2 setValue:[temp objectForKey:videoKey2] forKey:videoKey2];
-            }
-            
-        }
+        //TODOBOOKMARK:
+//        NSString *videoKey2 =[self getpreloadGalleryMoviesImagesKeyWithGalleryId:[[videosArray2 objectAtIndex:i] videoGalleryID]videoId:[[videosArray2 objectAtIndex:i] itemID]]; //[self getPreloadMoviesImagesKeyWithVideoId:(NSInteger)i];
+//        if (![preloadMoviesImages2 objectForKey:videoKey2]) {
+//            if (![temp objectForKey:videoKey2]) {
+//                [preloadMoviesImages2 setValue:[self defaultVideoImage] forKey:videoKey2];
+//            } else{
+//                [preloadMoviesImages2 setValue:[temp objectForKey:videoKey2] forKey:videoKey2];
+//            }
+//            
+//        }
     }
     
     //queue
@@ -1957,42 +1906,43 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         dispatch_async([activeQueues2 objectAtIndex:activeQueueIndex], ^{
             
             //id of image inside preloadGalleryMoviesImages
-            NSString *videoKey2 = [self getpreloadGalleryMoviesImagesKeyWithGalleryId:[[videosArray2 objectAtIndex:i] videoGalleryID] videoId:[[videosArray2 objectAtIndex:i] itemID]];
-            //image is not default
-            if ([preloadMoviesImages2 objectForKey:videoKey2] != self.defaultVideoImage) {
-                if (![lastUpdate isEqualToString:[self currentTimeInLjubljana]]) {
-                    if ([APP_DELEGATE connectedToInternet]) {
-                        
-                        
-                        NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid mediaImage]];
-                        UIImage *imgNew = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
-                        CGSize size = CGSizeMake(300, 167);
-                        UIGraphicsBeginImageContext(size);
-                        
-                        CGRect imgBorder = CGRectMake(0, 0, size.width, size.height);
-                        [imgNew drawInRect:imgBorder];
-                        
-                        imgNew = UIGraphicsGetImageFromCurrentImageContext();
-                        UIGraphicsEndImageContext();
-                        if (imgNew!=nil) {
-                            NSData *data1 = UIImagePNGRepresentation(imgNew);
-                            NSData *data2 = UIImagePNGRepresentation([preloadMoviesImages2 objectForKey:videoKey2]);
-                            if (![data1 isEqual:data2]) {
-                                [preloadMoviesImages2 setValue:imgNew forKey:videoKey2];
-                            }
-                        }
-                    }
-                    
-                    success++;
-                    if (success == numberOfImages) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [MBProgressHUD hideAllHUDsForView:contentVideoModeView animated:YES];
-                        });
-                    }
-                    
-                    return;
-                }
-            }
+            //TODOBOOKMARK:
+//            NSString *videoKey2 = [self getpreloadGalleryMoviesImagesKeyWithGalleryId:[[videosArray2 objectAtIndex:i] videoGalleryID] videoId:[[videosArray2 objectAtIndex:i] itemID]];
+//            //image is not default
+//            if ([preloadMoviesImages2 objectForKey:videoKey2] != self.defaultVideoImage) {
+//                if (![lastUpdate isEqualToString:[self currentTimeInLjubljana]]) {
+//                    if ([APP_DELEGATE connectedToInternet]) {
+//                        
+//                        
+//                        NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[vid mediaImage]];
+//                        UIImage *imgNew = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
+//                        CGSize size = CGSizeMake(300, 167);
+//                        UIGraphicsBeginImageContext(size);
+//                        
+//                        CGRect imgBorder = CGRectMake(0, 0, size.width, size.height);
+//                        [imgNew drawInRect:imgBorder];
+//                        
+//                        imgNew = UIGraphicsGetImageFromCurrentImageContext();
+//                        UIGraphicsEndImageContext();
+//                        if (imgNew!=nil) {
+//                            NSData *data1 = UIImagePNGRepresentation(imgNew);
+//                            NSData *data2 = UIImagePNGRepresentation([preloadMoviesImages2 objectForKey:videoKey2]);
+//                            if (![data1 isEqual:data2]) {
+//                                [preloadMoviesImages2 setValue:imgNew forKey:videoKey2];
+//                            }
+//                        }
+//                    }
+//                    
+//                    success++;
+//                    if (success == numberOfImages) {
+//                        dispatch_async(dispatch_get_main_queue(), ^{
+//                            [MBProgressHUD hideAllHUDsForView:contentVideoModeView animated:YES];
+//                        });
+//                    }
+//                    
+//                    return;
+//                }
+//            }
             
             FMedia *vid=[videosArray2 objectAtIndex:i];
             
@@ -2030,14 +1980,14 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
                     
                     GEMainMenuCell *cell2 = [self.contentsVideoModeCollectionView cellForItemAtIndexPath:collectionIndexPath2];
                     
-                    [preloadMoviesImages2 setValue:img forKey:videoKey2];
+                    //TODOBOOKMARK:[preloadMoviesImages2 setValue:img forKey:videoKey2];
                     NSMutableDictionary *temp;
                     if ([APP_DELEGATE videoImages]==nil) {
                         temp =  [[NSMutableDictionary alloc] init];
                     } else{
                         temp =  [APP_DELEGATE videoImages];
                     }
-                    [temp setValue:img forKey:videoKey2];
+                   //TODOBOOKMARK: [temp setValue:img forKey:videoKey2];
                     [APP_DELEGATE setVideoImages:temp];
                     if (cell2)
                     {

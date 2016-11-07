@@ -21,11 +21,13 @@
 @property (nonatomic,retain) NSString *iconName;
 @property (nonatomic,retain) NSString *sort;
 @property (nonatomic,retain) NSString *bookmark;
-@property (nonatomic,retain) NSString *galleryItems;
+@property (nonatomic,retain) NSString *galleryItemIDs;
 @property (nonatomic,retain) NSString *userPermissions;
 @property (nonatomic,retain) NSString *deleted;
 @property (nonatomic) int sortInt;
+//To use in parsing
 @property (nonatomic, retain) NSArray *videosDicArr;
+@property (nonatomic, retain) NSArray *pdfsDicArr;
 
 -(id)initWithDictionary:(NSDictionary *)dic;
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic;

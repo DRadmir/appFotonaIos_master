@@ -11,7 +11,7 @@
 #import "FFotonaMenuViewController.h"
 #import "FIExternalLinkViewController.h"
 #import "FIFlowController.h"
-#import "FIVideoGalleryViewController.h"
+#import "FIGalleryViewController.h"
 #import "FIContentViewController.h"
 #import "FDownloadManager.h"
 #import "FDB.h"
@@ -21,16 +21,15 @@
 
 @interface FIFotonaViewController ()
 {
-//    UINavigationController *menu;
+    //    UINavigationController *menu;
     NSString *lastCategory;
     FIFotonaMenuViewController *subMenu;
     
     UIViewController *openedView;
     UIStoryboard *sb;
     FIExternalLinkViewController *externalView;
-    FIVideoGalleryViewController *videoGalleryView;
+    FIGalleryViewController *galleryView;
     FIContentViewController *contentView;
-    NSString *pdfFolder;
     NSString *pathToPdf;
     BubbleControler *bubbleCFotona;
     Bubble *b3;
@@ -52,16 +51,15 @@
     stateHelper = 0;
     
     UIBarButtonItem *btnMenu = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
-                                                                     style:UIBarButtonItemStylePlain
-                                                                    target:self
-                                                                    action:@selector(showMenu:)];
+                                                                style:UIBarButtonItemStylePlain
+                                                               target:self
+                                                               action:@selector(showMenu:)];
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects:btnMenu, nil] animated:false];
     
     sb = [UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil];
-//    menu = [sb instantiateViewControllerWithIdentifier:@"menuNavigation"];
+    //    menu = [sb instantiateViewControllerWithIdentifier:@"menuNavigation"];
     subMenu = [sb instantiateViewControllerWithIdentifier:@"fotonaMenu"];
     lastCategory = @"";
-    pdfFolder = @".PDF";
     pathToPdf = @"";
     
     if (self.bookmarkMenu == nil) {
@@ -84,11 +82,7 @@
     }
     
     if (flow.fromSearch) {
-        if (flow.openPDF) {
-            [self openCategory:flow.pdfToOpen];
-        } else {
-            [self openGalleryFromSearch:flow.videoGal andReplace:false];
-        }
+        [self openGalleryFromSearch:flow.galToOpen andReplace:false andType:[[flow mediaToOpen] mediaType]];
     }
     [self showBubbles];
     
@@ -104,22 +98,23 @@
 -(void)openCategory:(FFotonaMenu *)fotonaCategory
 {
     BOOL replace = false;
-    if (![lastCategory isEqualToString:[fotonaCategory fotonaCategoryType]]) {
+    if ([lastCategory intValue] != [[fotonaCategory fotonaCategoryType] intValue]) {
         if (openedView != nil) {
             [openedView willMoveToParentViewController:nil];
             [openedView.view removeFromSuperview];
             [openedView removeFromParentViewController];
-           
+            
         }
-         replace = true;
+        replace = true;
         lastCategory = [fotonaCategory fotonaCategoryType];
     }
-    
-    if ([lastCategory isEqual:@"2"]) {
-        [FGoogleAnalytics writeGAForItem:[fotonaCategory title] andType:GAFOTONAWEBPAGEINT];
-        [self openExternalLink:[fotonaCategory externalLink] andReplace:replace];
-    } else{
-        if ([lastCategory isEqual:@"3"]) {
+    switch ([[fotonaCategory fotonaCategoryType] intValue]) {
+        case 2:{
+            [FGoogleAnalytics writeGAForItem:[fotonaCategory title] andType:GAFOTONAWEBPAGEINT];
+            [self openExternalLink:[fotonaCategory externalLink] andReplace:replace];
+        }
+            break;
+        case 3:{
             FIFlowController *flow = [FIFlowController sharedInstance];
             
             flow.caseFlow = [FDB getCaseWithID:[fotonaCategory categoryID]];
@@ -128,20 +123,22 @@
                 [[[flow caseMenu] navigationController] popToRootViewControllerAnimated:false];
             }
             [self.tabBarController setSelectedIndex:3];
-        } else{
-            if ([lastCategory isEqual:@"4"]) {
-                [self openGallery:[fotonaCategory videoGalleryID] andReplace:replace];
-            } else{
-                if ([lastCategory isEqual:@"5"]) {
-                    [self openContent:[fotonaCategory title] withDescription:[fotonaCategory text] andReplace:replace];
-                } else{
-                    if ([lastCategory isEqual:@"6"]) {
-                        [self openPDFCategory:fotonaCategory andReplace:replace];
-                    } else{
-                    }
-                }
-            }
         }
+            break;
+        case 4:{
+            [self openGallery:[fotonaCategory galleryItemIDs] andReplace:replace andType:MEDIAVIDEO];
+        }
+             break;
+        case 5:{
+            [self openContent:[fotonaCategory title] withDescription:[fotonaCategory text] andReplace:replace];
+        }
+            break;
+        case 6:{
+           [self openGallery:[fotonaCategory galleryItemIDs] andReplace:replace andType:MEDIAPDF];
+        }
+            break;
+        default:
+            break;
     }
 }
 
@@ -173,41 +170,42 @@
     }
 }
 
-#pragma mark - Open Video Gallery
+#pragma mark - Open Gallery
 
-- (void) openGallery:(NSString *) galleryID andReplace:(BOOL) replace
+- (void) openGallery:(NSString *) galleryItems andReplace:(BOOL) replace andType:(NSString *)mediaType
 {
-    if (videoGalleryView == nil) {
-        videoGalleryView = [sb instantiateViewControllerWithIdentifier:@"videoGalleryView"];
+    if (galleryView == nil) {
+        galleryView = [sb instantiateViewControllerWithIdentifier:@"galleryView"];
         replace = true;
     }
     
-    videoGalleryView.galleryID = galleryID;
-     videoGalleryView.category = @"0";
+    galleryView.galleryItems = galleryItems;
+    galleryView.galleryType = mediaType;
+    galleryView.category = @"0";
     if (replace)
     {
-        [self openViewInContainer:videoGalleryView];
+        [self openViewInContainer:galleryView];
     }
-
+    
 }
 
-- (void) openGalleryFromSearch:(NSString *) galleryID andReplace:(BOOL) replace
+- (void) openGalleryFromSearch:(NSString *) galleryItems andReplace:(BOOL) replace andType:(NSString *)mediaType
 {
     
-    if (videoGalleryView == nil) {
-        videoGalleryView = [sb instantiateViewControllerWithIdentifier:@"videoGalleryView"];
+    if (galleryView == nil) {
+        galleryView = [sb instantiateViewControllerWithIdentifier:@"galleryView"];
         replace = true;
     }
-    
-    videoGalleryView.galleryID = galleryID;
-    videoGalleryView.category = @"0";
+    galleryView.galleryItems = galleryItems;
+    galleryView.galleryType = mediaType;
+    galleryView.category = @"0";
     
     if (openedView != nil) {
         [openedView willMoveToParentViewController:nil];
         [openedView.view removeFromSuperview];
         [openedView removeFromParentViewController];
     }
-    [self openViewInContainer:videoGalleryView];
+    [self openViewInContainer:galleryView];
 }
 
 #pragma mark - Open Content
@@ -233,77 +231,14 @@
     
 }
 
-#pragma mark - Open PDF
-
--(void) openPDFCategory:(FFotonaMenu *)category andReplace:(BOOL) replace
-{
-    [FGoogleAnalytics writeGAForItem:[category title] andType:GAFOTONAPDFINT];
-    NSString *fileURL = [category pdfSrc];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@",docDir,pdfFolder]]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@%@",docDir,pdfFolder] withIntermediateDirectories:YES attributes:nil error:nil];
-        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",docDir,pdfFolder]]];
-    }
-    NSString *localPdf=[NSString stringWithFormat:@"%@%@/%@",docDir,pdfFolder,[fileURL lastPathComponent]];
-    BOOL downloaded = YES;
-    for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
-        downloaded = [download checkDownload:localPdf];
-    }
-    
-    if (([[NSFileManager defaultManager] fileExistsAtPath:localPdf]) && (downloaded) && [FDB checkIfBookmarkedForDocumentID:category.categoryID andType:BOOKMARKPDF]) {
-        NSString *path = [[NSString stringWithFormat:@"%@%@",docDir,pdfFolder] stringByAppendingPathComponent:[fileURL lastPathComponent]];
-        [self openPDF:path];
-    }else
-    {
-        if([APP_DELEGATE connectedToInternet]){
-            [self openExternalLink:fileURL andReplace:replace];
-        } else {
-            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [av show];
-        }
-    }
-
-}
-
--(void) openPDF:(NSString *)fileURL
-{
-    if (openedView != nil) {
-        [openedView willMoveToParentViewController:nil];
-        [openedView.view removeFromSuperview];
-        [openedView removeFromParentViewController];
-    }
-    pathToPdf = fileURL;
-    QLPreviewController *previewController = [[QLPreviewController alloc] init];
-    previewController.dataSource = self;
-    previewController.delegate = self;
-    [[previewController.navigationController navigationBar] setHidden:YES];
-    previewController.currentPreviewItemIndex = 0;
-    
-    [self presentViewController:previewController animated:YES completion:nil];
-    
-}
-
-- (NSInteger) numberOfPreviewItemsInPreviewController: (QLPreviewController *) controller
-{
-    return 1; //assuming your code displays a single file
-}
-
-- (id <QLPreviewItem>)previewController: (QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
-{
-    return [NSURL fileURLWithPath:pathToPdf]; //path of the file to be displayed
-}
-
--(void)previewControllerDidDismiss:(QLPreviewController *)controller
-{
-    [self showMenu:self];
-}
 
 
 #pragma mark - Open menu
 
 - (IBAction)showMenu:(id)sender
 {
-     FIFlowController *flow = [FIFlowController sharedInstance];
-
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    
     if (flow.fotonaMenuArray.count > 0) {
         NSMutableArray *controllers = [self.navigationController.viewControllers mutableCopy];
         for (FIFotonaMenuViewController *m in flow.fotonaMenuArray) {
@@ -318,39 +253,28 @@
     
 }
 
--(void)refreshMenu:(NSString *)link{
-    link=[link stringByReplacingOccurrencesOfString:@"%20" withString:@" "];
-    if ([self.bookmarkMenu objectForKey:link]) {
-        FIFlowController *flow = [FIFlowController sharedInstance];
-        if (flow.fotonaMenu != nil)
-        {
-           [[flow fotonaMenu] refreshPDF:link];
-        }
-        
-    }
-    
-}
+
 
 -(void)clearViews
 {
     
-//    if (openedView != nil) {
-//        [openedView willMoveToParentViewController:nil];
-//        [openedView.view removeFromSuperview];
-//        [openedView removeFromParentViewController];
-//    }
-//     FIFlowController *flow = [FIFlowController sharedInstance];
-//    //[flow.fotonaMenu closeMenu:self];
-//    if (flow.fotonaMenu != nil )
-//    {
-//        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
-//    }
-//    openedView = nil;
-//    lastCategory = @"";
-//    [flow.fotonaMenuArray removeAllObjects];
-//    if (![self.navigationController.visibleViewController isKindOfClass:[FIFotonaMenuViewController class]]) {
-//        [self showMenu:self];
-//    }
+    //    if (openedView != nil) {
+    //        [openedView willMoveToParentViewController:nil];
+    //        [openedView.view removeFromSuperview];
+    //        [openedView removeFromParentViewController];
+    //    }
+    //     FIFlowController *flow = [FIFlowController sharedInstance];
+    //    //[flow.fotonaMenu closeMenu:self];
+    //    if (flow.fotonaMenu != nil )
+    //    {
+    //        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
+    //    }
+    //    openedView = nil;
+    //    lastCategory = @"";
+    //    [flow.fotonaMenuArray removeAllObjects];
+    //    if (![self.navigationController.visibleViewController isKindOfClass:[FIFotonaMenuViewController class]]) {
+    //        [self showMenu:self];
+    //    }
     
     FIFlowController *flow = [FIFlowController sharedInstance];
     if (openedView != nil) {
@@ -361,21 +285,21 @@
         if (flow.fotonaMenu != nil )
         {
             [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
-             [flow.fotonaMenuArray removeAllObjects];
+            [flow.fotonaMenuArray removeAllObjects];
         }
     }
     
     openedView = nil;
     lastCategory = @"";
     if (flow.fotonaMenuArray.count > 1) {
-         [flow.fotonaMenuArray removeAllObjects];
+        [flow.fotonaMenuArray removeAllObjects];
     }
     
     if (![self.navigationController.visibleViewController isKindOfClass:[FIFotonaMenuViewController class]]) {
         [self showMenu:self];
     }
-
-
+    
+    
 }
 
 #pragma mark - BUBBLES :D
@@ -462,7 +386,7 @@
                 [bubbleCFotona addBubble:b4];
                 [b4 setDelegate:self];
             }
-
+            
             
             //[containerView addSubview:bubbleCFotona];
             UIWindow *window = [[UIApplication sharedApplication] keyWindow];

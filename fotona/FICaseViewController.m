@@ -524,7 +524,7 @@
 
 -(void) bookmarkCase{
     if([APP_DELEGATE connectedToInternet] || [[caseToOpen coverflow] boolValue]){
-        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Item bookmarking" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
         
     } else {
@@ -535,7 +535,7 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([alertView.message isEqualToString:@"Item bookmarking"]) {
+    if ([alertView.message isEqualToString:NSLocalizedString(@"BOOKMARKING", nil)]) {
         [HelperBookmark bookmarkCase:caseToOpen forCategory:0];
         [APP_DELEGATE setBookmarkAll:YES];
         [[FDownloadManager shared] prepareForDownloadingFiles];

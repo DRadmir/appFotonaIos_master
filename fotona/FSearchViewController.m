@@ -367,7 +367,7 @@
                     NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
                     NSString *c = [dic objectForKey:@"d"];
                     NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                    FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
+                    FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
                                                                                                      options:NSJSONReadingMutableContainers
                                                                                                        error:&jsonError]];
                     NSMutableArray *imgs = [[NSMutableArray alloc] init];

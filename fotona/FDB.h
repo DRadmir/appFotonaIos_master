@@ -29,7 +29,7 @@
 +(NSMutableArray *)getAlphabeticalCasesForBookmark:(NSString *)category;
 
 +(void)removeBookmarkedCase:(FCase *) caseToRemove;
-
++(void)removeCaseWithID:(NSString *)fotonaID;
 
 +(NSMutableArray *)getCasebookMenu;
 +(NSMutableArray *)getCaseCategoryWithPrev:(NSString *)prev;
@@ -52,25 +52,19 @@
 +(NSMutableArray *)getVideosFromArray:(NSString *)videoGalleryID;
 +(NSMutableArray *)getVideoswithCategory:(NSString *)videoCategory;
 +(void)removeBookmarkedVideo:(FMedia *)videoToRemove;
-+(FMedia *)getVideoWithId:(NSString *) videoId;
 
 
 +(NSMutableArray *)getFotonaMenu:(NSString *)catID;
 +(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
-+(NSMutableArray *)getPDFForCategory:(NSString *)category;
-
-
-+(BOOL)checkFotonaForUserSearch:(NSString *)fc;
-+(BOOL)checkFotonaForUser:(FFotonaMenu *)f;
-+(BOOL)checkFotonaForUser:(FFotonaMenu *)f andCategory:(NSString *)category;
-
++(void)removeFotonaMenuWithID:(NSString *)fotonaID;
 
 +(BOOL)checkIfBookmarkedForDocumentID:(NSString *)documentID andType:(NSString *)type;
 +(void)removeFromBookmarkForDocumentID:(NSString *)documentID;
 
 +(void)addMedia:(NSMutableArray *)m withType:(int)type andDownload:(BOOL) toDownload;
-+(void) deleteMedia:(NSMutableArray *)mediaArray andType:(NSString *) type;
-
++(void)updateMedia:(NSMutableArray *)mediaArray andType:(NSString *) type;
++(NSMutableArray *)getMediaForGallery:(NSString *)galleryItems withMediType: (NSString *)mediaType;
++(FMedia *)getMediaWithId:(NSString *) videoId andType: (NSString *)mediaType;
 
 +(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(void) removeFromFavoritesItem:(int) documentID ofType:(NSString *) typeID;

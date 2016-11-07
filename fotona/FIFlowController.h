@@ -19,7 +19,7 @@
 #import "FIBookmarkViewController.h"
 #import "FICaseViewController.h"
 #import "FITabbarController.h"
-#import "FIVideoGalleryViewController.h"
+#import "FIGalleryViewController.h"
 #import "FIBaseView.h"
 #import "FCase.h"
 #import "FMedia.h"
@@ -45,7 +45,7 @@
 @property (strong, nonatomic, readwrite) NSMutableArray *bookmarkMenuArray;
 
 @property (strong, nonatomic, readwrite) FICaseViewController *caseView;
-@property (strong, nonatomic, readwrite) FIVideoGalleryViewController *videoView;
+@property (strong, nonatomic, readwrite) FIGalleryViewController *videoView;
 
 @property (strong, nonatomic, readwrite) FCase *caseFlow;
 @property (strong, nonatomic, readwrite) FCase *caseOpened;
@@ -58,13 +58,8 @@
 @property (nonatomic) BOOL showMenu;
 
 @property (nonatomic) BOOL fromSearch;
-@property (nonatomic) BOOL videoSearch;
-
-@property(strong, nonatomic) NSString* videoGal;
-@property(strong, nonatomic) FMedia* vidToOpen;
-
-@property(nonatomic) BOOL openPDF;
-@property(strong, nonatomic) FFotonaMenu* pdfToOpen;
+@property(strong, nonatomic) FMedia* mediaToOpen;
+@property (strong, nonatomic) NSString *galToOpen;
 
 @property(nonatomic) int fotonaHelperState;
 

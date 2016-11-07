@@ -23,72 +23,57 @@
 @synthesize videoArray;
 @synthesize pdfArray;
 @synthesize active;
-@synthesize videosDicArr;
 @synthesize iconName;
 @synthesize sort;
 @synthesize bookmark;
 @synthesize userPermissions;
-@synthesize galleryItems;
+@synthesize galleryItemIDs;
 @synthesize sortInt;
 @synthesize deleted;
 
+@synthesize videosDicArr;
+@synthesize pdfsDicArr;
+
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic
 {
-    NSLog(@"%@",[dic objectForKey:@"videos"]);
     self=[super init];
     if (self) {
+        self.videoArray = [[NSMutableArray alloc] init];
+        self.pdfArray = [[NSMutableArray alloc] init];
         [self initCommon:dic];
         [self setExternalLink:[dic objectForKey:@"link"]];
-
-        if (![[dic objectForKey:@"videos"] isEqual:[NSNull null]] && ![[dic objectForKey:@"videos"] isKindOfClass:[NSString class]]) {
-            [self setVideosDicArr:[dic objectForKey:@"videos"]];
-        }else
-        {
-            self.videosDicArr=[[NSArray alloc] init];
+        [self parseMedia:videosDicArr isFromServer:YES  forMediaType:MEDIAVIDEO];
+        [self parseMedia:pdfsDicArr isFromServer:YES forMediaType:MEDIAPDF];
+        [self setGalleryItemIDs:[FCommon arrayToString:[dic objectForKey:@"galleryItemIDs"] withSeparator:@","]];
+        if ([[dic valueForKey:@"deleted"] boolValue]) {
+            [self setDeleted:@"1"];
+        } else {
+            [self setDeleted:@"0"];
         }
-        [self parseVideos:videosDicArr isFromServer:YES];
-        //TODO: parsanje pdfov
-        if (![[dic objectForKey:@"pdfs"] isEqual:[NSNull null]] && ![[dic objectForKey:@"pdfs"] isKindOfClass:[NSString class]]) {
-           // [self setVideosDicArr:[dic objectForKey:@"videos"]];
-        }else
-        {
-            //self.videosDicArr=[[NSArray alloc] init];
+        if ([[dic valueForKey:@"active"] boolValue]) {
+            [self setActive:@"1"];
+        } else {
+            [self setActive:@"0"];
         }
-        [self parseVideos:videosDicArr isFromServer:YES];
-        
-        [self setGalleryItems:[FCommon arrayToString:[dic objectForKey:@"galleryItemIDs"] withSeparator:@","]];
     }
     
     return self;
 }
 
 
-
 -(id)initWithDictionary:(NSDictionary *)dic
 {
     self=[super init];
     if (self) {
-        
+        self.videoArray = [[NSMutableArray alloc] init];
+        self.pdfArray = [[NSMutableArray alloc] init];
         [self initCommon:dic];
         [self setExternalLink:[dic objectForKey:@"externalLink"]];
-        if (![[dic objectForKey:@"videos"] isEqual:[NSNull null]] && ![[dic objectForKey:@"videos"] isKindOfClass:[NSString class]]) {
-            [self setVideosDicArr:[dic objectForKey:@"videos"]];
-        }else
-        {
-            self.videosDicArr=[[NSArray alloc] init];
-        }
-        [self parseVideos:videosDicArr isFromServer:NO];
-        
-        //TODO: parsanje pdfov
-        if (![[dic objectForKey:@"pdfs"] isEqual:[NSNull null]] && ![[dic objectForKey:@"pdfs"] isKindOfClass:[NSString class]]) {
-            // [self setVideosDicArr:[dic objectForKey:@"videos"]];
-        }else
-        {
-            //self.videosDicArr=[[NSArray alloc] init];
-        }
-        [self parseVideos:videosDicArr isFromServer:YES];
-        
-        [self setGalleryItems:[dic objectForKey:@"galleryItemIDs"]];
+        [self parseMedia:videosDicArr isFromServer:NO forMediaType:MEDIAVIDEO];
+        [self parseMedia:pdfsDicArr isFromServer:NO forMediaType:MEDIAPDF];
+        [self setGalleryItemIDs:[dic objectForKey:@"galleryItemIDs"]];
+        [self setActive:[dic objectForKey:@"active"]];
+        [self setDeleted:[dic objectForKey:@"deleted"]];
     }
     
     return self;
@@ -103,32 +88,50 @@
     [self setCaseID:[dic objectForKey:@"caseID"]];
     [self setDescription:[dic objectForKey:@"description"]];
     [self setText:[dic objectForKey:@"text"]];
-    [self setActive:[dic objectForKey:@"active"]];
-    [self setDeleted:[dic objectForKey:@"deleted"]];
     [self setSort:[dic objectForKey:@"sort"]];
     [self setBookmark:[dic objectForKey:@"isBookmark"]];
     [self setUserPermissions:[dic objectForKey:@"userPermissions"]];
+    if (![[dic objectForKey:@"pdfs"] isEqual:[NSNull null]] && ![[dic objectForKey:@"pdfs"] isKindOfClass:[NSString class]]) {
+        [self setPdfsDicArr:[dic objectForKey:@"pdfs"]];
+    }else
+    {
+        self.pdfsDicArr=[[NSArray alloc] init];
+    }
+    if (![[dic objectForKey:@"videos"] isEqual:[NSNull null]] && ![[dic objectForKey:@"videos"] isKindOfClass:[NSString class]]) {
+        [self setVideosDicArr:[dic objectForKey:@"videos"]];
+    }else
+    {
+        self.videosDicArr=[[NSArray alloc] init];
+    }
 }
 
 
 -(void)updateVideos
 {
     self.videoArray=[[NSMutableArray alloc] init];
-    [self parseVideos:videosDicArr isFromServer:true];
+    [self parseMedia:videosDicArr isFromServer:true forMediaType:MEDIAVIDEO];
 }
 
--(void)parseVideos:(NSArray *)arrVideos isFromServer:(BOOL) server
+-(void)parseMedia:(NSArray *)arrMedia isFromServer:(BOOL) server forMediaType: (NSString *) mediatype
 {
-    if (![arrVideos isEqual:[NSNull null]]) {
-        for (NSDictionary *dicVideo in arrVideos) {
-            FMedia *video;
+    
+    if (![arrMedia isEqual:[NSNull null]]) {
+        for (NSDictionary *dicMedia in arrMedia) {
+            FMedia *media;
             if (server) {
-                video=[[FMedia alloc] initWithDictionaryFromServer:dicVideo forMediType:MEDIAVIDEO];
+                media=[[FMedia alloc] initWithDictionaryFromServer:dicMedia forMediType:mediatype];
             } else {
-                 video=[[FMedia alloc] initWithDictionary:dicVideo];
+                 media=[[FMedia alloc] initWithDictionary:dicMedia];
             }
            
-            [self.videoArray addObject:video];
+            if ([mediatype isEqualToString:MEDIAVIDEO]) {
+                [self.videoArray addObject:media];
+            } else {
+                if ([mediatype isEqualToString:MEDIAPDF]) {
+                    [self.pdfArray addObject:media];
+                }
+            }
+            
         }
     }
 }
@@ -137,7 +140,7 @@
 
 -(NSMutableArray *)getVideos
 {
-    return [FDB getVideosFromArray:[FCommon stringToArray:[self galleryItems] withSeparator:@","]];    
+    return [FDB getVideosFromArray:[FCommon stringToArray:[self galleryItemIDs] withSeparator:@","]];    
 }
 
 -(NSDate *) formateDate:(NSString *) stringDate{

@@ -118,8 +118,8 @@
         NSError *error;
         [fileManager removeItemAtPath:downloadFilename error:&error];
         
-        NSArray *pathComp=[[video videoImage] pathComponents];
-        NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[video videoImage] lastPathComponent]];        [fileManager removeItemAtPath:pathTmp error:&error];
+        NSArray *pathComp=[[video mediaImage] pathComponents];
+        NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[video mediaImage] lastPathComponent]];        [fileManager removeItemAtPath:pathTmp error:&error];
         
     }
     
@@ -157,7 +157,7 @@
             [APP_DELEGATE setBookmarkingVideos:[NSMutableArray new]];
         }
         [[APP_DELEGATE bookmarkingVideos] addObject:video.itemID];
-        if ([HelperBookmark bookmarkVideo:video]) {
+        if ([HelperBookmark bookmarkMedia:video]) {
             [self.bookmarkBtn setEnabled:NO];
         } else{
             [self.bookmarkBtn setEnabled:YES];

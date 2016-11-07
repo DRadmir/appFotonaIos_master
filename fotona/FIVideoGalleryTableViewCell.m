@@ -14,7 +14,7 @@
 
 @implementation FIVideoGalleryTableViewCell
 
-@synthesize video;
+@synthesize media;
 @synthesize btnBookmark;
 @synthesize btnUnbookmark;
 @synthesize parent;
@@ -44,8 +44,8 @@
     [btnUnbookmark.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Regular" size:17]];
     btnUnbookmark.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
 
-    [[self lblVideoTitle] setText: [[self video] title]];
-    if ([FDB checkIfBookmarkedForDocumentID:[video itemID] andType:BOOKMARKVIDEO])
+    [[self lblVideoTitle] setText: [[self media] title]];
+    if ([FDB checkIfBookmarkedForDocumentID:[media itemID] andType:[media mediaType]])
     {
         btnUnbookmark.hidden = false;
         btnBookmark.enabled = true;
@@ -67,8 +67,8 @@
 }
 
 - (IBAction)removeFromBookmark:(id)sender {
-    [FDB removeBookmarkedVideo:video];
-    video.bookmark = @"0";
+    [FDB removeBookmarkedVideo:media];
+    media.bookmark = @"0";
     FIFlowController *flow = [FIFlowController sharedInstance];
     if (flow.lastIndex == 2)
     {
@@ -104,8 +104,8 @@
         if ([APP_DELEGATE bookmarkingVideos] == nil) {
             [APP_DELEGATE setBookmarkingVideos:[NSMutableArray new]];
         }
-        [[APP_DELEGATE bookmarkingVideos] addObject:video.itemID];
-        if ([HelperBookmark bookmarkVideo:video]) {
+        [[APP_DELEGATE bookmarkingVideos] addObject:media.itemID];
+        if ([HelperBookmark bookmarkMedia:media]) {
             [btnBookmark setEnabled:NO];
         } else{
             [btnBookmark setEnabled:YES];

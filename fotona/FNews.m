@@ -149,7 +149,7 @@
         
         [self setLocalImage:[dic valueForKey:@"headerImage"]];
         temp = [dic valueForKey:@"images"];
-        NSMutableArray *tempB = [temp componentsSeparatedByString:@","];
+        NSMutableArray *tempB = [[temp componentsSeparatedByString:@","] mutableCopy];
         [self setLocalImages:tempB];
         
         

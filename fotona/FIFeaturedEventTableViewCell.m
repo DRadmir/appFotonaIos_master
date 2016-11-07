@@ -69,7 +69,7 @@ BOOL wrap;
     //set up data
     wrap = YES;
     
-    self.items = [FDB fillEventsWithCategory:category andType:0 andMobile:true];//[FDB fillArrayWithCategory:category andType:0];//self.getCasesForCarouselFromDB;
+    self.items = [FDB fillEventsWithCategory:category andType:0 andMobile:true];
 }
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {

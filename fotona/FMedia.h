@@ -26,8 +26,8 @@
 -(id)initWithDictionary:(NSDictionary *)dic;
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic forMediType: (NSString *)type;
 
-
 -(void)downloadFile:(NSString *)fileUrl inFolder:(NSString *)folder;
 
--(BOOL) checkVideoForCategory:(NSString *)category;
++(void) openMedia:(FMedia *)media;
++(NSString *) createLocalPathForLink:(NSString *)link andMediaType:(NSString *)mediaType;
 @end

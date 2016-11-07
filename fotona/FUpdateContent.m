@@ -15,6 +15,8 @@
 #import "FFotonaMenu.h"
 #import "FDownloadManager.h"
 #import "Logger.h"
+#import "FDB.h"
+#import "FMediaManager.h"
 
 @implementation FUpdateContent
 
@@ -618,7 +620,6 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request addValue:globalAccessToken forHTTPHeaderField:@"access_key"];
     [request setTimeoutInterval:timeOutInterval];
-    NSLog(@"%f",request.timeoutInterval);
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         // I get response as XML here and parse it in a function
@@ -738,7 +739,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     NSMutableArray *casesArray=[[NSMutableArray alloc] init];
     NSArray *allCaces=[dicCases objectForKey:@"d"];
     for (NSDictionary *c in allCaces) {
-        FCase *caseObj=[[FCase alloc] initWithDictionaryDB:c];
+        FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:c];
         [casesArray addObject:caseObj];
     }
     [APP_DELEGATE setCaseArray:casesArray];
@@ -763,55 +764,47 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             while([resultsBookmarked next]) {
                 bookmarked=@"1";
             }
-            NSString *images = @"";
-            NSString *videos = @"";
             FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where caseID=%@;",c.caseID]];
             BOOL flag=NO;
             while([results next]) {
-                images = [results valueForKey:@"galleryItemImagesIDs"];
-                videos = [results valueForKey:@"galleryItemVideoIDs"];
                 flag=YES;
             }
+            //TODO: dodat prenos novih slik, če je case bookmarkan
+            [FDB updateMedia:[c parseImages] andType:MEDIAIMAGE];
+            [FDB updateMedia:[c parseVideosFromServer:YES] andType:MEDIAVIDEO];
             if ([c.coverflow boolValue] || [bookmarked boolValue]) {
                 if (!flag) {
-                    [database executeUpdate:@"INSERT INTO Cases (caseID,title,langID,coverTypeID,name,image,introduction,procedure,results,'references',parameters,date,active,allowedForGuests,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissons, galleryItemVideoIDs, galleryItemImagesIDs) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.allowedForGuests,c.authorID,bookmarked,c.coverflow, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs];
-                    //insertMedia TODO
-                    [self addMedia:[c parseImages] withType:0];
-                    [self addMedia:[c parseVideos] withType:1];
+                    [database executeUpdate:@"INSERT INTO Cases (caseID,title,langID,coverTypeID,name,image,introduction,procedure,results,'references',parameters,date,active,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissions, galleryItemVideoIDs, galleryItemImagesIDs) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.authorID,bookmarked,c.coverflow, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs];
+
+
                     [self setCase:c.caseID InCategories:c.categories];
                 }else
                 {
-                    
-                    
-                     [database executeUpdate:@"UPDATE Cases set title=?,langID=?,coverTypeID=?,name=?,image=?,introduction=?,procedure=?,results=?,'references'=?,parameters=?,date=?,active=?,allowedForGuests=?,authorID=?,alloweInCoverFlow=?,isBookmark=?, deleted=?, download=?, userPermissons=?, galleryItemVideoIDs=?, galleryItemImagesIDs=? where caseID=?",c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.allowedForGuests,c.authorID,c.coverflow,bookmarked, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs, c.caseID];
-                    
-                    NSMutableArray *imgs = [c parseImages];
-                    NSMutableArray *videos = [c parseVideos];
-                    
-                    [self deleteMediaForCaseGalleryID:c.galleryID withArray:imgs andType:0];
-                    [self deleteMediaForCaseGalleryID:c.videoGalleryID withArray:videos andType:1];
-                    
-                    [self addMedia:imgs withType:0];
-                    [self addMedia:videos withType:1];
-                    
                     [self deleteCasesFromCategories:c.caseID];
-                    [self setCase:c.caseID InCategories:c.categories];
+                    if ([c.deleted isEqualToString:@"1"]) {
+                        [FDB removeCaseWithID:c.caseID];
+                    } else {
+                        
+                        [database executeUpdate:@"UPDATE Cases set title=?,langID=?,coverTypeID=?,name=?,image=?,introduction=?,procedure=?,results=?,'references'=?,parameters=?,date=?,active=?,authorID=?,alloweInCoverFlow=?,isBookmark=?, deleted=?, download=?, userPermissions=?, galleryItemVideoIDs=?, galleryItemImagesIDs=? where caseID=?",c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.authorID,c.coverflow,bookmarked, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs, c.caseID];
+                        [self setCase:c.caseID InCategories:c.categories];
+                    }
                 }
             } else {
                 if (!flag) {
-                    [database executeUpdate:@"INSERT INTO Cases (caseID,title,langID,coverTypeID,name,image,introduction,procedure,results,'references',parameters,date,active,allowedForGuests,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissons, galleryItemVideoIDs, galleryItemImagesIDs) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.allowedForGuests,c.authorID,bookmarked,c.coverflow, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs];
-                    [self addMediaWhithout:[c parseImages] withType:0];
-                    [self addMediaWhithout:[c parseVideos] withType:1];
+                    [database executeUpdate:@"INSERT INTO Cases (caseID,title,langID,coverTypeID,name,image,introduction,procedure,results,'references',parameters,date,active,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissions, galleryItemVideoIDs, galleryItemImagesIDs) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.authorID,bookmarked,c.coverflow, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs];
+
                     [self setCase:c.caseID InCategories:c.categories];
                 }else
                 {
-                    [database executeUpdate:@"UPDATE Cases set title=?,langID=?,coverTypeID=?,name=?,image=?,introduction=?,procedure=?,results=?,'references'=?,parameters=?,date=?,active=?,allowedForGuests=?,authorID=?,alloweInCoverFlow=?,isBookmark=?, deleted=?, download=?, userPermissons=?, galleryItemVideoIDs=?, galleryItemImagesIDs=? where caseID=?",c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.allowedForGuests,c.authorID,c.coverflow,bookmarked, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs, c.caseID];
-                    [self updateMedia:[c parseImages] withType:0 idArray:[NSMutableArray new]];
-                    [self updateMedia:[c parseVideos] withType:1  idArray:[NSMutableArray new]];
                     [self deleteCasesFromCategories:c.caseID];
-                    [self setCase:c.caseID InCategories:c.categories];
+                    if ([c.deleted isEqualToString:@"1"]) {
+                        [FDB removeCaseWithID:c.caseID];
+                    } else {
+                        [database executeUpdate:@"UPDATE Cases set title=?,langID=?,coverTypeID=?,name=?,image=?,introduction=?,procedure=?,results=?,'references'=?,parameters=?,date=?,active=?,authorID=?,alloweInCoverFlow=?,isBookmark=?, deleted=?, download=?, userPermissions=?, galleryItemVideoIDs=?, galleryItemImagesIDs=? where caseID=?",c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.authorID,c.coverflow,bookmarked, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs, c.caseID];
+                        [self setCase:c.caseID InCategories:c.categories];
+
+                    }
                 }
-                
             }
         }
     }
@@ -840,31 +833,6 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 }
 
 
--(void)deleteMediaForCaseGalleryID:(NSString *)gID withArray:(NSMutableArray *)array andType:(int)t
-{
-    if (t==0) {
-        for (FImage *img in array) {
-            NSArray *pathComp=[img.path pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error;
-            [fileManager removeItemAtPath:pathTmp error:&error];
-        }
-    } else if (t==1){
-        for (FMedia *vid in array) {
-            NSArray *pathComp=[vid.path pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error;
-            [fileManager removeItemAtPath:pathTmp error:&error];
-        }
-    }
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    [database executeUpdate:@"delete from Media where galleryID=?",gID];
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
 -(void)addMedia:(NSMutableArray *)m withType:(int)type{
     if (m.count>0) {
         if (type==0) {
@@ -874,7 +842,6 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
                 NSArray *pathComp=[img.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
                 [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,sort, deleted, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?)",img.itemID,img.title,img.path,pathTmp,img.description,@"0",@"0",img.sort, img.deleted, img.fileSize];
-                //                [img downloadFile:img.path inFolder:@"/.Cases"];
                 
                 [[APP_DELEGATE imagesToDownload] addObject:img.path];
                 
@@ -889,7 +856,6 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
                 [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,time,mediaImage,sort, active, deleted, download, fileSize, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.title,vid.path,pathTmp,vid.description,@"1",@"1",vid.time,vid.mediaImage,vid.sort, vid.active, vid.deleted, vid.download, vid.filesize, vid.userPermissions];
 
-                //                [vid downloadFile:vid.path inFolder:@"/.Cases"];
                 [[APP_DELEGATE videosToDownload] addObject:vid.path];
             }
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -1185,7 +1151,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
         }
         
         if (!flag) {
-            [database executeUpdate:@"INSERT INTO Documents (documentID,title,langID,iconType,description,isLink,link,src,active, bookmark, userPermission) VALUES (?,?,?,?,?,?,?,?,?,?,?)",d.documentID,d.title,langID,d.iconType,d.description,d.isLink,d.link,d.src,d.active, d.bookmark, d.userPermissions];
+            [database executeUpdate:@"INSERT INTO Documents (documentID,title,langID,iconType,description,isLink,link,src,active, bookmark, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?)",d.documentID,d.title,langID,d.iconType,d.description,d.isLink,d.link,d.src,d.active, d.bookmark, d.userPermissions];
 
         }else{
             [database executeUpdate:@"UPDATE Documents set title=?,langID=?,iconType=?,description=?,isLink=?,link=?,src=?,active=?, userPermission=? where documentID=?",d.title,langID,d.iconType,d.description,d.isLink,d.link,d.src,d.active, d.userPermissions,d.documentID];
@@ -1266,62 +1232,17 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             bookmark = [results objectForColumnName:@"isBookmark"];
         }
         
-        if (!flag) {
-            
-            [database executeUpdate:@"INSERT INTO FotonaMenu (categoryID,categoryIDPrev,langID,title,fotonaCategoryType,description,text,caseID,pdfSrc,externalLink,videoGalleryID,videos,active,sort,icon,isBookmark) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",m.categoryID,m.categoryIDPrev,langID,m.title,m.fotonaCategoryType,m.description,m.text,m.caseID,m.pdfSrc,m.externalLink,m.videoGalleryID,m.videosDicArr,m.active,m.sort,m.iconName,@"0"];
-            
-            [m updateVideos];
-            if (m.videos.count>0) {
-                [self addMediaWhithout:m.videos withType:1];
-            }
-            
-         
-            
-        }else{
-            [database executeUpdate:@"UPDATE FotonaMenu set categoryIDPrev=?,langID=?,title=?,fotonaCategoryType=?,description=?,text=?,caseID=?,pdfSrc=?,externalLink=?,videoGalleryID=?,videos=?,active=?,sort=?,icon=? where categoryID=?",m.categoryIDPrev,langID,m.title,m.fotonaCategoryType,m.description,m.text,m.caseID,m.pdfSrc,m.externalLink,m.videoGalleryID,m.videos,m.active,m.sort,m.iconName,m.categoryID];
-            
-            
-            if ([m.fotonaCategoryType intValue]==6) {
-                if ([bookmark isEqualToString:@"1"]) {
-                    NSFileManager *fileManager = [NSFileManager defaultManager];
-                    NSError *error;
-                    [fileManager removeItemAtPath:m.pdfSrc error:&error];
-                    [[APP_DELEGATE pdfToDownload] addObject:m.pdfSrc];
-                    
-                }
-            }
-            else {
-                NSMutableArray *tempVideos = [NSMutableArray new];
-                NSString *videoBookmarked = @"";
-                FMResultSet *resultsVideos = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where galleryID=%@ AND isBookmark=1",m.videoGalleryID]];
-                while([resultsVideos next]) {
-                        [tempVideos addObject:[resultsVideos objectForColumnName:@"mediaID"]];
-                    NSString *downloadFilename = [resultsVideos stringForColumn:@"localPath"];//[[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[results2 stringForColumn:@"localPath"]];
-                    
-                    NSFileManager *fileManager = [NSFileManager defaultManager];
-                    NSError *error;
-                    [fileManager removeItemAtPath:downloadFilename error:&error];
-                    
-                    //                            downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[results2 stringForColumn:@"videoImage"]];
-                    NSArray *pathComp=[[resultsVideos stringForColumn:@"mediaImage"] pathComponents];
-                    NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[resultsVideos stringForColumn:@"mediaImage"] lastPathComponent]];
-                    [fileManager removeItemAtPath:pathTmp error:&error];
+        [FDB updateMedia:m.pdfArray andType:MEDIAPDF];
+        [FDB updateMedia:m.videoArray andType:MEDIAVIDEO];
 
-                }
-                [database executeUpdate:@"DELETE FROM Media WHERE galleryID=? ",m.videoGalleryID,nil];
-                
-                [m updateVideos];
-                if (m.videos.count>0) {
-                    [self updateMedia:m.videos withType:1 idArray:tempVideos];
-                }
-                
-                NSString *currentUsr = [FCommon getUser];                
-                if (tempVideos.count > 0) {
-                    for (NSString *vid in tempVideos) {
-                        [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",vid,currentUsr,BOOKMARKVIDEO];
-                    }
-                }
-                
+        if (!flag) {
+
+            [database executeUpdate:@"INSERT INTO FotonaMenu (categoryID,categoryIDPrev,langID,title,fotonaCategoryType,description,text,caseID,externalLink,active,sort,icon,isBookmark, userPermissions, galleryItemIDs, deleted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",m.categoryID,m.categoryIDPrev,langID,m.title,m.fotonaCategoryType,m.description,m.text,m.caseID,m.externalLink,m.active,m.sort,m.iconName,@"0", m.userPermissions,m.galleryItemIDs,m.deleted];
+        }else{
+            if ([m.deleted isEqualToString:@"1"]) {
+                [FDB removeFotonaMenuWithID:m.categoryID];
+            } else {
+                [database executeUpdate:@"UPDATE FotonaMenu set categoryIDPrev=?,langID=?,title=?,fotonaCategoryType=?,description=?,text=?,caseID=?,externalLink=?,active=?,sort=?,icon=?, userPermissions=?, galleryItemIDs=?, deleted=? WHERE categoryID=?",m.categoryIDPrev,langID,m.title,m.fotonaCategoryType,m.description,m.text,m.caseID,m.externalLink,m.active,m.sort,m.iconName,m.userPermissions,m.galleryItemIDs,m.deleted,m.categoryID];
             }
         }
     }

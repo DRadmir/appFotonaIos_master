@@ -14,7 +14,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FMedia.h"
-#import "FIVideoGalleryViewController.h"
+#import "FIGalleryViewController.h"
 
 @interface FIVideoGalleryTableViewCell : UITableViewCell <UIActionSheetDelegate>
 
@@ -22,9 +22,9 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnUnbookmark;
 @property (strong, nonatomic) IBOutlet UIImageView *imgVideoThumbnail;
 @property (strong, nonatomic) IBOutlet UILabel *lblVideoTitle;
-@property (strong, nonatomic) FIVideoGalleryViewController *parent;
+@property (strong, nonatomic) FIGalleryViewController *parent;
 
-@property (strong, nonatomic) FMedia *video;
+@property (strong, nonatomic) FMedia *media;
 
 -(void)fillCell;
 - (IBAction)addToBookmark:(id)sender;

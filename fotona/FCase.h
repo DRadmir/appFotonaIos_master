@@ -23,7 +23,6 @@
 @property (nonatomic, retain) NSMutableArray *images;
 @property (nonatomic, retain) NSMutableArray *video;
 @property (nonatomic, retain) NSString *active;
-@property (nonatomic, retain) NSString *allowedForGuests;
 @property (nonatomic, retain) NSMutableArray *categories;
 @property (nonatomic, retain) NSString *authorID;
 @property (nonatomic, retain) NSString *bookmark;
@@ -35,13 +34,13 @@
 @property (nonatomic, retain) NSString *galleryItemVideoIDs;
 @property (nonatomic, retain) NSString *galleryItemImagesIDs;
 
--(id)initWithDictionary:(NSDictionary *)dic;
--(id)initWithDictionaryDB:(NSDictionary *)dic;
+-(id)initWithDictionaryFromServer:(NSDictionary *)dic;
+-(id)initWithDictionaryFromDB:(NSDictionary *)dic;
 
 -(NSMutableArray *)getImages;
 -(NSMutableArray *)getVideos;
 -(NSMutableArray *)parseImages;
--(NSMutableArray *)parseVideos;
+-(NSMutableArray *)parseVideosFromServer: (BOOL)fromServer;
 -(NSString *)getAuthorName;
 
 @end

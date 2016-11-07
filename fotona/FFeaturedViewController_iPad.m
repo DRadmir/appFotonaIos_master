@@ -163,7 +163,7 @@ FNewsView *newsViewController;
         cellNumber = 12;
         [self.collectionView setContentOffset:CGPointZero animated:YES];
         if ([APP_DELEGATE closedEvents]) {
-            self.eventsArray = [FDB getEventsFromDB];//[[self getEventsFromDB];
+            self.eventsArray = [[FDB getEventsFromDB] mutableCopy];
             [APP_DELEGATE setClosedEvents:NO];
         }
         
@@ -213,7 +213,7 @@ FNewsView *newsViewController;
 {
     [FGoogleAnalytics writeGAForItem:nil andType:GAFEATUREDTABINT];
     if (firstRun || [APP_DELEGATE newNews]){
-        self.eventsArray = [FDB getEventsFromDB];//[self getEventsFromDB];
+        self.eventsArray = [[FDB getEventsFromDB] mutableCopy];
         //[self getNewsFromDB];
         newsArray = [FDB getNewsSortedDateFromDB];
         if (newsArray.count>=1) {
@@ -826,33 +826,12 @@ FNewsView *newsViewController;
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and caseID=%@ limit 1",caseID]];
     while([results next]) {
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParameters:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
+        f = [[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     
-    if ([APP_DELEGATE checkGuest]) {
-        if ([f.allowedForGuests isEqualToString:@"1"]) {
-            return f;
-        }
-    } else {
+    if ([FCommon userPermission:[f userPermissions]]) {
         return f;
     }
     return nil;

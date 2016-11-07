@@ -188,20 +188,19 @@
 
 -(void)downloadPDF
 {
-    NSString *folder=@".PDF";
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@",docDir,folder]]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@%@",docDir,folder] withIntermediateDirectories:YES attributes:nil error:nil];
-        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",docDir,folder]]];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@",docDir,FOLDERPDF]]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@%@",docDir,FOLDERPDF] withIntermediateDirectories:YES attributes:nil error:nil];
+        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",docDir,FOLDERPDF]]];
     }
     for (NSString *fileUrl in [APP_DELEGATE pdfToDownload]) {
         NSArray *pathComp=[fileUrl pathComponents];
         NSString *fileUrl1=[fileUrl stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@/%@",docDir,folder,[pathComp objectAtIndex:pathComp.count-2]]]) {
+        if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@/%@",docDir,FOLDERPDF,[pathComp objectAtIndex:pathComp.count-2]]]) {
             NSError *err;
-            [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@%@/%@",docDir,folder,[pathComp objectAtIndex:pathComp.count-2]] withIntermediateDirectories:YES attributes:nil error:&err];
+            [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@%@/%@",docDir,FOLDERPDF,[pathComp objectAtIndex:pathComp.count-2]] withIntermediateDirectories:YES attributes:nil error:&err];
         }
         
-        NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[fileUrl lastPathComponent]];
+        NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,FOLDERPDF] stringByAppendingPathComponent:[fileUrl lastPathComponent]];
         
         if ([self checkDownload:fileUrl1]) {
             [self.downloadManager addDownloadWithFilename:downloadFilename URL:[NSURL URLWithString:fileUrl1]];

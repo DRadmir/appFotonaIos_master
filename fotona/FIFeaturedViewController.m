@@ -267,7 +267,7 @@
     //set up data
     wrap = YES;
     
-    self.items = [FDB getCasesForCarouselFromDB];//self.getCasesForCarouselFromDB;
+    self.items = [FDB getCasesForCarouselFromDB];
     //random mixing carousel
     for (int x = 0; x < [items count]; x++) {
         int randInt = (arc4random() % ([items count] - x)) + x;

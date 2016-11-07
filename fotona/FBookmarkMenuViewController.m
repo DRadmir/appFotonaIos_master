@@ -539,7 +539,7 @@ NSString *categoryMenu = @"";
                             //pdf
                             [self.viewDeckController closeLeftViewAnimated:YES];
                             [parent setShowView:0];
-                            [parent downloadFile:[NSString stringWithFormat:@"%@",[[menuItems objectAtIndex:indexPath.row] pdfSrc]] inFolder:@".PDF" type:6];
+                            //TODOBOOKMARK:[parent downloadFile:[NSString stringWithFormat:@"%@",[[menuItems objectAtIndex:indexPath.row] pdfSrc]] inFolder:@".PDF" type:6];
                         }
                     }
                 }
@@ -566,13 +566,14 @@ NSString *categoryMenu = @"";
                 flag=YES;
             }
             if (!flag) {
-                [database executeUpdate:@"UPDATE FotonaMenu set isBookmark=? where categoryID=?",@"0",[[menuItems objectAtIndex:indexPath.row] categoryID]];
-                
-                NSString *folder=@".PDF";
-                NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[[[menuItems objectAtIndex:indexPath.row] pdfSrc] lastPathComponent]];
-                NSFileManager *fileManager = [NSFileManager defaultManager];
-                NSError *error;
-                [fileManager removeItemAtPath:downloadFilename error:&error];
+                //TODOBOOKMARK:
+//                [database executeUpdate:@"UPDATE FotonaMenu set isBookmark=? where categoryID=?",@"0",[[menuItems objectAtIndex:indexPath.row] categoryID]];
+//                
+//                NSString *folder=@".PDF";
+//                NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[[[menuItems objectAtIndex:indexPath.row] pdfSrc] lastPathComponent]];
+//                NSFileManager *fileManager = [NSFileManager defaultManager];
+//                NSError *error;
+//                [fileManager removeItemAtPath:downloadFilename error:&error];
                 
             }
             
@@ -622,7 +623,7 @@ NSString *categoryMenu = @"";
         }
         
         if (flag) {
-            FCase *f=[[FCase alloc] initWithDictionary:[results resultDictionary]];
+            FCase *f=[[FCase alloc] initWithDictionaryFromServer:[results resultDictionary]];
             if (![categoryMenu isEqualToString:@"0"]) {
                 if ([f.coverTypeID isEqualToString:categoryMenu])
                     [cases addObject:f];
@@ -674,7 +675,7 @@ NSString *categoryMenu = @"";
 
 -(BOOL)checkFotonaForUser:(FFotonaMenu *)f andCategory:(NSString *)category
 {
-    //TODO predelava za pravice
+    //TODOBOOKMARK predelava za pravice
     BOOL check=NO;
     
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];

@@ -38,13 +38,8 @@
 @synthesize showMenu;
 
 @synthesize fromSearch;
-@synthesize videoSearch;
-@synthesize videoGal;
-@synthesize vidToOpen;
-
-@synthesize pdfToOpen;
-@synthesize openPDF;
-
+@synthesize mediaToOpen;
+@synthesize galToOpen;
 
 @synthesize fotonaHelperState;
 
@@ -78,11 +73,8 @@
         showMenu = nil;
         lastOpenedView = nil;
         fromSearch = nil;
-        videoSearch = nil;
-        videoGal = nil;
-        vidToOpen = nil;
-        pdfToOpen = nil;
-        openPDF = false;
+        galToOpen = nil;
+        mediaToOpen = nil;
         fotonaHelperState = 0;
         fotonaMenuArray = [NSMutableArray new];
         caseMenuArray = [NSMutableArray new];

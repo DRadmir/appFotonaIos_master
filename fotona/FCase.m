@@ -26,7 +26,6 @@
 @synthesize images;
 @synthesize video;
 @synthesize active;
-@synthesize allowedForGuests;
 @synthesize categories;
 @synthesize authorID;
 @synthesize bookmark;
@@ -36,7 +35,7 @@
 @synthesize userPermissions;
 
 //befor saving into BD
--(id)initWithDictionaryDB:(NSDictionary *)dic
+-(id)initWithDictionaryFromServer:(NSDictionary *)dic
 {
     
     self=[super init];
@@ -69,8 +68,6 @@
         }else{
             [self setVideo:[dic objectForKey:@"videos"]];
         }
-        [self setActive:[dic valueForKey:@"active"]];
-        [self setAllowedForGuests:[dic valueForKey:@"allowedForGuests"]];
         if ([dic objectForKey:@"categories"]==[NSNull null]) {
             categories=[[NSMutableArray alloc] init];
         }else{
@@ -93,8 +90,14 @@
         } else {
             [self setDownload:@"0"];
         }
+        if ([[dic valueForKey:@"active"] boolValue]) {
+            [self setActive:@"1"];
+        } else {
+            [self setActive:@"0"];
+        }
         [self setGalleryItemVideoIDs:[FCommon arrayToString:[dic valueForKey:@"galleryItemVideoIDs"] withSeparator:@","]];
         [self setGalleryItemImagesIDs:[FCommon arrayToString:[dic valueForKey:@"galleryItemImagesIDs"] withSeparator:@","]];
+        [self setUserPermissions:[dic valueForKey:@"userPermissions"]];
     }
     
     
@@ -102,7 +105,7 @@
 }
 
 //puling from DB
--(id)initWithDictionary:(NSDictionary *)dic
+-(id)initWithDictionaryFromDB:(NSDictionary *)dic
 {
     self=[super init];
     if (self) {
@@ -122,7 +125,6 @@
             [self setImages:[self getImages]];
         }else{
             NSArray *tmp=[dic objectForKey:@"images"];
-            
             NSMutableArray *imgs=[[NSMutableArray alloc] init];
             for (NSDictionary *dicImg in tmp) {
                 FImage *img=[[FImage alloc] initWithDictionaryFromDB:dicImg];
@@ -133,7 +135,6 @@
         if ([dic objectForKey:@"videos"]==[NSNull null]) {
             [self setVideo:[self getVideos]];
         }else{
-            NSLog(@"%@",[dic objectForKey:@"videos"]);
             NSArray *tmp=[dic objectForKey:@"videos"];
             NSMutableArray *videos=[[NSMutableArray alloc] init];
             for (NSDictionary *dicVid in tmp) {
@@ -143,7 +144,6 @@
             [self setVideo:videos];
         }
         [self setActive:[dic valueForKey:@"active"]];
-        [self setAllowedForGuests:[dic valueForKey:@"allowedForGuests"]];
         if ([dic objectForKey:@"categories"]==[NSNull null]) {
             categories=[[NSMutableArray alloc] init];
         }else{
@@ -156,11 +156,10 @@
             [self setCoverflow:[dic valueForKey:@"allowInCoverFlow"]];
         }
         [self setDeleted:[dic valueForKey:@"deleted"]];
-       
         [self setDownload:[dic valueForKey:@"download"]];
-       
         [self setGalleryItemVideoIDs:[dic valueForKey:@"galleryItemVideoIDs"]];
         [self setGalleryItemImagesIDs:[dic valueForKey:@"galleryItemImagesIDs"]];
+        [self setUserPermissions:[dic valueForKey:@"userPermissions"]];
     }
     
     
@@ -223,12 +222,20 @@
     [self setImage:[tmpImgs mutableCopy]];
     return tmpImgs;
 }
--(NSMutableArray *)parseVideos
+
+-(NSMutableArray *)parseVideosFromServer: (BOOL)fromServer
 {
     NSMutableArray *tmpVideos=[[NSMutableArray alloc] init];
     if (self.video.count>0) {
         for (NSDictionary *videDic in self.video) {
-            FMedia *v=[[FMedia alloc] initWithDictionary:videDic ];//TODO: pogledat ali je iz baze ali iz serverja
+            FMedia *v;
+            if (fromServer){
+                 v=[[FMedia alloc] initWithDictionaryFromServer:videDic forMediType:MEDIAVIDEO ];
+            }else {
+                 v=[[FMedia alloc] initWithDictionary:videDic ];
+            }
+
+           
             [tmpVideos addObject:v];
         }
     }

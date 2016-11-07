@@ -470,23 +470,50 @@
                 lastUpdate = @"2.4";
             }
             if ([lastUpdate isEqualToString:@"2.4"]){
-                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                [database open];
-                //Favorites
-                [database executeUpdate:@"CREATE TABLE UserFavorites (userFavoriteID INTEGER PRIMARY KEY, username TEXT NOT NULL, documentID INTEGER NOT NULL, typeID INTEGER NOT NULL);"];
-                //Media
-                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN userPermissions TEXT"];
-                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN active TEXT"];
-                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN deleted TEXT"];
-                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN download TEXT"];
-                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN fileSize TEXT"];
-                [database executeUpdate:@"ALTER TABLE Media REMOVE COLUMN galleryID TEXT"];
-                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-                [database close];
-                [defaults setObject:@"3.0" forKey:@"DBLastUpdate"];
-                [defaults setObject:@"" forKey:@"lastUpdate"];
-                [defaults synchronize];
+                //                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+                //                [database open];
+                //                //Favorites
+                //                [database executeUpdate:@"CREATE TABLE UserFavorites (userFavoriteID INTEGER PRIMARY KEY, username TEXT NOT NULL, documentID INTEGER NOT NULL, typeID INTEGER NOT NULL);"];
+                //                //Media
+                //                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN userPermissions TEXT"];
+                //                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN active TEXT"];
+                //                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN deleted TEXT"];
+                //                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN download TEXT"];
+                //                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN fileSize TEXT"];
+                //                [database executeUpdate:@"ALTER TABLE Media REMOVE COLUMN galleryID TEXT"];
+                //                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+                //                [database close];
+                //                [defaults setObject:@"3.0" forKey:@"DBLastUpdate"];
+                //                [defaults setObject:@"" forKey:@"lastUpdate"];
+                //                [defaults synchronize];
+                //                lastUpdate = @"3.0";
+                
+                
+                //TODO: NRdite de se zbrišejo vsi bookmarki
+                
+                [fileManager removeItemAtPath:dbPath error:&error];
+                NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"fotona.db"];
+                success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
+                
+                if (!success)
+                    NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
+                else{
+                    [[NSUserDefaults standardUserDefaults] setObject:@"3.0" forKey:@"DBLastUpdate"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    [defaults setObject:@"" forKey:@"newsLastUpdate"];
+                    [defaults setObject:@"" forKey:@"eventsLastUpdate"];
+                    [defaults setObject:@"" forKey:@"caseCategoriesLastUpdate"];
+                    [defaults setObject:@"" forKey:@"casesLastUpdate"];
+                    [defaults setObject:@"" forKey:@"authorsLastUpdate"];
+                    [defaults setObject:@"" forKey:@"documentsLastUpdate"];
+                    [defaults setObject:@"" forKey:@"fotonaLastUpdate"];
+                    [defaults setObject:@"" forKey:@"lastUpdate"];
+                    [defaults setObject:userBookmarked forKey:@"userBookmarked"];
+                    [defaults synchronize];
+                    
+                }
                 lastUpdate = @"3.0";
+                
             }
 
         }
@@ -942,15 +969,11 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and caseID=%@ limit 1",caseID]];
     while([results next]) {
-        f = [[FCase alloc] initWithDictionary:[results resultDictionary]];
+        f = [[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
     }
     [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    if ([APP_DELEGATE checkGuest]) {
-        if ([f.allowedForGuests isEqualToString:@"1"]) {
-            return f;
-        }
-    } else {
+    if ([FCommon userPermission:[f userPermissions]]) {
         return f;
     }
     return nil;

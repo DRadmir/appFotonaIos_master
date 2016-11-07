@@ -8,6 +8,7 @@
 
 #import "FIGalleryTableViewCell.h"
 #import "FDB.h"
+#import "FHelperThumbnailImg.h"
 
 @implementation FIGalleryTableViewCell
 @synthesize caseToShow;
@@ -38,22 +39,28 @@
     [cellViewCase setContentForCase:fcase];
 }
 
--(void)setContentForFotona:(FItemFavorite *)fitem{
-    if ([[fitem typeID] intValue] == BOOKMARKVIDEOINT) {
-        FMedia * video =[FDB getVideoWithId:[fitem itemID]];
-        [self setContentForVideo:video];
+-(void)setContentForFavorite:(FItemFavorite *)fitem forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath{
+    if ([[fitem typeID] intValue] == BOOKMARKVIDEOINT || [[fitem typeID] intValue] == BOOKMARKPDFINT) {
+        FMedia * media =[FDB getMediaWithId:[fitem itemID] andType:[fitem typeID]];
+        [self setContentForMedia:media];
+        [FHelperThumbnailImg getThumbnailForMedia:media onTableView:tableView withIndex:indexPath];
     }
 }
 
--(void)setContentForVideo:(FMedia *)video{
+-(void)setContentForMedia:(FMedia *)media{
+    enabled = true;;
     if (cellViewFotona == nil) {
          cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
          [[self contentView] addSubview: cellViewFotona];
     }
-    [cellViewFotona setContentForVideo:video];
+    [cellViewFotona setContentForMedia:media andMediaType:[media mediaType]];
+    if ([[media bookmark] isEqualToString:@"0"] && ![APP_DELEGATE connectedToInternet]) {
+        enabled = false;
+    }
+
 }
 
--(void)refreshVideoThumbnail:(UIImage *)img{
+-(void)refreshMediaThumbnail:(UIImage *)img{
     [cellViewFotona reloadVideoThumbnail:img];
 }
 

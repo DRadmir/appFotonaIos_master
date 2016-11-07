@@ -195,7 +195,6 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //TODO: preverjanje če ni neta? - odpiranje stvari ko ni neta oz če case ni na napravi
     [parentIPhone.view endEditing:YES];
     FIFlowController *flow = [FIFlowController sharedInstance];
     [flow.lastOpenedView toggleSearchBar];
@@ -211,9 +210,9 @@
                 }else
                 {
                     if (videosSearchResIPhone.count>0) {
-                        [self openVideo:indexPath];
+                        [self openMedia:videosSearchResIPhone[indexPath.row]];
                     }else {
-                        [self openPDF:indexPath];
+                        [self openMedia:pdfsSearcResIPhone[indexPath.row]];
                     }
                 }
             }
@@ -224,21 +223,21 @@
             }else
             {
                 if (videosSearchResIPhone.count>0) {
-                    [self openVideo:indexPath];
+                    [self openMedia:videosSearchResIPhone[indexPath.row]];
                 }else {
-                    [self openPDF:indexPath];
+                    [self openMedia:pdfsSearcResIPhone[indexPath.row]];
                 }
             }
             break;
         case 2:
             if (videosSearchResIPhone.count>0) {
-                [self openVideo:indexPath];
+                [self openMedia:videosSearchResIPhone[indexPath.row]];
             } else {
-                [self openPDF:indexPath];
+                [self openMedia:pdfsSearcResIPhone[indexPath.row]];
             }
             break;
         case 3:
-            [self openPDF:indexPath];
+            [self openMedia:pdfsSearcResIPhone[indexPath.row]];
             break;
         default:
             break;
@@ -252,6 +251,7 @@
 
 -(void)searchIPhone
 {
+    
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     newsSearchResIPhone=[FDB getNewsForSearchFromDB:searchTxtIPhone withDatabase:database];
@@ -316,45 +316,9 @@
 }
 
 #pragma mark - Open Video
--(void) openVideo:(NSIndexPath*) index
+-(void) openMedia:(FMedia *)media
 {
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    flow.vidToOpen = videosSearchResIPhone[index.row];
-    flow.videoGal = flow.vidToOpen.videoGalleryID;
-    flow.openPDF = false;
-    flow.fromSearch = true;
-    if (flow.fotonaMenu != nil)
-    {
-        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
-    }
-    if (flow.lastIndex != 2) {
-        flow.lastIndex = 2;
-        [flow.tabControler setSelectedIndex:2];
-    } else {
-        [flow.fotonaTab openGalleryFromSearch:flow.videoGal andReplace:true];
-    }
- 
+    [FMedia openMedia:media];
 }
-
-#pragma mark - Open PDF
--(void) openPDF:(NSIndexPath*) index
-{
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    flow.pdfToOpen = pdfsSearcResIPhone[index.row];
-    flow.openPDF = true;
-    flow.fromSearch = true;
-    if (flow.fotonaMenu != nil)
-    {
-        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
-    }
-    if (flow.lastIndex != 2) {
-        flow.lastIndex = 2;
-        [flow.tabControler setSelectedIndex:2];
-    } else {
-        [flow.fotonaTab openCategory:flow.pdfToOpen];
-    }
-    
-}
-
 
 @end

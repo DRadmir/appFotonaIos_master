@@ -24,7 +24,7 @@
 @property (strong, nonatomic) NSIndexPath *index;
 
 @property (nonatomic) NSString *type;
-@property (strong, nonatomic) FMedia *cellVideo;
+@property (strong, nonatomic) FMedia *cellMedia;
 
 
 - (IBAction)downloadAdd:(id)sender;
@@ -32,7 +32,7 @@
 - (IBAction)favoriteAdd:(id)sender;
 - (IBAction)favoriteRemove:(id)sender;
 
--(void)setContentForVideo:(FMedia *) video;
+-(void)setContentForMedia:(FMedia *)media andMediaType:(NSString *)mediaType;
 -(void)reloadVideoThumbnail:(UIImage *)img;
 
 @end

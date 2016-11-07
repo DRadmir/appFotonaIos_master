@@ -32,11 +32,11 @@ typedef NS_ENUM(NSInteger, Caret) {
 @property (nonatomic, weak) id<BubbleDelegate> delegate;
 
 @property (strong, nonatomic) NSString *text;
-@property (nonatomic) UIColor *fontColor;
-@property (nonatomic) UIFont *font;
+@property (strong,nonatomic) UIColor *fontColor;
+@property (strong,nonatomic) UIFont *font;
 @property (nonatomic) UIEdgeInsets textContentInset;
 
-@property (nonatomic) UIColor *tint;
+@property (strong,nonatomic) UIColor *tint;
 @property (nonatomic) CGRect bubble;
 @property (nonatomic) CGRect highlight;
 @property (nonatomic) NSInteger cornerRadius;
