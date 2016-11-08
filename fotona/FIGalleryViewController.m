@@ -217,7 +217,6 @@
     for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
         downloaded = [download checkDownload:local];
     }
-    
     if (([[NSFileManager defaultManager] fileExistsAtPath:local]) && (downloaded) && [FDB checkIfBookmarkedForDocumentID:[pdf itemID] andType:BOOKMARKPDF]) {
         [self openPDFFromUrl:local];
     }else

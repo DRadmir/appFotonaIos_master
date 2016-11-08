@@ -49,22 +49,22 @@
 
 
 +(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
-+(NSMutableArray *)getVideosFromArray:(NSString *)videoGalleryID;
 +(NSMutableArray *)getVideoswithCategory:(NSString *)videoCategory;
 +(void)removeBookmarkedVideo:(FMedia *)videoToRemove;
 
-
-+(NSMutableArray *)getFotonaMenu:(NSString *)catID;
-+(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
-+(void)removeFotonaMenuWithID:(NSString *)fotonaID;
 
 +(BOOL)checkIfBookmarkedForDocumentID:(NSString *)documentID andType:(NSString *)type;
 +(void)removeFromBookmarkForDocumentID:(NSString *)documentID;
 
 +(void)addMedia:(NSMutableArray *)m withType:(int)type andDownload:(BOOL) toDownload;
 +(void)updateMedia:(NSMutableArray *)mediaArray andType:(NSString *) type;
-+(NSMutableArray *)getMediaForGallery:(NSString *)galleryItems withMediType: (NSString *)mediaType;
 +(FMedia *)getMediaWithId:(NSString *) videoId andType: (NSString *)mediaType;
++(NSMutableArray *)getMediaForGallery:(NSString *)galleryItems withMediType: (NSString *)mediaType;
+
+
++(NSMutableArray *)getFotonaMenu:(NSString *)catID;
++(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
++(void)removeFotonaMenuWithID:(NSString *)fotonaID;
 
 +(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(void) removeFromFavoritesItem:(int) documentID ofType:(NSString *) typeID;

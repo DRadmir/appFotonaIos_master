@@ -206,7 +206,7 @@
     {
         if ([[clicked fotonaCategoryType] isEqualToString:@"4"]) {
             //video+content
-            NSArray *videos = [clicked getVideos];
+            NSArray *videos = [clicked getMedia];
             if (videos.count >0) {
                 [self.viewDeckController closeLeftViewAnimated:YES];
                 [parent closeMenu];

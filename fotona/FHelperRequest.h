@@ -12,6 +12,8 @@
 
 +(NSMutableURLRequest *) requestToGetCaseByID:(NSString *) caseID onView:(UIView *)view;
     
++(void) setDeviceData:(NSString *) _deviceData;
 
++(void)sendDeviceData;
 
 @end

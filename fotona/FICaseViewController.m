@@ -536,7 +536,7 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if ([alertView.message isEqualToString:NSLocalizedString(@"BOOKMARKING", nil)]) {
-        [HelperBookmark bookmarkCase:caseToOpen forCategory:0];
+        [HelperBookmark bookmarkCase:caseToOpen];
         [APP_DELEGATE setBookmarkAll:YES];
         [[FDownloadManager shared] prepareForDownloadingFiles];
     }

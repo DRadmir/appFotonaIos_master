@@ -32,5 +32,5 @@
 -(id)initWithDictionary:(NSDictionary *)dic;
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic;
 -(void)updateVideos;
--(NSMutableArray *)getVideos;
+-(NSMutableArray *)getMedia;
 @end

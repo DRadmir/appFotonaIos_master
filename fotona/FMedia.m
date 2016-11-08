@@ -152,7 +152,6 @@
     }
     
 }
-
 +(NSString *) createLocalPathForLink:(NSString *)link andMediaType:(NSString *)mediaType{
     NSString *local = @"";
     if ([mediaType intValue] == [MEDIAVIDEO intValue]) {
@@ -160,8 +159,12 @@
         local=[[NSString stringWithFormat:@"%@/.Cases/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[link lastPathComponent]];
     } else {
         if ([mediaType intValue] == [MEDIAPDF intValue]) {
-            NSArray *pathComp=[link pathComponents];
-            local=[[NSString stringWithFormat:@"%@/.PDF/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[link lastPathComponent]];
+            local=[NSString stringWithFormat:@"%@.PDF/%@",docDir,[link lastPathComponent]];
+        } else {
+            if ([mediaType intValue] == [MEDIAIMAGE intValue]) {
+                NSArray *pathComp=[link pathComponents];
+                local = [NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]];
+            }
         }
     }
     return local;

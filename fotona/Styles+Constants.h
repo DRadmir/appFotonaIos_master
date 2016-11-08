@@ -10,21 +10,24 @@
 #define fotona_Styles_Constants_h
 
 //bookmark types
-#define BOOKMARKCASE @"0"
+#define BOOKMARKIMAGE @"0"
 #define BOOKMARKVIDEO @"1"
 #define BOOKMARKPDF @"2"
 #define BOOKMARKNEWS @"3"
 #define BOOKMARKEVENTS @"4"
+#define BOOKMARKCASE @"5"
 
-#define BOOKMARKCASEINT 0
+#define BOOKMARKIMAGEINT 0
 #define BOOKMARKVIDEOINT 1
 #define BOOKMARKPDFINT 2
 #define BOOKMARKNEWSINT 3
 #define BOOKMARKEVENTSINT 4
+#define BOOKMARKCASEINT 5
 
 //bookmark source type
 #define BSOURCECASE 0
 #define BSOURCEFOTONA 1
+#define BSOURCEALL 2
 
 
 //MEDIA TYPE
@@ -46,6 +49,10 @@
 #define DISABLEDCOLORALPHA 0.4
 
 #define FOTONARED @"ED1C24"
+
+//FOTONA CATEGORY TYPES
+#define CATEGORYPDF @"6"
+#define CATEGORVIDEO @"4"
 
 //FOLDERS
 #define FOLDERPDF @".PDF"

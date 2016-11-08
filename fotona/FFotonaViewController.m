@@ -811,7 +811,7 @@ NSString *currentVideoGalleryId;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    videoArray = [item getVideos];
+    videoArray = [item getMedia];
     return videoArray.count;
 }
 
@@ -872,7 +872,7 @@ NSString *currentVideoGalleryId;
 {
     openVideoGal = YES;
     [self.viewDeckController closeLeftView];
-    videoArray = [item getVideos];
+    videoArray = [item getMedia];
     FMedia *vid=[videoArray objectAtIndex:[indexPath row]];
     
     [self playVideo:vid];
@@ -958,7 +958,7 @@ NSString *currentVideoGalleryId;
 }
 
 - (void) refreshVideoCells{
-    videoArray = [item getVideos];
+    videoArray = [item getMedia];
     for (int i=0; i<videoArray.count; i++) {
         FMedia * vid = videoArray[i];
         [self refreshCellUnbookmark:[vid.itemID intValue]];

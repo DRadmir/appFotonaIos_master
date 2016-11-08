@@ -16,7 +16,7 @@
 + (BOOL) bookmarked: (int) itemID withType:(NSString *)type inCategory:(int) category;
 + (BOOL) bookmarked: (int) itemID withType:(NSString *)type;
 
-+ (void)bookmarkCase:(FCase*) currentCase forCategory:(int) category;
++ (void)bookmarkCase:(FCase*) currentCase;
 + (BOOL) bookmarkMedia: (FMedia *)media;
 
 + (void) cancelBookmark;

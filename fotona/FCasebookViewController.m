@@ -2076,7 +2076,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if ([alertView.message isEqualToString:NSLocalizedString(@"BOOKMARKING", nil)]) {
-        [HelperBookmark bookmarkCase:currentCase forCategory:0];
+        [HelperBookmark bookmarkCase:currentCase];
         [APP_DELEGATE setBookmarkAll:YES];
         [[FDownloadManager shared] prepareForDownloadingFiles];
     }

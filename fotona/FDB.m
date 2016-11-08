@@ -533,31 +533,6 @@
     return tmpVideo;
 }
 
-+(NSMutableArray *)getVideosFromArray:(NSMutableArray *)videoGallery
-{
-    
-    
-    NSMutableArray *videosTmp=[[NSMutableArray alloc] init];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    for (NSString *vId in videoGallery) {
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ order by sort",vId]];
-        while([results next]) {
-            FMedia *f= [[FMedia alloc] initWithDictionary:[results resultDictionary]];
-  
-            if ([FCommon userPermission:[f userPermissions]]) {
-                [videosTmp addObject:f];
-            }
-        }
-        
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return videosTmp;
-}
-
-
 +(NSMutableArray *)getVideoswithCategory:(NSString *)videoCategory
 {
     NSMutableArray *videosTmp=[[NSMutableArray alloc] init];
@@ -620,20 +595,6 @@
     [database close];
 }
 
-+(FMedia *)getMediaWithId:(NSString *) videoId andType: (NSString *)mediaType{
-    FMedia *video;
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    
-    FMResultSet *results2 = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ and mediaType=%@ order by sort",videoId, mediaType]];
-    while([results2 next]) {
-        video = [[FMedia alloc] initWithDictionary:[results2 resultDictionary]];
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return video;
-}
 
 #pragma mark - FotonaMenu
 
@@ -937,6 +898,24 @@
     
     return videosTmp;
 }
+
++(FMedia *)getMediaWithId:(NSString *) videoId andType: (NSString *)mediaType{
+    FMedia *video;
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    
+    FMResultSet *results2 = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ and mediaType=%@ order by sort",videoId, mediaType]];
+    while([results2 next]) {
+        video = [[FMedia alloc] initWithDictionary:[results2 resultDictionary]];
+    }
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+    
+    return video;
+}
+
+
+
 
 #pragma mark - Favorites
 

@@ -9,7 +9,6 @@
 #import "FAppDelegate.h"
 #import "FMainViewController_iPad.h"
 #import "FMainViewController.h"
-#import "AFNetworking.h"
 #import <QuickLook/QuickLook.h>
 #import "ASDepthModalViewController.h"
 #import "FNews.h"
@@ -26,6 +25,7 @@
 #import "UIWindow+Fotona.h"
 #import "FIExternalLinkViewController.h"
 #import <AVKit/AVKit.h>
+#import "FHelperRequest.h"
 
 
 
@@ -659,6 +659,7 @@
             [defaults setObject:deviceUuid forKey:@"deviceUuid"];
         }
     }
+    //TODO: premaknt pošiljanje po loginu, zaradi dodajanja usetype (int) - tyin subtype(string)
     // Prepare the Device Token for Registration (remove spaces and < >)
     NSString *deviceToken = [[[[devToken description]
                                stringByReplacingOccurrencesOfString:@"<"withString:@""]
@@ -668,34 +669,8 @@
     
     
     
-    NSString *requestData;
-    
-    requestData =[NSString stringWithFormat:@"{\"deviceID\":null,\"appname\":\"%@\",\"appversion\":\"%@\",\"deviceuid\":\"%@\",\"devicetoken\":\"%@\",\"devicename\":\"%@\",\"devicemodel\":\"%@\",\"deviceversion\":\"%@\",\"pushbadge\":true,\"pushalert\":true,\"pushsound\":true,\"active\":true}",appName,appVersion,deviceUuid,deviceToken,deviceName,deviceModel,deviceSystemVersion];
-    //
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, LINKWRITEDEVICE]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    
-    [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setHTTPMethod:@"POST"];
-    [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [request addValue:globalAccessToken forHTTPHeaderField:@"access_key"];
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        // I get response as XML here and parse it in a function
-        NSLog(@"Push success %@",[operation responseString]);
-        
-    }
-                                     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                         NSLog(@"Push failed %@",error.localizedDescription);
-                                         
-                                     }];
-    
-    [operation start];
-    
-    
-    
+    NSString *requestData =[NSString stringWithFormat:@"{\"deviceID\":null,\"appname\":\"%@\",\"appversion\":\"%@\",\"deviceuid\":\"%@\",\"devicetoken\":\"%@\",\"devicename\":\"%@\",\"devicemodel\":\"%@\",\"deviceversion\":\"%@\",\"pushbadge\":true,\"pushalert\":true,\"pushsound\":true,\"active\":true",appName,appVersion,deviceUuid,deviceToken,deviceName,deviceModel,deviceSystemVersion];
+    [FHelperRequest setDeviceData:requestData];
 #endif
 }
 

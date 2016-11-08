@@ -42,6 +42,19 @@
         self.pdfArray = [[NSMutableArray alloc] init];
         [self initCommon:dic];
         [self setExternalLink:[dic objectForKey:@"link"]];
+        if (![[dic objectForKey:@"pdfs"] isEqual:[NSNull null]] && ![[dic objectForKey:@"pdfs"] isKindOfClass:[NSString class]]) {
+            [self setPdfsDicArr:[dic objectForKey:@"pdfs"]];
+        }else
+        {
+            self.pdfsDicArr=[[NSArray alloc] init];
+        }
+        if (![[dic objectForKey:@"videos"] isEqual:[NSNull null]] && ![[dic objectForKey:@"videos"] isKindOfClass:[NSString class]]) {
+            [self setVideosDicArr:[dic objectForKey:@"videos"]];
+        }else
+        {
+            self.videosDicArr=[[NSArray alloc] init];
+        }
+
         [self parseMedia:videosDicArr isFromServer:YES  forMediaType:MEDIAVIDEO];
         [self parseMedia:pdfsDicArr isFromServer:YES forMediaType:MEDIAPDF];
         [self setGalleryItemIDs:[FCommon arrayToString:[dic objectForKey:@"galleryItemIDs"] withSeparator:@","]];
@@ -55,7 +68,7 @@
         } else {
             [self setActive:@"0"];
         }
-    }
+            }
     
     return self;
 }
@@ -91,18 +104,7 @@
     [self setSort:[dic objectForKey:@"sort"]];
     [self setBookmark:[dic objectForKey:@"isBookmark"]];
     [self setUserPermissions:[dic objectForKey:@"userPermissions"]];
-    if (![[dic objectForKey:@"pdfs"] isEqual:[NSNull null]] && ![[dic objectForKey:@"pdfs"] isKindOfClass:[NSString class]]) {
-        [self setPdfsDicArr:[dic objectForKey:@"pdfs"]];
-    }else
-    {
-        self.pdfsDicArr=[[NSArray alloc] init];
-    }
-    if (![[dic objectForKey:@"videos"] isEqual:[NSNull null]] && ![[dic objectForKey:@"videos"] isKindOfClass:[NSString class]]) {
-        [self setVideosDicArr:[dic objectForKey:@"videos"]];
-    }else
-    {
-        self.videosDicArr=[[NSArray alloc] init];
-    }
+   
 }
 
 
@@ -114,7 +116,6 @@
 
 -(void)parseMedia:(NSArray *)arrMedia isFromServer:(BOOL) server forMediaType: (NSString *) mediatype
 {
-    
     if (![arrMedia isEqual:[NSNull null]]) {
         for (NSDictionary *dicMedia in arrMedia) {
             FMedia *media;
@@ -138,9 +139,13 @@
 
 
 
--(NSMutableArray *)getVideos
+-(NSMutableArray *)getMedia
 {
-    return [FDB getVideosFromArray:[FCommon stringToArray:[self galleryItemIDs] withSeparator:@","]];    
+    NSString *type = MEDIAVIDEO;
+    if ([[self fotonaCategoryType] intValue] ==[CATEGORYPDF intValue]) {
+        type = MEDIAPDF;
+    }
+    return [FDB getMediaForGallery:[self galleryItemIDs] withMediType:type];
 }
 
 -(NSDate *) formateDate:(NSString *) stringDate{

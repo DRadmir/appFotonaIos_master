@@ -16,6 +16,7 @@
 #import "FMainViewController_iPad.h"
 #import "AFNetworking.h"
 #import "Logger.h"
+#import "FHelperRequest.h"
 
 @implementation FLogin
 
@@ -209,7 +210,6 @@ UIButton *tmp;
             
         }
         else if([[dic valueForKey:@"msg"] isEqualToString:@"Success"]){
-            
             FUser *usr=[[FUser alloc] initWithDictionary:[[dic objectForKey:@"values"] objectAtIndex:0]];
             [SFHFKeychainUtils storeUsername:usr.username andPassword:password forServiceName:@"fotona" updateExisting:YES error:nil];
             [[NSUserDefaults standardUserDefaults] setValue:usr.username forKey:@"autoLogin"];
@@ -217,6 +217,7 @@ UIButton *tmp;
             [usr setPassword:[NSString stringWithFormat:@"%lu",(unsigned long)password.hash]];
             [FUser addUserInDB:usr];
             [APP_DELEGATE setCurrentLogedInUser:usr];
+            [FHelperRequest sendDeviceData];
             [APP_DELEGATE setUserFolderPath:[NSString stringWithFormat:@"%@/Documents/%@",NSHomeDirectory(),usr.username]];
             if (![[NSFileManager defaultManager] fileExistsAtPath:[APP_DELEGATE userFolderPath]]) {
                 [[NSFileManager defaultManager] createDirectoryAtPath:[APP_DELEGATE userFolderPath] withIntermediateDirectories:YES attributes:nil error:nil];
@@ -354,6 +355,7 @@ UIButton *tmp;
         [self showUserFolder:@".guest"];
         [[NSUserDefaults standardUserDefaults] setValue:guest.username forKey:@"autoLogin"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        [FHelperRequest sendDeviceData];
         if(parentiPad != nil)
         {
             [parentiPad showFeatured];
@@ -592,6 +594,7 @@ UIButton *tmp;
         [parentiPad showFeatured]; //če ga ni se pokliče showfeatured
     }
 }
+
 
 
 @end
