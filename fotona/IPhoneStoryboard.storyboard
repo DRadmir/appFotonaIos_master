@@ -161,10 +161,10 @@
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="eventsTabelViewCell" selectionStyle="none" indentationWidth="10" reuseIdentifier="eventsTabelViewCell" rowHeight="82" id="6Y9-0J-ndx" customClass="FIEventTableViewCell">
-                                        <rect key="frame" x="0.0" y="56" width="375" height="82"/>
+                                        <rect key="frame" x="0.0" y="56" width="1000" height="82"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Y9-0J-ndx" id="unc-pE-m9B">
-                                            <frame key="frameInset" width="375" height="82"/>
+                                            <frame key="frameInset" width="1000" height="82"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FvT-ZR-v8i">
@@ -1455,7 +1455,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="193" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="ZQF-tO-zj6">
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="dataSource" destination="88U-Xi-ZxX" id="Sgl-uL-clK"/>
                                     <outlet property="delegate" destination="88U-Xi-ZxX" id="dtJ-ny-RoG"/>
@@ -1825,6 +1825,41 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e0T-AQ-ZzF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4410.3999999999996" y="1388.4557721139431"/>
+        </scene>
+        <!--PDF VIew-->
+        <scene sceneID="2a9-6P-Zmg">
+            <objects>
+                <viewController storyboardIdentifier="pdfViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XrX-ut-zAD" userLabel="PDF VIew" customClass="FIPDFViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="N3B-aG-9Vv"/>
+                        <viewControllerLayoutGuide type="bottom" id="Ijn-fM-Tgn"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="qUg-IM-xag">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" scalesPageToFit="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4VA-fE-szu">
+                                <color key="backgroundColor" red="0.28958413" green="0.31462949509999999" blue="0.32950475810000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <outlet property="delegate" destination="XrX-ut-zAD" id="hmg-XH-Dym"/>
+                                </connections>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Ijn-fM-Tgn" firstAttribute="top" secondItem="4VA-fE-szu" secondAttribute="bottom" id="88a-Mi-Wm8"/>
+                            <constraint firstAttribute="trailing" secondItem="4VA-fE-szu" secondAttribute="trailing" id="OZI-dg-Q36"/>
+                            <constraint firstItem="4VA-fE-szu" firstAttribute="leading" secondItem="qUg-IM-xag" secondAttribute="leading" id="e5y-dm-Bfs"/>
+                            <constraint firstItem="4VA-fE-szu" firstAttribute="top" secondItem="qUg-IM-xag" secondAttribute="top" id="yPS-Cy-7F8"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="pdfWebView" destination="4VA-fE-szu" id="Id0-rY-iMB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7ay-wO-dSb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5085.6000000000004" y="1387.5562218890557"/>
         </scene>
     </scenes>
     <resources>

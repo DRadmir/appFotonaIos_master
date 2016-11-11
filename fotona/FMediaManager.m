@@ -70,6 +70,10 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *error;
     [fileManager removeItemAtPath:pathTmp error:&error];
+    
+    NSArray *pathCompImage=[[video mediaImage] pathComponents];
+    NSString *pathTmpImage = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathCompImage.count-2]] stringByAppendingPathComponent:[[video mediaImage] lastPathComponent]];
+    [fileManager removeItemAtPath:pathTmpImage error:&error];
 }
 
 +(void) deletePDF:(FMedia *)pdf{
@@ -78,6 +82,10 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *error;
     [fileManager removeItemAtPath:downloadFilename error:&error];
+    
+    NSArray *pathComp=[[pdf mediaImage] pathComponents];
+    NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[pdf mediaImage] lastPathComponent]];
+    [fileManager removeItemAtPath:pathTmp error:&error];
 }
 
 

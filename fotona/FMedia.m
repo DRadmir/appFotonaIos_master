@@ -24,7 +24,7 @@
 @synthesize filesize;
 @synthesize download;
 @synthesize mediaType;
-@synthesize time;//TODO: preverit ali ga rabim
+@synthesize time;
 
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic forMediType: (NSString *)type
 {
@@ -163,7 +163,7 @@
         } else {
             if ([mediaType intValue] == [MEDIAIMAGE intValue]) {
                 NSArray *pathComp=[link pathComponents];
-                local = [NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]];
+                local=[[NSString stringWithFormat:@"%@/.Cases/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[link lastPathComponent]];
             }
         }
     }

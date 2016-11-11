@@ -219,9 +219,7 @@
     beforeOrient=[APP_DELEGATE currentOrientation];
     openGal = NO;
     [self.viewDeckController setLeftSize:self.view.frame.size.width-320];
-    
-    UIViewController *tempMenu = self.viewDeckController.leftController;
-    
+        
 }
 
 -(void)viewDidDisappear:(BOOL)animated

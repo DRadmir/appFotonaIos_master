@@ -16,6 +16,7 @@
 #import "FIGalleryTableViewCell.h"
 #import "FHelperThumbnailImg.h"
 #import "FIExternalLinkViewController.h"
+#import "FIPDFViewController.h"
 
 
 @interface FIGalleryViewController ()
@@ -23,10 +24,7 @@
     NSMutableArray *mediaArray;
     NSUInteger numberOfImages;
     NSString *lastGalleryItems;
-    NSString *pathOnline;
-    FIExternalLinkViewController *externalView;
-
-   
+    FIPDFViewController *pdfViewController;
 }
 
 @property (nonatomic, strong)UIImage *defaultVideoImage;
@@ -49,8 +47,6 @@
     
     [self.videoGalleryTableView setNeedsLayout];
     [self.videoGalleryTableView layoutIfNeeded];
-    
-  
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -112,28 +108,7 @@
 
 -(void) openVideo:(FMedia *) video
 {
-    [FGoogleAnalytics writeGAForItem:[video title] andType:GAFOTONAVIDEOINT];
-    BOOL downloaded = YES;
-    NSString *local= [FMedia  createLocalPathForLink:[video path] andMediaType:MEDIAVIDEO];
-
-    for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
-        downloaded = [download checkDownload:local];
-    }
-    
-    BOOL flag = [FDB checkIfBookmarkedForDocumentID:[video itemID] andType:BOOKMARKVIDEO];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:local] && downloaded && flag) {
-          [FCommon playVideoFromURL:local onViewController:self localSaved:YES];
-    }else
-    {
-        if([APP_DELEGATE connectedToInternet]){
-            
-            [FCommon playVideoFromURL:video.path onViewController:self localSaved:NO];
-        } else {
-            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [av show];
-        }
-    }
+    [FCommon playVideoOnIphone:video onViewController:self];
 }
 
 
@@ -165,7 +140,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
-    [cell setContentForMedia:mediaArray[indexPath.row]];
+    [cell setContentForMedia:mediaArray[indexPath.row] forTableView:tableView onIndex:indexPath];
     return cell;
 }
 
@@ -205,68 +180,26 @@
 #pragma mark - Open PDF
 
 -(void) openPdf:(FMedia *) pdf{
-    [FGoogleAnalytics writeGAForItem:[pdf title] andType:GAFOTONAPDFINT];
-    pathOnline = [pdf path];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@",docDir,FOLDERPDF]]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@%@",docDir,FOLDERPDF] withIntermediateDirectories:YES attributes:nil error:nil];
-        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",docDir,FOLDERPDF]]];
+    if (pdfViewController == nil) {
+        pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
     }
-    NSString *local= [FMedia createLocalPathForLink:[pdf path] andMediaType:MEDIAPDF];
+    pdfViewController.pdfMedia = pdf;
+    [[self navigationController] pushViewController:pdfViewController animated:YES];
+}
 
-    BOOL downloaded = YES;
-    for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
-        downloaded = [download checkDownload:local];
-    }
-    if (([[NSFileManager defaultManager] fileExistsAtPath:local]) && (downloaded) && [FDB checkIfBookmarkedForDocumentID:[pdf itemID] andType:BOOKMARKPDF]) {
-        [self openPDFFromUrl:local];
-    }else
-    {
-        if([APP_DELEGATE connectedToInternet]){
-            [self openExternalLink:pathOnline];
-        } else {
-            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [av show];
+#pragma mark - Refresh
+
+-(void) refreshCellWithItemID:(NSString *)itemID andItemType:(NSString *) itemType{
+    if ([galleryType intValue] == [itemType intValue]) {
+        for (int i = 0; i<[mediaArray count]; i++){
+            FMedia *item = mediaArray[i];
+            if ([[item itemID] intValue]== [itemID intValue]) {
+                NSIndexPath *index = [NSIndexPath  indexPathForItem:i inSection:0];
+                [videoGalleryTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:index, nil] withRowAnimation:UITableViewRowAnimationNone];
+                break;
+            }
         }
     }
 }
-
-
--(void) openPDFFromUrl:(NSString *)fileURL
-{
-    pathOnline = fileURL;
-    QLPreviewController *previewController = [[QLPreviewController alloc] init];
-    previewController.dataSource = self;
-    previewController.delegate = self;
-    [[previewController.navigationController navigationBar] setHidden:YES];
-    previewController.currentPreviewItemIndex = 0;
-    
-    [self presentViewController:previewController animated:YES completion:nil];
-}
-
-- (NSInteger) numberOfPreviewItemsInPreviewController: (QLPreviewController *) controller
-{
-    return 1; //assuming your code displays a single file
-}
-
-- (id <QLPreviewItem>)previewController: (QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
-{
-    return [NSURL fileURLWithPath:pathOnline]; //path of the file to be displayed
-}
-
-#pragma mark - Open Link
-
-- (void) openExternalLink:(NSString *) url
-{
-    if (externalView == nil) {
-        externalView = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"webViewController"];
-    }
-    externalView.urlString = url;
-    [[self navigationController] pushViewController:externalView animated:YES];
-}
-
-
-
-
-
 
 @end

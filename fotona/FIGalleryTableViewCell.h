@@ -28,7 +28,7 @@
 
 -(void)setContentForFavorite:(FItemFavorite *)fitem forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath;
 
--(void)setContentForMedia:(FMedia *) video;
+-(void)setContentForMedia:(FMedia *) video forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath;
 
 -(void)refreshMediaThumbnail:(UIImage *)img;
 

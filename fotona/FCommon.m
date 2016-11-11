@@ -9,6 +9,9 @@
 #import "FCommon.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
+#import "FGoogleAnalytics.h"
+#import "FDownloadManager.h"
+#import "FDB.h"
 
 @implementation FCommon
 
@@ -64,6 +67,31 @@
     return img;
 }
 
++(void)playVideoOnIphone:(FMedia *)video  onViewController:(UIViewController *)viewController{
+    [FGoogleAnalytics writeGAForItem:[video title] andType:GAFOTONAVIDEOINT];
+    BOOL downloaded = YES;
+    NSString *local= [FMedia  createLocalPathForLink:[video path] andMediaType:MEDIAVIDEO];
+    
+    for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
+        downloaded = [download checkDownload:local];
+    }
+    
+    BOOL flag = [FDB checkIfBookmarkedForDocumentID:[video itemID] andType:BOOKMARKVIDEO];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:local] && downloaded && flag) {
+        [FCommon playVideoFromURL:local onViewController:viewController localSaved:YES];
+    }else
+    {
+        if([APP_DELEGATE connectedToInternet]){
+            
+            [FCommon playVideoFromURL:video.path onViewController:viewController localSaved:NO];
+        } else {
+            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [av show];
+        }
+    }
+}
+
 +(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController localSaved:(BOOL) isLocalSaved{
      NSURL *videoURL=[NSURL URLWithString:url];
     if (isLocalSaved) {
@@ -114,10 +142,6 @@
     }
     return false;
 }
-
-
-
-
 
 +(NSString *)arrayToString:(NSMutableArray *)array withSeparator:(NSString *)separator{
     if (![array isKindOfClass:[NSNull class]] && [array count] > 0) {

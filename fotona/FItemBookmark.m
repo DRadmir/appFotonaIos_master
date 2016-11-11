@@ -14,8 +14,9 @@
 @synthesize link;
 @synthesize bookmarkSourceType;
 @synthesize  cases;
+@synthesize fileSize;
 
--(id) initWithItemID:(NSString *)_itemID ofType:(NSString *)_type fromSource:(int)_bookmarkSourceType forCases:(NSString *) _cases withLink:(NSString *)_link{
+-(id) initWithItemID:(NSString *)_itemID ofType:(NSString *)_type fromSource:(int)_bookmarkSourceType forCases:(NSString *) _cases withLink:(NSString *)_link withFileSize:(int)_fileSize{
     self=[super init];
     if (self) {
         [self setItemID:_itemID];
@@ -23,11 +24,12 @@
         [self setLink:_link];
         [self setBookmarkSourceType:_bookmarkSourceType];
         [self setCases:_cases];
+        [self setFileSize:_fileSize];
     }
     return self;
 }
 
--(id) initWithItemIDint:(int)_itemID ofType:(NSString *)_type fromSource:(int)_bookmarkSourceType forCases:(NSString *) _cases withLink:(NSString *)_link{
+-(id) initWithItemIDint:(int)_itemID ofType:(NSString *)_type fromSource:(int)_bookmarkSourceType forCases:(NSString *) _cases withLink:(NSString *)_link withFileSize:(int)_fileSize{
     self=[super init];
     if (self) {
         [self setItemID:[NSString stringWithFormat:@"%d",_itemID]];
@@ -35,6 +37,7 @@
         [self setLink:_link];
         [self setBookmarkSourceType:_bookmarkSourceType];
         [self setCases:_cases];
+        [self setFileSize:_fileSize];
     }
     return self;
 }

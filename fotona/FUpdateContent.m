@@ -45,6 +45,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [self updateDocuments];
     [self updateFotonaTab];
     [self updateCases];
+    [[FDownloadManager shared] prepareForDownloadingFiles];
     
 }
 
@@ -234,18 +235,18 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [database open];
     for (FNews *fNews in news) {
         
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM News where newsID=%d;", fNews.newsID]];
+        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM News where newsID=%d;", (int)fNews.newsID]];
         BOOL flag=NO;
         while([results next]) {
             flag=YES;
         }
         
         if (!flag) {
-            [database executeUpdate:@"INSERT INTO News (newsID,title,langID,description,text,active,date,isReaded,headerImage,headerImageLink,images,imagesLinks,categories,rest,isBookmark) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[NSString stringWithFormat:@"%d", fNews.newsID],fNews.title,langID,fNews.description,fNews.text, fNews.activeDB,fNews.nDate,@"0",fNews.headerImageDB, fNews.headerImageLink,fNews.imagesDB,fNews.imagesLinksDB,fNews.categoriesDB,fNews.rest, fNews.bookmark];
+            [database executeUpdate:@"INSERT INTO News (newsID,title,langID,description,text,active,date,isReaded,headerImage,headerImageLink,images,imagesLinks,categories,rest,isBookmark) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[NSString stringWithFormat:@"%d", (int)fNews.newsID],fNews.title,langID,fNews.description,fNews.text, fNews.activeDB,fNews.nDate,@"0",fNews.headerImageDB, fNews.headerImageLink,fNews.imagesDB,fNews.imagesLinksDB,fNews.categoriesDB,fNews.rest, fNews.bookmark];
             
         }else
         {
-            [database executeUpdate:@"UPDATE News set title=?,langID=?,description=?,text=?,active=?,date=?,headerImage=?, headerImageLink=?,images=?,imagesLinks=?,categories=?,rest=?,isBookmark=? where newsID=?",fNews.title,langID,fNews.description,fNews.text,fNews.activeDB,fNews.nDate,fNews.headerImageDB,fNews.headerImageLink,fNews.imagesDB, fNews.imagesLinksDB,fNews.categoriesDB,fNews.rest,fNews.bookmark,[NSString stringWithFormat:@"%d", fNews.newsID]];
+            [database executeUpdate:@"UPDATE News set title=?,langID=?,description=?,text=?,active=?,date=?,headerImage=?, headerImageLink=?,images=?,imagesLinks=?,categories=?,rest=?,isBookmark=? where newsID=?",fNews.title,langID,fNews.description,fNews.text,fNews.activeDB,fNews.nDate,fNews.headerImageDB,fNews.headerImageLink,fNews.imagesDB, fNews.imagesLinksDB,fNews.categoriesDB,fNews.rest,fNews.bookmark,[NSString stringWithFormat:@"%d", (int)fNews.newsID]];
             
             [self deleteNewsForUserTypes:[[NSNumber numberWithLong:fNews.newsID]stringValue]];
         }
@@ -520,18 +521,18 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [database open];
     for (FEvent *fEvent in events) {
         
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Events where eventID=%d;", fEvent.eventID]];
+        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Events where eventID=%d;", (int)fEvent.eventID]];
         BOOL flag=NO;
         while([results next]) {
             flag=YES;
         }
         
         if (!flag) {
-            [database executeUpdate:@"INSERT INTO Events (eventID,title,description,date,text,type,categories,images,dateTo, mobileFeatured) VALUES (?,?,?,?,?,?,?,?,?,?)",[NSString stringWithFormat:@"%d", fEvent.eventID],fEvent.title,fEvent.eventplace,fEvent.eventdate, fEvent.text,[NSString stringWithFormat:@"%d", fEvent.typeE],fEvent.eventcategoriesDB,fEvent.eventImagesDB, fEvent.eventdateTo, fEvent.mobileFeaturedDB];
+            [database executeUpdate:@"INSERT INTO Events (eventID,title,description,date,text,type,categories,images,dateTo, mobileFeatured) VALUES (?,?,?,?,?,?,?,?,?,?)",[NSString stringWithFormat:@"%d", (int)fEvent.eventID],fEvent.title,fEvent.eventplace,fEvent.eventdate, fEvent.text,[NSString stringWithFormat:@"%d", (int)fEvent.typeE],fEvent.eventcategoriesDB,fEvent.eventImagesDB, fEvent.eventdateTo, fEvent.mobileFeaturedDB];
             
         }else
         {
-            [database executeUpdate:@"UPDATE Events set title=?,description=?,date=?,text=?,type=?,categories=?,images=?,dateTo=?, mobileFeatured=?  where eventID=?",fEvent.title,fEvent.eventplace,fEvent.eventdate,fEvent.text,[NSString stringWithFormat:@"%d", fEvent.typeE],fEvent.eventcategoriesDB,fEvent.eventImagesDB,fEvent.eventdateTo, fEvent.mobileFeaturedDB,[NSString stringWithFormat:@"%d", fEvent.eventID]];
+            [database executeUpdate:@"UPDATE Events set title=?,description=?,date=?,text=?,type=?,categories=?,images=?,dateTo=?, mobileFeatured=?  where eventID=?",fEvent.title,fEvent.eventplace,fEvent.eventdate,fEvent.text,[NSString stringWithFormat:@"%d", (int)fEvent.typeE],fEvent.eventcategoriesDB,fEvent.eventImagesDB,fEvent.eventdateTo, fEvent.mobileFeaturedDB,[NSString stringWithFormat:@"%d", (int)fEvent.eventID]];
         }
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -759,7 +760,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [database open];
     for (FCase *c in caseArray) {
         if ([c active] ) {
-            FMResultSet *resultsBookmarked = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark WHERE documentID=%@ AND typeID=0", c.caseID]];
+            FMResultSet *resultsBookmarked = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark WHERE documentID=%@ AND typeID=?", c.caseID, BOOKMARKCASE]];
             NSString *bookmarked=@"0";
             while([resultsBookmarked next]) {
                 bookmarked=@"1";
@@ -769,9 +770,13 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             while([results next]) {
                 flag=YES;
             }
-            //TODO: dodat prenos novih slik, če je case bookmarkan
-            [FDB updateMedia:[c parseImages] andType:MEDIAIMAGE];
-            [FDB updateMedia:[c parseVideosFromServer:YES] andType:MEDIAVIDEO];
+            BOOL download = NO;
+            if ([bookmarked isEqualToString:@"1"] || [[c coverflow] isEqualToString:@"1"]) {
+                download = YES;
+            }
+            
+            [FDB updateMedia:[c parseImagesFromServer:YES] andType:MEDIAIMAGE  andDownload:download forCase:c.caseID];
+            [FDB updateMedia:[c parseVideosFromServer:YES] andType:MEDIAVIDEO  andDownload:download forCase:c.caseID];
             if ([c.coverflow boolValue] || [bookmarked boolValue]) {
                 if (!flag) {
                     [database executeUpdate:@"INSERT INTO Cases (caseID,title,langID,coverTypeID,name,image,introduction,procedure,results,'references',parameters,date,active,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissions, galleryItemVideoIDs, galleryItemImagesIDs) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.authorID,bookmarked,c.coverflow, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs];
@@ -1063,7 +1068,6 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             NSFileManager *fileManager = [NSFileManager defaultManager];
             NSError *error;
             [fileManager removeItemAtPath:downloadFilename error:&error];
-            
             [database executeUpdate:@"UPDATE Author set name=?,langID=?,image=?,imageLocal=?,cv=?,active=? where authorID=?",a.name,langID,a.image,a.imageLocal,a.cv,a.active,a.authorID];
             
             [[APP_DELEGATE authorsImageToDownload] addObject:[a.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
@@ -1221,7 +1225,6 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 
 -(void)addFotonaMenuInDB:(NSMutableArray *)menuArr
 {
-    NSString *bookmark=@"0";
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     for (FFotonaMenu *m in menuArr) {
@@ -1229,11 +1232,10 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
         BOOL flag=NO;
         while([results next]) {
             flag=YES;
-            bookmark = [results objectForColumnName:@"isBookmark"];
         }
         
-        [FDB updateMedia:m.pdfArray andType:MEDIAPDF];
-        [FDB updateMedia:m.videoArray andType:MEDIAVIDEO];
+        [FDB updateMedia:m.pdfArray andType:MEDIAPDF andDownload:NO forCase:nil];
+        [FDB updateMedia:m.videoArray andType:MEDIAVIDEO andDownload:NO forCase:nil];
 
         if (!flag) {
 

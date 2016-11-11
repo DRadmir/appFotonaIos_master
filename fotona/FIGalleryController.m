@@ -44,10 +44,11 @@
         dispatch_async(queue, ^{
             //code to be executed in the background
             NSURL *videoURL;
-            if (![[NSFileManager defaultManager] fileExistsAtPath:vid.localPath]) {
+            NSString *localPath = [FMedia createLocalPathForLink:vid.path andMediaType:MEDIAVIDEO];
+            if (![[NSFileManager defaultManager] fileExistsAtPath:localPath]) {
                 videoURL= [NSURL URLWithString:vid.path] ;
             }else{
-                videoURL=[NSURL fileURLWithPath:vid.localPath];
+                videoURL=[NSURL fileURLWithPath:localPath];
             }
             
             AVURLAsset *asset1 = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
@@ -86,12 +87,12 @@
         dispatch_async(queue, ^{
             //code to be executed in the background
             UIImage *image;
-            NSString *pathTmp = [NSString stringWithFormat:@"%@%@",docDir,img.localPath];
-            if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp] || [img.localPath isEqualToString:@""]) {
+            NSString *pathTmp = [FMedia createLocalPathForLink:img.path andMediaType:MEDIAIMAGE];
+            if (pathTmp == nil || ![[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
                 image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
-                
             }else{
-                image = [UIImage imageWithData:[NSData dataWithContentsOfFile:[NSURL URLWithString:pathTmp]]];
+                
+                image =[UIImage imageWithContentsOfFile:pathTmp];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 //code to be executed on the main thread when background task is finished
@@ -244,8 +245,9 @@
 -(IBAction)openVideo:(id)sender
 {
     FMedia *vid=[videosArray objectAtIndex:[sender tag]];
-    if (![vid.localPath isEqualToString:@""]) {
-        [FCommon playVideoFromURL:vid.localPath onViewController:parent localSaved:YES];
+    NSString *localPath = [FMedia createLocalPathForLink:vid.path andMediaType:MEDIAVIDEO];
+    if (![localPath isEqualToString:@""]) {
+        [FCommon playVideoFromURL:localPath onViewController:parent localSaved:YES];
     }else
     {
         [FCommon playVideoFromURL:vid.path onViewController:parent localSaved:NO];
@@ -287,8 +289,8 @@
             //code to be executed in the background
             UIImage *image;
             if (type == 1) {
-                NSString *pathTmp = [NSString stringWithFormat:@"%@%@",docDir,img.localPath];
-                if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp] || [img.localPath isEqualToString:@""]) {
+                NSString *pathTmp = [FMedia createLocalPathForLink:img.path andMediaType:MEDIAIMAGE];
+                if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
                     image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
                     
                 }else{

@@ -16,6 +16,7 @@
 #import "AFNetworking.h"
 #import "FImage.h"
 #import "FGoogleAnalytics.h"
+#import "FIPDFViewController.h"
 
 @interface FIFavoriteViewController ()
 
@@ -23,6 +24,7 @@
     NSMutableArray *favorites;
     int updateCounter;
     int success;
+    FIPDFViewController *pdfViewController;
 }
 
 @end
@@ -203,7 +205,14 @@
 
 -(void)openMedia:(NSString *)mediaID  andType:(NSString *)mediaType{
     FMedia *media = [FDB getMediaWithId:mediaID andType:mediaType];
-    [FMedia openMedia:media];
+    if ([[media mediaType] intValue] == [MEDIAVIDEO intValue]) {
+        [FCommon playVideoOnIphone:media onViewController:self];
+    } else {
+        if ([[media mediaType] intValue] == [MEDIAPDF intValue]) {
+            [self openPdf:media];
+        }
+    }
+    
 }
 
 #pragma mark - HUD
@@ -221,5 +230,27 @@
     updateCounter=0;
     success=0;
 }
+
+#pragma mark - Refresh
+
+-(void) refreshCellWithItemID:(NSString *)itemID andItemType:(NSString *) itemType{
+    for (int i = 0; i<[favorites count]; i++){
+        FItemFavorite *item = favorites[i];
+        if ([[item itemID] intValue]== [itemID intValue] && [[item typeID] intValue] == [itemType intValue]  ) {
+            NSIndexPath *index = [NSIndexPath  indexPathForItem:i inSection:0];
+            [favoriteTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:index, nil] withRowAnimation:UITableViewRowAnimationNone];
+            break;
+        }
+    }
+}
+    
+-(void) openPdf:(FMedia *) pdf{
+        if (pdfViewController == nil) {
+            pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
+        }
+        pdfViewController.pdfMedia = pdf;
+        [[self navigationController] pushViewController:pdfViewController animated:YES];
+}
+
 
 @end

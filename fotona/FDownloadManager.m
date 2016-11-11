@@ -270,6 +270,7 @@
             if([APP_DELEGATE bookmarkCountLeft]==0) {
                 [[APP_DELEGATE downloadList] removeAllObjects];
                 [APP_DELEGATE setBookmarkCountLeft:0];
+                [APP_DELEGATE setBookmarkSizeLeft:0];
                 if ([FCommon isIpad])
                 {
                     [[APP_DELEGATE settingsController] refreshStatusBar];
@@ -286,6 +287,7 @@
                 [HelperBookmark warning];
                 [[APP_DELEGATE downloadList] removeAllObjects];
                 [APP_DELEGATE setBookmarkCountLeft:0];
+                [APP_DELEGATE setBookmarkSizeLeft:0];
                 if ([FCommon isIpad])
                 {
                     [[APP_DELEGATE settingsController] refreshStatusBar];
@@ -302,7 +304,6 @@
     }
     
     if ([APP_DELEGATE loginShown]) {
-        UIViewController *parent = self.updateDelegate;
         //[MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
         id<UpdateDelegate> strongDelegate = self.updateDelegate;
         if ([strongDelegate respondsToSelector:@selector(updateProcess)])

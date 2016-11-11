@@ -47,7 +47,6 @@
     [super viewDidLoad];
     casesInMenu = false;
     
-    
     UIBarButtonItem *btnMenu = [[UIBarButtonItem alloc] initWithTitle:@"Close"
                                                                 style:UIBarButtonItemStylePlain
                                                                target:self
@@ -245,15 +244,11 @@
         {
             [cell.textLabel setText:[[allItems objectAtIndex:indexPath.row] title]];
             UIImage *image = [UIImage imageNamed:@"case_author_red"];
-            
             [cell.imageView setImage:image];
-            
             image = [UIImage imageWithContentsOfFile:[[authors objectAtIndex:indexPath.row] imageLocal]];
-            NSLog(@"%@",[[authors objectAtIndex:indexPath.row] imageLocal]);
             UIImageView *img=[FCommon imageCutWithRect:CGRectMake(13, 5, 45, 45)];
             //img.backgroundColor = [UIColor whiteColor];
             img.image = image;
-            
             [cell.contentView addSubview:img];
         }else{
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];

@@ -63,6 +63,8 @@
 
 @synthesize bookmarkCountAll;
 @synthesize bookmarkCountLeft;
+@synthesize bookmarkSizeAll;
+@synthesize bookmarkSizeLeft;
 
 @synthesize loginShown;
 
@@ -375,6 +377,8 @@
         
         [APP_DELEGATE setBookmarkCountAll:0];
         [APP_DELEGATE setBookmarkCountLeft:0];
+        [APP_DELEGATE setBookmarkSizeAll:0];
+        [APP_DELEGATE setBookmarkSizeLeft:0];
         if (!success)
             NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
     } else {
@@ -436,6 +440,8 @@
                 
                 [APP_DELEGATE setBookmarkCountAll:0];
                 [APP_DELEGATE setBookmarkCountLeft:0];
+                [APP_DELEGATE setBookmarkSizeAll:0];
+                [APP_DELEGATE setBookmarkSizeLeft:0];
                 lastUpdate = @"2.2";
                 
             }
@@ -456,6 +462,8 @@
                 
                 [APP_DELEGATE setBookmarkCountAll:0];
                 [APP_DELEGATE setBookmarkCountLeft:0];
+                [APP_DELEGATE setBookmarkSizeAll:0];
+                [APP_DELEGATE setBookmarkSizeLeft:0];
                 lastUpdate = @"2.3";
             }
             if ([lastUpdate isEqualToString:@"2.3"]){

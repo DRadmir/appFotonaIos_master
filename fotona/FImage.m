@@ -37,7 +37,11 @@
             [self setDescription:[dic valueForKey:@"description"]];
         }
         [self setSort:[dic valueForKey:@"sort"]];
-        [self setDeleted:[dic valueForKey:@"deleted"]];
+        if ([[dic valueForKey:@"deleted"] boolValue]) {
+            [self setDeleted:@"1"];
+        } else {
+            [self setDeleted:@"0"];
+        }
         [self setFileSize:[dic valueForKey:@"fileSize"]];
     }
     

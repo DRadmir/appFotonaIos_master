@@ -78,6 +78,8 @@
 
 @property (assign) float bookmarkCountAll;
 @property (assign) float bookmarkCountLeft;
+@property (assign) float bookmarkSizeAll;
+@property (assign) float bookmarkSizeLeft;
 
 @property (assign) NSString* logText;
 @property (assign) BOOL logingEnabled;

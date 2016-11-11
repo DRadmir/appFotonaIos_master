@@ -33,6 +33,8 @@
 @synthesize deleted;
 @synthesize download;
 @synthesize userPermissions;
+@synthesize galleryItemVideoIDs;
+@synthesize galleryItemImagesIDs;
 
 //befor saving into BD
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic
@@ -121,29 +123,7 @@
         [self setReferences:[dic valueForKey:@"references"]];
         [self setDate:[dic valueForKey:@"date"]];
         [self setParameters:[dic valueForKey:@"parameters"]];
-        if ([dic objectForKey:@"images"]== nil || [dic objectForKey:@"images"]== (id)[NSNull null] ) {
-            [self setImages:[self getImages]];
-        }else{
-            NSArray *tmp=[dic objectForKey:@"images"];
-            NSMutableArray *imgs=[[NSMutableArray alloc] init];
-            for (NSDictionary *dicImg in tmp) {
-                FImage *img=[[FImage alloc] initWithDictionaryFromDB:dicImg];
-                [imgs addObject:img];
-            }
-            [self setImages:imgs];
-        }
-        if ([dic objectForKey:@"videos"]==[NSNull null]) {
-            [self setVideo:[self getVideos]];
-        }else{
-            NSArray *tmp=[dic objectForKey:@"videos"];
-            NSMutableArray *videos=[[NSMutableArray alloc] init];
-            for (NSDictionary *dicVid in tmp) {
-                FMedia *vid=[[FMedia alloc] initWithDictionary:dicVid];
-                [videos addObject:vid];
-            }
-            [self setVideo:videos];
-        }
-        [self setActive:[dic valueForKey:@"active"]];
+               [self setActive:[dic valueForKey:@"active"]];
         if ([dic objectForKey:@"categories"]==[NSNull null]) {
             categories=[[NSMutableArray alloc] init];
         }else{
@@ -160,6 +140,29 @@
         [self setGalleryItemVideoIDs:[dic valueForKey:@"galleryItemVideoIDs"]];
         [self setGalleryItemImagesIDs:[dic valueForKey:@"galleryItemImagesIDs"]];
         [self setUserPermissions:[dic valueForKey:@"userPermissions"]];
+        if ([dic objectForKey:@"galleryItemImagesIDs"]!= nil || [dic objectForKey:@"galleryItemImagesIDs"]!= (id)[NSNull null] ) {
+            [self setImages:[self getImages]];
+        }else{
+            NSArray *tmp=[dic objectForKey:@"images"];
+            NSMutableArray *imgs=[[NSMutableArray alloc] init];
+            for (NSDictionary *dicImg in tmp) {
+                FImage *img=[[FImage alloc] initWithDictionaryFromDB:dicImg];
+                [imgs addObject:img];
+            }
+            [self setImages:imgs];
+        }
+        if ([dic objectForKey:@"galleryItemVideoIDs"]!=[NSNull null]) {
+            [self setVideo:[self getVideos]];
+        }else{
+            NSArray *tmp=[dic objectForKey:@"videos"];
+            NSMutableArray *videos=[[NSMutableArray alloc] init];
+            for (NSDictionary *dicVid in tmp) {
+                FMedia *vid=[[FMedia alloc] initWithDictionary:dicVid];
+                [videos addObject:vid];
+            }
+            [self setVideo:videos];
+        }
+
     }
     
     
@@ -174,7 +177,7 @@
         FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
         [database open];
         for (NSString *imgId in imagesArray) {
-            FMResultSet *result = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@;",imgId]];
+            FMResultSet *result = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ AND mediaType=%@;",imgId, MEDIAIMAGE]];
             while([result next]) {
                 FImage *f=[[FImage alloc] initWithDictionaryFromDB:[result resultDictionary]];
                 [arr addObject:f];
@@ -195,7 +198,7 @@
         FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
         [database open];
         for (NSString *vidId in videosArray) {
-            FMResultSet *result = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@;",vidId]];
+            FMResultSet *result = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ AND mediaType=%@;",vidId, MEDIAVIDEO]];
             while([result next]) {
                 FMedia *f=[[FMedia alloc] initWithDictionary:[result resultDictionary]];
                 [arr addObject:f];
@@ -208,14 +211,19 @@
     return arr;
 }
 
--(NSMutableArray *)parseImages
+-(NSMutableArray *)parseImagesFromServer: (BOOL)fromServer
 {
     NSMutableArray *tmpImgs=[[NSMutableArray alloc] init];
     //    NSArray *imgsArr=[NSJSONSerialization JSONObjectWithData:[imgs dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
     
     if (self.images.count>0) {
         for (NSDictionary *imgDic in self.images) {
-            FImage *img=[[FImage alloc] initWithDictionaryFromServer:imgDic];
+            FImage *img;
+            if (fromServer){
+                img=[[FImage alloc] initWithDictionaryFromDB:imgDic];
+            }else {
+                img=[[FImage alloc] initWithDictionaryFromServer:imgDic];
+            }
             [tmpImgs addObject:img];
         }
     }

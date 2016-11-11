@@ -14,6 +14,7 @@
 @property (nonatomic, retain) NSString *typeID;
 
 
+
 - (FItemFavorite *) initWithDictionary:(NSDictionary *) dictionary;
 
 @end

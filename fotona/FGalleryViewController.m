@@ -139,8 +139,7 @@
         dispatch_async(queue, ^{
             //code to be executed in the background
             UIImage *image;
-            //            image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
-            NSString *pathTmp = [NSString stringWithFormat:@"%@%@",docDir,img.localPath];
+            NSString *pathTmp =[FMedia createLocalPathForLink:img.path andMediaType:MEDIAIMAGE];
             if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
                 image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
                 

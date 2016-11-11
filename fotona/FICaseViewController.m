@@ -27,6 +27,7 @@
     Bubble *b1;
     Bubble *b2;
     int state;
+   
     
 }
 @end
@@ -73,15 +74,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
      [super viewWillAppear:animated];
-    BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
-    if (bookmarked){//[currentCase.bookmark boolValue]) {
-        [btnBookmark setHidden:YES];
-        [btnRemoveBookmark setHidden:NO];
-    } else {
-        [btnBookmark setHidden:NO];
-        [btnRemoveBookmark setHidden:YES];
-    }
-    
+    [self refreshBookmarkBtn];
     
     
     [self loadCase];
@@ -478,7 +471,7 @@
     }
     [btnRemoveBookmark setHidden:YES];
     
-    [FDB removeBookmarkedCase:caseToOpen];
+    [HelperBookmark removeBookmarkedCase:caseToOpen];
 }
 
 - (IBAction)addBookmark:(id)sender {
@@ -491,8 +484,15 @@
 }
 
 - (void) refreshBookmarkBtn  {
-    [btnBookmark setHidden:YES];
-    [btnRemoveBookmark setHidden:NO];
+     BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
+    if (bookmarked){
+        [btnBookmark setHidden:YES];
+        [btnRemoveBookmark setHidden:NO];
+    } else {
+        [btnBookmark setHidden:NO];
+        [btnRemoveBookmark setHidden:YES];
+    }
+
     
 }
 

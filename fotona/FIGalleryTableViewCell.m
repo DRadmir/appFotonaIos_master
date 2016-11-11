@@ -42,12 +42,12 @@
 -(void)setContentForFavorite:(FItemFavorite *)fitem forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath{
     if ([[fitem typeID] intValue] == BOOKMARKVIDEOINT || [[fitem typeID] intValue] == BOOKMARKPDFINT) {
         FMedia * media =[FDB getMediaWithId:[fitem itemID] andType:[fitem typeID]];
-        [self setContentForMedia:media];
+        [self setContentForMedia:media forTableView:tableView onIndex:indexPath];
         [FHelperThumbnailImg getThumbnailForMedia:media onTableView:tableView withIndex:indexPath];
     }
 }
 
--(void)setContentForMedia:(FMedia *)media{
+-(void)setContentForMedia:(FMedia *)media forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath{
     enabled = true;;
     if (cellViewFotona == nil) {
          cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
@@ -57,7 +57,7 @@
     if ([[media bookmark] isEqualToString:@"0"] && ![APP_DELEGATE connectedToInternet]) {
         enabled = false;
     }
-
+     [FHelperThumbnailImg getThumbnailForMedia:media onTableView:tableView withIndex:indexPath];
 }
 
 -(void)refreshMediaThumbnail:(UIImage *)img{

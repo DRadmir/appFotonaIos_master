@@ -79,6 +79,7 @@
 }
 
 - (IBAction)downloadRemove:(id)sender {
+    [HelperBookmark removeBookmarkForMedia:cellMedia andType:[cellMedia mediaType] forBookmarkType:BSOURCEFOTONA];
 }
 
 - (IBAction)favoriteAdd:(id)sender {

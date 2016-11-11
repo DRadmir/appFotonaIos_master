@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "FMedia.h"
+#import "FIBaseView.h"
 
-@interface FIGalleryViewController : UIViewController <QLPreviewControllerDelegate,QLPreviewControllerDataSource,UITableViewDataSource, UITableViewDelegate>
+@interface FIGalleryViewController : FIBaseView <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) NSString* galleryItems;
 @property (strong, nonatomic) NSString* galleryType;
@@ -21,5 +22,7 @@
 -(void) loadGallery;
 -(void) reloadCells:(NSString *)videoToReload;
 -(void) openVideo:(FMedia *) video;
+
+-(void) refreshCellWithItemID:(NSString *)itemID andItemType:(NSString *) itemType;
 
 @end

@@ -15,4 +15,5 @@
 @property (strong, nonatomic) IBOutlet UITableView *favoriteTableView;
 
 -(void)deleteRowAtIndex:(NSIndexPath *) index;
+-(void) refreshCellWithItemID:(NSString *)itemID andItemType:(NSString *) itemType;
 @end

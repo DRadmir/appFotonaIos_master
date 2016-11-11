@@ -73,6 +73,7 @@
 		1B206B1A1C21724C00DBA153 /* ConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B206B191C21724C00DBA153 /* ConnectionHelper.m */; };
 		1B21D8F21DB0B97E00648E60 /* FGalleryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B21D8F11DB0B97E00648E60 /* FGalleryView.xib */; };
 		1B21D8F51DB0C07900648E60 /* FCaseGalleryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B21D8F41DB0C07900648E60 /* FCaseGalleryView.m */; };
+		1B3A44A81DD4D86D0091679C /* FIPDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B3A44A71DD4D86D0091679C /* FIPDFViewController.m */; };
 		1B3ABA531DCB9B6B00AF1F60 /* FMediaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B3ABA521DCB9B6B00AF1F60 /* FMediaManager.m */; };
 		1B4767ED1DB77D570059D774 /* FHelperThumbnailImg.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4767EC1DB77D570059D774 /* FHelperThumbnailImg.m */; };
 		1B48CDB81C58C00900E5F039 /* FICaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B48CDB71C58C00900E5F039 /* FICaseViewController.m */; };
@@ -472,6 +473,8 @@
 		1B21D8F11DB0B97E00648E60 /* FGalleryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FGalleryView.xib; sourceTree = "<group>"; };
 		1B21D8F31DB0C07900648E60 /* FCaseGalleryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCaseGalleryView.h; sourceTree = "<group>"; };
 		1B21D8F41DB0C07900648E60 /* FCaseGalleryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCaseGalleryView.m; sourceTree = "<group>"; };
+		1B3A44A61DD4D86D0091679C /* FIPDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FIPDFViewController.h; path = fotona/FIPDFViewController.h; sourceTree = SOURCE_ROOT; };
+		1B3A44A71DD4D86D0091679C /* FIPDFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIPDFViewController.m; path = fotona/FIPDFViewController.m; sourceTree = SOURCE_ROOT; };
 		1B3ABA511DCB9B6B00AF1F60 /* FMediaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMediaManager.h; path = fotona/FMediaManager.h; sourceTree = SOURCE_ROOT; };
 		1B3ABA521DCB9B6B00AF1F60 /* FMediaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMediaManager.m; path = fotona/FMediaManager.m; sourceTree = SOURCE_ROOT; };
 		1B4767EB1DB77D570059D774 /* FHelperThumbnailImg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHelperThumbnailImg.h; sourceTree = "<group>"; };
@@ -1220,6 +1223,8 @@
 				1BD662301C4D27C0009BA994 /* FIFotonaViewController.m */,
 				1BD662351C4D2FB9009BA994 /* FIFotonaMenuViewController.h */,
 				1BD662361C4D2FB9009BA994 /* FIFotonaMenuViewController.m */,
+				1B3A44A61DD4D86D0091679C /* FIPDFViewController.h */,
+				1B3A44A71DD4D86D0091679C /* FIPDFViewController.m */,
 			);
 			name = FotonaTab;
 			sourceTree = "<group>";
@@ -2455,6 +2460,7 @@
 				C9A3D1A418ED1898007A0E49 /* AFNetworkReachabilityManager.m in Sources */,
 				1B03B2341ADBB7BA00BE2DE4 /* Background.m in Sources */,
 				1B7F4AD41C294C4900DCFBA5 /* FDB.m in Sources */,
+				1B3A44A81DD4D86D0091679C /* FIPDFViewController.m in Sources */,
 				C9F9C79A18FCA1770031FEEB /* FFotonaMenu.m in Sources */,
 				C9A3D15018ED1898007A0E49 /* FFeaturedViewController_iPad.m in Sources */,
 				C9A3D1A018ED1898007A0E49 /* iCarousel.m in Sources */,

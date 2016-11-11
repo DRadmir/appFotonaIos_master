@@ -39,7 +39,7 @@
 
 -(NSMutableArray *)getImages;
 -(NSMutableArray *)getVideos;
--(NSMutableArray *)parseImages;
+-(NSMutableArray *)parseImagesFromServer: (BOOL)fromServer;
 -(NSMutableArray *)parseVideosFromServer: (BOOL)fromServer;
 -(NSString *)getAuthorName;
 

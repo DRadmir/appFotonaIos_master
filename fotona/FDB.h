@@ -28,7 +28,6 @@
 +(NSMutableArray *)getCasesWithAuthorID:(NSString *)authorID;
 +(NSMutableArray *)getAlphabeticalCasesForBookmark:(NSString *)category;
 
-+(void)removeBookmarkedCase:(FCase *) caseToRemove;
 +(void)removeCaseWithID:(NSString *)fotonaID;
 
 +(NSMutableArray *)getCasebookMenu;
@@ -57,7 +56,7 @@
 +(void)removeFromBookmarkForDocumentID:(NSString *)documentID;
 
 +(void)addMedia:(NSMutableArray *)m withType:(int)type andDownload:(BOOL) toDownload;
-+(void)updateMedia:(NSMutableArray *)mediaArray andType:(NSString *) type;
++(void)updateMedia:(NSMutableArray *)mediaArray andType:(NSString *) type  andDownload:(BOOL)download forCase:(NSString *) caseID;
 +(FMedia *)getMediaWithId:(NSString *) videoId andType: (NSString *)mediaType;
 +(NSMutableArray *)getMediaForGallery:(NSString *)galleryItems withMediType: (NSString *)mediaType;
 

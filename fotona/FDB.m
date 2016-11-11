@@ -15,6 +15,7 @@
 #import "FDownloadManager.h"
 #import "FItemFavorite.h"
 #import "FMediaManager.h"
+#import "HelperBookmark.h"
 
 
 @implementation FDB
@@ -252,38 +253,6 @@
     return cases;
 }
 
-+(void)removeBookmarkedCase:(FCase *)caseToRemove
-{
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    NSString *usr = [FCommon getUser];
-    [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=0",caseToRemove.caseID,usr,nil];
-    BOOL bookmarked = NO;
-    
-    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where typeID=0 and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:caseToRemove.caseID, nil]];
-    while([resultsBookmarked next]) {
-        bookmarked = YES;
-    }
-    
-    if (!bookmarked) {
-        if ([[caseToRemove coverflow] boolValue]) {
-            [database executeUpdate:@"UPDATE Cases set isBookmark=? where caseID=?",@"0",caseToRemove.caseID];
-            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-            [database close];
-        }
-        else{
-            [database executeUpdate:@"DELETE FROM Cases WHERE caseID=?",caseToRemove.caseID];
-            [database executeUpdate:@"INSERT INTO Cases (caseID,title,name,active,authorID,isBookmark,alloweInCoverFlow) VALUES (?,?,?,?,?,?,?)",caseToRemove.caseID,caseToRemove.title,caseToRemove.name,caseToRemove.active,caseToRemove.authorID,@"0",caseToRemove.coverflow];
-            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-            [database close];
-            
-            [FMediaManager deleteMedia:caseToRemove.images andType:0 andFromDB:YES];
-            [FMediaManager deleteMedia:caseToRemove.video andType:1 andFromDB:YES];
-        }
-    }
-    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [av show];
-}
 
 
 +(void)removeCaseWithID:(NSString *)fotonaID{
@@ -677,36 +646,6 @@
 }
 
 
-+(void)removeFromBookmarkForDocumentID:(NSString *)documentID
-{
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    NSString *usr = [FCommon getUser];
-    [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",documentID,usr,BOOKMARKPDF];
-    FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",documentID,BOOKMARKPDF]];
-    BOOL flag=NO;
-    while([resultsBookmarked next]) {
-        flag=YES;
-    }
-    if (!flag) {
-        NSString * pdfSrc=@"";
-        [database executeUpdate:@"UPDATE FotonaMenu set isBookmark=? where categoryID=?",@"0",documentID];
-        
-        FMResultSet *results= [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenu where active=1 and categoryID=%@",documentID]];
-        while([results next]) {
-            pdfSrc = [results stringForColumn:@"pdfSrc"];
-        }
-        NSString *folder=@".PDF";
-        NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[pdfSrc lastPathComponent]];
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSError *error;
-        [fileManager removeItemAtPath:downloadFilename error:&error];
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
-
-
 #pragma mark - Media
 
 +(void)addMedia:(NSMutableArray *)m withType:(int)type andDownload:(BOOL) toDownload{
@@ -740,7 +679,6 @@
             }
             
         }else {
-            //TODO: pazit na posodabljanje lokal patha
             if (type==1){
                 for (FMedia *v in m) {
                     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where itemID=%@ AND mediaType=1;", v.itemID]];
@@ -782,8 +720,7 @@
 
 
 
-+(void) updateMedia:(NSMutableArray *)mediaArray andType:(NSString *) type {
-    //TODO: brisat file če niso več nikjer bookmarkani iz baze pa ko je deleted
++(void) updateMedia:(NSMutableArray *)mediaArray andType:(NSString *) type andDownload:(BOOL) download  forCase:(NSString *) caseID{
     BOOL deleted = NO;
     NSString *mediaType = @"-1";
     FMedia *media;
@@ -791,26 +728,29 @@
     [database open];
     if ([type isEqualToString:MEDIAIMAGE]) {
         for (FImage *img in mediaArray) {
-            if ([img deleted] || [[img deleted] isEqualToString:@"1"]) {
+            if ([[img deleted] isEqualToString:@"1"]) {
                 [database executeUpdate:@"DELETE FROM Media WHERE mediaID=? AND mediaType=0",[img itemID]];
                 [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[img itemID],[FCommon getUser],BOOKMARKCASE];
                  [FMediaManager deleteImage:img];
             } else {
-                FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media WHERE itemID=%@ AND mediaType=0;", img.itemID]];
+                FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media WHERE mediaID=%@ AND mediaType=0;", img.itemID]];
                 BOOL exists = NO;
                 while ([results next]) {
                     exists = YES;
                 }
-                NSArray *pathComp=[img.path pathComponents];
-                NSString *pathTmp = [[NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
+                
                 if (!exists) {
-                    [database executeUpdate:@"INSERT INTO Media (mediaID, title, path, localPath, description, mediaType,  fileSize, deleted, sort) VALUES (?,?,?,?,?,?,?,?,?)",img.itemID, img.title, img.path, pathTmp, img.description, @"0", img.fileSize, img.deleted, img.sort];
+                    [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,sort,deleted, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?)",  img.itemID,img.title,img.path,@"",img.description,@"0",@"0",img.sort, img.deleted, img.fileSize];
+                    if (download) {
+                        [HelperBookmark addImageToDownloadLis:img forCase:caseID];
+                    }
                 } else {
-                    [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,,fileSize=?, deleted=?, sort=? WHERE mediaID=? AND mediaType=0",img.title, img.path, pathTmp, img.description, @"0", img.fileSize, img.deleted, img.sort, img.itemID];
+                    [database executeUpdate:@"UPDATE Media set title=?,path=?,description=?,sort=?, deleted=?, fileSize=? WHERE mediaID=? AND mediaType=1",img.title,img.path,img.description, img.sort, img.deleted, img.fileSize,img.itemID];
                 }
             }
         }
     } else {
+        //TODO: če je pdf ali video bookmarkan bi mogu sliko posodobit
         if ([type isEqualToString:MEDIAVIDEO]){
             for (FMedia *vid in mediaArray) {
                 if ([[vid deleted] isEqualToString:@"1"]) {
