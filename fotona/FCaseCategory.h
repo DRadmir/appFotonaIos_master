@@ -13,6 +13,7 @@
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *active;
 @property (nonatomic, retain) NSString *sort;
+@property (nonatomic, retain) NSString *deleted;
 
 -(id)initWithDictionary:(NSDictionary *)dic;
 

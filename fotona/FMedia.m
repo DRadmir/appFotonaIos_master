@@ -1,46 +1,87 @@
 //
-//  FVideo.m
+//  FMedia.m
 //  Fotona
 //
 //  Created by Dejan Krstevski on 4/2/14.
 //  Copyright (c) 2014 Dejan Krstevski. All rights reserved.
 //
 
-#import "FVideo.h"
+#import "FMedia.h"
 #import "AFNetworking.h"
 #import "FMDatabase.h"
+#import "FIFlowController.h"
 
-@implementation FVideo
+@implementation FMedia
 @synthesize itemID;
-@synthesize videoGalleryID;
 @synthesize title;
 @synthesize path;
 @synthesize description;
 @synthesize localPath;
-@synthesize videoImage;
+@synthesize mediaImage;
 @synthesize sort;
-@synthesize dateUpdated;
-@synthesize userSubType;
-@synthesize userType;
+@synthesize userPermissions;
+@synthesize deleted;
+@synthesize filesize;
+@synthesize download;
+@synthesize mediaType;
+@synthesize time;
+
+-(id)initWithDictionaryFromServer:(NSDictionary *)dic forMediType: (NSString *)type
+{
+    self=[super init];
+    if (self) {
+        [self setItemID:[dic valueForKey:@"customGalleryItemID"]];
+        [self setTitle:[dic valueForKey:@"title"]];
+        NSString *pathUpdated = [[dic valueForKey:@"path"] stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+        [self setPath:[pathUpdated stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
+        [self setLocalPath:@""];
+        [self setDescription:[dic valueForKey:@"description"]];
+        [self setMediaImage:[dic valueForKey:@"mediaImage"]];
+        [self setSort:[dic valueForKey:@"sort"]];
+        [self setFilesize:[dic valueForKey:@"fileSize"]];
+        [self setUserPermissions:[dic valueForKey:@"userPermissions"]];
+        if ([[dic valueForKey:@"download"] boolValue]) {
+            [self setDownload:@"1"];
+        } else {
+            [self setDownload:@"0"];
+        }
+        if ([[dic valueForKey:@"deleted"] boolValue]) {
+            [self setDeleted:@"1"];
+        } else {
+            [self setDeleted:@"0"];
+        }
+        if ([[dic valueForKey:@"active"] boolValue]) {
+            [self setActive:@"1"];
+        } else {
+            [self setActive:@"0"];
+        }
+        [self setTime:[dic valueForKey:@"imageCapturedTime"]];
+        [self setMediaType:type];
+    }
+    return self;
+}
+
 
 -(id)initWithDictionary:(NSDictionary *)dic
 {
     self=[super init];
     if (self) {
-        [self setItemID:[dic valueForKey:@"itemID"]];
-        [self setVideoGalleryID:[dic valueForKey:@"galleryID"]];
+        [self setItemID:[dic valueForKey:@"mediaID"]];
         [self setTitle:[dic valueForKey:@"title"]];
         [self setPath:[dic valueForKey:@"path"]];
         [self setPath:[self.path stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
-        [self setLocalPath:@""];
+        [self setLocalPath:[dic valueForKey:@"localPath"]];
         [self setDescription:[dic valueForKey:@"description"]];
         [self setBookmark:[dic valueForKey:@"bookmark"]];
-        [self setTime:[dic valueForKey:@"cropedTime"]];
-        [self setVideoImage:[dic valueForKey:@"videoImage"]];
+        [self setMediaImage:[dic valueForKey:@"mediaImage"]];
         [self setSort:[dic valueForKey:@"sort"]];
-        [self setDateUpdated:[self formateDate:[dic valueForKey:@"dateUpdated"]]];
-        [self setUserSubType:[dic valueForKey:@"allowedUserSubTypes"]];
-        [self setUserType:[dic valueForKey:@"allowedUserTypes"]];
+        [self setDeleted:[dic valueForKey:@"deleted"]];
+        [self setFilesize:[dic valueForKey:@"fileSize"]];
+        [self setUserPermissions:[dic valueForKey:@"userPermissions"]];
+        [self setDownload:[dic valueForKey:@"download"]];
+        [self setActive:[dic valueForKey:@"active"]];
+        [self setMediaType:[dic valueForKey:@"mediaType"]];
+        [self setTime:[dic valueForKey:@"mediaType"]];
     }
     return self;
 }
@@ -92,76 +133,43 @@
     return [dateFormater dateFromString:stringDate];
 }
 
-//če gleda glede na pravice na videu
-//-(BOOL)checkVideoForUser
-//{
-//    NSString *tempUser = [self.userType stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-//    tempUser = [tempUser stringByReplacingOccurrencesOfString:@"(" withString:@""];
-//    tempUser = [tempUser stringByReplacingOccurrencesOfString:@")" withString:@""];
-//    tempUser = [tempUser stringByReplacingOccurrencesOfString:@" " withString:@""];
-//    
-//    NSString *tempUserSub = [self.userSubType stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-//    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@"(" withString:@""];
-//    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@")" withString:@""];
-//    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@" " withString:@""];
-//    
-//   
-//
-//    if (tempUser.length > 0) {
-//        NSArray *userT =   [tempUser componentsSeparatedByString:@","];
-//        FUser *currentUser = [APP_DELEGATE currentLogedInUser];
-//        if (currentUser.userType.intValue == 2  ) {
-//             NSArray *userSubT =   [tempUserSub componentsSeparatedByString:@","];
-//            for (int i=0; i<currentUser.userTypeSubcategory.count; i++) {
-//                NSString *t = [NSString stringWithFormat:@"%@", currentUser.userTypeSubcategory[i]];
-//                if ([userSubT containsObject: t]) {
-//                    return true;
-//                }
-//            }
-//        } else{
-//            NSString *t = [NSString stringWithFormat:@"%@", currentUser.userType];
-//            if ([userT containsObject:t]) {
-//                return true;
-//            }
-//            
-//        }
-//    }
-//    
-//        return false;
-//    }
 
-
-
-
-
--(BOOL)checkVideoForCategory :(NSString *)category
++(void) openMedia:(FMedia *)media
 {
-    //dodat, da če je usertype na videu enak 0 in kategorija enako 0 ga doda
-    if ([category isEqualToString:@"0"]) {
-         NSString *tempUserSub = [self.userType stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-        tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@"(" withString:@""];
-        tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@")" withString:@""];
-        tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@" " withString:@""];
-        
-        NSArray *userSubT =   [tempUserSub componentsSeparatedByString:@","];
-        if ([userSubT containsObject: category]) {
-            return true;
-        }
-
-    } else
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.mediaToOpen = media;
+    flow.galToOpen = [NSString stringWithFormat:@"%@",[media itemID]];
+    flow.fromSearch = true;
+    if (flow.fotonaMenu != nil)
     {
-    NSString *tempUserSub = [self.userSubType stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@"(" withString:@""];
-    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@")" withString:@""];
-    tempUserSub = [tempUserSub stringByReplacingOccurrencesOfString:@" " withString:@""];
-
-            NSArray *userSubT =   [tempUserSub componentsSeparatedByString:@","];
-                if ([userSubT containsObject: category]) {
-                    return true;
-                }
+        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
     }
-    return false;
+    if (flow.lastIndex != 2) {
+        flow.lastIndex = 2;
+        [flow.tabControler setSelectedIndex:2];
+    } else {
+        [flow.fotonaTab openGalleryFromSearch:flow.galToOpen andReplace:YES andType:[media mediaType]];
+    }
+    
 }
++(NSString *) createLocalPathForLink:(NSString *)link andMediaType:(NSString *)mediaType{
+    NSString *local = @"";
+    if ([mediaType intValue] == [MEDIAVIDEO intValue]) {
+        NSArray *pathComp=[link pathComponents];
+        local=[[NSString stringWithFormat:@"%@/.Cases/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[link lastPathComponent]];
+    } else {
+        if ([mediaType intValue] == [MEDIAPDF intValue]) {
+            local=[NSString stringWithFormat:@"%@.PDF/%@",docDir,[link lastPathComponent]];
+        } else {
+            if ([mediaType intValue] == [MEDIAIMAGE intValue]) {
+                NSArray *pathComp=[link pathComponents];
+                local=[[NSString stringWithFormat:@"%@/.Cases/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[link lastPathComponent]];
+            }
+        }
+    }
+    return local;
+}
+
 
 
     @end

@@ -15,9 +15,10 @@
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "UIColor+Hex.h"
 #import "FHelperRequest.h"
+#import "FGoogleAnalytics.h"
 
 @interface FICasebookMenuViewController ()
 {
@@ -45,7 +46,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     casesInMenu = false;
-    
     
     UIBarButtonItem *btnMenu = [[UIBarButtonItem alloc] initWithTitle:@"Close"
                                                                 style:UIBarButtonItemStylePlain
@@ -116,6 +116,7 @@
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     enabled = true;
+    [FGoogleAnalytics writeGAForItem:[self title] andType:GACASEMENUINT];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -126,7 +127,6 @@
 
 - (IBAction)closeMenu:(id)sender
 {
-    // [self.navigationController dismissViewControllerAnimated:true completion:nil];
     [self.navigationController popToRootViewControllerAnimated:true];
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.showMenu = false;
@@ -244,15 +244,11 @@
         {
             [cell.textLabel setText:[[allItems objectAtIndex:indexPath.row] title]];
             UIImage *image = [UIImage imageNamed:@"case_author_red"];
-            
             [cell.imageView setImage:image];
-            
             image = [UIImage imageWithContentsOfFile:[[authors objectAtIndex:indexPath.row] imageLocal]];
-            NSLog(@"%@",[[authors objectAtIndex:indexPath.row] imageLocal]);
             UIImageView *img=[FCommon imageCutWithRect:CGRectMake(13, 5, 45, 45)];
             //img.backgroundColor = [UIColor whiteColor];
             img.image = image;
-            
             [cell.contentView addSubview:img];
         }else{
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
@@ -419,25 +415,19 @@
              NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[caseTemp caseID] onView:self.view];
             AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
             [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                // I get response as XML here and parse it in a function
-                
-                NSError *jsonError;
                 NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-                NSString *c = [dic objectForKey:@"d"];
-                NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
-                                                                                                 options:NSJSONReadingMutableContainers
-                                                                                                   error:&jsonError]];
+                NSArray *caseArray = [dic objectForKey:@"d"];
+                FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:caseArray[0]];
                 NSMutableArray *imgs = [[NSMutableArray alloc] init];
                 for (NSDictionary *imgLink in [caseObj images]) {
-                    FImage * img = [[FImage alloc] initWithDictionary:imgLink];
+                    FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
                     
                     [imgs addObject:img];
                 }
                 [caseObj setImages:imgs];
                 NSMutableArray *videos = [[NSMutableArray alloc] init];
                 for (NSDictionary *videoLink in [caseObj video]) {
-                    FVideo * videoTemp = [[FVideo alloc] initWithDictionary:videoLink];
+                    FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink forMediType:MEDIAVIDEO];
                     
                     [videos addObject:videoTemp];
                 }
@@ -447,8 +437,6 @@
                 [self removeHud];
                 caseToReturn = caseObj;
                 [self openCase];
-                
-                
             }
                                              failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                  NSLog(@"Cases failed %@",error.localizedDescription);
@@ -485,7 +473,6 @@
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.showMenu = false;
-    //[self.navigationController dismissViewControllerAnimated:true completion:nil];
     [self.navigationController popToRootViewControllerAnimated:true];
     parent.caseToOpen = caseToReturn;
     [parent openCase];

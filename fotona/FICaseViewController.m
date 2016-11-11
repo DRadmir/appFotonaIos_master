@@ -27,6 +27,7 @@
     Bubble *b1;
     Bubble *b2;
     int state;
+   
     
 }
 @end
@@ -73,15 +74,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
      [super viewWillAppear:animated];
-    BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
-    if (bookmarked){//[currentCase.bookmark boolValue]) {
-        [btnBookmark setHidden:YES];
-        [btnRemoveBookmark setHidden:NO];
-    } else {
-        [btnBookmark setHidden:NO];
-        [btnRemoveBookmark setHidden:YES];
-    }
-    
+    [self refreshBookmarkBtn];
     
     
     [self loadCase];
@@ -312,8 +305,8 @@
     int columnWidth = 150;
     
     int y=0;
-    if (caseToOpen.parametars && caseToOpen.parametars != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
-        NSArray*allData=[NSJSONSerialization JSONObjectWithData:[caseToOpen.parametars dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+    if (caseToOpen.parameters && caseToOpen.parameters != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
+        NSArray*allData=[NSJSONSerialization JSONObjectWithData:[caseToOpen.parameters dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
         
         
         NSMutableArray *allDataM=[allData mutableCopy];
@@ -478,7 +471,7 @@
     }
     [btnRemoveBookmark setHidden:YES];
     
-    [FDB removeBookmarkedCase:caseToOpen];
+    [HelperBookmark removeBookmarkedCase:caseToOpen];
 }
 
 - (IBAction)addBookmark:(id)sender {
@@ -491,8 +484,15 @@
 }
 
 - (void) refreshBookmarkBtn  {
-    [btnBookmark setHidden:YES];
-    [btnRemoveBookmark setHidden:NO];
+     BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
+    if (bookmarked){
+        [btnBookmark setHidden:YES];
+        [btnRemoveBookmark setHidden:NO];
+    } else {
+        [btnBookmark setHidden:NO];
+        [btnRemoveBookmark setHidden:YES];
+    }
+
     
 }
 
@@ -524,7 +524,7 @@
 
 -(void) bookmarkCase{
     if([APP_DELEGATE connectedToInternet] || [[caseToOpen coverflow] boolValue]){
-        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Item bookmarking" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
         
     } else {
@@ -535,8 +535,8 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([alertView.message isEqualToString:@"Item bookmarking"]) {
-        [HelperBookmark bookmarkCase:caseToOpen forCategory:0];
+    if ([alertView.message isEqualToString:NSLocalizedString(@"BOOKMARKING", nil)]) {
+        [HelperBookmark bookmarkCase:caseToOpen];
         [APP_DELEGATE setBookmarkAll:YES];
         [[FDownloadManager shared] prepareForDownloadingFiles];
     }

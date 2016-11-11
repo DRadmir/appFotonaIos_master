@@ -16,6 +16,7 @@
 #import "AFNetworking.h"
 #import "FImage.h"
 #import "FGoogleAnalytics.h"
+#import "FIPDFViewController.h"
 
 @interface FIFavoriteViewController ()
 
@@ -23,6 +24,7 @@
     NSMutableArray *favorites;
     int updateCounter;
     int success;
+    FIPDFViewController *pdfViewController;
 }
 
 @end
@@ -48,11 +50,11 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-   [favoriteTableView reloadData];
+    [favoriteTableView reloadData];
     
     updateCounter = 0;
     success = 0;
-     [FGoogleAnalytics writeGAForItem:nil andType:GAFAVORITETABINT];
+    [FGoogleAnalytics writeGAForItem:nil andType:GAFAVORITETABINT];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -64,9 +66,8 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-     return 182;
+    return 182;
 }
-
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -78,8 +79,8 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     FItemFavorite *item = favorites[indexPath.row];
-       
-    if ([[item typeID] intValue] == [BOOKMARKCASE intValue]) {
+    
+    if ([[item typeID] intValue] == BOOKMARKCASEINT) {
         
         FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
         FCase *caseToShow = [FDB getCaseWithID:[item itemID]];
@@ -88,22 +89,31 @@
         [cell setParentIphone:self];
         [cell setContentForCase:caseToShow];
         return cell;
+    } else {
+        if ([[item typeID] intValue] == BOOKMARKVIDEOINT || [[item typeID] intValue] == BOOKMARKPDFINT) {
+            
+            FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
+            [cell setContentForFavorite:item forTableView:tableView onIndex:indexPath];
+            return cell;
+        }
     }
-    return [[UITableViewCell alloc] init];    return [[UITableViewCell alloc] init];
+    return [[UITableViewCell alloc] init];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    //TODO: open differnet types of items
     FItemFavorite *item = favorites[indexPath.row];
-    switch ([[item typeID] intValue]) {
-        case BOOKMARKCASEINT:
-            if (((FIGalleryTableViewCell *) [tableView cellForRowAtIndexPath:indexPath]).enabled) {
-                 [self openCaseWithID:[item itemID]];
-            }
-        break;
-            
-        default:
-            break;
+    if (((FIGalleryTableViewCell *) [tableView cellForRowAtIndexPath:indexPath]).enabled) {
+        switch ([[item typeID] intValue]) {
+            case BOOKMARKCASEINT:
+                [self openCaseWithID:[item itemID]];
+                break;
+            case BOOKMARKVIDEOINT:
+            case BOOKMARKPDFINT:
+                [self openMedia:[item itemID]  andType:[item typeID]];
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -131,7 +141,7 @@
         [self openCase:caseToOpen];
     } else{
         if([APP_DELEGATE connectedToInternet]){
-             NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:caseID onView: self.view];
+            NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:caseID onView: self.view];
             AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
             [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                 // I get response as XML here and parse it in a function
@@ -140,19 +150,19 @@
                 NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
                 NSString *c = [dic objectForKey:@"d"];
                 NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
+                FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
                                                                                                  options:NSJSONReadingMutableContainers
                                                                                                    error:&jsonError]];
                 NSMutableArray *imgs = [[NSMutableArray alloc] init];
                 for (NSDictionary *imgLink in [caseObj images]) {
-                    FImage * img = [[FImage alloc] initWithDictionary:imgLink];
+                    FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
                     
                     [imgs addObject:img];
                 }
                 [caseObj setImages:imgs];
                 NSMutableArray *videos = [[NSMutableArray alloc] init];
                 for (NSDictionary *videoLink in [caseObj video]) {
-                    FVideo * videoTemp = [[FVideo alloc] initWithDictionary:videoLink];
+                    FMedia * videoTemp = [[FMedia alloc] initWithDictionary:videoLink];
                     
                     [videos addObject:videoTemp];
                 }
@@ -190,7 +200,19 @@
     }
     flow.lastIndex = 3;
     [flow.tabControler setSelectedIndex:3];
+    
+}
 
+-(void)openMedia:(NSString *)mediaID  andType:(NSString *)mediaType{
+    FMedia *media = [FDB getMediaWithId:mediaID andType:mediaType];
+    if ([[media mediaType] intValue] == [MEDIAVIDEO intValue]) {
+        [FCommon playVideoOnIphone:media onViewController:self];
+    } else {
+        if ([[media mediaType] intValue] == [MEDIAPDF intValue]) {
+            [self openPdf:media];
+        }
+    }
+    
 }
 
 #pragma mark - HUD
@@ -208,5 +230,27 @@
     updateCounter=0;
     success=0;
 }
+
+#pragma mark - Refresh
+
+-(void) refreshCellWithItemID:(NSString *)itemID andItemType:(NSString *) itemType{
+    for (int i = 0; i<[favorites count]; i++){
+        FItemFavorite *item = favorites[i];
+        if ([[item itemID] intValue]== [itemID intValue] && [[item typeID] intValue] == [itemType intValue]  ) {
+            NSIndexPath *index = [NSIndexPath  indexPathForItem:i inSection:0];
+            [favoriteTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:index, nil] withRowAnimation:UITableViewRowAnimationNone];
+            break;
+        }
+    }
+}
+    
+-(void) openPdf:(FMedia *) pdf{
+        if (pdfViewController == nil) {
+            pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
+        }
+        pdfViewController.pdfMedia = pdf;
+        [[self navigationController] pushViewController:pdfViewController animated:YES];
+}
+
 
 @end

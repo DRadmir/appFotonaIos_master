@@ -62,7 +62,7 @@
 		1B03B2351ADBB7BA00BE2DE4 /* Bubble.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B03B2311ADBB7BA00BE2DE4 /* Bubble.m */; };
 		1B03B2361ADBB7BA00BE2DE4 /* BubbleControler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B03B2331ADBB7BA00BE2DE4 /* BubbleControler.m */; };
 		1B0BED961C3D42DD00D580CA /* FINewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0BED951C3D42DD00D580CA /* FINewsViewController.m */; };
-		1B0FF0701C512CE900AD16F5 /* FIVideoGalleryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0FF06F1C512CE900AD16F5 /* FIVideoGalleryViewController.m */; };
+		1B0FF0701C512CE900AD16F5 /* FIGalleryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0FF06F1C512CE900AD16F5 /* FIGalleryViewController.m */; };
 		1B0FF0731C5237B600AD16F5 /* FIVideoGalleryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0FF0721C5237B600AD16F5 /* FIVideoGalleryTableViewCell.m */; };
 		1B1D357A1AE91A310085E18C /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B1D35791AE91A310085E18C /* arrow@2x.png */; };
 		1B1ECAF21B70B0FE00C050CF /* FItemBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B1ECAF11B70B0FE00C050CF /* FItemBookmark.m */; };
@@ -73,6 +73,9 @@
 		1B206B1A1C21724C00DBA153 /* ConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B206B191C21724C00DBA153 /* ConnectionHelper.m */; };
 		1B21D8F21DB0B97E00648E60 /* FGalleryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B21D8F11DB0B97E00648E60 /* FGalleryView.xib */; };
 		1B21D8F51DB0C07900648E60 /* FCaseGalleryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B21D8F41DB0C07900648E60 /* FCaseGalleryView.m */; };
+		1B3A44A81DD4D86D0091679C /* FIPDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B3A44A71DD4D86D0091679C /* FIPDFViewController.m */; };
+		1B3ABA531DCB9B6B00AF1F60 /* FMediaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B3ABA521DCB9B6B00AF1F60 /* FMediaManager.m */; };
+		1B4767ED1DB77D570059D774 /* FHelperThumbnailImg.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4767EC1DB77D570059D774 /* FHelperThumbnailImg.m */; };
 		1B48CDB81C58C00900E5F039 /* FICaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B48CDB71C58C00900E5F039 /* FICaseViewController.m */; };
 		1B4A96A81C5CBD090070C8BF /* FICarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4A96A61C5CBD090070C8BF /* FICarousel.m */; };
 		1B4A96A91C5CBD090070C8BF /* FICarousel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B4A96A71C5CBD090070C8BF /* FICarousel.xib */; };
@@ -262,7 +265,7 @@
 		C9A3D19018ED1898007A0E49 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = C9A3D10818ED1898007A0E49 /* FMDatabasePool.m */; };
 		C9A3D19118ED1898007A0E49 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = C9A3D10A18ED1898007A0E49 /* FMDatabaseQueue.m */; };
 		C9A3D19218ED1898007A0E49 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = C9A3D10C18ED1898007A0E49 /* FMResultSet.m */; };
-		C9A3D19418ED1898007A0E49 /* FVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = C9A3D11118ED1898007A0E49 /* FVideo.m */; };
+		C9A3D19418ED1898007A0E49 /* FMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = C9A3D11118ED1898007A0E49 /* FMedia.m */; };
 		C9A3D19518ED1898007A0E49 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D11318ED1898007A0E49 /* SVProgressHUD.bundle */; };
 		C9A3D19618ED1898007A0E49 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = C9A3D11518ED1898007A0E49 /* SVProgressHUD.m */; };
 		C9A3D19718ED1898007A0E49 /* FFeaturedViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D11618ED1898007A0E49 /* FFeaturedViewController_iPad.xib */; };
@@ -451,8 +454,8 @@
 		1B03B2331ADBB7BA00BE2DE4 /* BubbleControler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BubbleControler.m; sourceTree = "<group>"; };
 		1B0BED941C3D42DD00D580CA /* FINewsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FINewsViewController.h; path = fotona/FINewsViewController.h; sourceTree = SOURCE_ROOT; };
 		1B0BED951C3D42DD00D580CA /* FINewsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FINewsViewController.m; path = fotona/FINewsViewController.m; sourceTree = SOURCE_ROOT; };
-		1B0FF06E1C512CE900AD16F5 /* FIVideoGalleryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FIVideoGalleryViewController.h; path = fotona/FIVideoGalleryViewController.h; sourceTree = SOURCE_ROOT; };
-		1B0FF06F1C512CE900AD16F5 /* FIVideoGalleryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIVideoGalleryViewController.m; path = fotona/FIVideoGalleryViewController.m; sourceTree = SOURCE_ROOT; };
+		1B0FF06E1C512CE900AD16F5 /* FIGalleryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FIGalleryViewController.h; path = fotona/FIGalleryViewController.h; sourceTree = SOURCE_ROOT; };
+		1B0FF06F1C512CE900AD16F5 /* FIGalleryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIGalleryViewController.m; path = fotona/FIGalleryViewController.m; sourceTree = SOURCE_ROOT; };
 		1B0FF0711C5237B600AD16F5 /* FIVideoGalleryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FIVideoGalleryTableViewCell.h; path = fotona/FIVideoGalleryTableViewCell.h; sourceTree = SOURCE_ROOT; };
 		1B0FF0721C5237B600AD16F5 /* FIVideoGalleryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIVideoGalleryTableViewCell.m; path = fotona/FIVideoGalleryTableViewCell.m; sourceTree = SOURCE_ROOT; };
 		1B1D35791AE91A310085E18C /* arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@2x.png"; sourceTree = "<group>"; };
@@ -470,6 +473,12 @@
 		1B21D8F11DB0B97E00648E60 /* FGalleryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FGalleryView.xib; sourceTree = "<group>"; };
 		1B21D8F31DB0C07900648E60 /* FCaseGalleryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCaseGalleryView.h; sourceTree = "<group>"; };
 		1B21D8F41DB0C07900648E60 /* FCaseGalleryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCaseGalleryView.m; sourceTree = "<group>"; };
+		1B3A44A61DD4D86D0091679C /* FIPDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FIPDFViewController.h; path = fotona/FIPDFViewController.h; sourceTree = SOURCE_ROOT; };
+		1B3A44A71DD4D86D0091679C /* FIPDFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIPDFViewController.m; path = fotona/FIPDFViewController.m; sourceTree = SOURCE_ROOT; };
+		1B3ABA511DCB9B6B00AF1F60 /* FMediaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMediaManager.h; path = fotona/FMediaManager.h; sourceTree = SOURCE_ROOT; };
+		1B3ABA521DCB9B6B00AF1F60 /* FMediaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMediaManager.m; path = fotona/FMediaManager.m; sourceTree = SOURCE_ROOT; };
+		1B4767EB1DB77D570059D774 /* FHelperThumbnailImg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHelperThumbnailImg.h; sourceTree = "<group>"; };
+		1B4767EC1DB77D570059D774 /* FHelperThumbnailImg.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHelperThumbnailImg.m; sourceTree = "<group>"; };
 		1B48CDB61C58C00900E5F039 /* FICaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FICaseViewController.h; path = fotona/FICaseViewController.h; sourceTree = SOURCE_ROOT; };
 		1B48CDB71C58C00900E5F039 /* FICaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FICaseViewController.m; path = fotona/FICaseViewController.m; sourceTree = SOURCE_ROOT; };
 		1B4A96A51C5CBD090070C8BF /* FICarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FICarousel.h; sourceTree = "<group>"; };
@@ -619,7 +628,7 @@
 		1BFA5F0E1DA7902B0042DD4D /* FIFavoriteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIFavoriteViewController.m; path = fotona/FIFavoriteViewController.m; sourceTree = SOURCE_ROOT; };
 		1BFA5F1A1DA7A1310042DD4D /* FItemFavorite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FItemFavorite.h; sourceTree = "<group>"; };
 		1BFA5F1B1DA7A1310042DD4D /* FItemFavorite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FItemFavorite.m; sourceTree = "<group>"; };
-		1BFA5F1D1DA7C1ED0042DD4D /* FITableGalleryCells.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FITableGalleryCells.xib; path = icon_round_square/FITableGalleryCells.xib; sourceTree = "<group>"; };
+		1BFA5F1D1DA7C1ED0042DD4D /* FITableGalleryCells.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FITableGalleryCells.xib; sourceTree = "<group>"; };
 		1BFE5EA21DAB73250071F755 /* FIGalleryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FIGalleryTableViewCell.h; path = fotona/FIGalleryTableViewCell.h; sourceTree = SOURCE_ROOT; };
 		1BFE5EA31DAB73250071F755 /* FIGalleryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIGalleryTableViewCell.m; path = fotona/FIGalleryTableViewCell.m; sourceTree = SOURCE_ROOT; };
 		240BC38E0F9687E900F08B3C /* libPods-fotonaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fotonaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -739,8 +748,8 @@
 		C9A3D10C18ED1898007A0E49 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 		C9A3D10D18ED1898007A0E49 /* FNews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FNews.h; sourceTree = "<group>"; };
 		C9A3D10F18ED1898007A0E49 /* FUpdateContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FUpdateContent.h; sourceTree = "<group>"; };
-		C9A3D11018ED1898007A0E49 /* FVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FVideo.h; sourceTree = "<group>"; };
-		C9A3D11118ED1898007A0E49 /* FVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FVideo.m; sourceTree = "<group>"; };
+		C9A3D11018ED1898007A0E49 /* FMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMedia.h; sourceTree = "<group>"; };
+		C9A3D11118ED1898007A0E49 /* FMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMedia.m; sourceTree = "<group>"; };
 		C9A3D11318ED1898007A0E49 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
 		C9A3D11418ED1898007A0E49 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		C9A3D11518ED1898007A0E49 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
@@ -973,7 +982,6 @@
 		1B01D2F61DB4ADBC00CF7391 /* GalleryViews */ = {
 			isa = PBXGroup;
 			children = (
-				1BFA5F1D1DA7C1ED0042DD4D /* FITableGalleryCells.xib */,
 				1B21D8F11DB0B97E00648E60 /* FGalleryView.xib */,
 				1B21D8F31DB0C07900648E60 /* FCaseGalleryView.h */,
 				1B21D8F41DB0C07900648E60 /* FCaseGalleryView.m */,
@@ -986,8 +994,8 @@
 		1B0FF06D1C512CB800AD16F5 /* VideoGallery */ = {
 			isa = PBXGroup;
 			children = (
-				1B0FF06E1C512CE900AD16F5 /* FIVideoGalleryViewController.h */,
-				1B0FF06F1C512CE900AD16F5 /* FIVideoGalleryViewController.m */,
+				1B0FF06E1C512CE900AD16F5 /* FIGalleryViewController.h */,
+				1B0FF06F1C512CE900AD16F5 /* FIGalleryViewController.m */,
 				1B0FF0711C5237B600AD16F5 /* FIVideoGalleryTableViewCell.h */,
 				1B0FF0721C5237B600AD16F5 /* FIVideoGalleryTableViewCell.m */,
 			);
@@ -1022,6 +1030,22 @@
 				1B206B191C21724C00DBA153 /* ConnectionHelper.m */,
 			);
 			name = ConnectionHelper;
+			sourceTree = "<group>";
+		};
+		1B2A1A271DB65A1B004F05A0 /* ThumbnailImages */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = ThumbnailImages;
+			sourceTree = "<group>";
+		};
+		1B4767E91DB77CFD0059D774 /* HelperThumbnailImg */ = {
+			isa = PBXGroup;
+			children = (
+				1B4767EB1DB77D570059D774 /* FHelperThumbnailImg.h */,
+				1B4767EC1DB77D570059D774 /* FHelperThumbnailImg.m */,
+			);
+			name = HelperThumbnailImg;
 			sourceTree = "<group>";
 		};
 		1B48CDB91C597D5E00E5F039 /* BookmarkTab */ = {
@@ -1106,6 +1130,8 @@
 				1B7F4AD31C294C4900DCFBA5 /* FDB.m */,
 				1BD662381C4E30C1009BA994 /* FCommon.h */,
 				1BD662391C4E30C1009BA994 /* FCommon.m */,
+				1B3ABA511DCB9B6B00AF1F60 /* FMediaManager.h */,
+				1B3ABA521DCB9B6B00AF1F60 /* FMediaManager.m */,
 			);
 			name = Common;
 			path = icon_round_square;
@@ -1137,13 +1163,13 @@
 			path = icon_round_square;
 			sourceTree = "<group>";
 		};
-		1BCB28E31C47AAEC00C9C066 /* HelpeeString */ = {
+		1BCB28E31C47AAEC00C9C066 /* HelperString */ = {
 			isa = PBXGroup;
 			children = (
 				1BDDA01B1C0840C100AABEAE /* HelperString.h */,
 				1BDDA01C1C0840C100AABEAE /* HelperString.m */,
 			);
-			name = HelpeeString;
+			name = HelperString;
 			sourceTree = "<group>";
 		};
 		1BCB28E41C47AAF900C9C066 /* HelperBookmark */ = {
@@ -1197,6 +1223,8 @@
 				1BD662301C4D27C0009BA994 /* FIFotonaViewController.m */,
 				1BD662351C4D2FB9009BA994 /* FIFotonaMenuViewController.h */,
 				1BD662361C4D2FB9009BA994 /* FIFotonaMenuViewController.m */,
+				1B3A44A61DD4D86D0091679C /* FIPDFViewController.h */,
+				1B3A44A71DD4D86D0091679C /* FIPDFViewController.m */,
 			);
 			name = FotonaTab;
 			sourceTree = "<group>";
@@ -1243,9 +1271,10 @@
 		1BF4EEA51DACD87C007E90A3 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				1B4767E91DB77CFD0059D774 /* HelperThumbnailImg */,
 				1BF4EEA91DAD1496007E90A3 /* HelperRequest */,
 				1BCB28E41C47AAF900C9C066 /* HelperBookmark */,
-				1BCB28E31C47AAEC00C9C066 /* HelpeeString */,
+				1BCB28E31C47AAEC00C9C066 /* HelperString */,
 				1B7777E51B345B8A00660472 /* HelperDate */,
 			);
 			name = Helpers;
@@ -1267,6 +1296,7 @@
 				1BFA5F0E1DA7902B0042DD4D /* FIFavoriteViewController.m */,
 				1BFE5EA21DAB73250071F755 /* FIGalleryTableViewCell.h */,
 				1BFE5EA31DAB73250071F755 /* FIGalleryTableViewCell.m */,
+				1BFA5F1D1DA7C1ED0042DD4D /* FITableGalleryCells.xib */,
 			);
 			name = FavoriteTab;
 			sourceTree = "<group>";
@@ -1683,8 +1713,8 @@
 				C9A3D0FE18ED1898007A0E49 /* FDocument.m */,
 				C9A3D0FF18ED1898007A0E49 /* FImage.h */,
 				C9A3D10018ED1898007A0E49 /* FImage.m */,
-				C9A3D11018ED1898007A0E49 /* FVideo.h */,
-				C9A3D11118ED1898007A0E49 /* FVideo.m */,
+				C9A3D11018ED1898007A0E49 /* FMedia.h */,
+				C9A3D11118ED1898007A0E49 /* FMedia.m */,
 				C9A3D12418ED1898007A0E49 /* FUser.h */,
 				C9A3D12518ED1898007A0E49 /* FUser.m */,
 				C9A3D1BD18EE2652007A0E49 /* FAuthor.h */,
@@ -1785,6 +1815,7 @@
 		C9A3D21518F2D8DA007A0E49 /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				1B2A1A271DB65A1B004F05A0 /* ThumbnailImages */,
 				1B01D2F61DB4ADBC00CF7391 /* GalleryViews */,
 				1B01D2F51DB4AC6500CF7391 /* BubbleController */,
 				1B01D2F41DB4AC3D00CF7391 /* ErrorLogger */,
@@ -2073,6 +2104,9 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.DataProtection = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 							com.apple.iCloud = {
@@ -2426,6 +2460,7 @@
 				C9A3D1A418ED1898007A0E49 /* AFNetworkReachabilityManager.m in Sources */,
 				1B03B2341ADBB7BA00BE2DE4 /* Background.m in Sources */,
 				1B7F4AD41C294C4900DCFBA5 /* FDB.m in Sources */,
+				1B3A44A81DD4D86D0091679C /* FIPDFViewController.m in Sources */,
 				C9F9C79A18FCA1770031FEEB /* FFotonaMenu.m in Sources */,
 				C9A3D15018ED1898007A0E49 /* FFeaturedViewController_iPad.m in Sources */,
 				C9A3D1A018ED1898007A0E49 /* iCarousel.m in Sources */,
@@ -2437,6 +2472,7 @@
 				1BBCF2511C5AADCE00CFE771 /* FIBookmarkViewController.m in Sources */,
 				C9A3D1E118F0B615007A0E49 /* AIMTableViewIndexBar.m in Sources */,
 				1B7F4ACE1C294B7000DCFBA5 /* FITabbarController.m in Sources */,
+				1B4767ED1DB77D570059D774 /* FHelperThumbnailImg.m in Sources */,
 				1BD662311C4D27C0009BA994 /* FIFotonaViewController.m in Sources */,
 				C9A3D18C18ED1898007A0E49 /* FImage.m in Sources */,
 				C9B060D1191E3B7900930993 /* unzip.c in Sources */,
@@ -2489,7 +2525,7 @@
 				1B0FF0731C5237B600AD16F5 /* FIVideoGalleryTableViewCell.m in Sources */,
 				C9A3D08E18ED1845007A0E49 /* main.m in Sources */,
 				C9A3D15518ED1898007A0E49 /* FSettingsViewController.m in Sources */,
-				C9A3D19418ED1898007A0E49 /* FVideo.m in Sources */,
+				C9A3D19418ED1898007A0E49 /* FMedia.m in Sources */,
 				C9A3D1AC18ED1898007A0E49 /* FDLabelView.m in Sources */,
 				1B0BED961C3D42DD00D580CA /* FINewsViewController.m in Sources */,
 				C9F9C7F318FF3D5C0031FEEB /* FFotonaMenuViewController.m in Sources */,
@@ -2518,6 +2554,7 @@
 				1BF2A9431DAF74A700A20DC1 /* FGoogleAnalytics.m in Sources */,
 				C9A3D21A18F2D8EF007A0E49 /* CustomLayout.m in Sources */,
 				C9277270191488A800E9D4FA /* UIImage+Blur.m in Sources */,
+				1B3ABA531DCB9B6B00AF1F60 /* FMediaManager.m in Sources */,
 				C9A3D1A618ED1898007A0E49 /* AFURLConnectionOperation.m in Sources */,
 				C9E0A3CB195F7B5D00CFFBDD /* EBCommentsView.m in Sources */,
 				1B7A22A21C567F7F0031CEB3 /* FIOptionsViewController.m in Sources */,
@@ -2561,7 +2598,7 @@
 				C9A3D1A318ED1898007A0E49 /* AFHTTPSessionManager.m in Sources */,
 				C9A3D09218ED1845007A0E49 /* FAppDelegate.m in Sources */,
 				C9B060D0191E3B7900930993 /* mztools.c in Sources */,
-				1B0FF0701C512CE900AD16F5 /* FIVideoGalleryViewController.m in Sources */,
+				1B0FF0701C512CE900AD16F5 /* FIGalleryViewController.m in Sources */,
 				16D6D9341A8A074300E646CE /* FCaseMenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2695,6 +2732,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = fotona/fotona.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = NR5BL2Y2D7;
@@ -2716,6 +2754,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = fotona/fotona.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = NR5BL2Y2D7;
@@ -2823,6 +2862,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = fotona/fotona.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = NR5BL2Y2D7;

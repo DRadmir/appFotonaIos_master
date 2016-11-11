@@ -71,7 +71,6 @@ int forgotenBottom = 0;
     [login setDefaultParent:nil andiPhone:self];
     
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
-        //TODO:tuki dodat še shranjevanje uporabnika kot na ipadu
         [login autoLogin];
     }else
     {

@@ -11,11 +11,10 @@
 #import <QuickLook/QuickLook.h>
 #import "FDLabelView.h"
 #import "Bubble.h"
-#import "FVideo.h"
+#import "FMedia.h"
 
 @interface FFotonaViewController : UIViewController <UITableViewDelegate,UITableViewDataSource,UIWebViewDelegate,QLPreviewControllerDelegate,QLPreviewControllerDataSource,UISearchBarDelegate,UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, BubbleDelegate>
 {
-//UIImagePickerControllerDelegate,
     
     IBOutlet UIWebView *webView;
     
@@ -28,13 +27,10 @@
     IBOutlet UIButton *feedbackBtn;
     IBOutlet UIButton *menuBtn;
     
-    
     IBOutlet UIView *contentModeView;
     IBOutlet FDLabelView *cTitleLbl;
-    //IBOutlet UILabel *cDescriptionLbl;
     IBOutlet UIScrollView *contentModeScrollView;
     IBOutlet UIWebView *cDescription;
-    
     
     IBOutlet UIView *contentVideoModeView;
     IBOutlet FDLabelView *cvTitleLbl;
@@ -43,13 +39,10 @@
     IBOutlet UIScrollView *contentVideModeScrollView;
     NSMutableArray *videoBtns;
     
-    
     IBOutlet UIView *webContentView;
     
     UIImage *imageToSave;
-//    UIImagePickerController *imagePicker;
     NSString *imageName;
-    
     
     IBOutlet UIView *customToolbar;
     
@@ -78,7 +71,7 @@
 @property (nonatomic,retain) NSMutableArray *menuItems;
 @property (nonatomic,retain) NSMutableArray *menuTitles;
 
-@property(nonatomic) NSMutableDictionary *bookmarkMenu;
+@property(nonatomic, retain) NSMutableDictionary *bookmarkMenu;
 
 @property (nonatomic) BOOL openVideoGal;
 
@@ -96,15 +89,15 @@
 - (IBAction)openSettings:(id)sender;
 - (IBAction)closeSettings:(id)sender;
 
-- (void) refreshCell:(int) index;
-- (void) refreshCellUnbookmark:(int) index;
-- (void) refreshVideoCells;
+-(void) refreshCell:(int) index;
+-(void) refreshCellUnbookmark:(int) index;
+-(void) refreshVideoCells;
 
-- (void) refreshMenu:(NSString *)link;
+-(void) refreshMenu:(NSString *)link;
 
--(void)openVideoFromSearch:(FVideo *)video;
+-(void)openVideoFromSearch:(FMedia *)video;
 
-- (void) setOpenGal: (BOOL) og;
+-(void) setOpenGal: (BOOL) og;
 -(void) setPDF:(FFotonaMenu *)PDF;
 -(void) openPDFFromSearch;
 @end

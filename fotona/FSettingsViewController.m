@@ -15,6 +15,7 @@
 #import "MBProgressHUD.h"
 #import "FUpdateContent.h"
 #import "FRegistrationViewController.h"
+#import "FMediaManager.h"
 
 @interface FSettingsViewController ()
 
@@ -165,8 +166,8 @@
         [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height+8, downloadView.frame.size.width,downloadView.frame.size.height)];
         downloadView.hidden = NO;
 
-        self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%%",(1-[APP_DELEGATE bookmarkCountLeft]/[APP_DELEGATE bookmarkCountAll])*100];
-        [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkCountLeft]/[APP_DELEGATE bookmarkCountAll] animated:YES];
+        self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%%",(1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll])*100];
+        [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll] animated:YES];
     }
     
 
@@ -293,6 +294,8 @@
     [[APP_DELEGATE bookmarkingVideos] removeAllObjects];
     [APP_DELEGATE setBookmarkCountLeft:0];
     [APP_DELEGATE setBookmarkCountAll:0];
+    [APP_DELEGATE setBookmarkSizeAll:0];
+    [APP_DELEGATE setBookmarkSizeLeft:0];
     for (NSIndexPath *index in [self.categoryTable indexPathsForVisibleRows]) {
         [self.categoryTable cellForRowAtIndexPath:index].accessoryType = UITableViewCellAccessoryNone;
         [self.categoryTable deselectRowAtIndexPath:index animated:YES];
@@ -350,7 +353,6 @@
                         NSFileManager *fileManager = [NSFileManager defaultManager];
                         NSError *error;
                         [fileManager removeItemAtPath:downloadFilename error:&error];
-                        
                         for (int i =0; i<[f.localImages count]; i++) {
                             downloadFilename = [NSString stringWithFormat:@"%@%@",docDir,[f.localImages objectAtIndex:i]];
                             [fileManager removeItemAtPath:downloadFilename error:&error];
@@ -385,16 +387,14 @@
                         FMResultSet *results2 = [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ order by sort",[resultsBookmarked stringForColumn:@"documentID"]]];
                         
                         while([results2 next]) {
-                            //  NSString *folder=@".Cases";
-                            NSString *downloadFilename = [results2 stringForColumn:@"localPath"];//[[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[results2 stringForColumn:@"localPath"]];
+                            NSString *downloadFilename = [FMedia createLocalPathForLink:[results2 stringForColumn:@"path"] andMediaType:MEDIAVIDEO];
                             
                             NSFileManager *fileManager = [NSFileManager defaultManager];
                             NSError *error;
                             [fileManager removeItemAtPath:downloadFilename error:&error];
                             
-                            //                            downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[results2 stringForColumn:@"videoImage"]];
-                            NSArray *pathComp=[[results2 stringForColumn:@"videoImage"] pathComponents];
-                            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[results2 stringForColumn:@"videoImage"] lastPathComponent]];
+                            NSArray *pathComp=[[results2 stringForColumn:@"mediaImage"] pathComponents];
+                            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[results2 stringForColumn:@"mediaImage"] lastPathComponent]];
                             [fileManager removeItemAtPath:pathTmp error:&error];
                             x++;
                         }
@@ -438,7 +438,7 @@
                         FMResultSet *selectedCases = [localDatabase executeQuery:@"SELECT * FROM Cases where caseID=?" withArgumentsInArray:@[[resultsBookmarked stringForColumn:@"documentID"]]];
                         FCase * selected;
                         while([selectedCases next]) {
-                            selected =  [[FCase alloc] initWithDictionary:[selectedCases resultDictionary]];
+                            selected =  [[FCase alloc] initWithDictionaryFromServer:[selectedCases resultDictionary]];
                         }
                         
                         if (!bookmarked) {
@@ -448,14 +448,14 @@
                             }
                             else{
                                 [localDatabase executeUpdate:@"DELETE FROM Cases WHERE caseID=?",selected.caseID];
-                                [localDatabase executeUpdate:@"INSERT INTO Cases (caseID,title, coverTypeID,name,image,active,authorID,isBookmark,alloweInCoverFlow,galleryID,videoGalleryID) VALUES (?,?,?,?,?,?,?,?,?,?,?)",selected.caseID,selected.title,selected.coverTypeID,selected.name,selected.image,selected.active,selected.authorID,@"0",selected.coverflow, selected.galleryID,selected.videoGalleryID];
+                                [localDatabase executeUpdate:@"INSERT INTO Cases (caseID,title, coverTypeID,name,image,active,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?)",selected.caseID,selected.title,selected.coverTypeID,selected.name,selected.image,selected.active,selected.authorID,@"0",selected.coverflow,selected.deleted, selected.download, selected.userPermissions];
                                 [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
                                 x+=[selected getImages].count-1;
                                 x+=[selected getVideos].count-1;
-                                [[[FCasebookViewController alloc]init]  deleteMediaForCaseGalleryID:selected.galleryID withArray:[selected getImages] andType:0];
-                                [[[FCasebookViewController alloc]init] deleteMediaForCaseGalleryID:selected.videoGalleryID withArray:[selected getVideos] andType:1];
-                                [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseImages] withType:0];
-                                [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseVideos] withType:1];
+                                [FMediaManager  deleteMedia:[selected getImages] andType:0 andFromDB:YES];
+                                [FMediaManager deleteMedia:[selected getVideos] andType:1 andFromDB:YES];
+                                [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseImagesFromServer:NO] withType:0];
+                                [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseVideosFromServer:NO] withType:1];
                             }
                             
                         }
@@ -567,10 +567,12 @@
 
 -(void) refreshStatusBar{
     dispatch_async(dispatch_get_main_queue(), ^{
-    self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%%",(1-[APP_DELEGATE bookmarkCountLeft]/[APP_DELEGATE bookmarkCountAll])*100];
-    [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkCountLeft]/[APP_DELEGATE bookmarkCountAll] animated:YES];
+    self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%%",(1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll])*100];
+    [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll] animated:YES];
     if ([APP_DELEGATE bookmarkCountLeft] == 0) {
         [APP_DELEGATE setBookmarkCountAll:0];
+        [APP_DELEGATE setBookmarkSizeAll:0];
+        [APP_DELEGATE setBookmarkSizeLeft:0];
         [[APP_DELEGATE imagesToDownload]removeAllObjects];
         [[APP_DELEGATE videosToDownload]removeAllObjects];
         [[APP_DELEGATE pdfToDownload]removeAllObjects];

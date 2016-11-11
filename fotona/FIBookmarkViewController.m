@@ -14,7 +14,7 @@
 #import "FNews.h"
 #import "FEvent.h"
 #import "FFotonaMenu.h"
-#import "FIVideoGalleryViewController.h"
+#import "FIGalleryViewController.h"
 #import "FICaseViewController.h"
 #import "FINewsViewController.h"
 #import "FIEventSingleViewController.h"
@@ -29,7 +29,7 @@
     FICaseViewController *caseView;
     FINewsViewController *newsView;
     FIEventSingleViewController *eventView;
-    FIVideoGalleryViewController *videoView;
+    FIGalleryViewController *videoView;
     int lastDocument;
     FCase *lastCase;
     FNews *lastNews;
@@ -298,7 +298,7 @@
 
 -(void) openPDFCategory:(FFotonaMenu *)category andReplace:(BOOL) replace
 {
-    NSString *fileURL = [category pdfSrc];
+    NSString *fileURL = @"";//[category pdfSrc];
     if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@",docDir,pdfFolder]]) {
         [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@%@",docDir,pdfFolder] withIntermediateDirectories:YES attributes:nil error:nil];
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@",docDir,pdfFolder]]];
@@ -417,7 +417,7 @@
     }
     
     videoView.category = category;
-    videoView.galleryID = @"-1";
+    videoView.galleryItems = @"-1";
     if (replace)
     {
         [self openViewInContainer:videoView];

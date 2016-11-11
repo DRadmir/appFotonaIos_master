@@ -13,7 +13,7 @@
 #import "NSString+HTML.h"
 #import "FUpdateContent.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FAuthor.h"
 #import "FGalleryViewController.h"
 #import <AVFoundation/AVFoundation.h>
@@ -26,6 +26,7 @@
 #import "HelperBookmark.h"
 #import "FDB.h"
 #import "FGoogleAnalytics.h"
+#import "FMediaManager.h"
 
 @interface FCasebookViewController ()
 {
@@ -218,9 +219,7 @@
     beforeOrient=[APP_DELEGATE currentOrientation];
     openGal = NO;
     [self.viewDeckController setLeftSize:self.view.frame.size.width-320];
-    
-    UIViewController *tempMenu = self.viewDeckController.leftController;
-
+        
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -231,7 +230,7 @@
     if (!settingsView.isHidden && settingsView != nil) {
         [self closeSettings:nil];
     }
-//    currentCase = nil;
+    //    currentCase = nil;
 }
 
 
@@ -551,7 +550,7 @@
             }
         }
     }
-
+    
     authorImg.layer.cornerRadius = authorImg.frame.size.height /2;
     authorImg.layer.masksToBounds = YES;
     authorImg.layer.borderWidth = 0;
@@ -576,7 +575,7 @@
             
         }
     }
-
+    
     NSString * title = @"";
     NSMutableAttributedString *allAdditionalInfo=[[NSMutableAttributedString alloc] init];
     NSString *check=[[currentCase introduction] stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@""];
@@ -594,7 +593,7 @@
         [introductionTitle setFrame:CGRectMake(38, 15, self.view.frame.size.width-76, 0)];
         [introductionTitle setNumberOfLines:0];
         [introductionTitle setTextAlignment:NSTextAlignmentJustified];
-
+        
         NSString *htmlString=[currentCase introduction];
         NSMutableAttributedString * attrStr = [[NSMutableAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
         [attrStr addAttribute:NSFontAttributeName value: [UIFont fontWithName:@"HelveticaNeue-Light" size:17] range: NSMakeRange(0, attrStr.length)];
@@ -605,9 +604,9 @@
                         value:style
                         range:NSMakeRange(0, attrStr.length)];
         [allAdditionalInfo appendAttributedString:attrStr];
-
+        
         title = @"<br/><br/>";
-
+        
     }
     
     
@@ -619,8 +618,8 @@
         
         numberOfSpaces++;
         
-       title =[title stringByAppendingString:@"<br/><p>Procedure</p><br/>"];
-               NSMutableAttributedString * titleAttrStr = [[NSMutableAttributedString alloc] initWithData:[title dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+        title =[title stringByAppendingString:@"<br/><p>Procedure</p><br/>"];
+        NSMutableAttributedString * titleAttrStr = [[NSMutableAttributedString alloc] initWithData:[title dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
         [titleAttrStr addAttribute:NSFontAttributeName value: [UIFont fontWithName:@"HelveticaNeue" size:17] range: NSMakeRange(0, titleAttrStr.length)];
         [allAdditionalInfo appendAttributedString:titleAttrStr];
         
@@ -648,9 +647,9 @@
         NSMutableAttributedString * titleAttrStr = [[NSMutableAttributedString alloc] initWithData:[title dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
         [titleAttrStr addAttribute:NSFontAttributeName value: [UIFont fontWithName:@"HelveticaNeue" size:17] range: NSMakeRange(0, titleAttrStr.length)];
         [allAdditionalInfo appendAttributedString:titleAttrStr];
-
-
-
+        
+        
+        
         
         NSString *htmlString=[currentCase results];
         NSMutableAttributedString * attrStr = [[NSMutableAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
@@ -675,8 +674,8 @@
         [titleAttrStr addAttribute:NSFontAttributeName value: [UIFont fontWithName:@"HelveticaNeue" size:17] range: NSMakeRange(0, titleAttrStr.length)];
         [allAdditionalInfo appendAttributedString:titleAttrStr];
         
-      
-
+        
+        
         
         NSString *htmlString=[currentCase references];
         NSMutableAttributedString * attrStr = [[NSMutableAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
@@ -689,16 +688,16 @@
                         range:NSMakeRange(0, attrStr.length)];
         [allAdditionalInfo appendAttributedString:attrStr];
         title = @"<br/><br/>";
-
+        
     }
-
+    
     //DISCLAMER
     numberOfSpaces++;
     title =[title stringByAppendingString:@"<br/><p>Disclamer</p><br/>"];
     NSMutableAttributedString * titleAttrStr = [[NSMutableAttributedString alloc] initWithData:[title dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
     [titleAttrStr addAttribute:NSFontAttributeName value: [UIFont fontWithName:@"HelveticaNeue" size:17] range: NSMakeRange(0, titleAttrStr.length)];
     [allAdditionalInfo appendAttributedString:titleAttrStr];
-
+    
     //[self getDisclamer:true]
     NSMutableAttributedString * attrStr = [[NSMutableAttributedString alloc] initWithData:[[[NSUserDefaults standardUserDefaults] stringForKey:@"disclaimerShort"]  dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
     [attrStr addAttribute:NSFontAttributeName value: [UIFont fontWithName:@"HelveticaNeue-Light" size:17] range: NSMakeRange(0, attrStr.length)];
@@ -709,13 +708,13 @@
                     value:style
                     range:NSMakeRange(0, attrStr.length)];
     [allAdditionalInfo appendAttributedString:attrStr];
-
+    
     numberOfSpaces++;
     
     
     introductionTitle.attributedText=allAdditionalInfo;
     [introductionTitle sizeToFit];
- 
+    
     //[additionalInfo setFrame:CGRectMake(introductionTitle.frame.origin.x,introductionTitle.frame.origin.y, introductionTitle.frame.size.width,introductionTitle.frame.size.height+125)];
     
     if ([additionalInfo isHidden]) {
@@ -732,7 +731,7 @@
             vidArr = [currentCase video];
         }
         for (int i=0;i<[vidArr count];i++) {
-            FVideo *vid=[vidArr objectAtIndex:i];
+            FMedia *vid=[vidArr objectAtIndex:i];
             UIButton *tmpImg=[UIButton buttonWithType:UIButtonTypeCustom];
             [tmpImg setFrame:CGRectMake(x, 0, 200, 200)];
             [tmpImg.imageView setContentMode:UIViewContentModeScaleAspectFill];
@@ -760,11 +759,6 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     //code to be executed on the main thread when background task is finished
                     [tmpImg setImage:image forState:UIControlStateNormal];
-                    //                    UIImageView *expandImg=[[UIImageView alloc] initWithFrame:CGRectMake(tmpImg.frame.size.width-25, tmpImg.frame.size.height-25, 60, 60)];
-                    //                    expandImg.center = CGPointMake(tmpImg.frame.size.width / 2, tmpImg.frame.size.height / 2);
-                    //
-                    //                    [expandImg setImage:[UIImage imageNamed:@"playVideo"]];
-                    //                    [tmpImg addSubview:expandImg];
                     [tmpImg setTag:i];
                     [tmpImg addTarget:self action:@selector(openVideo:) forControlEvents:UIControlEventTouchUpInside];
                     [imagesScroll addSubview:tmpImg];
@@ -785,7 +779,7 @@
             imgs = [currentCase images];
         }
         
-
+        
         for (int i=0;i<imgs.count;i++){
             FImage *img=[imgs objectAtIndex:i];
             UIButton *tmpImg=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -819,7 +813,7 @@
                 
             });
         }
-       if ((imgs.count>0) || ([vidArr count]>0)) {
+        if ((imgs.count>0) || ([vidArr count]>0)) {
             [imagesScroll setHidden:NO];
             [imagesScroll setContentSize:CGSizeMake(210*(imgs.count+vidArr.count)-10, 230)];
             [imagesScroll setContentOffset:CGPointZero animated:YES];
@@ -851,8 +845,8 @@
     int allDataObjectAtIndex0Count=0;
     
     int y=0;
-    if (currentCase.parametars && currentCase.parametars != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
-        NSArray*allData=[NSJSONSerialization JSONObjectWithData:[currentCase.parametars dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+    if (currentCase.parameters && currentCase.parameters != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
+        NSArray*allData=[NSJSONSerialization JSONObjectWithData:[currentCase.parameters dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
         
         
         NSMutableArray *allDataM=[allData mutableCopy];
@@ -996,7 +990,7 @@
     {
         [disclaimerBtn setFrame:CGRectMake(480, introductionTitle.frame.size.height-15, 99, 40)];
     }
-
+    
     [additionalInfo addSubview:disclaimerBtn ];
     [exCaseView setFrame:CGRectMake(0, 0, self.view.frame.size.width, additionalInfo.frame.origin.y+additionalInfo.frame.size.height)];
     [caseScroll setContentSize:CGSizeMake(self.view.frame.size.width, exCaseView.frame.size.height)];
@@ -1050,8 +1044,8 @@
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
             [database close];
             
-            [self deleteMediaForCaseGalleryID:currentCase.galleryID withArray:currentCase.images andType:0];
-            [self deleteMediaForCaseGalleryID:currentCase.videoGalleryID withArray:currentCase.video andType:1];
+            [FMediaManager deleteMedia:currentCase.images andType:0 andFromDB:YES];
+            [FMediaManager deleteMedia:currentCase.video andType:1 andFromDB:YES];
         }
         
     }
@@ -1067,7 +1061,7 @@
         UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
         [av showInView:self.view];
     }
-
+    
 }
 
 - (void) refreshBookmarkBtn  {
@@ -1093,13 +1087,13 @@
 }
 
 -(void) bookmarkCase{
-
+    
     if([APP_DELEGATE connectedToInternet] || [[currentCase coverflow] boolValue]){
         //[addBookmarks setHidden:YES];
         //[removeBookmarks setHidden:NO];
-        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Item bookmarking" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
-       
+        
     } else {
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTIONBOOKMARK", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
@@ -1115,7 +1109,7 @@
             for (FImage *img in m) {
                 NSArray *pathComp=[img.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-                [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,sort) VALUES (?,?,?,?,?,?,?,?,?)",img.itemID,img.galleryID,img.title,img.path,pathTmp,img.description,@"0",@"0",img.sort];
+                [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,sort, deleted, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?)",img.itemID,img.title,img.path,pathTmp,img.description,@"0",@"0",img.sort, img.deleted, img.fileSize];
                 //                [img downloadFile:img.path inFolder:@"/.Cases"];
                 [links addObject:img.path];
             }
@@ -1126,10 +1120,10 @@
         }else if(type==1){
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
-            for (FVideo *vid in m) {
+            for (FMedia *vid in m) {
                 NSArray *pathComp=[vid.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,time,videoImage,sort, userType,userSubType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.videoGalleryID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.videoImage,vid.sort, vid.userType,vid.userSubType];
+                [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,time,mediaImage,sort, active, deleted, download, fileSize, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.mediaImage,vid.sort, vid.active, vid.deleted, vid.download, vid.filesize, vid.userPermissions];
                 //                [vid downloadFile:vid.path inFolder:@"/.Cases"];
                 [links addObject:vid.path];
             }
@@ -1142,31 +1136,7 @@
     }
 }
 
--(void)deleteMediaForCaseGalleryID:(NSString *)gID withArray:(NSMutableArray *)array andType:(int)t
-{
-    if (t==0) {
-        for (FImage *img in array) {
-            NSArray *pathComp=[img.path pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error;
-            [fileManager removeItemAtPath:pathTmp error:&error];
-        }
-    } else if (t==1){
-        for (FVideo *vid in array) {
-            NSArray *pathComp=[vid.path pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error;
-            [fileManager removeItemAtPath:pathTmp error:&error];
-        }
-    }
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    [database executeUpdate:@"delete from Media where galleryID=?",gID];
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
+
 -(void)expand:(id)sender
 {
     flagParameters=!flagParameters;
@@ -1209,7 +1179,7 @@
     settingsController.contentWidth.constant = self.view.frame.size.width;
     
     [settingsView addSubview:settingsController.view];
-   
+    
     [popupCloseBtn setHidden:NO];
     [menuBtn setHidden:YES];
     
@@ -1256,11 +1226,11 @@
         [contentModeScrollView setFrame:CGRectMake(0, 0, 768, 909)];
     }
     
-//    for (UIView *v in caseView.subviews) {
-//        [v removeFromSuperview];
-//    }
+    //    for (UIView *v in caseView.subviews) {
+    //        [v removeFromSuperview];
+    //    }
     [fotonaImg setHidden:YES];
-   // [caseScroll setContentSize:CGSizeMake(self.view.frame.size.width, contentModeView.frame.size.height)];
+    // [caseScroll setContentSize:CGSizeMake(self.view.frame.size.width, contentModeView.frame.size.height)];
     [caseView addSubview:contentModeView];
     [cTitleLbl setText:@"Disclaimer"];
     
@@ -1285,17 +1255,17 @@
     cDescriptionLbl.contentInset = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
     
     [contentModeScrollView setContentSize:CGSizeMake(768, cDescriptionLbl.frame.origin.y+cDescriptionLbl.frame.size.height+20)];
-
+    
 }
 
 -(IBAction)openVideo:(id)sender
 {
-    FVideo *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
+    FMedia *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
     if (![vid.localPath isEqualToString:@""]) {
-        [FCommon playVideoFromURL:vid.localPath onViewController:self];
+        [FCommon playVideoFromURL:vid.localPath onViewController:self  localSaved:YES];
     }else
     {
-         [FCommon playVideoFromURL:vid.path onViewController:self];
+        [FCommon playVideoFromURL:vid.path onViewController:self localSaved:NO];
     }
     
 }
@@ -1405,34 +1375,11 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT c.* FROM Cases as c,CasesInCategories as cic where cic.categorieID=%@ and cic.caseID=c.caseID",catID]];
     while([results next]) {
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        //[cases addObject:f];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [cases addObject:f];
-            }
-        } else {
+        FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
+        if ([FCommon userPermission:[f userPermissions]]) {
             [cases addObject:f];
         }
-    }
+            }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     
@@ -1466,34 +1413,10 @@
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where authorID=%@",authorID]];
     while([results next]) {
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        //[cases addObject:f];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [cases addObject:f];
-            }
-        } else {
+        FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
+        if ([FCommon userPermission:[f userPermissions]]) {
             [cases addObject:f];
-        }
-    }
+        }    }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     
@@ -1538,10 +1461,10 @@
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-   
+    
     if (toInterfaceOrientation!=UIInterfaceOrientationPortrait) {
-       [settingsView setFrame:CGRectMake(0,0, self.view.frame.size.height, 654)];
-       
+        [settingsView setFrame:CGRectMake(0,0, self.view.frame.size.height, 654)];
+        
     }else{
         [settingsView setFrame:CGRectMake(0,0, self.view.frame.size.height, 910)];
         
@@ -1558,7 +1481,7 @@
     }
     if (fromInterfaceOrientation==UIInterfaceOrientationPortrait) {
         [APP_DELEGATE setCurrentOrientation:1];
-         [disclaimerBtn setFrame:CGRectMake(225, introductionTitle.frame.size.height-15, 99, 40)];
+        [disclaimerBtn setFrame:CGRectMake(225, introductionTitle.frame.size.height-15, 99, 40)];
     }else
     {
         [APP_DELEGATE setCurrentOrientation:0];
@@ -1630,7 +1553,7 @@
             //code to be executed in the background
             UIImage *image;
             //            image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
-             NSString *pathTmp = [NSString stringWithFormat:@"%@%@",docDir,img.localPath];
+            NSString *pathTmp = [NSString stringWithFormat:@"%@%@",docDir,img.localPath];
             if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp] || [img.localPath isEqualToString:@""]) {
                 image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
                 
@@ -1991,83 +1914,83 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
     if(![usersarray containsObject:usr]){
-
-    if(bubbleC == nil)
-    {
-        bubbleC = [[BubbleControler alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
         
-        // [bubbleC setBlockUserInteraction:NO];
-        //[bubbleC setBackgroundTint:[UIColor clearColor]];
-        b1 = [[Bubble alloc] init];
-        
-        // Calculate point of caret
-        CGPoint loc = addBookmarks.frame.origin;
-        CGRect newFrame = addBookmarks.frame;
-        if (state<1) {
-            if (!removeBookmarks.isHidden) {
-                newFrame= removeBookmarks.frame;
-                loc = removeBookmarks.frame.origin;
-                loc.x += removeBookmarks.frame.size.width / 2; // Center
-                loc.y += 68 +  removeBookmarks.frame.size.height; // Bottom
-            } else{
-                loc.x += addBookmarks.frame.size.width / 2; // Center
-                loc.y += 68 +  addBookmarks.frame.size.height; // Bottom
+        if(bubbleC == nil)
+        {
+            bubbleC = [[BubbleControler alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+            
+            // [bubbleC setBlockUserInteraction:NO];
+            //[bubbleC setBackgroundTint:[UIColor clearColor]];
+            b1 = [[Bubble alloc] init];
+            
+            // Calculate point of caret
+            CGPoint loc = addBookmarks.frame.origin;
+            CGRect newFrame = addBookmarks.frame;
+            if (state<1) {
+                if (!removeBookmarks.isHidden) {
+                    newFrame= removeBookmarks.frame;
+                    loc = removeBookmarks.frame.origin;
+                    loc.x += removeBookmarks.frame.size.width / 2; // Center
+                    loc.y += 68 +  removeBookmarks.frame.size.height; // Bottom
+                } else{
+                    loc.x += addBookmarks.frame.size.width / 2; // Center
+                    loc.y += 68 +  addBookmarks.frame.size.height; // Bottom
+                }
+                
+                
+                // Set if highlight is desired
+                
+                newFrame.origin.y += 65;
+                if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+                    loc.y -=16;
+                    newFrame.origin.y -= 16;
+                }
+                [b1 setHighlight:newFrame];
+                [b1 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
+                [b1 setFontColor:[UIColor whiteColor]];
+                // Set buble size and position (first size, then position!!)
+                [b1 setSize:CGSizeMake(200, 130)];
+                [b1 setCornerRadius:5];
+                [b1 setPositionOfCaret:loc withCaretFrom:TOP_RIGHT];
+                [b1 setCaretSize:15]; // Because tablet, we want a bigger bubble caret
+                // Set font, paddings and text
+                [b1 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
+                [b1 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLECASE1", nil)]];
+                [b1 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]]; // Default font is helvetica-neue, size 12
+                
+                // Add bubble to controler
+                [bubbleC addBubble:b1];
+                [b1 setDelegate:self];
             }
-            
-            
-            // Set if highlight is desired
-            
-            newFrame.origin.y += 65;
-            if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
-                loc.y -=16;
-                newFrame.origin.y -= 16;
+            if (state<2) {
+                b2 = [[Bubble alloc] init];
+                loc =[[[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4] frame].origin;
+                loc.x =[[APP_DELEGATE tabBar] tabBar].frame.size.width/2 + 182 + [[[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4]frame].size.width/2; // Center//loc.x += [[[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4] frame].size.width/2; // Center
+                //            if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+                //                //loc.y +=16;
+                //            }
+                loc.y = self.view.frame.size.height - 50;//+= [[[self tabBarController] tabBar] frame].origin.y-3; // Bottom
+                [b2 setCornerRadius:10];
+                [b2 setSize:CGSizeMake(200, 130)];
+                CGRect newFrame =[ [[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4] frame];
+                newFrame.origin.y += self.view.frame.size.height-newFrame.size.height-2;
+                newFrame.origin.x = [[APP_DELEGATE tabBar] tabBar].frame.size.width/2 + 182;
+                newFrame.size.height += 1;
+                [b2 setHighlight:newFrame];
+                
+                [b2 setPositionOfCaret:loc withCaretFrom:BOTTOM_RIGHT];
+                [b2 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLECASE2", nil)]];
+                [b2 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
+                [b2 setFontColor:[UIColor whiteColor]];
+                [b2 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
+                [b2 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]];
+                
+                [bubbleC addBubble:b2];
+                [b2 setDelegate:self];
             }
-            [b1 setHighlight:newFrame];
-            [b1 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-            [b1 setFontColor:[UIColor whiteColor]];
-            // Set buble size and position (first size, then position!!)
-            [b1 setSize:CGSizeMake(200, 130)];
-            [b1 setCornerRadius:5];
-            [b1 setPositionOfCaret:loc withCaretFrom:TOP_RIGHT];
-            [b1 setCaretSize:15]; // Because tablet, we want a bigger bubble caret
-            // Set font, paddings and text
-            [b1 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
-            [b1 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLECASE1", nil)]];
-            [b1 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]]; // Default font is helvetica-neue, size 12
-            
-            // Add bubble to controler
-            [bubbleC addBubble:b1];
-            [b1 setDelegate:self];
+            UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+            [window addSubview:bubbleC];
         }
-        if (state<2) {
-            b2 = [[Bubble alloc] init];
-            loc =[[[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4] frame].origin;
-            loc.x =[[APP_DELEGATE tabBar] tabBar].frame.size.width/2 + 182 + [[[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4]frame].size.width/2; // Center//loc.x += [[[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4] frame].size.width/2; // Center
-            //            if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
-            //                //loc.y +=16;
-            //            }
-            loc.y = self.view.frame.size.height - 50;//+= [[[self tabBarController] tabBar] frame].origin.y-3; // Bottom
-            [b2 setCornerRadius:10];
-            [b2 setSize:CGSizeMake(200, 130)];
-            CGRect newFrame =[ [[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4] frame];
-            newFrame.origin.y += self.view.frame.size.height-newFrame.size.height-2;
-            newFrame.origin.x = [[APP_DELEGATE tabBar] tabBar].frame.size.width/2 + 182;
-            newFrame.size.height += 1;
-            [b2 setHighlight:newFrame];
-            
-            [b2 setPositionOfCaret:loc withCaretFrom:BOTTOM_RIGHT];
-            [b2 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLECASE2", nil)]];
-            [b2 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-            [b2 setFontColor:[UIColor whiteColor]];
-            [b2 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
-            [b2 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]];
-            
-            [bubbleC addBubble:b2];
-            [b2 setDelegate:self];
-        }
-        UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-        [window addSubview:bubbleC];
-    }
     }
 }
 
@@ -2150,8 +2073,8 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([alertView.message isEqualToString:@"Item bookmarking"]) {
-        [HelperBookmark bookmarkCase:currentCase forCategory:0];
+    if ([alertView.message isEqualToString:NSLocalizedString(@"BOOKMARKING", nil)]) {
+        [HelperBookmark bookmarkCase:currentCase];
         [APP_DELEGATE setBookmarkAll:YES];
         [[FDownloadManager shared] prepareForDownloadingFiles];
     }

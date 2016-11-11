@@ -16,9 +16,8 @@
 @property (nonatomic, retain) NSString *link;
 @property (nonatomic, retain) NSString *src;
 @property (nonatomic, retain) NSString *active;
-@property (nonatomic, retain) NSMutableArray *allowedUserTypes;
-@property (nonatomic, retain) NSMutableArray *allowedUserSubTypes;
 @property (nonatomic, retain) NSString *bookmark;
+@property (nonatomic, retain) NSString *userPermissions;
 
 -(id)initWithDictionary:(NSDictionary *)dic;
 

@@ -30,6 +30,9 @@ id<GAITracker> tracker;
         case GACASEINT:
             text = [NSString stringWithFormat:@"Case with title %@",title];
             break;
+        case GACASEMENUINT:
+            text = [NSString stringWithFormat:@"Case menu with title %@",title];
+            break;
         case GAFEATUREDTABINT:
             text = [NSString stringWithFormat:@"Featured tab"];
             break;

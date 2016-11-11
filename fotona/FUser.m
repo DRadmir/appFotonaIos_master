@@ -9,6 +9,7 @@
 #import "FUser.h"
 #import "FMDatabase.h"
 
+
 @implementation FUser
 @synthesize userID;
 @synthesize username;
@@ -104,9 +105,9 @@
         flag=YES;
     }
     
-        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     return flag;
-    
-    }
+}
+
 @end

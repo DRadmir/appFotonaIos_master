@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "FItemFavorite.h"
-#import "FVideo.h"
+#import "FMedia.h"
+#import "FIFavoriteViewController.h"
 
 @interface FFotonaGalleryView : UIView
 
@@ -19,9 +20,11 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnDownloadRemove;
 @property (strong, nonatomic) IBOutlet UIButton *btnFavoriteAdd;
 @property (strong, nonatomic) IBOutlet UIButton *btnFavoriteRemove;
+@property (strong, nonatomic) FIFavoriteViewController *parentIphone;//TODO: dodat ipad parenta
+@property (strong, nonatomic) NSIndexPath *index;
 
-@property (strong, nonatomic) FVideo *video;
-@property (nonatomic) int type;
+@property (nonatomic) NSString *type;
+@property (strong, nonatomic) FMedia *cellMedia;
 
 
 - (IBAction)downloadAdd:(id)sender;
@@ -29,6 +32,7 @@
 - (IBAction)favoriteAdd:(id)sender;
 - (IBAction)favoriteRemove:(id)sender;
 
--(void) setContentForFavorite:(FItemFavorite *) favorite;
+-(void)setContentForMedia:(FMedia *)media andMediaType:(NSString *)mediaType;
+-(void)reloadVideoThumbnail:(UIImage *)img;
 
 @end

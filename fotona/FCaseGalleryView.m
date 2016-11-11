@@ -20,7 +20,7 @@
 
 @synthesize btnDownloadAdd;
 @synthesize btnFavoriteAdd;
-@synthesize btnDownladRemove;
+@synthesize btnDownloadRemove;
 @synthesize btnFavoriteRemove;
 
 @synthesize caseToShow;
@@ -29,6 +29,7 @@
 @synthesize index;
 @synthesize enabled;
 
+#pragma mark - Layout
 
 -(void) setContentForCase:(FCase *)fcase{
     enabled = true;
@@ -57,10 +58,10 @@
     }
     
     if([FDB checkIfBookmarkedForDocumentID:[item itemID] andType:[item typeID]]){
-        btnDownladRemove.hidden = false;
+        btnDownloadRemove.hidden = false;
         btnDownloadAdd.hidden = true;
     } else {
-        btnDownladRemove.hidden = true;
+        btnDownloadRemove.hidden = true;
         btnDownloadAdd.hidden = false;
     }
     
@@ -85,6 +86,8 @@
     }
 }
 
+#pragma mark - Buttons
+
 - (IBAction)favoriteRemove:(id)sender {
     [FDB removeFromFavoritesItem:[[item itemID] intValue] ofType:[item typeID]];
     if (parentIphone != nil) {
@@ -102,12 +105,12 @@
 }
 
 - (IBAction)downloadRemove:(id)sender {
-    btnDownladRemove.hidden = true;
+    btnDownloadRemove.hidden = true;
     btnDownloadAdd.hidden = false;
 }
 
 - (IBAction)downloadAdd:(id)sender {
-    btnDownladRemove.hidden = false;
+    btnDownloadRemove.hidden = false;
     btnDownloadAdd.hidden = true;
 }
 

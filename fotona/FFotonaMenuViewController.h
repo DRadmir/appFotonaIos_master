@@ -28,8 +28,6 @@
 @property (nonatomic,retain) NSMutableArray *menuIcons;
 @property (nonatomic,retain) NSMutableArray *bookmarkPDF;
 
-- (void) refreshPDF:(NSString *)link;
-
 
 -(void) resetViewAnime:(BOOL) anime;
 @end

@@ -10,7 +10,7 @@
 #import "FCase.h"
 #import "FFotonaMenu.h"
 #import "FAuthor.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FMDatabase.h"
 
 @interface FDB : NSObject
@@ -28,8 +28,7 @@
 +(NSMutableArray *)getCasesWithAuthorID:(NSString *)authorID;
 +(NSMutableArray *)getAlphabeticalCasesForBookmark:(NSString *)category;
 
-+(void)removeBookmarkedCase:(FCase *) caseToRemove;
-
++(void)removeCaseWithID:(NSString *)fotonaID;
 
 +(NSMutableArray *)getCasebookMenu;
 +(NSMutableArray *)getCaseCategoryWithPrev:(NSString *)prev;
@@ -49,28 +48,26 @@
 
 
 +(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
-+(NSMutableArray *)getVideosWithGallery:(NSString *)videoGalleryID;
 +(NSMutableArray *)getVideoswithCategory:(NSString *)videoCategory;
-+(void)removeBookmarkedVideo:(FVideo *)videoToRemove;
-+(FVideo *)getVideoWithId:(NSString *) videoId;
-
-
-+(NSMutableArray *)getFotonaMenu:(NSString *)catID;
-+(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
-+(NSMutableArray *)getPDFForCategory:(NSString *)category;
-
-
-+(BOOL)checkFotonaForUserSearch:(NSString *)fc;
-+(BOOL)checkFotonaForUser:(FFotonaMenu *)f;
-+(BOOL)checkFotonaForUser:(FFotonaMenu *)f andCategory:(NSString *)category;
++(void)removeBookmarkedVideo:(FMedia *)videoToRemove;
 
 
 +(BOOL)checkIfBookmarkedForDocumentID:(NSString *)documentID andType:(NSString *)type;
 +(void)removeFromBookmarkForDocumentID:(NSString *)documentID;
 
++(void)addMedia:(NSMutableArray *)m withType:(int)type andDownload:(BOOL) toDownload;
++(void)updateMedia:(NSMutableArray *)mediaArray andType:(NSString *) type  andDownload:(BOOL)download forCase:(NSString *) caseID;
++(FMedia *)getMediaWithId:(NSString *) videoId andType: (NSString *)mediaType;
++(NSMutableArray *)getMediaForGallery:(NSString *)galleryItems withMediType: (NSString *)mediaType;
+
+
++(NSMutableArray *)getFotonaMenu:(NSString *)catID;
++(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
++(void)removeFotonaMenuWithID:(NSString *)fotonaID;
 
 +(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(void) removeFromFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(BOOL) checkIfFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(NSMutableArray *) getAllFavoritesForUser;
+
 @end

@@ -18,7 +18,7 @@
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FDB.h"
 #import "FHelperRequest.h"
 
@@ -367,19 +367,19 @@
                     NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
                     NSString *c = [dic objectForKey:@"d"];
                     NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                    FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
+                    FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
                                                                                                      options:NSJSONReadingMutableContainers
                                                                                                        error:&jsonError]];
                     NSMutableArray *imgs = [[NSMutableArray alloc] init];
                     for (NSDictionary *imgLink in [caseObj images]) {
-                        FImage * img = [[FImage alloc] initWithDictionary:imgLink];
+                        FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
                         
                         [imgs addObject:img];
                     }
                     [caseObj setImages:imgs];
                     NSMutableArray *videos = [[NSMutableArray alloc] init];
                     for (NSDictionary *videoLink in [caseObj video]) {
-                        FVideo * videoTemp = [[FVideo alloc] initWithDictionary:videoLink];
+                        FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink forMediType:MEDIAVIDEO];
                         [videos addObject:videoTemp];
                     }
                     [caseObj setVideo:videos];

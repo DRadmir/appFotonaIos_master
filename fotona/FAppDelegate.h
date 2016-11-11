@@ -20,9 +20,6 @@
 
 #define APP_DELEGATE (FAppDelegate *)[[UIApplication sharedApplication] delegate]
 #define langID  @"1"
-#define webService @"https://plutontest.4egenus.com/fotona/rest/WebService.asmx/"//pluton test
-#define webService2 @"https://www.fotona.com/inc/verzija2/ajax/" // link to news in events
-//#define webService @"https://fotonaapp.4egenus.com/rest/WebService.asmx/"//production
 
 #define globalAccessToken @"eyUpQ6JOcYaa86DNIDvv8ooxQHtuI6Cz0agTpOfjeZk3N7Ak0YkoaeJfXEGvZZcnQwnqPqktutfDGJjNz0J2j1qk8Bcgm6PUuuBY"
 #define DB_PATH [NSString stringWithFormat:@"%@/Documents/.db/fotona.db",NSHomeDirectory()]
@@ -81,6 +78,8 @@
 
 @property (assign) float bookmarkCountAll;
 @property (assign) float bookmarkCountLeft;
+@property (assign) float bookmarkSizeAll;
+@property (assign) float bookmarkSizeLeft;
 
 @property (assign) NSString* logText;
 @property (assign) BOOL logingEnabled;

@@ -19,7 +19,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblTitle;
 @property (strong, nonatomic) IBOutlet UILabel *lblDescription;
 @property (strong, nonatomic) IBOutlet UIButton *btnDownloadAdd;
-@property (strong, nonatomic) IBOutlet UIButton *btnDownladRemove;
+@property (strong, nonatomic) IBOutlet UIButton *btnDownloadRemove;
 @property (strong, nonatomic) IBOutlet UIButton *btnFavoriteAdd;
 @property (strong, nonatomic) IBOutlet UIButton *btnFavoriteRemove;
 

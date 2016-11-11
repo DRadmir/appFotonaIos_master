@@ -11,7 +11,7 @@
 #import "FIFeaturedNewsTableViewCell.h"
 #import "FDB.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FIGalleryController.h"
 #import "HelperDate.h"
 

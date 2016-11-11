@@ -107,9 +107,7 @@
 - (void)downloadDidFail:(Download *)download
 {
     [self.downloads removeObject:download];
-//    if ([[APP_DELEGATE downloadList] count]>0) {
-//        [HelperBookmark checkAllFiles:[[download url] absoluteString]];
-//    }
+
 
     if ([self.delegate respondsToSelector:@selector(downloadManager:downloadDidFail:)])
         [self.delegate downloadManager:self downloadDidFail:download];

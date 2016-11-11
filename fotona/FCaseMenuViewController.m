@@ -16,9 +16,10 @@
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FDB.h"
 #import "FHelperRequest.h"
+#import "FGoogleAnalytics.h"
 
 @interface FCaseMenuViewController ()
 
@@ -105,6 +106,11 @@ NSString *count = @"";
     [[self.navigationController navigationBar] addSubview:menuTitle];
     updateCounter=0;
     success=0;
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [FGoogleAnalytics writeGAForItem:[self title] andType:GACASEMENUINT];
 }
 
 -(void)backBtn:(id)sender
@@ -336,7 +342,7 @@ NSString *count = @"";
                         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
                         NSString *c = [dic objectForKey:@"d"];
                         NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                        FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
+                        FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
                                                                                                          options:NSJSONReadingMutableContainers
                                                                                                            error:&jsonError]];
                         NSLog(@"%@",[jsonError localizedDescription]);
@@ -419,19 +425,19 @@ NSString *count = @"";
                         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
                         NSString *c = [dic objectForKey:@"d"];
                         NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                        FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
+                        FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
                                                                                                          options:NSJSONReadingMutableContainers
                                                                                                            error:&jsonError]];
                         NSMutableArray *imgs = [[NSMutableArray alloc] init];
                         for (NSDictionary *imgLink in [caseObj images]) {
-                            FImage * img = [[FImage alloc] initWithDictionary:imgLink];
+                            FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
                             
                             [imgs addObject:img];
                         }
                         [caseObj setImages:imgs];
                         NSMutableArray *videos = [[NSMutableArray alloc] init];
                         for (NSDictionary *videoLink in [caseObj video]) {
-                            FVideo * videoTemp = [[FVideo alloc] initWithDictionary:videoLink];
+                            FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink forMediType:MEDIAVIDEO];
                             
                             [videos addObject:videoTemp];
                         }
@@ -575,31 +581,8 @@ NSString *count = @"";
     while([results next]) {
         casesType = -1;
         category = authorID;
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        //[cases addObject:f];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [cases addObject:f];
-            }
-        } else {
+        FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
+        if ([FCommon userPermission:[f userPermissions]]) {
             [cases addObject:f];
         }
     }
@@ -616,31 +599,8 @@ NSString *count = @"";
     while([results next]) {
         casesType = 1;
         category = catID;
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        //[cases addObject:f];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [cases addObject:f];
-            }
-        } else {
+        FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
+        if ([FCommon userPermission:[f userPermissions]]) {
             [cases addObject:f];
         }
     }

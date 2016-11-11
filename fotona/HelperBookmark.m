@@ -9,17 +9,19 @@
 #import "HelperBookmark.h"
 #import "FMDatabase.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FDownloadManager.h"
 #import "FItemBookmark.h"
 #import "AFNetworking.h"
 #import "FIFlowController.h"
 #import "FHelperRequest.h"
+#import "FDB.h"
+#import "FMediaManager.h"
+#import "FIFavoriteViewController.h"
 
 @implementation HelperBookmark
 {
 }
-BOOL bookmarked;
 NSMutableArray *newsToBookmark;
 NSMutableArray *eventsToBookmark;
 NSMutableArray *casesToBookmark;
@@ -50,16 +52,10 @@ int bookmarkedCount;
         }
     }
     [[FDownloadManager shared] prepareForDownloadingFiles];
-    //    if ([APP_DELEGATE downloadList].count == 0) {
-    //        NSLog(@"%d",bookmarkedCount);
-    //        [HelperBookmark success];
-    //    }
 }
 
 +(void) cancelBookmark {
-    
     [[FDownloadManager shared] cancelDownload];
-    
 }
 
 #pragma mark News
@@ -83,38 +79,35 @@ int bookmarkedCount;
     FNews *n;
     for (id nID in list.allKeys) {
         if ([[list objectForKey:nID] containsObject:[[NSNumber numberWithInt:category] stringValue]]) {
-            if (![self bookmarked:[nID intValue] withType:BOOKMARKNEWS inCategory:category]) {
+            if (![self bookmarked:[nID intValue] withType:BOOKMARKNEWS]) {
                 [newsDatabase open];
                 selectedNews = [newsDatabase executeQuery:@"SELECT * FROM News where newsID=?" withArgumentsInArray:@[[[NSNumber numberWithInt:[nID intValue]] stringValue]]];
                 while([selectedNews next]) {
                     n=[[FNews alloc] initWithDictionary:[selectedNews resultDictionary]];
                 }
                 [newsDatabase close];
-                [self bookmarkNews:n forCategory:(int) category];
+                [self bookmarkNews:n];
             }
         }
     }
 }
 
-+(void) bookmarkNews: (FNews *) news forCategory:(int) category{
-    if ([HelperBookmark checkItem:[NSString stringWithFormat:@"%d",news.newsID] forCategory:category andType:BOOKMARKNEWS]) {
++(void) bookmarkNews: (FNews *) news{
+    if ([HelperBookmark checkItem:[NSString stringWithFormat:@"%d",(int)news.newsID] andType:BOOKMARKNEWS]) {
         NSString *url_Img_FULL = news.headerImageLink;
         [[APP_DELEGATE imagesToDownload] addObject:url_Img_FULL];
-        FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:news.newsID ofType:BOOKMARKNEWS inCategory:category withLink:url_Img_FULL];
+        FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:(int)news.newsID ofType:BOOKMARKNEWS fromSource:BSOURCEALL forCases:nil withLink:url_Img_FULL withFileSize:0];
         [[APP_DELEGATE downloadList] addObject:headerImage];
-        [HelperBookmark countBookmarks:1];
+        [HelperBookmark countBookmarks:1 withSize:[headerImage fileSize]];
         for (int i =0; i<[news.imagesLinks count]; i++) {
             NSString *url_Img_FULL = [news.imagesLinks objectAtIndex:i];
             [[APP_DELEGATE imagesToDownload] addObject:url_Img_FULL];
-            FItemBookmark *image = [[FItemBookmark alloc] initWithItemIDint:news.newsID ofType:BOOKMARKNEWS inCategory:category withLink:url_Img_FULL];
+            FItemBookmark *image = [[FItemBookmark alloc] initWithItemIDint:(int)news.newsID ofType:BOOKMARKNEWS fromSource:BSOURCEALL forCases:nil withLink:url_Img_FULL withFileSize:0];
             [[APP_DELEGATE downloadList] addObject:image];
-            [HelperBookmark countBookmarks:1];
+            [HelperBookmark countBookmarks:1  withSize:[image fileSize]];
         }
-        
     }
-    
 }
-
 
 
 #pragma mark Events
@@ -124,351 +117,152 @@ int bookmarkedCount;
     NSString * c;
     NSArray *categories;
     int eventID;
-    FMDatabase *newsDatabase = [FMDatabase databaseWithPath:DB_PATH];
+    FMDatabase *eventsDatabase = [FMDatabase databaseWithPath:DB_PATH];
     FMResultSet *selectedEvents;
-    [newsDatabase open];
-    selectedEvents = [newsDatabase executeQuery:[NSString stringWithFormat:@"SELECT eventID, categories FROM Events"]];
+    [eventsDatabase open];
+    selectedEvents = [eventsDatabase executeQuery:[NSString stringWithFormat:@"SELECT eventID, categories FROM Events"]];
     while([selectedEvents next]) {
         c = [selectedEvents stringForColumn:@"categories"];
         categories =  [c componentsSeparatedByString:@","];
         eventID = [selectedEvents intForColumn:@"eventID"];
         [list setObject:categories forKey:@(eventID)];
     }
-    [newsDatabase close];
+    [eventsDatabase close];
     FEvent *e;
     for (id eID in list.allKeys) {
         if ([[list objectForKey:eID] containsObject:[[NSNumber numberWithInt:category] stringValue]]) {
-            if (![self bookmarked:[eID intValue] withType:BOOKMARKEVENTS inCategory:category]) {
-                [newsDatabase open];
-                selectedEvents = [newsDatabase executeQuery:@"SELECT * FROM Events where eventID=?" withArgumentsInArray:@[[[NSNumber numberWithInt:[eID intValue]] stringValue]]];
+            if (![self bookmarked:[eID intValue] withType:BOOKMARKEVENTS]) {
+                [eventsDatabase open];
+                selectedEvents = [eventsDatabase executeQuery:@"SELECT * FROM Events where eventID=?" withArgumentsInArray:@[[[NSNumber numberWithInt:[eID intValue]] stringValue]]];
                 while([selectedEvents next]) {
                     e=[[FEvent alloc] initWithDictionary:[selectedEvents resultDictionary]];
                 }
-                [newsDatabase close];
-                [self bookmarkEvent:e forCategory:(int) category];
+                [eventsDatabase close];
+                [self bookmarkEvent:e];
             }
         }
     }
 }
 
-+(void) bookmarkEvent: (FEvent *) event forCategory:(int) category{
-    //    NSLog(@"Event id:%ld",(long)event.eventID);
-    NSString *categories = [NSString stringWithFormat:@"%d",category];
++(void) bookmarkEvent: (FEvent *) event{
     NSString *eventUsr = [FCommon getUser];
     FMDatabase *eventsBookmarkDatabase = [FMDatabase databaseWithPath:DB_PATH];
     [eventsBookmarkDatabase open];
-    BOOL bookmarked = true;
-    FMResultSet *resultsBookmarkedAlready =  [eventsBookmarkDatabase executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[eventUsr,BOOKMARKEVENTS,[NSString stringWithFormat:@"%ld", event.eventID]]];
+    BOOL bookmark = true;
+    FMResultSet *resultsBookmarkedAlready =  [eventsBookmarkDatabase executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[eventUsr,BOOKMARKEVENTS,[NSString stringWithFormat:@"%d", (int)event.eventID]]];
     while([resultsBookmarkedAlready next]) {
-        bookmarked = false;
+        bookmark = false;
     }
-    if (bookmarked) {
-        [eventsBookmarkDatabase executeUpdate:@"INSERT INTO UserBookmark (username,documentID,typeID) VALUES (?,?,?)",eventUsr,[NSString stringWithFormat:@"%ld", event.eventID],BOOKMARKEVENTS];
+    if (bookmark) {
+         [self insertToDB:eventsBookmarkDatabase forUser:eventUsr item:[NSString stringWithFormat:@"%d", (int)event.eventID] withType:BOOKMARKEVENTS forCaseIDs:@"" andBookmarkType:BSOURCEALL];
     }
-    //    [eventsBookmarkDatabase executeUpdate:@"INSERT INTO UserBookmark (username,documentID,typeID, categories) VALUES (?,?,?,?)",eventUsr,[NSString stringWithFormat:@"%ld", event.eventID],BOOKMARKEVENTS,categories];
     [eventsBookmarkDatabase executeUpdate:@"UPDATE Events set isBookmark=? where eventID=?",@"1", [NSString stringWithFormat:@"%ld", (long)event.eventID]];
     [eventsBookmarkDatabase close];
 }
 
 
-#pragma mark checkIfBookmarked
-
-+(BOOL) bookmarked: (int) itemID withType:(NSString *)type inCategory:(int) category {
-    NSString *itemUsr = [FCommon getUser];
-    FMDatabase *localDatabase = [FMDatabase databaseWithPath:DB_PATH];
-    [localDatabase open];
-    FMResultSet *resultsBookmarked =  [localDatabase executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[itemUsr,type,[[NSNumber numberWithInt:itemID] stringValue]]];
-    while([resultsBookmarked next]) {
-        //        NSString * c = [resultsBookmarked stringForColumn:@"categories"];
-        //        NSArray *categories =  [c componentsSeparatedByString:@","];
-        //        if (![categories containsObject:[[NSNumber numberWithInt:category] stringValue]]){
-        //
-        //            //TODO to preselt v funkcijo ki bookmarka
-        //            c = [c stringByAppendingString:[NSString stringWithFormat:@"%d", category]];
-        //            [localDatabase executeUpdate:@"UPDATE UserBookmark set categories=? where userBookmarkID=?",c, [resultsBookmarked stringForColumn:@"userBookmarkID"]];
-        //        }
-        [localDatabase close];
-        return YES;
-    }
-    [localDatabase close];
-    return NO;
-}
-
-+(BOOL) bookmarked: (int) itemID withType:(NSString *)type{
-    NSString *itemUsr = [FCommon getUser];
-    FMDatabase *localDatabase = [FMDatabase databaseWithPath:DB_PATH];
-    [localDatabase open];
-    FMResultSet *resultsBookmarked =  [localDatabase executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[itemUsr,type,[[NSNumber numberWithInt:itemID] stringValue]]];
-    while([resultsBookmarked next]) {
-        [localDatabase close];
-        return YES;
-    }
-    [localDatabase close];
-    return NO;
-}
-
+#pragma mark - Cases
 +(void) selectCases: (int) category{
     NSMutableArray *list = [NSMutableArray new];
     FMDatabase *casesDatabase = [FMDatabase databaseWithPath:DB_PATH];
-    FMResultSet *selectedCases;
     [casesDatabase open];
-    if ([[APP_DELEGATE currentLogedInUser].userType intValue] == 0 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3){
-        selectedCases = [casesDatabase executeQuery:@"SELECT * FROM Cases where coverTypeID=? and allowedForGuests=? AND active=1" withArgumentsInArray:@[[[NSNumber numberWithInt:category] stringValue],@"1"]];
-    } else {
-        selectedCases = [casesDatabase executeQuery:@"SELECT * FROM Cases where coverTypeID=? AND active=1" withArgumentsInArray:@[[[NSNumber numberWithInt:category] stringValue]]];
-        
-    }
-    
+            FMResultSet *selectedCases = [casesDatabase executeQuery:@"SELECT * FROM Cases where active=1 AND download=1" withArgumentsInArray:@[[[NSNumber numberWithInt:category] stringValue]]];
     while([selectedCases next]) {
-        FCase * selected =  [[FCase alloc] initWithDictionary:[selectedCases resultDictionary]];
-        [list addObject:selected];
-        NSLog(@"%@", selected.title);
+        FCase * selected =  [[FCase alloc] initWithDictionaryFromDB:[selectedCases resultDictionary]];
+        if ([FCommon userPermission:[selected userPermissions]] && [FCommon checkItemPermissions:[selected userPermissions] ForCategory:[NSString stringWithFormat:@"%d",category]]) {
+             [list addObject:selected];
+        }
     }
     [casesDatabase close];
     
     for (FCase *sCase in list) {
-        if (![self bookmarked:[[sCase caseID] intValue] withType:BOOKMARKCASE inCategory:category]) {
-            [self bookmarkCase:sCase forCategory:category];
+        if (![self bookmarked:[[sCase caseID] intValue] withType:BOOKMARKCASE]) {
+            [self bookmarkCase:sCase];
         }
     }
 }
 
-
-
-+ (void)bookmarkCase:(FCase*) currentCase forCategory:(int) category {
++ (void)bookmarkCase:(FCase*) currentCase {
     
-    if ([HelperBookmark checkItem:[NSString stringWithFormat:@"%d",[currentCase.caseID intValue]] forCategory:category andType:BOOKMARKCASE]) {
+    if ([HelperBookmark checkItem:[NSString stringWithFormat:@"%d",[currentCase.caseID intValue]] andType:BOOKMARKCASE]) {
         NSString *usr = [FCommon getUser];
+        
+        FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+        [database open];
+        BOOL bookmark = true;
+        FMResultSet *resultsBookmarkedAlready =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr,BOOKMARKCASE,currentCase.caseID]];
+        while([resultsBookmarkedAlready next]) {
+            bookmark = false;
+        }
+        if (bookmark) {
+            [self insertToDB:database forUser:usr item:currentCase.caseID withType:BOOKMARKCASE forCaseIDs:@"" andBookmarkType:BSOURCECASE];
+        }
+        [database executeUpdate:@"UPDATE Cases set isBookmark=? where caseID=?",@"1",currentCase.caseID];
+        [database close];
+        
         if (![[currentCase coverflow] boolValue]) {
-            //insertMedia TODO
+            NSMutableArray *imgs = [currentCase parseImagesFromServer:NO];
+            NSMutableArray *videosA = [currentCase parseVideosFromServer:NO];
             
-            NSMutableArray *imgs = [currentCase parseImages];
-            NSMutableArray *videosA = [currentCase parseVideos];
-            
-            [self addMedia:imgs withType:0 fromcase:[currentCase.caseID intValue] inCategory:category];
-            [self addMedia:videosA withType:1 fromcase:[currentCase.caseID intValue] inCategory:category];
-            if (imgs.count == 0) {
-                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                [database open];
-                //            if (category == 0) {
-                BOOL bookmarked = true;
-                FMResultSet *resultsBookmarkedAlready =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr,BOOKMARKCASE,currentCase.caseID]];
-                while([resultsBookmarkedAlready next]) {
-                    bookmarked = false;
-                }
-                if (bookmarked) {
-                    [database executeUpdate:@"INSERT INTO UserBookmark (documentID, username, typeID) VALUES (?,?,0)",currentCase.caseID,usr];
-                }
-                //            } else {
-                //                [database executeUpdate:@"INSERT INTO UserBookmark (documentID, username, typeID,categories) VALUES (?,?,0,?)",currentCase.caseID,usr,[NSString stringWithFormat:@"%d",category]];
-                //            }
-                
-                [database executeUpdate:@"UPDATE Cases set isBookmark=? where caseID=?",@"1",currentCase.caseID];
-                [database close];
-            }
-            
+            [self addMedia:imgs withType:MEDIAIMAGE fromcase:currentCase.caseID];
+            [self addMedia:videosA withType:MEDIAVIDEO fromcase:currentCase.caseID];
+          
         }else{
-            FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-            [database open];
-            //            if (category == 0) {
-            BOOL bookmarked = true;
-            FMResultSet *resultsBookmarkedAlready =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr,BOOKMARKCASE,currentCase.caseID]];
-            while([resultsBookmarkedAlready next]) {
-                bookmarked = false;
-            }
-            if (bookmarked) {
-                [database executeUpdate:@"INSERT INTO UserBookmark (documentID, username, typeID) VALUES (?,?,0)",currentCase.caseID,usr];
-            }
-            //            } else {
-            //                [database executeUpdate:@"INSERT INTO UserBookmark (documentID, username, typeID,categories) VALUES (?,?,0,?)",currentCase.caseID,usr,[NSString stringWithFormat:@"%d",category]];
-            //            }
-            
-            [database executeUpdate:@"UPDATE Cases set isBookmark=? where caseID=?",@"1",currentCase.caseID];
-            [database close];
-            
             if ([FCommon isIpad]) {
                 if ([[[APP_DELEGATE casebookController] currentCase] caseID] == currentCase.caseID ) {
                     [[APP_DELEGATE casebookController] refreshBookmarkBtn];
                 }
             } else{
-                 FIFlowController *flow = [FIFlowController sharedInstance];
+                FIFlowController *flow = [FIFlowController sharedInstance];
                 if ([[flow caseOpened] caseID] == currentCase.caseID ) {
                     [[flow caseView] refreshBookmarkBtn];
                 }
             }
-            
-            
         }
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     }
 }
 
-+(void)addMedia:(NSMutableArray *)m withType:(int)type fromcase:(int)caseID inCategory:(int)category{
+
++(void)addMedia:(NSMutableArray *)m withType:(NSString *)type fromcase:(NSString *)caseID{
     if (m.count>0) {
-        
-        NSMutableArray *links =[[NSMutableArray alloc] init];
-        if (type==0) {
+        if ([type intValue]==[MEDIAIMAGE intValue]) {
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
             for (FImage *img in m) {
-                [links addObject:img.path];
-                FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:caseID ofType:BOOKMARKCASE inCategory:category withLink:img.path];
-                [[APP_DELEGATE downloadList] addObject:headerImage];
-                [[APP_DELEGATE imagesToDownload] addObject:img.path];
-                [HelperBookmark countBookmarks:1];
+                [self addImageToDownloadLis:img forCase:caseID];
             }
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
             [database close];
-        }else if(type==1){
+        }else if([type intValue]==[MEDIAVIDEO intValue]){
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
-            for (FVideo *vid in m) {
-                [links addObject:vid.path];
-                FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:caseID ofType:BOOKMARKCASE inCategory:category withLink:vid.path];
-                [[APP_DELEGATE downloadList] addObject:headerImage];
-                
-                [[APP_DELEGATE videosToDownload] addObject:vid.path];
-                [HelperBookmark countBookmarks:1];
-            }
+            for (FMedia *vid in m) {
+                [self addVideoToDownloadLis:vid forCase:caseID];}
             [database close];
         }
         
     }
 }
 
-
-
-+(void)bookmarkMedia:(NSMutableArray *)m withType:(int)type{
-    if (m.count>0) {
-        if (type==0) {
-            FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-            [database open];
-            for (FImage *img in m) {
-                NSArray *pathComp=[img.path pathComponents];
-                NSString *pathTmp = [[NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-                FMResultSet *mediaSelect = [database executeQuery:@"SELECT * FROM Media where mediaID=? and galleryID=? and mediaType=0"withArgumentsInArray:@[img.itemID,img.galleryID]];
-                BOOL flag = NO;
-                while([mediaSelect next]) {
-                    flag = YES;
-                }
-                if (!flag) {
-                    [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,sort) VALUES (?,?,?,?,?,?,?,?,?)",img.itemID,img.galleryID,img.title,img.path,pathTmp,img.description,@"0",@"1",img.sort];
-                    bookmarkedCount++;
-                } else {
-                    [database executeUpdate:@"UPDATE Media set galleryID=?,title=?,path=?,localPath=?,description=?,mediaType=?,sort=? where mediaID=?",img.galleryID,img.title,img.path,pathTmp,img.description,@"0",img.sort,img.itemID];
-                }
-            }
-            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-            [database close];
-        }else if(type==1){
-            FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-            [database open];
-            for (FVideo *vid in m) {
-                NSArray *pathComp=[vid.path pathComponents];
-                NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                FMResultSet *mediaSelect = [database executeQuery:@"SELECT * FROM Media where mediaID=? and galleryID=? and mediaType=1"withArgumentsInArray:@[vid.itemID,vid.videoGalleryID]];
-                BOOL flag = NO;
-                while([mediaSelect next]) {
-                    flag = YES;
-                }
-                if (!flag) {
-                    [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,time,videoImage,sort,userType,userSubType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.videoGalleryID,vid.title,vid.path,pathTmp,vid.description,@"1",@"1",vid.time,vid.videoImage,vid.sort,vid.userType,vid.userSubType];
-                    bookmarkedCount++;
-                } else {
-                    [database executeUpdate:@"UPDATE Media set galleryID=?,title=?,path=?,localPath=?,description=?,mediaType=?,time=?,videoImage=?,sort=?,userType=?,userSubType=? where mediaID=?",vid.videoGalleryID,vid.title,vid.path,pathTmp,vid.description,@"1",vid.time,vid.videoImage,vid.sort,vid.userType,vid.userSubType,vid.itemID];
-                }
-                
-                
-            }
-            [database close];
-        }
-        
-    }
++(void)addImageToDownloadLis:(FImage *)img forCase:(NSString *)caseID{
+    FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:[caseID intValue] ofType:MEDIAIMAGE fromSource:BSOURCECASE forCases:caseID withLink:img.path withFileSize:[[img fileSize] intValue]];
+    [[APP_DELEGATE downloadList] addObject:headerImage];
+    [[APP_DELEGATE imagesToDownload] addObject:img.path];
+    [HelperBookmark countBookmarks:1  withSize:[headerImage fileSize]];
 }
 
-/*select fotona po ko so bila pravice na videu
-+(void) selectFotona: (int) category{
-    NSMutableArray *list = [NSMutableArray new];
-    
-    FMDatabase *fotonaDatabase = [FMDatabase databaseWithPath:DB_PATH];
-    FMResultSet *selectedFotona;
-    [fotonaDatabase open];
-    selectedFotona = [fotonaDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenu WHERE  fotonaCategoryType=6 and active=1"]];//(fotonaCategoryType=4 OR fotonaCategoryType=6)
-    while([selectedFotona next]) {
-        FFotonaMenu* f=[[FFotonaMenu alloc] initWithDictionary:[selectedFotona resultDictionary]];
-        if ([self checkFotona:f forCategory:category]) {
-            [list addObject:f];
-        }
-    }
-    [fotonaDatabase close];
-    for (FFotonaMenu * menu in list) {
-        if ([menu.fotonaCategoryType intValue] ==6) {
-            if (![self bookmarked:[menu.categoryID intValue] withType:BOOKMARKPDF inCategory:category]) {
-                if ([HelperBookmark checkItem:[NSString stringWithFormat:@"%d",[menu.categoryID intValue]] forCategory:category andType:BOOKMARKPDF]) {
-                    FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:[menu.categoryID intValue] ofType:BOOKMARKPDF inCategory:category withLink:[menu.pdfSrc stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
-                    [[APP_DELEGATE downloadList] addObject:headerImage];
-                    [[APP_DELEGATE pdfToDownload] addObject:menu.pdfSrc];
-                    [HelperBookmark countBookmarks:1];
-                }
-                
-            }
-        }
-    }
-    
-    [list removeAllObjects];
-    
-    [fotonaDatabase open];
-    selectedFotona = [fotonaDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenu WHERE  fotonaCategoryType=4 and active=1"]];//(fotonaCategoryType=4 OR fotonaCategoryType=6)
-    while([selectedFotona next]) {
-        FFotonaMenu* f=[[FFotonaMenu alloc] initWithDictionary:[selectedFotona resultDictionary]];
-        [list addObject:f];
-    }
-    [fotonaDatabase close];
-    for (FFotonaMenu * menu in list) {
-        FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-        [database open];
-        FMResultSet *videos = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media WHERE galleryID = %d and mediaType=1",[menu.videoGalleryID intValue]]];
-        while([videos next]) {
-            FVideo *f=[[FVideo alloc] init];
-            [f setTitle:[videos stringForColumn:@"title"]];
-            [f setItemID:[videos stringForColumn:@"mediaID"]];
-            [f setUserType:[videos stringForColumn:@"userType"]];
-            [f setUserSubType:[videos stringForColumn:@"userSubType"]];
-            [f setBookmark:[videos stringForColumn:@"isBookmark"]];
-            NSLog(@"%@",f.title);
-            if ([f checkVideoForUser]) {
-                if (![self bookmarked:[[videos stringForColumn:@"mediaID"] intValue] withType:BOOKMARKVIDEO inCategory:category]) {
-//                    NSString *usr =[APP_DELEGATE currentLogedInUser].username;
-//                    if (usr == nil) {
-//                        usr =@"guest";
-//                    }
-//                    FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%d and isBookmark=1 and mediaType=1",[[videos stringForColumn:@"mediaID"] intValue]]];
-//                    BOOL flag=NO;
-//                    while([resultsBookmarked next]) {
-//                        flag=YES;
-////                        NSLog(@"%@, %@",[resultsBookmarked stringForColumn:@"mediaID"],[resultsBookmarked stringForColumn:@"isBookmark"]);
-//                    }
-                    if ([f.bookmark isEqualToString:@"0"]) {
-                        if ([HelperBookmark checkItem:[NSString stringWithFormat:@"%d",[[videos stringForColumn:@"mediaID"] intValue]] forCategory:category andType: BOOKMARKVIDEO]) {
-                            FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:[[videos stringForColumn:@"mediaID"] intValue] ofType:BOOKMARKVIDEO inCategory:category withLink:[videos stringForColumn:@"videoImage"]];
-                            [[APP_DELEGATE downloadList] addObject:headerImage];
-                            [[APP_DELEGATE imagesToDownload] addObject:[videos stringForColumn:@"videoImage"]];
-                            FItemBookmark * headerImage2 = [[FItemBookmark alloc] initWithItemIDint:[[videos stringForColumn:@"mediaID"] intValue] ofType:BOOKMARKVIDEO inCategory:category withLink:[videos stringForColumn:@"path"]];
-                            [[APP_DELEGATE downloadList] addObject:headerImage2];
-                            [[APP_DELEGATE videosToDownload] addObject:[videos stringForColumn:@"path"]];
-                            [HelperBookmark countBookmarks:2];
-                        }
-                    }
-                    
-                }
-            }
-            
-            
-        }
-        [database close];
-    }
-} */
++(void)addVideoToDownloadLis:(FMedia *)video forCase:(NSString *)caseID{
+    FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:[caseID intValue] ofType:MEDIAVIDEO fromSource:BSOURCECASE forCases:caseID withLink:video.path withFileSize:[[video filesize] intValue]];
+    [[APP_DELEGATE downloadList] addObject:headerImage];
+    [[APP_DELEGATE videosToDownload] addObject:video.path];
+    FItemBookmark *imageBookmarkItem = [[FItemBookmark alloc] initWithItemIDint:[[video itemID] intValue] ofType:[video mediaType] fromSource:BSOURCECASE forCases:nil withLink:[video mediaImage] withFileSize:0];
+    [[APP_DELEGATE downloadList] addObject:imageBookmarkItem];
+    [[APP_DELEGATE imagesToDownload] addObject:[video mediaImage]];
+    [HelperBookmark countBookmarks:2  withSize:[headerImage fileSize]];
+}
 
+//Geting all pdfs and videos that can be bookmarked for user
 +(void) selectFotona: (int) category{
     NSMutableArray *list = [NSMutableArray new];
     
@@ -478,130 +272,153 @@ int bookmarkedCount;
     selectedFotona = [fotonaDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenu WHERE (fotonaCategoryType=4 OR fotonaCategoryType=6) and active=1"]];
     while([selectedFotona next]) {
         FFotonaMenu* f=[[FFotonaMenu alloc] initWithDictionary:[selectedFotona resultDictionary]];
-        if ([self checkFotona:f forCategory:category]) {
+        if ([FCommon checkItemPermissions:[f userPermissions] ForCategory:[NSString stringWithFormat:@"%d",category]]) {
             [list addObject:f];
         }
     }
-    [fotonaDatabase close];
     for (FFotonaMenu * menu in list) {
-        if ([menu.fotonaCategoryType intValue] ==6) {
-            if (![self bookmarked:[menu.categoryID intValue] withType:BOOKMARKPDF inCategory:category]) {
-                if ([HelperBookmark checkItem:[NSString stringWithFormat:@"%d",[menu.categoryID intValue]] forCategory:category andType:BOOKMARKPDF]) {
-                    FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:[menu.categoryID intValue] ofType:BOOKMARKPDF inCategory:category withLink:[menu.pdfSrc stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
-                    [[APP_DELEGATE downloadList] addObject:headerImage];
-                    [[APP_DELEGATE pdfToDownload] addObject:menu.pdfSrc];
-                    [HelperBookmark countBookmarks:1];
-                }
+        NSMutableArray *mediaArray = [NSMutableArray new];
+        if ([menu.fotonaCategoryType intValue] ==6 || [menu.fotonaCategoryType intValue] ==4) {
+            mediaArray = [menu getMedia];
+        }
+        
+        for (FMedia *media in mediaArray) {
+            if ([FCommon checkItemPermissions:[media userPermissions] ForCategory:[NSString stringWithFormat:@"%d",category]]){
                 
-            }
-        } else {
-            
-            FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-            [database open];
-            FMResultSet *videos = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media WHERE galleryID = %d and mediaType=1",[menu.videoGalleryID intValue]]];
-            while([videos next]) {
-                if (![self bookmarked:[[videos stringForColumn:@"mediaID"] intValue] withType:BOOKMARKVIDEO inCategory:category]) {
-                    NSString *usr = [FCommon getUser];
-                    FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%d and isBookmark=1 and mediaType=1",[[videos stringForColumn:@"mediaID"] intValue]]];
-                    BOOL flag=NO;
-                    while([resultsBookmarked next]) {
-                        flag=YES;
-                        NSLog(@"%@, %@",[resultsBookmarked stringForColumn:@"mediaID"],[resultsBookmarked stringForColumn:@"isBookmark"]);
-                    }
-                    if (!flag) {
-                        if ([HelperBookmark checkItem:[NSString stringWithFormat:@"%d",[[videos stringForColumn:@"mediaID"] intValue]] forCategory:category andType: BOOKMARKVIDEO]) {
-                            FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:[[videos stringForColumn:@"mediaID"] intValue] ofType:BOOKMARKVIDEO inCategory:category withLink:[videos stringForColumn:@"videoImage"]];
-                            [[APP_DELEGATE downloadList] addObject:headerImage];
-                            [[APP_DELEGATE imagesToDownload] addObject:[videos stringForColumn:@"videoImage"]];
-                            FItemBookmark * headerImage2 = [[FItemBookmark alloc] initWithItemIDint:[[videos stringForColumn:@"mediaID"] intValue] ofType:BOOKMARKVIDEO inCategory:category withLink:[videos stringForColumn:@"path"]];
-                            [[APP_DELEGATE downloadList] addObject:headerImage2];
-                            [[APP_DELEGATE videosToDownload] addObject:[videos stringForColumn:@"path"]];
-                            [HelperBookmark countBookmarks:2];
+                NSString *usr = [FCommon getUser];
+                FMResultSet *resultsBookmarked =  [fotonaDatabase executeQuery:[NSString stringWithFormat:@"SELECT isBookmark FROM Media where mediaID=%d and isBookmark=1 and mediaType=%@",[[media itemID] intValue], [media mediaType]]];
+                BOOL flag=NO;
+                while([resultsBookmarked next]) {
+                    flag=YES;
+                }
+                if (!flag) {
+                    FItemBookmark *pdfBookmarkItem =[[FItemBookmark alloc] initWithItemIDint:[[media itemID] intValue] ofType:[media mediaType] fromSource:BSOURCEFOTONA forCases:nil withLink:[media path]  withFileSize:[[media filesize] intValue]];
+                    [[APP_DELEGATE downloadList] addObject:pdfBookmarkItem];
+                    if ([[media mediaType] intValue] == [BOOKMARKPDF intValue]) {
+                        [[APP_DELEGATE pdfToDownload] addObject:[media path]];
+                    } else {
+                        if ([[media mediaType] intValue] == [BOOKMARKVIDEO intValue]) {
+                            [[APP_DELEGATE videosToDownload] addObject:[media path]];
                         }
                     }
                     
+                    FItemBookmark *imageBookmarkItem = [[FItemBookmark alloc] initWithItemIDint:[[media itemID] intValue] ofType:[media mediaType] fromSource:BSOURCEFOTONA forCases:nil withLink:[media mediaImage] withFileSize:0];
+                    [[APP_DELEGATE downloadList] addObject:imageBookmarkItem];
+                    [[APP_DELEGATE imagesToDownload] addObject:[media mediaImage]];
+                    
+                    [HelperBookmark countBookmarks:2  withSize:[pdfBookmarkItem fileSize]];
+                    [APP_DELEGATE setBookmarkAll:YES];
+                    
+                }
+                else{
+                    [self insertToDB:fotonaDatabase forUser:usr item:[NSString stringWithFormat:@"%d", [media.itemID intValue]] withType:[media mediaType] forCaseIDs:@"" andBookmarkType:BSOURCEFOTONA];
+                }
+            }
+        }
+        [fotonaDatabase close];
+    }
+}
+
+
++(void)saveBookmarkForMedia:(NSMutableArray *)m withType:(NSString *)type andSource:(int)source forCaseID:(NSString *)caseID{
+    if (m.count>0) {
+        NSString *usr = [FCommon getUser];
+        BOOL alreadyBookmarked = true;
+        NSString *cases = @"";
+        if([type intValue] == [MEDIAVIDEO intValue] || [type intValue] == [MEDIAPDF intValue] || [type intValue] == [MEDIAIMAGE intValue]){
+            NSString *bookmarType = BOOKMARKVIDEO;
+            if([type intValue] == [MEDIAPDF intValue]){
+                bookmarType = BOOKMARKPDF;
+            } else {
+                if([type intValue] == [MEDIAIMAGE intValue]){
+                    bookmarType = BOOKMARKIMAGE;
+                }
+            }
+            FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+            [database open];
+            for (FMedia *vid in m) {
+                alreadyBookmarked = NO;
+                FMResultSet *resultsBookmarkedAlready =  [database executeQuery:@"SELECT * FROM UserBookmark WHERE username=? AND typeID=? AND documentID=? AND bookmarkType=?" withArgumentsInArray:@[usr,bookmarType,[NSString stringWithFormat:@"%d", [vid.itemID intValue]], [NSString stringWithFormat:@"%d", source]]];
+                while([resultsBookmarkedAlready next]) {
+                    alreadyBookmarked = YES;
+                    cases = [resultsBookmarkedAlready valueForKey:@"caseIDs"];
+                }
+                
+                //check and add if needed, for wich cases is item bookmarked
+                if (source == BSOURCECASE) {
+                    NSMutableArray *caseArray = [[FCommon stringToArray:cases withSeparator:@","] mutableCopy];
+                    if (![caseArray containsObject:caseID]) {
+                        [caseArray addObject:caseID];
+                        cases = [FCommon arrayToString:caseArray withSeparator:@","];
+                    }
+                }
+                
+                //If not bookmarked yet insert else update
+                if (alreadyBookmarked) {
+                    [self updateDB:database forUser:usr item:[NSString stringWithFormat:@"%d", [vid.itemID intValue]] withType:bookmarType forCaseIDs:cases andBookmarkType:source];
+                } else {
+                    [self insertToDB:database forUser:usr item:[NSString stringWithFormat:@"%d", [vid.itemID intValue]] withType:bookmarType forCaseIDs:cases andBookmarkType:source];
+                    bookmarkedCount+=2;
+                }
+                
+                FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where active=1 and mediaID=%@ AND isBookmark=1 AND mediaType=%@",[NSString stringWithFormat:@"%d", [vid.itemID intValue]], type]];
+                BOOL flag=NO;
+                while([resultsBookmarked next]) {
+                    flag=YES;
+                }
+                if (!flag) {
+                    [database executeUpdate:@"UPDATE Media set isBookmark=?  where mediaType=? AND  mediaID=?",@"1", type,[NSString stringWithFormat:@"%d", [vid.itemID intValue]]];
                 }
             }
             [database close];
-            
         }
-        
     }
-    
-}
-
-+ (void) bookmarkPDF: (FFotonaMenu *)menu{
-    FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:[menu.categoryID intValue] ofType:BOOKMARKPDF inCategory:0 withLink:[menu.pdfSrc stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
-    [[APP_DELEGATE downloadList] addObject:headerImage];
-    [[APP_DELEGATE pdfToDownload] addObject:menu.pdfSrc];
-    [HelperBookmark countBookmarks:1];
-    
 }
 
 
-+(BOOL) bookmarkVideo: (FVideo *) video{
+
+
++ (BOOL) bookmarkMedia: (FMedia *)media{
     BOOL bookmarked = false;
+ 
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    FMResultSet *videos = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media WHERE galleryID = %d AND mediaID = %d and mediaType=1",[video.videoGalleryID intValue], [video.itemID intValue]]];
-    while([videos next]) {
-        NSString *usr = [FCommon getUser];
-        FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT isBookmark FROM Media where mediaID=%d and isBookmark=1 and mediaType=1",[[videos stringForColumn:@"mediaID"] intValue]]];
-        BOOL flag=NO;
-        while([resultsBookmarked next]) {
-            flag=YES;
-        }
-        if (!flag) {
-            FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:[[videos stringForColumn:@"mediaID"] intValue] ofType:BOOKMARKVIDEO inCategory:0 withLink:[videos stringForColumn:@"videoImage"]];
-            [[APP_DELEGATE downloadList] addObject:headerImage];
-            [[APP_DELEGATE imagesToDownload] addObject:[videos stringForColumn:@"videoImage"]];
-            FItemBookmark *headerImage2 = [[FItemBookmark alloc] initWithItemIDint:[[videos stringForColumn:@"mediaID"] intValue] ofType:BOOKMARKVIDEO inCategory:0 withLink:[videos stringForColumn:@"path"]];
-            [[APP_DELEGATE downloadList] addObject:headerImage2];
-            [[APP_DELEGATE videosToDownload] addObject:[videos stringForColumn:@"path"]];
-            [HelperBookmark countBookmarks:2];
-            [APP_DELEGATE setBookmarkAll:true];
-            bookmarked = true;
-        }
-        else{
-            
-            [database executeUpdate:@"INSERT INTO UserBookmark ('username',documentID,'typeID') VALUES (?,?,?)",usr,[NSString stringWithFormat:@"%d", [video.itemID intValue]],BOOKMARKVIDEO];
-            
-
+    NSString *usr = [FCommon getUser];
+    FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT isBookmark FROM Media where mediaID=%d and isBookmark=1 and mediaType=%@",[[media itemID] intValue], [media mediaType]]];
+    BOOL flag=NO;
+    while([resultsBookmarked next]) {
+        flag=YES;
+    }
+    if (!flag) {
+        FItemBookmark *pdfBookmarkItem =[[FItemBookmark alloc] initWithItemIDint:[[media itemID] intValue] ofType:[media mediaType] fromSource:BSOURCEFOTONA forCases:nil withLink:[media path] withFileSize:[[media filesize] intValue]];
+        [[APP_DELEGATE downloadList] addObject:pdfBookmarkItem];
+        if ([[media mediaType] intValue] == [BOOKMARKPDF intValue]) {
+            [[APP_DELEGATE pdfToDownload] addObject:[media path]];
+        } else {
+            if ([[media mediaType] intValue] == [BOOKMARKVIDEO intValue]) {
+                [[APP_DELEGATE videosToDownload] addObject:[media path]];
+            }
         }
         
+        FItemBookmark *imageBookmarkItem = [[FItemBookmark alloc] initWithItemIDint:[[media itemID] intValue] ofType:[media mediaType] fromSource:BSOURCEFOTONA forCases:nil withLink:[media mediaImage] withFileSize:0];
+        [[APP_DELEGATE downloadList] addObject:imageBookmarkItem];
+        [[APP_DELEGATE imagesToDownload] addObject:[media mediaImage]];
+        
+        [HelperBookmark countBookmarks:2  withSize:[pdfBookmarkItem fileSize]];
+        [APP_DELEGATE setBookmarkAll:YES];
+        [[FDownloadManager shared] prepareForDownloadingFiles];
+        bookmarked = true;
+
+    }
+    else{
+        [self insertToDB:database forUser:usr item:[NSString stringWithFormat:@"%d", [media.itemID intValue]] withType:[media mediaType] forCaseIDs:@"" andBookmarkType:BSOURCEFOTONA];
     }
     [database close];
     return bookmarked;
-    
+
 }
 
-+(BOOL)checkFotona:(FFotonaMenu *)f forCategory:(int) category
-{
-    BOOL check=NO;
-    
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    
-    if ([[[APP_DELEGATE currentLogedInUser] userTypeSubcategory] count]>0) {
-        
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenuForUserSubType where fotonaID=%@ and userSubType=%@",f.categoryID,[NSString stringWithFormat:@"%d", category]]];
-        while([results next]) {
-            check=YES;
-        }
-        
-    }
-    else{
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenuForUserType where fotonaID=%@ and userType=%@",f.categoryID,[[APP_DELEGATE currentLogedInUser] userType]]];
-        while([results next]) {
-            check=YES;
-        }
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return check;
-    
-}
+
 
 +(void)userBookmarked{
     NSString *usr = [FCommon getUser];
@@ -622,6 +439,8 @@ int bookmarkedCount;
             item = [[APP_DELEGATE downloadList] objectAtIndex:i];
             [[APP_DELEGATE downloadList] removeObjectAtIndex:i];
             [APP_DELEGATE setBookmarkCountLeft:([APP_DELEGATE bookmarkCountLeft]-1)];
+            [APP_DELEGATE setBookmarkSizeLeft:([APP_DELEGATE bookmarkSizeLeft]-[item fileSize])];
+            NSLog(@"Size left %f",[APP_DELEGATE bookmarkSizeLeft]);
             if ([FCommon isIpad])
             {
                 [[APP_DELEGATE settingsController] refreshStatusBar];
@@ -632,14 +451,16 @@ int bookmarkedCount;
                     [[flow fotonaSettings] refreshStatusBar];
                 }
             }
-            
             break;
         }
     }
     NSString *fileUsr = [FCommon getUser];
     BOOL exists = true;
+    BOOL alreadyBookmarked = true;
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
     if (item!=nil) {
-        if ([item.type isEqualToString:BOOKMARKNEWS]) {
+        if ([item.type intValue] == [BOOKMARKNEWS intValue]) {
             for (int i = 0; i < [[APP_DELEGATE downloadList] count]; i++) {
                 if (([[[[APP_DELEGATE downloadList] objectAtIndex:i] itemID] isEqualToString:[item itemID]])&& (![[[[APP_DELEGATE downloadList] objectAtIndex:i] link] isEqualToString:[item link]])) {
                     exists = false;
@@ -647,31 +468,25 @@ int bookmarkedCount;
                 }
             }
             if (exists) {
-                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                [database open];
-                BOOL bookmarked = true;
                 FMResultSet *resultsBookmarkedAlready =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[fileUsr,BOOKMARKNEWS,item.itemID]];
                 while([resultsBookmarkedAlready next]) {
-                    bookmarked = false;
+                    alreadyBookmarked = false;
                 }
-                if (bookmarked) {
-                    [database executeUpdate:@"INSERT INTO UserBookmark (username,documentID,typeID) VALUES (?,?,?)",fileUsr,item.itemID,BOOKMARKNEWS];
+                if (alreadyBookmarked) {
+                    [self insertToDB:database forUser:fileUsr item:item.itemID withType:BOOKMARKNEWS forCaseIDs:@"" andBookmarkType:BSOURCEALL];
                 }
                 
-                //                [database executeUpdate:@"INSERT INTO UserBookmark (username,documentID,typeID, categories) VALUES (?,?,?,?)",fileUsr,item.itemID,BOOKMARKNEWS, item.category];
                 [database executeUpdate:@"UPDATE News set isBookmark=? where newsID=?",@"1", item.itemID];
-                [database close];
             }
             NSArray *pathComp=[dlink pathComponents];
             NSString *local=[[NSString stringWithFormat:@"%@/.Cases/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[dlink lastPathComponent]];
-            
             
             if ([[NSFileManager defaultManager] fileExistsAtPath:local]) {
                 [[APP_DELEGATE imagesToDownload] removeObject:local];
             }
             
         } else {
-            if ([item.type isEqualToString:BOOKMARKCASE]) {
+            if ([item.type intValue] == [BOOKMARKCASE intValue]) {
                 
                 for (int i = 0; i < [[APP_DELEGATE downloadList] count]; i++) {
                     FItemBookmark * temp = [[APP_DELEGATE downloadList] objectAtIndex:i];
@@ -681,62 +496,53 @@ int bookmarkedCount;
                     }
                 }
                 if (exists) {
-                    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                    [database open];
-                    
                     NSString *usr = [FCommon getUser];
                     // typeID 0-case 1-video 2-pdf
                     FMResultSet *selectedCases = [database executeQuery:@"SELECT * FROM Cases where caseID=?" withArgumentsInArray:@[item.itemID]];
                     FCase * selected;
                     while([selectedCases next]) {
-                        selected =  [[FCase alloc] initWithDictionary:[selectedCases resultDictionary]];
+                        selected =  [[FCase alloc] initWithDictionaryFromDB:[selectedCases resultDictionary]];
                     }
-                    //                    if (item.category == 0) {
-                    BOOL bookmarked = true;
                     FMResultSet *resultsBookmarkedAlready =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr,BOOKMARKCASE,item.itemID]];
                     while([resultsBookmarkedAlready next]) {
-                        bookmarked = false;
+                        alreadyBookmarked = false;
                     }
-                    if (bookmarked) {
-                        [database executeUpdate:@"INSERT INTO UserBookmark (documentID, username, typeID) VALUES (?,?,0)",item.itemID,usr];
+                    if (alreadyBookmarked) {
+                        [self insertToDB:database forUser:usr item:item.itemID withType:BOOKMARKCASE forCaseIDs:@"" andBookmarkType:BSOURCEALL];
                     }
-                    //                    } else {
-                    //                        [database executeUpdate:@"INSERT INTO UserBookmark (documentID, username, typeID,categories) VALUES (?,?,0,?)",item.itemID,usr,item.category];
-                    //                    }
-                    
                     
                     if (selected.coverflow == nil || ![[selected coverflow] boolValue]) {
-                        
-                     
-                        
-                         NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:selected.caseID onView:nil];
+                        NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:selected.caseID onView:nil];
                         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
                         [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                             // I get response as XML here and parse it in a function
-                            
                             NSError *jsonError;
                             NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
                             NSString *c = [dic objectForKey:@"d"];
                             NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                            FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
-                                                                                                             options:NSJSONReadingMutableContainers
-                                                                                                               error:&jsonError]];
+                            FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
+                                                                                                                       options:NSJSONReadingMutableContainers
+                                                                                                                         error:&jsonError]];
                             NSLog(@"%@",[jsonError localizedDescription]);
                             
+                            NSMutableArray *imgs = [caseObj parseImagesFromServer:NO];
+                            NSMutableArray *videosA = [caseObj parseVideosFromServer:NO];
                             
-                            
-                            //insertMedia TODO
-                            NSMutableArray *imgs = [caseObj parseImages];
-                            NSMutableArray *videosA = [caseObj parseVideos];
-                            
-                            [self bookmarkMedia:imgs withType:0];
-                            [self bookmarkMedia:videosA withType:1];
-                            FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                            [database open];
+                            [self saveBookmarkForMedia:imgs  withType:MEDIAIMAGE andSource:BSOURCECASE forCaseID:[caseObj caseID]];
+                            [self saveBookmarkForMedia:videosA  withType:MEDIAVIDEO andSource:BSOURCECASE forCaseID:[caseObj caseID]];
+
                             NSLog(@"Bookmarked %@",caseObj.title);
-                            [database executeUpdate:@"UPDATE Cases set title=?,langID=?,coverTypeID=?,name=?,image=?,introduction=?,procedure=?,results=?,'references'=?,parameters=?,date=?,galleryID=?,videoGalleryID=?,active=?,allowedForGuests=?,authorID=?,alloweInCoverFlow=?,isBookmark=? where caseID=?",caseObj.title,langID,caseObj.coverTypeID,caseObj.name,caseObj.image,caseObj.introduction,caseObj.procedure,caseObj.results,caseObj.references,caseObj.parametars,caseObj.date,caseObj.galleryID,caseObj.videoGalleryID,caseObj.active,caseObj.allowedForGuests,caseObj.authorID,caseObj.coverflow,@"1", caseObj.caseID];
-                            [database close];
+                            [database executeUpdate:@"UPDATE Cases set title=?,langID=?,coverTypeID=?,name=?,image=?,introduction=?,procedure=?,results=?,'references'=?,parameters=?,date=?,active=?,authorID=?,alloweInCoverFlow=?,isBookmark=?, deleted=?, download=?, userPermissions=?, galleryItemVideoIDs=?, galleryItemImagesIDs=? where caseID=?",caseObj.title,langID,caseObj.coverTypeID,caseObj.name,caseObj.image,caseObj.introduction,caseObj.procedure,caseObj.results,caseObj.references,caseObj.parameters,caseObj.date,caseObj.active,caseObj.authorID,caseObj.coverflow,@"1", caseObj.deleted, caseObj.download, caseObj.userPermissions, caseObj.galleryItemVideoIDs, caseObj.galleryItemImagesIDs, caseObj.caseID];
                             
+                            if ([FCommon isIpad]) {
+                                if ([[[APP_DELEGATE casebookController] currentCase] caseID] == selected.caseID ) {
+                                    [[APP_DELEGATE casebookController] refreshBookmarkBtn];
+                                }//TODO: dodat da pogleda na favorite in če je tm da refresha tisto celico
+                            } else{
+                                [self refreshViewWithItem:selected.caseID forItemType:BOOKMARKCASE];
+
+                            }
+
                         }
                                                          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                              NSLog(@"Cases bookmark failed %@",error.localizedDescription);
@@ -744,170 +550,118 @@ int bookmarkedCount;
                                                          }];
                         [operation start];
                         
-                        
-                        
                     }
                     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-                    [database close];
                     NSArray *pathComp=[dlink pathComponents];
                     NSString *local=[[NSString stringWithFormat:@"%@/.Cases/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[dlink lastPathComponent]];
-                    
                     
                     if ([[NSFileManager defaultManager] fileExistsAtPath:local]) {
                         [[APP_DELEGATE imagesToDownload] removeObject:local];
                         [[APP_DELEGATE videosToDownload] removeObject:local];
                     }
-                    if ([FCommon isIpad]) {
-                        if ([[[APP_DELEGATE casebookController] currentCase] caseID] == selected.caseID ) {
-                            [[APP_DELEGATE casebookController] refreshBookmarkBtn];
-                        }//TODO: dodat da pogleda na favorite in če je tm da refresha tisto celico
-                    } else{
-                        FIFlowController *flow = [FIFlowController sharedInstance];
-                        if ([[flow caseOpened] caseID] == selected.caseID ) {
-                            [[flow caseView] refreshBookmarkBtn];
-                        }//TODO: dodat da pogleda na favorite in če je tm da refresha tisto celico
-                    }
-
                 }
-                
             } else {
-                if ([item.type isEqualToString:BOOKMARKPDF]) {
-                    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                    [database open];
-                    NSString *usr = [FCommon getUser];
+                if ([item.type intValue] == [BOOKMARKPDF intValue]) {
                     // typeID 0-case 1-video 2-pdf
-                    //                    if (item.category == 0) {
-                    BOOL bookmarked = true;
-                    FMResultSet *resultsBookmarkedAlready =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr,BOOKMARKPDF,[NSString stringWithFormat:@"%d", [item.itemID intValue]]]];
-                    while([resultsBookmarkedAlready next]) {
-                        bookmarked = false;
-                    }
-                    if (bookmarked) {
-                        [database executeUpdate:@"INSERT INTO UserBookmark ('username',documentID,'typeID') VALUES (?,?,?)",usr,[NSString stringWithFormat:@"%d", [item.itemID intValue]],BOOKMARKPDF];
-                        bookmarkedCount++;
-                    }
-                    //                    } else {
-                    //                        [database executeUpdate:@"INSERT INTO UserBookmark (username,documentID,typeID, categories) VALUES (?,?,?,?)",usr,[NSString stringWithFormat:@"%d", [item.itemID intValue]],BOOKMARKPDF,item.category];
-                    //                    }
-                    //                    [database executeUpdate:@"INSERT INTO UserBookmark (username,documentID,typeID, categories) VALUES (?,?,?,?)",usr,[NSString stringWithFormat:@"%d", [item.itemID intValue]],BOOKMARKPDF,item.category];
-                    FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenu where active=1 and categoryID=%@ AND isBookmark=1",[NSString stringWithFormat:@"%d", [item.itemID intValue]]]];
-                    BOOL flag=NO;
-                    while([resultsBookmarked next]) {
-                        flag=YES;
-                    }
-                    if (!flag) {
-                        [database executeUpdate:@"UPDATE FotonaMenu set isBookmark=? where categoryID=?",@"1",[NSString stringWithFormat:@"%d", [item.itemID intValue]]];
-                    }
-                    [database close];
-                    NSArray *pathComp=[dlink pathComponents];
-                    NSString *local=[[NSString stringWithFormat:@"%@/.PDF/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[dlink lastPathComponent]];
-                    
-                    
-                    if ([[NSFileManager defaultManager] fileExistsAtPath:local]) {
-                        [[APP_DELEGATE pdfToDownload] removeObject:local];
-                    }
-                    if ([FCommon isIpad]) {
-                        [[APP_DELEGATE fotonaController] refreshMenu:item.link];
-                    } else
-                    {
-                        FIFlowController *flow = [FIFlowController sharedInstance];
-                        if (flow.fotonaTab != nil)
-                        {
-                            [[flow fotonaTab] refreshMenu:item.link];
+                    //check if both items were downloaded
+                    BOOL pdfComplete = true;
+                    for (int i = 0; i < [[APP_DELEGATE downloadList] count]; i++) {
+                        FItemBookmark * temp = [[APP_DELEGATE downloadList] objectAtIndex:i];
+                        if (([[[[APP_DELEGATE downloadList] objectAtIndex:i] itemID] isEqualToString:[item itemID]])&& (![[[[APP_DELEGATE downloadList] objectAtIndex:i] link] isEqualToString:[item link]]) &&([temp.type intValue] == [[item type] intValue]) ) {
+                            pdfComplete = false;
+                            break;
                         }
                     }
-                    
-                    
-                } else {
-                    
-                    if ([item.type isEqualToString:BOOKMARKVIDEO]) {
-                        FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                        [database open];
-                        
-                        NSString *usr = [FCommon getUser];
-                        //treba pogledat, če je še kak item s tem idjem not kot pr casih
-                        //if (item.category == 0) {
-                        
-                        BOOL videoExists = true;
-                        for (int i = 0; i < [[APP_DELEGATE downloadList] count]; i++) {
-                            FItemBookmark * temp = [[APP_DELEGATE downloadList] objectAtIndex:i];
-                            if (([[[[APP_DELEGATE downloadList] objectAtIndex:i] itemID] isEqualToString:[item itemID]])&& (![[[[APP_DELEGATE downloadList] objectAtIndex:i] link] isEqualToString:[item link]]) &&([temp.type isEqualToString:[item type]]) ) {
-                                videoExists = false;
-                                break;
-                            }
-                        }
-                        if (videoExists) {
-                            BOOL bookmarked = true;
-                            FMResultSet *resultsBookmarkedAlready =  [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr,BOOKMARKVIDEO,[NSString stringWithFormat:@"%d", [item.itemID intValue]]]];
-                            while([resultsBookmarkedAlready next]) {
-                                bookmarked = false;
-                            }
-                            if (bookmarked) {
-                                [database executeUpdate:@"INSERT INTO UserBookmark ('username',documentID,'typeID') VALUES (?,?,?)",usr,[NSString stringWithFormat:@"%d", [item.itemID intValue]],BOOKMARKVIDEO];
-                                [[APP_DELEGATE fotonaController] refreshCell:[item.itemID intValue]];
-                                bookmarkedCount+=2;
-                                [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=? and mediaType=1",@"1",item.itemID];
-                            }
-                        }
-                        //                        } else {
-                        //                            [database executeUpdate:@"INSERT INTO UserBookmark (username,documentID,typeID, categories) VALUES (?,?,?,?)",usr,[NSString stringWithFormat:@"%@",item.itemID],BOOKMARKVIDEO,item.category];
-                        //                        }
-                        //                                [database executeUpdate:@"INSERT INTO UserBookmark (username,documentID,typeID, categories) VALUES (?,?,?,?)",usr,[NSString stringWithFormat:@"%@",item.itemID],BOOKMARKVIDEO,item.category];
-                        
-                        
-                        
-                        BOOL exists = true;
-                        for (int i = 0; i < [[APP_DELEGATE downloadList] count]; i++) {
-                            if (([[[[APP_DELEGATE downloadList] objectAtIndex:i] itemID] isEqualToString:[item itemID]])&& (![[[[APP_DELEGATE downloadList] objectAtIndex:i] link] isEqualToString:[item link]])) {
-                                exists = false;
-                                break;
-                            }
-                        }
-                        if (exists) {
-                            if ([FCommon isIpad]) {
-                                [[APP_DELEGATE fotonaController] refreshCell:[item.itemID intValue]];
-                            } else{
-                                FIFlowController *flow = [FIFlowController sharedInstance];
-                                [[flow videoView] reloadCells:item.itemID];
-                            }
-                            
-                        }
-                        
-                        [database close];
-                        NSArray *pathComp=[dlink pathComponents];
-                        NSString *local=[[NSString stringWithFormat:@"%@/.Cases/%@",docDir,[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[dlink lastPathComponent]];
-                        
+                    if (pdfComplete) {
+                        FMedia *pdf = [FDB getMediaWithId:[item itemID] andType:MEDIAPDF];
+
+                      [self saveBookmarkForMedia:[NSMutableArray arrayWithObjects:pdf, nil] withType:MEDIAPDF andSource:BSOURCEFOTONA forCaseID:@""];
+                        NSString *local= [FMedia  createLocalPathForLink:dlink andMediaType:MEDIAPDF];
                         
                         if ([[NSFileManager defaultManager] fileExistsAtPath:local]) {
+                            [[APP_DELEGATE pdfToDownload] removeObject:local];
                             [[APP_DELEGATE imagesToDownload] removeObject:local];
-                            [[APP_DELEGATE videosToDownload] removeObject:local];
                         }
-                        
-                        
+                        if ([FCommon isIpad]) {
+                            //TODO:refresh celice ne menuja [[APP_DELEGATE fotonaController] refreshMenu:item.link];
+                        } else
+                        {
+                            [self refreshViewWithItem:item.itemID forItemType:BOOKMARKPDF];
+                        }
+                    }
+                } else {
+                    [database close];
+                    if ([item.type intValue] == [BOOKMARKVIDEO intValue]) {                        
+                        BOOL videoComplete = true;
+                        for (int i = 0; i < [[APP_DELEGATE downloadList] count]; i++) {
+                            FItemBookmark * temp = [[APP_DELEGATE downloadList] objectAtIndex:i];
+                            if (([[[[APP_DELEGATE downloadList] objectAtIndex:i] itemID] isEqualToString:[item itemID]])&& (![[[[APP_DELEGATE downloadList] objectAtIndex:i] link] isEqualToString:[item link]]) &&([temp.type intValue] == [[item type] intValue]) ) {
+                                videoComplete = false;
+                                break;
+                            }
+                        }
+                        if (videoComplete) {
+                            FMedia *vid = [FDB getMediaWithId:[item itemID] andType:MEDIAVIDEO];
+                            [self saveBookmarkForMedia:[NSMutableArray arrayWithObjects:vid, nil] withType:MEDIAVIDEO andSource:BSOURCEFOTONA forCaseID:@""];
+                            NSString *local= [FMedia  createLocalPathForLink:dlink andMediaType:MEDIAVIDEO];
+
+                            if ([[NSFileManager defaultManager] fileExistsAtPath:local]) {
+                                [[APP_DELEGATE videosToDownload] removeObject:local];
+                                [[APP_DELEGATE imagesToDownload] removeObject:local];
+                            }
+                            if ([FCommon isIpad]) {
+                                //TODO:refresh celice ne menuja [[APP_DELEGATE fotonaController] refreshMenu:item.link];
+                            } else
+                            {
+                                [self refreshViewWithItem:item.itemID forItemType:BOOKMARKVIDEO];
+                            }
+                        }
                     }
                 }
-                
-                
             }
-            
-            
         }
-        
     }
-    //    if ([APP_DELEGATE downloadList].count == 0) {
-    //        NSLog(@"%d",bookmarkedCount);
-    //        [HelperBookmark success];
-    //    }
+    [database close];
 }
 
-+ (BOOL) checkItem:(NSString *) itemId forCategory:(int) category andType:(NSString *)type{
++(void)refreshViewWithItem:(NSString *)itemID forItemType:(NSString *)itemType{
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    if ([[[flow caseOpened] caseID] intValue] == [itemID intValue] ) {
+        [[flow caseView] refreshBookmarkBtn];
+    } else {
+        if ([[flow lastOpenedView] isKindOfClass:[FIFavoriteViewController class]]) {
+            FIFavoriteViewController *favorView =(FIFavoriteViewController *)[flow lastOpenedView];
+            [favorView refreshCellWithItemID:itemID andItemType:itemType];
+        }else {
+            if ([[flow lastOpenedView] isKindOfClass:[FIGalleryViewController class]]) {
+                FIGalleryViewController *gallView =(FIGalleryViewController *)[flow lastOpenedView];
+                [gallView refreshCellWithItemID:itemID andItemType:itemType];
+            }
+        }
+    }
+}
+
++(void) insertToDB:(FMDatabase *)database forUser:(NSString *)usr item:(NSString *)itemID withType:(NSString *) itemType forCaseIDs:(NSString *)caseIDs andBookmarkType:(int) bookmarkType{
+    if (caseIDs == nil) {
+        caseIDs = @"";
+    }
+    [database executeUpdate:@"INSERT INTO UserBookmark ('username',documentID,'typeID', 'caseIDs', bookmarkType) VALUES (?,?,?,?,?)",usr,itemID,itemType, caseIDs, [NSString stringWithFormat:@"%d", bookmarkType]];
+}
+
++(void) updateDB:(FMDatabase *)database forUser:(NSString *)usr item:(NSString *)itemID withType:(NSString *) itemType forCaseIDs:(NSString *)caseIDs andBookmarkType:(int) bookmarkType{
+    if (caseIDs == nil) {
+        caseIDs = @"";
+    }
+    
+    [database executeUpdate:@"UPDATE UserBookmark set caseIDs=? WHERE username=? AND typeID=? AND documentID=? AND bookmarkType=?",caseIDs, usr,itemType, itemID, bookmarkType];
+}
+
++ (BOOL) checkItem:(NSString *) itemId andType:(NSString *)type{
     for(FItemBookmark *item in [APP_DELEGATE downloadList]){
         if( [item.itemID isEqualToString:itemId] && [item.type isEqualToString:type]){
-            item.category =  [NSString stringWithFormat:@"%@,%d",item.category,category];
             return false;
         }
     }
-    
     return true;
 }
 
@@ -925,9 +679,293 @@ int bookmarkedCount;
      [defaults setBool:false forKey:@"bookmarkAll"];
 }
 
-+ (void) countBookmarks:(float)add {
++ (void) countBookmarks:(float)add withSize:(int) size {
     [APP_DELEGATE setBookmarkCountAll:[APP_DELEGATE bookmarkCountAll]+add];
     [APP_DELEGATE setBookmarkCountLeft:[APP_DELEGATE bookmarkCountLeft]+add];
+    [APP_DELEGATE setBookmarkSizeAll:[APP_DELEGATE bookmarkSizeAll]+size];
+    [APP_DELEGATE setBookmarkSizeLeft:[APP_DELEGATE bookmarkSizeLeft]+size];
 }
+
+#pragma mark checkIfBookmarked
+
+
++(BOOL) bookmarked: (int) itemID withType:(NSString *)type{
+    NSString *itemUsr = [FCommon getUser];
+    FMDatabase *localDatabase = [FMDatabase databaseWithPath:DB_PATH];
+    [localDatabase open];
+    FMResultSet *resultsBookmarked =  [localDatabase executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[itemUsr,type,[[NSNumber numberWithInt:itemID] stringValue]]];
+    while([resultsBookmarked next]) {
+        [localDatabase close];
+        return YES;
+    }
+    [localDatabase close];
+    return NO;
+}
+
++(void)unbookmarkAll{
+    NSString *currentUsr = [FCommon getUser];
+    int x = 0;
+    FMDatabase *localDatabase = [FMDatabase databaseWithPath:DB_PATH];
+    [localDatabase open];
+    FMResultSet *resultsBookmarked =  [localDatabase executeQuery:@"SELECT * FROM UserBookmark where username=?" withArgumentsInArray:@[currentUsr]];
+    while([resultsBookmarked next]) {
+        
+        
+        NSString *type = [resultsBookmarked stringForColumn:@"typeID"];
+        FMResultSet *resultItem;
+        BOOL still = NO;
+        if ([type isEqualToString:BOOKMARKNEWS]) {// news
+            [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,BOOKMARKNEWS];
+            resultItem = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKNEWS, nil]];
+            while([resultItem next]) {
+                still = YES;
+            }
+            if (!still) {//if not bookmaked anymore
+                resultItem = [localDatabase executeQuery:@"SELECT * FROM News where newsID=?" withArgumentsInArray:[NSArray arrayWithObjects:[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKNEWS, nil]];
+                while([resultItem next]) {
+                    FNews *f=[[FNews alloc] initWithDictionary:[resultItem resultDictionary]];
+                    [localDatabase executeUpdate:@"UPDATE News set isBookmark=? where newsID=?",@"0", [NSString stringWithFormat:@"%ld", (long)f.newsID]];
+                    if ([f.rest isEqualToString:@"1"]) {
+                        NSString *downloadFilename = [NSString stringWithFormat:@"%@%@",docDir,f.localImage];
+                        NSFileManager *fileManager = [NSFileManager defaultManager];
+                        NSError *error;
+                        [fileManager removeItemAtPath:downloadFilename error:&error];
+                        x++;
+                        for (int i =0; i<[f.localImages count]; i++) {
+                            downloadFilename = [NSString stringWithFormat:@"%@%@",docDir,[f.localImages objectAtIndex:i]];
+                            [fileManager removeItemAtPath:downloadFilename error:&error];
+                            x++;
+                        }
+                    }
+                }
+            }
+        } else {
+            if ([type isEqualToString:BOOKMARKEVENTS]) {//events
+                [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,BOOKMARKEVENTS];
+                resultItem = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKEVENTS, nil]];
+                while([resultItem next]) {
+                    still = YES;
+                }
+                if (!still) {
+                    [localDatabase executeUpdate:@"UPDATE Events set isBookmark=? where eventID=?",@"0", [NSString stringWithFormat:@"%@", [resultsBookmarked stringForColumn:@"documentID"]]];
+                }
+                
+            } else {
+                if ([type isEqualToString:BOOKMARKVIDEO] || [type isEqualToString:BOOKMARKPDF]) {//video and pdf
+                    [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,type];
+                    [[APP_DELEGATE fotonaController] refreshCellUnbookmark:[[resultsBookmarked stringForColumn:@"documentID"] intValue]];
+                    FMResultSet *results =  [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",[resultsBookmarked stringForColumn:@"documentID"],type]];
+                    BOOL flag=NO;
+                    while([results next]) {
+                        flag=YES;
+                    }
+                    if (!flag) {
+                        [localDatabase executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=?",@"0",[resultsBookmarked stringForColumn:@"documentID"]];
+                        FMResultSet *results2 = [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ order by sort",[resultsBookmarked stringForColumn:@"documentID"]]];
+                        
+                        while([results2 next]) {
+                            NSString *downloadFilename = [FMedia createLocalPathForLink:[results2 stringForColumn:@"path"] andMediaType:type];
+                            NSFileManager *fileManager = [NSFileManager defaultManager];
+                            NSError *error;
+                            [fileManager removeItemAtPath:downloadFilename error:&error];
+                            x++;
+                            NSArray *pathComp=[[results2 stringForColumn:@"mediaImage"] pathComponents];
+                            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[results2 stringForColumn:@"mediaImage"] lastPathComponent]];
+                            [fileManager removeItemAtPath:pathTmp error:&error];
+                            x++;
+                        }
+                    }
+                    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+                } else {
+                    //case
+                    [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr, BOOKMARKCASE,nil];
+                    BOOL bookmarked = NO;
+                    
+                    FMResultSet *results = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:BOOKMARKCASE,[resultsBookmarked stringForColumn:@"documentID"], nil]];
+                    while([results next]) {
+                        bookmarked = YES;
+                    }
+                    FMResultSet *selectedCases = [localDatabase executeQuery:@"SELECT * FROM Cases where caseID=?" withArgumentsInArray:@[[resultsBookmarked stringForColumn:@"documentID"]]];
+                    FCase * selected;
+                    while([selectedCases next]) {
+                        selected =  [[FCase alloc] initWithDictionaryFromDB:[selectedCases resultDictionary]];
+                    }
+                    
+                    if (!bookmarked) {
+                        if ([[selected coverflow] boolValue]) {
+                            [localDatabase executeUpdate:@"UPDATE Cases set isBookmark=? where caseID=?",@"0",selected.caseID];
+                            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+                        }
+                        else{
+                            [localDatabase executeUpdate:@"DELETE FROM Cases WHERE caseID=?",selected.caseID];
+                            [localDatabase executeUpdate:@"INSERT INTO Cases (caseID,title, coverTypeID,name,image,active,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?)",selected.caseID,selected.title,selected.coverTypeID,selected.name,selected.image,selected.active,selected.authorID,@"0",selected.coverflow,selected.deleted, selected.download, selected.userPermissions];
+                            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+                            x+=[selected getImages].count;
+                            x+=[selected getVideos].count * 2;
+                            for (FMedia *vid in [selected getVideos]) {
+                                [self removeBookmarkForMedia:vid andType:MEDIAVIDEO forBookmarkType:BSOURCECASE];
+                            }
+                            for (FImage *image in [selected getImages]) {
+                                [self removeBookmarkForImage:image andType:MEDIAIMAGE forBookmarkType:BSOURCECASE];
+                            }
+                            [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseImagesFromServer:NO] withType:0];
+                            [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseVideosFromServer:NO] withType:1];
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+    [localDatabase close];
+    NSLog(@"Unbookmarked items: %d",x);
+    NSLog(@"Unbookmarking complete");
+    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEDBULKBOOKMARKS", nil)] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [av show];
+}
+
+
+
+#pragma mark - Remove Bookmark
+
++(void)removeBookmarkForMedia:(FMedia *)media andType:(NSString *)itemType forBookmarkType:(int)bookType{
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    NSString *usr = [FCommon getUser];
+    NSString *cases = @"";
+    BOOL delete = YES;
+    BOOL remove = YES;
+     FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=? AND bookmarkType=?" withArgumentsInArray:@[usr, itemType, [media itemID],[NSString stringWithFormat:@"%d", bookType]]];
+    BOOL stillBookmarked=NO;
+    while([resultsBookmarked next]) {
+        stillBookmarked=YES;
+        cases =[resultsBookmarked stringForColumn:@"caseIDs"];
+    }
+    if (stillBookmarked) {
+        if (bookType == BSOURCECASE) {
+            NSMutableArray *casesArray = [[FCommon stringToArray:cases withSeparator:@","] mutableCopy];
+            if([casesArray containsObject:[media itemID]]){
+                [casesArray removeObject:[media itemID]];
+            }
+            cases = [FCommon arrayToString:casesArray withSeparator:@","];
+            if (![cases isEqualToString:@""]) {
+                delete = NO;
+            }
+        }
+        
+        if (delete) {
+            [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? AND username=? AND typeID=? AND bookmarkType=?",[media itemID],usr,itemType, [NSString stringWithFormat:@"%d", bookType]];
+        } else {
+            [database executeUpdate:@"DELETE UserBookmark  set caseIDs=? WHERE documentID=? AND username=? AND typeID=? AND bookmarkType=?",cases,[media itemID],usr,itemType, [NSString stringWithFormat:@"%d", bookType]];
+        }
+        
+        FMResultSet *resultsRemove = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=? AND bookmarkType=?" withArgumentsInArray:@[usr, itemType, [media itemID],[NSString stringWithFormat:@"%d", bookType]]];
+        while([resultsRemove next]) {
+            remove = NO;
+        }
+        if (remove) {
+             [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=? AND mediaType=?",@"0",[resultsBookmarked stringForColumn:@"documentID"], itemType];
+            NSString *downloadFilename = [FMedia createLocalPathForLink:[media path] andMediaType:itemType];
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSError *error;
+            [fileManager removeItemAtPath:downloadFilename error:&error];
+            NSArray *pathComp=[[media mediaImage] pathComponents];
+            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[media mediaImage] lastPathComponent]];
+            [fileManager removeItemAtPath:pathTmp error:&error];
+        }
+    }
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+
+    
+    [self refreshViewWithItem:media.itemID forItemType:itemType];
+    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [av show];
+}
+
++(void)removeBookmarkForImage:(FImage *)image andType:(NSString *)itemType forBookmarkType:(int)bookType{
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    NSString *usr = [FCommon getUser];
+    NSString *cases = @"";
+    BOOL delete = YES;
+    BOOL remove = YES;
+    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=? AND bookmarkType=?" withArgumentsInArray:@[usr, itemType, [image itemID],[NSString stringWithFormat:@"%d", bookType]]];
+    BOOL stillBookmarked=NO;
+    while([resultsBookmarked next]) {
+        stillBookmarked=YES;
+        cases =[resultsBookmarked stringForColumn:@"caseIDs"];
+    }
+    if (stillBookmarked) {
+        if (bookType == BSOURCECASE) {
+            NSMutableArray *casesArray = [[FCommon stringToArray:cases withSeparator:@","] mutableCopy];
+            if([casesArray containsObject:[image itemID]]){
+                [casesArray removeObject:[image itemID]];
+            }
+            cases = [FCommon arrayToString:casesArray withSeparator:@","];
+            if (![cases isEqualToString:@""]) {
+                delete = NO;
+            }
+        }
+        
+        if (delete) {
+            [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? AND username=? AND typeID=? AND bookmarkType=?",[image itemID],usr,itemType, [NSString stringWithFormat:@"%d", bookType]];
+        } else {
+            [database executeUpdate:@"DELETE UserBookmark  set caseIDs=? WHERE documentID=? AND username=? AND typeID=? AND bookmarkType=?",cases,[image itemID],usr,itemType, [NSString stringWithFormat:@"%d", bookType]];
+        }
+        
+        FMResultSet *resultsRemove = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=? AND bookmarkType=?" withArgumentsInArray:@[usr, itemType, [image itemID],[NSString stringWithFormat:@"%d", bookType]]];
+        while([resultsRemove next]) {
+            remove = NO;
+        }
+        if (remove) {
+            [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=? AND mediaType=?",@"0",[resultsBookmarked stringForColumn:@"documentID"], itemType];
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSError *error;
+            NSArray *pathComp=[[image path] pathComponents];
+            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[image path] lastPathComponent]];
+            [fileManager removeItemAtPath:pathTmp error:&error];
+        }
+    }
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+    [self refreshViewWithItem:image.itemID forItemType:itemType];
+    
+    
+    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [av show];
+}
+
++(void)removeBookmarkedCase:(FCase *)caseToRemove
+{
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    NSString *usr = [FCommon getUser];
+    [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? AND username=? AND typeID=?",caseToRemove.caseID,usr,BOOKMARKCASE,nil];
+    BOOL bookmarked = NO;
+    
+    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where typeID=? AND documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:BOOKMARKCASE,caseToRemove.caseID, nil]];
+    while([resultsBookmarked next]) {
+        bookmarked = YES;
+    }
+    
+    if (!bookmarked) {
+        [database executeUpdate:@"UPDATE Cases set isBookmark=? where caseID=?",@"0",caseToRemove.caseID];
+        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+        [database close];
+        if (![[caseToRemove coverflow] boolValue]) {
+            for (FMedia *vid in caseToRemove.video) {
+                [self removeBookmarkForMedia:vid andType:MEDIAVIDEO forBookmarkType:BSOURCECASE];
+            }
+            for (FImage *image in caseToRemove.images) {
+                [self removeBookmarkForImage:image andType:MEDIAIMAGE forBookmarkType:BSOURCECASE];
+            }
+        }
+    }
+    [self refreshViewWithItem:caseToRemove.caseID forItemType:BOOKMARKCASE];
+    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [av show];
+}
+
 
 @end

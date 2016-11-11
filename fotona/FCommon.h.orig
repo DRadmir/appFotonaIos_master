@@ -14,15 +14,15 @@
 
 +(UIImageView *)imageCutWithRect:(CGRect) rect;
 
-
-+(void)playVideoOnIphone:(FMedia *) video onViewController:(UIViewController *)viewController;
-+(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController  localSaved:(BOOL) isLocalSaved;
++(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController;
 
 +(BOOL) isGuest;
-+(BOOL)userPermission:(NSString*)permissions;
-+(BOOL)checkItemPermissions:(NSString *) permissions ForCategory:(NSString *)category;
-
+<<<<<<< HEAD
 
 +(NSString *)arrayToString:(NSMutableArray *) array withSeparator:(NSString *) separator;
 +(NSArray *)stringToArray:(NSString *) string withSeparator:(NSString *)separator;
+=======
++ (BOOL)userPermission:(NSString*)array;
+
+>>>>>>> b79a7f9b393b729b0f302d2432b6f9caf597f1b5
 @end

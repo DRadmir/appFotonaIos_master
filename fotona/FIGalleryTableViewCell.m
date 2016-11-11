@@ -8,6 +8,7 @@
 
 #import "FIGalleryTableViewCell.h"
 #import "FDB.h"
+#import "FHelperThumbnailImg.h"
 
 @implementation FIGalleryTableViewCell
 @synthesize caseToShow;
@@ -15,24 +16,52 @@
 @synthesize parentIphone;
 @synthesize index;
 @synthesize enabled;
-@synthesize cellView;
+@synthesize cellViewCase;
+@synthesize cellViewFotona;
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    cellView = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:0];
-    [[self contentView] addSubview: cellView];
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 }
 
--(void) setContentForCase:(FCase *)fcase{
+-(void)setContentForCase:(FCase *)fcase{
+   
+    cellViewCase = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:0];
+    [[self contentView] addSubview: cellViewCase];
     enabled = true;
-    [cellView setItem:item];
-    [cellView setIndex:index];
-    [cellView setParentIphone:parentIphone];
-    [cellView setContentForCase:fcase];
+    [cellViewCase setItem:item];
+    [cellViewCase setIndex:index];
+    [cellViewCase setParentIphone:parentIphone];
+    [cellViewCase setContentForCase:fcase];
+}
+
+-(void)setContentForFavorite:(FItemFavorite *)fitem forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath{
+    if ([[fitem typeID] intValue] == BOOKMARKVIDEOINT || [[fitem typeID] intValue] == BOOKMARKPDFINT) {
+        FMedia * media =[FDB getMediaWithId:[fitem itemID] andType:[fitem typeID]];
+        [self setContentForMedia:media forTableView:tableView onIndex:indexPath];
+        [FHelperThumbnailImg getThumbnailForMedia:media onTableView:tableView withIndex:indexPath];
+    }
+}
+
+-(void)setContentForMedia:(FMedia *)media forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath{
+    enabled = true;;
+    if (cellViewFotona == nil) {
+         cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
+         [[self contentView] addSubview: cellViewFotona];
+    }
+    [cellViewFotona setContentForMedia:media andMediaType:[media mediaType]];
+    if ([[media bookmark] isEqualToString:@"0"] && ![APP_DELEGATE connectedToInternet]) {
+        enabled = false;
+    }
+     [FHelperThumbnailImg getThumbnailForMedia:media onTableView:tableView withIndex:indexPath];
+}
+
+-(void)refreshMediaThumbnail:(UIImage *)img{
+    [cellViewFotona reloadVideoThumbnail:img];
 }
 
 @end
