@@ -32,6 +32,7 @@
     
     int newsCount;
     int extraNews;
+    int enabledNewsCount;
     
     int newsSelected;
     
@@ -61,6 +62,7 @@
     carouselHeight.constant = [[UIScreen mainScreen] bounds].size.width / 2.279;
     
     newsCount = 5;
+    enabledNewsCount = 5;
     extraNews = 4;
     newsSelected = 0;
     
@@ -155,7 +157,7 @@
             }
             
             if (indexPath.section == count) {
-                newsSelected = (int)indexPath.row;
+                newsSelected = indexPath.row;
                 FIFeaturedNewsTableViewCell *cell = [self.tableViewFeatured cellForRowAtIndexPath:indexPath];
                 cell.signNewNewsCell.hidden = true;
                 [APP_DELEGATE setNewsArray:newsArray];
@@ -206,27 +208,35 @@
     FIFeaturedNewsTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:0];
     if (indexPath.row == 0) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:1];
+        [cell setEnabled:YES];
     }
     if (indexPath.row > newsCount - 1) {
-        
 
         CGPoint offset = self.tableViewFeatured.contentOffset;
         offset.y-=10;
         [self.tableViewFeatured setContentOffset:offset animated:NO];
         int l = 4;
         if (newsCount + l > newsArray.count) {
-            l = (int)newsArray.count - newsCount;
+            l = newsArray.count - newsCount;
         }
         newsCount+=l;
+        [cell setEnabled:NO];
+        if (indexPath.row < enabledNewsCount ) {
+            [cell setEnabled:YES];
+        }
+        
         dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
         dispatch_async(queue, ^{
-            newsArray = [FNews getImages:newsArray fromStart:(int)indexPath.row forNumber:l];
+            newsArray = [FNews getImages:newsArray fromStart:indexPath.row forNumber:l];
             dispatch_async(dispatch_get_main_queue(), ^{
+                
                 NSMutableArray *rowsToReload =[[NSMutableArray alloc] init];
+                
                 for (int i = 0; i < l; i++){
                     NSIndexPath* index = [NSIndexPath indexPathForRow:indexPath.row+i inSection:indexPath.section];
                     [rowsToReload addObject:index];
                }
+                enabledNewsCount = newsCount;
                [tableViewFeatured reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
                 
             });
@@ -253,7 +263,7 @@
     //set up data
     wrap = YES;
     
-    self.items = [FDB getCasesForCarouselFromDB];
+    self.items = [FDB getCasesForCarouselFromDB];//self.getCasesForCarouselFromDB;
     //random mixing carousel
     for (int x = 0; x < [items count]; x++) {
         int randInt = (arc4random() % ([items count] - x)) + x;

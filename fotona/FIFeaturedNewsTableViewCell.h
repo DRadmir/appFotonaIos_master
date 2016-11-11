@@ -25,6 +25,7 @@
 @property (strong, nonatomic) FNews* news;
 @property (nonatomic) BOOL related;
 @property (strong, nonatomic) FIFeaturedViewController *parent;
+@property (nonatomic) BOOL enabled;
 
 - (void) fillCell;
 

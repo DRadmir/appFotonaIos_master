@@ -312,9 +312,6 @@
             }
             [newsArray replaceObjectAtIndex:startIndex+c withObject:sf];
         }
-      
-    
-
     return newsArray;
 }
 

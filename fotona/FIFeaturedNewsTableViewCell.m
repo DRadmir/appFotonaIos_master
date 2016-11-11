@@ -13,6 +13,7 @@
 
 @synthesize contentView;
 @synthesize topViewContentView;
+@synthesize enabled;
 
 //TODO : zbrisat xib file za ta class
 - (void)awakeFromNib {
@@ -46,6 +47,7 @@
             self.imgViewNewsCell.image =[[self.news images] objectAtIndex:0];
         }
     }
+    [self setUserInteractionEnabled:enabled];
 }
 
 @end
