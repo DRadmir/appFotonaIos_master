@@ -58,6 +58,9 @@
         NSString *temp = [dic valueForKey:@"images"];
         NSMutableArray *tempB = [temp componentsSeparatedByString:@","];
         NSMutableArray *tempA = [[NSMutableArray alloc]init];
+        
+        
+        
 //        if (![temp isEqualToString:@""]) {
 //            for (int i=0; i<tempB.count; i++) {
 //                //NSData *data = [[NSData alloc]initWithBase64EncodedString:[tempB objectAtIndex:i] options:NSDataBase64DecodingIgnoreUnknownCharacters];
@@ -67,7 +70,7 @@
 //            }
 //            
 //        }
-        if (![temp isEqualToString:@""])
+        if (![temp isEqualToString:@"" ])
             [self setEventImages:tempB];
         tempA = nil;
         temp = [dic valueForKey:@"categories"];
@@ -146,14 +149,13 @@
  siva - all*/
 
 
-
 - (NSString *)getDot{
+    
     int c = [[[self eventcategories] objectAtIndex:0] integerValue];
     switch (c) {
         case 1:
             return @"event_dental_red.pdf";
             break;
-            
         case 2:
             return @"event_aesthetics_red.pdf";
             break;
@@ -169,21 +171,23 @@
     }
 }
 
-- (NSString *)getDot:(int) cat{
+- (NSString *)getDot:(int) cat {
     switch (cat) {
-        case 1:
-            return @"blue.png";
-            break;
             
+        case 1:
+            return @"event_dental_red.pdf";
+            break;
         case 2:
-            return @"orange.png";
+            return @"event_aesthetics_red.pdf";
             break;
         case 3:
-            return @"pink.png";
+            return @"event_gyno_red.pdf";
             break;
         default:
-            return @"green.png";
+            return @"event_surgery_red.pdf";
             break;
+            
+
     }
 }
 

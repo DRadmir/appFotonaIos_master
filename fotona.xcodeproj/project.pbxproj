@@ -548,7 +548,7 @@
 		1BD1AE3F1C2022C30059560B /* FMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMainViewController.h; path = ../FMainViewController.h; sourceTree = "<group>"; };
 		1BD1AE401C2022C30059560B /* FMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMainViewController.m; path = ../FMainViewController.m; sourceTree = "<group>"; };
 		1BD1AE411C2022C30059560B /* FMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FMainViewController.xib; path = ../FMainViewController.xib; sourceTree = "<group>"; };
-		1BD1AE441C2050430059560B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		1BD1AE441C2050430059560B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = fotona/Images.xcassets; sourceTree = SOURCE_ROOT; };
 		1BD3102F1BFCD71B007A983B /* DisclaimerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisclaimerViewController.h; sourceTree = "<group>"; };
 		1BD310301BFCD71B007A983B /* DisclaimerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisclaimerViewController.m; sourceTree = "<group>"; };
 		1BD310311BFCD71B007A983B /* DisclaimerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DisclaimerViewController.xib; sourceTree = "<group>"; };

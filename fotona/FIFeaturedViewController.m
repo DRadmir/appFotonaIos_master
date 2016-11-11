@@ -32,6 +32,7 @@
     
     int newsCount;
     int extraNews;
+    int enabledNewsCount;
     
     int newsSelected;
     
@@ -61,6 +62,7 @@
     carouselHeight.constant = [[UIScreen mainScreen] bounds].size.width / 2.279;
     
     newsCount = 5;
+    enabledNewsCount = 5;
     extraNews = 4;
     newsSelected = 0;
     
@@ -206,41 +208,35 @@
     FIFeaturedNewsTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:0];
     if (indexPath.row == 0) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:1];
+        [cell setEnabled:YES];
     }
     if (indexPath.row > newsCount - 1) {
-        
-//        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
-//        [self.view addSubview:hud];
-//        hud.labelText = @"Loading...";
-//        //        [[MBProgressHUD showHUDAddedTo:self.view animated:YES]  setLabelText:@"Loading"];
-//        [hud show:YES];
-        
-        
+
         CGPoint offset = self.tableViewFeatured.contentOffset;
         offset.y-=10;
-//        self.tableViewFeatured.scrollEnabled =NO;
         [self.tableViewFeatured setContentOffset:offset animated:NO];
         int l = 4;
         if (newsCount + l > newsArray.count) {
             l = newsArray.count - newsCount;
         }
         newsCount+=l;
+        [cell setEnabled:NO];
+        if (indexPath.row < enabledNewsCount ) {
+            [cell setEnabled:YES];
+        }
+        
         dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
         dispatch_async(queue, ^{
             newsArray = [FNews getImages:newsArray fromStart:indexPath.row forNumber:l];
             dispatch_async(dispatch_get_main_queue(), ^{
-//                self.tableViewFeatured.scrollEnabled  = YES;
-//                [self.tableViewFeatured reloadData];
-//                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                
                 
                 NSMutableArray *rowsToReload =[[NSMutableArray alloc] init];
                 
                 for (int i = 0; i < l; i++){
                     NSIndexPath* index = [NSIndexPath indexPathForRow:indexPath.row+i inSection:indexPath.section];
                     [rowsToReload addObject:index];
-                    
                }
+                enabledNewsCount = newsCount;
                [tableViewFeatured reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
                 
             });

@@ -20,10 +20,10 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d8H-Ju-Rky" userLabel="Button5">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="19" id="bpU-1t-3X5"/>
-                                    <constraint firstAttribute="height" constant="19" id="qgC-aK-zZ8"/>
+                                    <constraint firstAttribute="width" constant="23" id="bpU-1t-3X5"/>
+                                    <constraint firstAttribute="height" constant="23" id="qgC-aK-zZ8"/>
                                 </constraints>
-                                <state key="normal" image="all.png">
+                                <state key="normal" image="event_all_red">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -32,9 +32,9 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FqI-ma-XCq" userLabel="Button4">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="19" id="Ykg-Cl-yvM"/>
+                                    <constraint firstAttribute="width" constant="23" id="Ykg-Cl-yvM"/>
                                 </constraints>
-                                <state key="normal" image="green.png">
+                                <state key="normal" image="event_surgery_red">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -43,9 +43,9 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JfC-YD-nJc" userLabel="Button3">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="19" id="Sj9-Dc-ENf"/>
+                                    <constraint firstAttribute="width" constant="23" id="Sj9-Dc-ENf"/>
                                 </constraints>
-                                <state key="normal" image="blue.png">
+                                <state key="normal" image="event_dental_red">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -54,9 +54,9 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o2m-RO-bpv" userLabel="Button2">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="19" id="Ibp-wh-4Hb"/>
+                                    <constraint firstAttribute="width" constant="23" id="Ibp-wh-4Hb"/>
                                 </constraints>
-                                <state key="normal" image="orange.png">
+                                <state key="normal" image="event_aesthetics_red">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -65,9 +65,9 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c1v-qy-666" userLabel="Button1">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="19" id="6m8-Io-Uyb"/>
+                                    <constraint firstAttribute="width" constant="23" id="6m8-Io-Uyb"/>
                                 </constraints>
-                                <state key="normal" image="pink.png">
+                                <state key="normal" image="event_gyno_red">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -352,10 +352,10 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="all.png" width="13" height="13"/>
-        <image name="blue.png" width="13" height="13"/>
-        <image name="green.png" width="13" height="13"/>
-        <image name="orange.png" width="13" height="13"/>
-        <image name="pink.png" width="13" height="13"/>
+        <image name="event_aesthetics_red" width="45" height="45"/>
+        <image name="event_all_red" width="45" height="45"/>
+        <image name="event_dental_red" width="45" height="45"/>
+        <image name="event_gyno_red" width="45" height="45"/>
+        <image name="event_surgery_red" width="45" height="45"/>
     </resources>
 </document>

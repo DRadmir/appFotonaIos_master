@@ -34,7 +34,7 @@
             <objects>
                 <navigationController id="9cP-QX-7OM" userLabel="FeaturedNavigation" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Featured" image="homepage_red.png" id="EmH-LA-wUk"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="YEt-iC-WgB">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="YEt-iC-WgB">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -158,7 +158,7 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="82" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Uc9-bb-Qvt">
-                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="eventsTabelViewCell" selectionStyle="none" indentationWidth="10" reuseIdentifier="eventsTabelViewCell" rowHeight="82" id="6Y9-0J-ndx" customClass="FIEventTableViewCell">
                                         <rect key="frame" x="0.0" y="56" width="375" height="82"/>
@@ -175,9 +175,9 @@
                                                     <color key="textColor" red="0.36767482757568359" green="0.36766383051872253" blue="0.36767005920410156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="USS-X1-JN3" userLabel="Dot">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="USS-X1-JN3" userLabel="Dot">
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="15" id="arf-cy-s0o"/>
+                                                        <constraint firstAttribute="height" constant="19" id="arf-cy-s0o"/>
                                                         <constraint firstAttribute="width" secondItem="USS-X1-JN3" secondAttribute="height" multiplier="1:1" id="eGd-Ab-jMo"/>
                                                     </constraints>
                                                 </imageView>
@@ -198,10 +198,10 @@
                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstItem="ECj-En-ey2" firstAttribute="top" secondItem="FvT-ZR-v8i" secondAttribute="bottom" constant="3" id="2l6-bu-XR3"/>
-                                                <constraint firstItem="USS-X1-JN3" firstAttribute="top" secondItem="unc-pE-m9B" secondAttribute="top" constant="12" id="2xl-ck-Vdi"/>
+                                                <constraint firstItem="USS-X1-JN3" firstAttribute="top" secondItem="unc-pE-m9B" secondAttribute="top" constant="10" id="2xl-ck-Vdi"/>
                                                 <constraint firstItem="FvT-ZR-v8i" firstAttribute="leading" secondItem="unc-pE-m9B" secondAttribute="leading" constant="10" id="3ZK-q1-xlq"/>
-                                                <constraint firstItem="Vqf-pV-Sa7" firstAttribute="top" secondItem="unc-pE-m9B" secondAttribute="top" constant="8" id="5UI-AE-bE7"/>
-                                                <constraint firstItem="FvT-ZR-v8i" firstAttribute="top" secondItem="Vqf-pV-Sa7" secondAttribute="bottom" constant="7" id="AJ0-1n-DQI"/>
+                                                <constraint firstItem="Vqf-pV-Sa7" firstAttribute="top" secondItem="unc-pE-m9B" secondAttribute="top" constant="10" id="5UI-AE-bE7"/>
+                                                <constraint firstItem="FvT-ZR-v8i" firstAttribute="top" secondItem="Vqf-pV-Sa7" secondAttribute="bottom" constant="5" id="AJ0-1n-DQI"/>
                                                 <constraint firstAttribute="trailing" secondItem="ECj-En-ey2" secondAttribute="trailing" constant="10" id="LJY-xM-fUj"/>
                                                 <constraint firstItem="ECj-En-ey2" firstAttribute="leading" secondItem="unc-pE-m9B" secondAttribute="leading" constant="10" id="QvF-Mb-t4Y"/>
                                                 <constraint firstItem="USS-X1-JN3" firstAttribute="width" secondItem="USS-X1-JN3" secondAttribute="height" multiplier="1:1" id="V9f-4f-ZQV"/>
@@ -584,14 +584,14 @@
                                 <color key="tintColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="eventsMenuTabelViewCell" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="eventsMenuTabelViewCell" textLabel="0Dr-mx-1wb" style="IBUITableViewCellStyleDefault" id="jjH-F8-MBR">
-                                        <rect key="frame" x="0.0" y="56" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="56" width="1000" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jjH-F8-MBR" id="HGf-Jq-iWG">
-                                            <frame key="frameInset" width="375" height="43"/>
+                                            <frame key="frameInset" width="1000" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0Dr-mx-1wb">
-                                                    <frame key="frameInset" minX="15" width="345" height="43"/>
+                                                    <frame key="frameInset" minX="164" width="672" height="43"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -628,7 +628,7 @@
             <objects>
                 <navigationController id="Oea-X6-6fv" userLabel="CasebookNavigation" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Casebook" image="casebook_grey.png" id="KyQ-BK-wy3"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="2AJ-kk-Dkt">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="2AJ-kk-Dkt">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -727,7 +727,7 @@
             <objects>
                 <navigationController id="BTt-qz-v7W" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Favorites" image="favorites_red.png" id="xY3-9g-rbp"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="4h8-vw-cWE">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="4h8-vw-cWE">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -801,7 +801,7 @@
         <scene sceneID="rnm-C2-VK0">
             <objects>
                 <navigationController storyboardIdentifier="optionsNavigation" useStoryboardIdentifierAsRestorationIdentifier="YES" id="E0V-O3-awz" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="uNi-wS-t0A">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="uNi-wS-t0A">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -818,7 +818,7 @@
             <objects>
                 <navigationController id="hW5-Ic-0B8" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Fotona" image="fotona_red.png" id="0T6-Gx-c5V"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="AtJ-4F-yeZ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="AtJ-4F-yeZ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -835,7 +835,7 @@
             <objects>
                 <navigationController id="Ixc-uI-hmx" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Events" image="events.png" id="b5H-uZ-cSt"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="tUD-x8-e6g">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="tUD-x8-e6g">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -851,7 +851,7 @@
         <scene sceneID="YWy-ie-CIQ">
             <objects>
                 <navigationController storyboardIdentifier="menuNavigation" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Ddk-Gp-b3x" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="G1P-6x-CxV">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="G1P-6x-CxV">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -864,7 +864,7 @@
         <scene sceneID="BG5-DP-0L7">
             <objects>
                 <navigationController storyboardIdentifier="caseMenuNavigation" id="im2-MC-sJG" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="O9X-B7-szQ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="O9X-B7-szQ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -889,11 +889,11 @@
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="separatorColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="casebookMenuCell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="casebookMenuCell" id="LJM-AH-28t">
-                                        <rect key="frame" x="0.0" y="56" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" restorationIdentifier="casebookMenuCell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="casebookMenuCell" id="LJM-AH-28t">
+                                        <rect key="frame" x="0.0" y="56" width="1000" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LJM-AH-28t" id="V0S-uz-mE4">
-                                            <frame key="frameInset" width="375" height="43"/>
+                                            <frame key="frameInset" width="1000" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -936,15 +936,15 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="GAl-mM-WFh">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="optionsCell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="RFM-h4-ETh" style="IBUITableViewCellStyleDefault" id="G36-hw-v3w">
-                                        <rect key="frame" x="0.0" y="120" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" restorationIdentifier="optionsCell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="RFM-h4-ETh" style="IBUITableViewCellStyleDefault" id="G36-hw-v3w">
+                                        <rect key="frame" x="0.0" y="120" width="1000" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="G36-hw-v3w" id="NKM-UT-6et">
-                                            <frame key="frameInset" width="375" height="43"/>
+                                            <frame key="frameInset" width="1000" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="RFM-h4-ETh">
-                                                    <frame key="frameInset" minX="15" width="345" height="43"/>
+                                                    <frame key="frameInset" minX="164" width="672" height="43"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -982,7 +982,7 @@
         <scene sceneID="KZm-7Y-Dyh">
             <objects>
                 <navigationController storyboardIdentifier="bookmarkMenuNavigation" id="lcq-Aq-owP" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="xEw-Jm-Xfr">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="xEw-Jm-Xfr">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1006,11 +1006,11 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="W6F-oG-4bP">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="bookmarkCell" id="iHd-YO-T6E">
-                                        <rect key="frame" x="0.0" y="56" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="bookmarkCell" id="iHd-YO-T6E">
+                                        <rect key="frame" x="0.0" y="56" width="1000" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iHd-YO-T6E" id="S6K-zl-nof">
-                                            <frame key="frameInset" width="375" height="43"/>
+                                            <frame key="frameInset" width="1000" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -1251,7 +1251,7 @@
                                                         <color key="sectionIndexColor" red="0.2156862745" green="0.2156862745" blue="0.2156862745" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <color key="sectionIndexTrackingBackgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <prototypes>
-                                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="setttingsCell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="setttingsCell" textLabel="mAu-mY-VWf" style="IBUITableViewCellStyleDefault" id="RKD-GD-fNH">
+                                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" restorationIdentifier="setttingsCell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="setttingsCell" textLabel="mAu-mY-VWf" style="IBUITableViewCellStyleDefault" id="RKD-GD-fNH">
                                                                 <rect key="frame" x="0.0" y="22" width="359" height="44"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RKD-GD-fNH" id="0mL-Ih-Yuv">
@@ -1400,7 +1400,7 @@
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="eventsMenuTabelViewCell" selectionStyle="none" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="fotonaMenuTabelViewCell" textLabel="zRs-87-PGN" style="IBUITableViewCellStyleDefault" id="eWu-Zl-Yqs">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" restorationIdentifier="eventsMenuTabelViewCell" selectionStyle="none" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="fotonaMenuTabelViewCell" textLabel="zRs-87-PGN" style="IBUITableViewCellStyleDefault" id="eWu-Zl-Yqs">
                                         <rect key="frame" x="0.0" y="56" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eWu-Zl-Yqs" id="cvy-Ka-swO">
@@ -1458,26 +1458,26 @@
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="sectionIndexBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="videoGalleryTableViewCell" id="4rt-Xe-Y6k" customClass="FIVideoGalleryTableViewCell">
-                                        <rect key="frame" x="0.0" y="56" width="375" height="415"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="videoGalleryTableViewCell" id="4rt-Xe-Y6k" customClass="FIVideoGalleryTableViewCell">
+                                        <rect key="frame" x="0.0" y="56" width="1000" height="415"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4rt-Xe-Y6k" id="Ryi-Zj-DpF" userLabel="CellView">
-                                            <frame key="frameInset" width="375" height="414"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="4rt-Xe-Y6k" id="Ryi-Zj-DpF" userLabel="CellView">
+                                            <frame key="frameInset" width="1000" height="414"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ef7-0O-i3P">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ef7-0O-i3P">
                                                     <frame key="frameInset" width="1000" height="1000"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="19"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BxJ-RN-3OQ">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BxJ-RN-3OQ">
                                                     <frame key="frameInset" width="1000" height="1000"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="BxJ-RN-3OQ" secondAttribute="height" multiplier="16:9" constant="-1.4444444444444571" id="Jbe-3V-1N5"/>
                                                     </constraints>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IaO-v9-NlK">
+                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IaO-v9-NlK">
                                                     <frame key="frameInset" width="1000" height="1000"/>
                                                     <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
                                                     <state key="normal" title="Button"/>
@@ -1485,7 +1485,7 @@
                                                         <action selector="removeFromBookmark:" destination="4rt-Xe-Y6k" eventType="touchUpInside" id="cZ0-jy-WSJ"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BPL-fM-fsr">
+                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BPL-fM-fsr">
                                                     <frame key="frameInset" width="1000" height="1000"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="K8P-9I-2Ql"/>
