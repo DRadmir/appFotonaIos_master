@@ -584,14 +584,21 @@ UIButton *tmp;
 {
     [MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
     if([ConnectionHelper isConnected]){  //preverjanje če je internet
-    MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
-    [parent.view addSubview:hud];
-    hud.labelText = @"Updating content";
-    [hud show:YES];
-    [self setDelegate];
+        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
+        [parent.view addSubview:hud];
+        hud.labelText = @"Updating content";
+        [hud show:YES];
+        [self setDelegate];
     }
     else{
-        [parentiPad showFeatured]; //če ga ni se pokliče showfeatured
+        if(parentiPad != nil)
+        {
+            [parentiPad showFeatured];
+        } else
+        {
+            [parentiPhone showFeatured];
+        }
+        //če ga ni se pokliče showfeatured
     }
 }
 

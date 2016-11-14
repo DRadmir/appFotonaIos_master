@@ -193,7 +193,6 @@ int forgotenBottom = 0;
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil];
         FITabbarController *vc = [storyboard instantiateViewControllerWithIdentifier:@"tabbar"];
         
-       // [self.navigationController pushViewController:vc animated:YES];
         [self.navigationController presentViewController:vc animated:true completion:nil];
     }
     
