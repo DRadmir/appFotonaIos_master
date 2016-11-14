@@ -760,7 +760,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [database open];
     for (FCase *c in caseArray) {
         if ([c active] ) {
-            FMResultSet *resultsBookmarked = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark WHERE documentID=%@ AND typeID=?", c.caseID, BOOKMARKCASE]];
+            FMResultSet *resultsBookmarked = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark WHERE documentID=%@ AND typeID=%@", c.caseID, BOOKMARKCASE]];
             NSString *bookmarked=@"0";
             while([resultsBookmarked next]) {
                 bookmarked=@"1";

@@ -91,7 +91,6 @@
 - (BOOL)connectedToInternet;
 - (BOOL)connectedToWifi;
 - (BOOL)connectedToBoth;
-- (BOOL) checkGuest;
 
 - (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 

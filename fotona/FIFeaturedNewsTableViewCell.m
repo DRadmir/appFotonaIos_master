@@ -17,7 +17,7 @@
 
 //TODO : zbrisat xib file za ta class
 - (void)awakeFromNib {
-    // Initialization code
+    [super awakeFromNib];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -33,21 +33,29 @@
         self.lblAbout.text = NSLocalizedString(@"ABOUTSHORT", nil);
     }else
     {
-        self.lblTitleNewsCell.text = self.news.title;
-        self.lblDateNewsCell.text = [HelperDate formatedDate:self.news.nDate];
-        [self.imgViewNewsCell setContentMode:UIViewContentModeScaleAspectFill];
-        [self.imgViewNewsCell setClipsToBounds:true];
-        if (self.related)
-        {
-            self.signNewNewsCell.hidden = true;
-            self.imgViewNewsCell.image =[self.news headerImage];
-        } else
-        {
-            self.signNewNewsCell.hidden = self.news.isReaded;
-            self.imgViewNewsCell.image =[[self.news images] objectAtIndex:0];
+        [self setUserInteractionEnabled:NO];
+        if ([[[self news] rest] isEqualToString:@"1"] && [APP_DELEGATE connectedToInternet]) {
+            self.lblTitleNewsCell.text = @" ";
+            self.lblDateNewsCell.text = @" ";
+            [self.lblTitleNewsCell setBackgroundColor:[UIColor lightGrayColor]];
+            [self.lblDateNewsCell setBackgroundColor:[UIColor lightGrayColor]];
+        } else {
+            [self setUserInteractionEnabled:YES];
+            self.lblTitleNewsCell.text = self.news.title;
+            self.lblDateNewsCell.text = [HelperDate formatedDate:self.news.nDate];
+            [self.imgViewNewsCell setContentMode:UIViewContentModeScaleAspectFill];
+            [self.imgViewNewsCell setClipsToBounds:true];
+            if (self.related)
+            {
+                self.signNewNewsCell.hidden = true;
+                self.imgViewNewsCell.image =[self.news headerImage];
+            } else
+            {
+                self.signNewNewsCell.hidden = self.news.isReaded;
+                self.imgViewNewsCell.image =[[self.news images] objectAtIndex:0];
+            }
         }
     }
-    [self setUserInteractionEnabled:enabled];
 }
 
 @end

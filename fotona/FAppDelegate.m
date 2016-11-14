@@ -83,10 +83,7 @@
     // Override point for customization after application launch.
     //    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"pushType"];
     //    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound categories:nil]];
-    [application registerForRemoteNotificationTypes: UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-    application.applicationIconBadgeNumber=0;
+   
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"newUpdate"]) {
         NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
@@ -180,6 +177,12 @@
     
     //Google analytics
     [self prepareGA];
+    
+    
+    [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIRemoteNotificationTypeAlert |UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound categories:nil]];
+    [application registerForRemoteNotificationTypes: UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    application.applicationIconBadgeNumber=0;
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
     return YES;
 }
@@ -594,11 +597,10 @@
 
 -(void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings{
     [application registerForRemoteNotifications];
-    
 }
 
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 #if !TARGET_IPHONE_SIMULATOR
     
     //    NSLog(@"Did register for remote notifications: %@", devToken);
@@ -669,7 +671,7 @@
     }
     //TODO: premaknt pošiljanje po loginu, zaradi dodajanja usetype (int) - tyin subtype(string)
     // Prepare the Device Token for Registration (remove spaces and < >)
-    NSString *deviceToken = [[[[devToken description]
+    NSString *devToken = [[[[deviceToken description]
                                stringByReplacingOccurrencesOfString:@"<"withString:@""]
                               stringByReplacingOccurrencesOfString:@">" withString:@""]
                              stringByReplacingOccurrencesOfString: @" " withString: @""];
@@ -677,7 +679,7 @@
     
     
     
-    NSString *requestData =[NSString stringWithFormat:@"{\"deviceID\":null,\"appname\":\"%@\",\"appversion\":\"%@\",\"deviceuid\":\"%@\",\"devicetoken\":\"%@\",\"devicename\":\"%@\",\"devicemodel\":\"%@\",\"deviceversion\":\"%@\",\"pushbadge\":true,\"pushalert\":true,\"pushsound\":true,\"active\":true",appName,appVersion,deviceUuid,deviceToken,deviceName,deviceModel,deviceSystemVersion];
+    NSString *requestData =[NSString stringWithFormat:@"{\"deviceID\":null,\"appname\":\"%@\",\"appversion\":\"%@\",\"deviceuid\":\"%@\",\"devicetoken\":\"%@\",\"devicename\":\"%@\",\"devicemodel\":\"%@\",\"deviceversion\":\"%@\",\"pushbadge\":true,\"pushalert\":true,\"pushsound\":true,\"active\":true",appName,appVersion,deviceUuid,devToken,deviceName,deviceModel,deviceSystemVersion];
     [FHelperRequest setDeviceData:requestData];
 #endif
 }
@@ -920,29 +922,7 @@
     
     return f;
 }
--(BOOL)checkNewsForUser:(FNews *)fNews
-{
-    BOOL check=NO;
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    if ([[[APP_DELEGATE currentLogedInUser] userTypeSubcategory] count]>0) {
-        for (NSString *subType in [[APP_DELEGATE currentLogedInUser] userTypeSubcategory]) {
-            FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM NewsInUserSubType where newsID=%@ and userSubType=%@",fNews.newsID,subType]];
-            while([results next]) {
-                check=YES;
-            }
-        }
-    }
-    else {
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM NewsInUserType where newsID=%@ and userType=%@",fNews.newsID,[[APP_DELEGATE currentLogedInUser] userType]]];
-        while([results next]) {
-            check=YES;
-        }
-    }
-    [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    return check;
-}
+
 
 -(FCase *)getCase:(NSString *)caseID
 {
@@ -962,15 +942,7 @@
     return nil;
 }
 
--(BOOL) checkGuest
-{
-    NSString *usr = [FCommon getUser];
-    if ([usr isEqualToString:@"guest"] || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3 ) {
-        return TRUE;
-    }
-    
-    return FALSE;
-}
+
 
 - (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
 {

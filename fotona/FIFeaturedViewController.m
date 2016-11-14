@@ -206,11 +206,11 @@
     }
     
     FIFeaturedNewsTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:0];
+    
     if (indexPath.row == 0) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:1];
-        [cell setEnabled:YES];
     }
-    if (indexPath.row > newsCount - 1) {
+    if (indexPath.row > newsCount - 1 && [APP_DELEGATE connectedToInternet]) {
 
         CGPoint offset = self.tableViewFeatured.contentOffset;
         offset.y-=10;
@@ -220,29 +220,30 @@
             l = newsArray.count - newsCount;
         }
         newsCount+=l;
-        [cell setEnabled:NO];
-        if (indexPath.row < enabledNewsCount ) {
-            [cell setEnabled:YES];
-        }
-        
-        dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
-        dispatch_async(queue, ^{
-            newsArray = [FNews getImages:newsArray fromStart:indexPath.row forNumber:l];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                NSMutableArray *rowsToReload =[[NSMutableArray alloc] init];
-                
-                for (int i = 0; i < l; i++){
-                    NSIndexPath* index = [NSIndexPath indexPathForRow:indexPath.row+i inSection:indexPath.section];
-                    [rowsToReload addObject:index];
-               }
-                enabledNewsCount = newsCount;
-               [tableViewFeatured reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
-                
+     
+            dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
+            dispatch_async(queue, ^{
+                if (newsCount > enabledNewsCount ) {
+                int diff = newsCount - enabledNewsCount;
+                newsArray = [FNews getImages:newsArray fromStart:enabledNewsCount forNumber:diff];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    int diffAfter = newsCount - enabledNewsCount;
+                    
+                    NSMutableArray *rowsToReload =[[NSMutableArray alloc] init];
+                    
+                    for (int i = 0; i < diffAfter; i++){
+                        NSIndexPath* index = [NSIndexPath indexPathForRow:enabledNewsCount+i-1 inSection:indexPath.section];
+                        [rowsToReload addObject:index];
+                    }
+                    enabledNewsCount+= diffAfter;
+                    [tableViewFeatured reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
+                    
+                });
+                    }
             });
-        });
         
     }
+    
     cell.news = newsArray[indexPath.row];
     [cell fillCell];
     if (indexPath.row>= 8)

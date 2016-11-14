@@ -13,5 +13,4 @@ target 'fotona' do
   end
 
 pod 'Google/Analytics'
-
 end
