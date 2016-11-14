@@ -273,6 +273,7 @@
                     for (int i=0; i<[sf imagesLinks].count; i++){
                         NSString * featured =[[sf imagesLinks] objectAtIndex:i];
                         if (featured == nil || [featured isEqualToString:@""] || (![APP_DELEGATE connectedToInternet])) {
+                            
                             img = [UIImage imageNamed:@"featured_news"];
                             [temp addObject: img];
                             break;
@@ -285,6 +286,7 @@
                             else {
                                 img = [UIImage imageNamed:@"featured_news"];
                                 [temp addObject: img];
+                                
                                 break;
                             }
                         }
