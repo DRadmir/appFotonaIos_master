@@ -108,17 +108,68 @@ static int category = 0;
     [[APP_DELEGATE tabBar] setSelectedIndex:1];
 }
 
+-(void)buttonTouchedGreen:(id)sender
+{
+    [self allButtonsRed];
+    [[self greenBtn] setImage:[UIImage imageNamed:@"event_surgery_red.pdf"] forState:UIControlStateNormal];
+    [sender setSelected:NO];
+}
+-(void)buttonTouchedBlue:(id)sender
+{
+    [self allButtonsRed];
+    [[self blueBtn] setImage:[UIImage imageNamed:@"event_dental_red.pdf"] forState:UIControlStateNormal];
+    [sender setSelected:NO];
+}
+-(void)buttonTouchedPink:(id)sender
+{
+    [self allButtonsRed];
+    [[self pinkBtn] setImage:[UIImage imageNamed:@"event_gyno_red.pdf"] forState:UIControlStateNormal];
+    [sender setSelected:NO];
+}
+-(void)buttonTouchedOrange:(id)sender
+{
+    [self allButtonsRed];
+    [[self orangeBtn] setImage:[UIImage imageNamed:@"event_aesthetics_red.pdf"] forState:UIControlStateNormal];
+    [sender setSelected:NO];
+}
+-(void)buttonTouchedGrey:(id)sender
+{
+    [self allButtonsRed];
+    [[self allBtn] setImage:[UIImage imageNamed:@"event_all_red.pdf"] forState:UIControlStateNormal];
+    [sender setSelected:NO];
+}
+
+-(void)allButtonsRed{
+    
+    [[self greenBtn] setImage:[UIImage imageNamed:@"event_surgery_gray.pdf"] forState:UIControlStateSelected];
+    [[self greenBtn] setSelected:YES];
+    
+    [[self blueBtn] setImage:[UIImage imageNamed:@"event_dental_gray.pdf"] forState:UIControlStateSelected];
+    [[self blueBtn] setSelected:YES];
+    
+    [[self pinkBtn] setImage:[UIImage imageNamed:@"event_gyno_gray.pdf"] forState:UIControlStateSelected];
+    [[self pinkBtn] setSelected:YES];
+    
+    [[self orangeBtn] setImage:[UIImage imageNamed:@"event_aesthetics_gray.pdf"] forState:UIControlStateSelected];
+    [[self orangeBtn]  setSelected:YES];
+    
+    [[self allBtn] setImage:[UIImage imageNamed:@"event_all_gray.pdf"] forState:UIControlStateSelected];
+    [[self allBtn]  setSelected:YES];
+    
+}
+
+
 - (IBAction)dotButtonAction:(id)sender {
     if ([self greenBtn].touchInside) {
-        category = 4;
+        category = 4;[self buttonTouchedGreen:_greenBtn];
     } else if ([self blueBtn].touchInside) {
-        category = 1;
+        category = 1;[self buttonTouchedBlue:_blueBtn];
     } else if ([self pinkBtn].touchInside) {
-        category = 3;
+        category = 3;[self buttonTouchedPink:_pinkBtn];
     } else if ([self orangeBtn].touchInside) {
-        category = 2;
+        category = 2;[self buttonTouchedOrange:_orangeBtn];
     } else {
-        category = 0;
+        category = 0;[self buttonTouchedGrey:_allBtn];
     }
     [self fillData];
     

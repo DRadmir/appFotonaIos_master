@@ -70,6 +70,7 @@ BOOL wrap;
         [[self btnGrey] setImage:[UIImage imageNamed:@"event_all_red.pdf"] forState:UIControlStateNormal];
         [sender setSelected:NO];
     }
+
 -(void)allButtonsRed{
     
     [[self btnGreen] setImage:[UIImage imageNamed:@"event_surgery_gray.pdf"] forState:UIControlStateSelected];
