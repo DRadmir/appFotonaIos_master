@@ -32,7 +32,6 @@
 #import "FDB.h"
 #import "FGoogleAnalytics.h"
 
-
 @interface FFeaturedViewController_iPad ()
 {
     BOOL wrap;
@@ -396,11 +395,6 @@ FNewsView *newsViewController;
     tempCell.newsTitle.text = [[newsArray objectAtIndex:index] title];
     tempCell.newsDate.text = [HelperDate formatedDate: [[newsArray objectAtIndex:index] nDate]];
     if (index>=cellNumber) {
-//        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:mainScroll];
-//        [mainScroll addSubview:hud];
-//        hud.labelText = @"Loading...";
-//        //        [[MBProgressHUD showHUDAddedTo:self.view animated:YES]  setLabelText:@"Loading"];
-//        [hud show:YES];
         CGPoint offset = collectionView.contentOffset;
         offset.y-=30;
         //collectionView.scrollEnabled =NO;
@@ -415,14 +409,12 @@ FNewsView *newsViewController;
         dispatch_async(queue, ^{
             newsArray = [FNews getImages:newsArray fromStart:index forNumber:l];
             dispatch_async(dispatch_get_main_queue(), ^{
-//                collectionView.scrollEnabled = YES;
-//                [collectionView reloadData ];
-//                [MBProgressHUD hideAllHUDsForView:mainScroll animated:YES];
                 
                 
                 int g = 1;
                 if ([FCommon isGuest]) {
                     g = 2;
+                    
                 }
                 
                 NSMutableArray *rowsToReload =[[NSMutableArray alloc] init];
@@ -430,11 +422,13 @@ FNewsView *newsViewController;
                 for (int i = 0; i < l; i++){
                     NSIndexPath* indexPath = [NSIndexPath indexPathForRow:index+i+g inSection:0];
                     [rowsToReload addObject:indexPath];
+                    
                 }
                 
                 [collectionView reloadItemsAtIndexPaths:rowsToReload];
-                
+               
             });
+            
         });
         
     }
@@ -443,6 +437,9 @@ FNewsView *newsViewController;
     [tempCell.newsImage setContentMode:UIViewContentModeScaleAspectFill];
     [tempCell.newsImage setClipsToBounds:YES];
     
+    tempCell.news = [newsArray objectAtIndex:index];
+    [tempCell fillCell];
+
     if (![[newsArray objectAtIndex:index] isReaded] && index<8) {
         tempCell.newsNew.hidden = NO;
     }

@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "FNews.h"
 
+
+
 @interface FNewsView : UIViewController{
 int beforeOrient;
 }

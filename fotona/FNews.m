@@ -285,8 +285,7 @@
                             }
                             else {
                                 img = [UIImage imageNamed:@"featured_news"];
-                                [temp addObject: img];
-                                
+                                [temp addObject: img];                                
                                 break;
                             }
                         }

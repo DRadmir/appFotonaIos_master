@@ -10,6 +10,7 @@
 #import "FNews.h"
 #import "FIFeaturedViewController.h"
 
+
 @interface FIFeaturedNewsTableViewCell : UITableViewCell
 
 @property (strong, nonatomic) IBOutlet UIImageView *imgViewNewsCell;

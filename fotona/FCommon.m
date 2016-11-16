@@ -144,7 +144,7 @@
 }
 
 +(NSString *)arrayToString:(NSMutableArray *)array withSeparator:(NSString *)separator{
-    if ([array isKindOfClass:[NSNull class]] && [array count] > 0) {
+    if (![array isKindOfClass:[NSNull class]] && [array count] > 0) {
         NSString *string = array[0];
         for (int i= 1; i<array.count; i++) {
             string = [NSString stringWithFormat:@"%@%@%@",string, separator, array[i]];
