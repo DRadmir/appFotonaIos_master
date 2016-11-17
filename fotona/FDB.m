@@ -119,9 +119,7 @@
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and alloweInCoverFlow=1"]];
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]]) {
-            [cases addObject:f];
-        }
+        [cases addObject:f];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
@@ -150,8 +148,9 @@
 
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        //TODO: glede na pravice?
-        [tmp addObject:f];
+        if ([FCommon userPermission:[f userPermissions]]) {
+             [tmp addObject:f];
+        }
     }
     return tmp;
 }
@@ -197,7 +196,7 @@
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT c.* FROM Cases as c,CasesInCategories as cic where cic.categorieID=%@ and cic.caseID=c.caseID and c.active=1",catID]];
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]]) {
+        if ([FCommon userPermission:[f userPermissions]] || [[f coverflow] isEqualToString:@"1"]) {
             [cases addObject:f];
         }
     }
@@ -213,7 +212,7 @@
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and authorID=%@",authorID]];
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]]) {
+        if ([FCommon userPermission:[f userPermissions]] || [[f coverflow] isEqualToString:@"1"]) {
             [cases addObject:f];
         }
     }
@@ -537,35 +536,6 @@
 
 
 
-+(void) removeBookmarkedVideo:(FMedia *)videoToRemove
-{
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    NSString *usr = [FCommon getUser];
-    [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",videoToRemove.itemID,usr,BOOKMARKVIDEO];
-    
-    FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",videoToRemove.itemID,BOOKMARKVIDEO]];
-    BOOL flag=NO;
-    while([resultsBookmarked next]) {
-        flag=YES;
-    }
-    if (!flag) {
-        [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=?",@"0",videoToRemove.itemID];
-        NSString *downloadFilename = [videoToRemove path];
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSError *error;
-        [fileManager removeItemAtPath:downloadFilename error:&error];
-        
-        NSArray *pathComp=[[videoToRemove mediaImage] pathComponents];
-        NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[videoToRemove mediaImage] lastPathComponent]];
-        [fileManager removeItemAtPath:pathTmp error:&error];
-    }
-    
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
-
-
 #pragma mark - FotonaMenu
 
 +(NSMutableArray *)getFotonaMenu:(NSString *)catID
@@ -806,13 +776,9 @@
     
     if (deleted) {
         [self removeFromFavoritesItem:[[media itemID] intValue] ofType:BOOKMARKVIDEO];
-        if ([mediaType isEqualToString:MEDIAVIDEO]) {
-            [self removeBookmarkedVideo:media];
-        } else {
-            if ([mediaType isEqualToString:MEDIAPDF]) {
-               //TODO: remove za pdf [self removeFromBookmarkForDocumentID:[media itemID]];
-            }
-        }
+        if ([mediaType isEqualToString:MEDIAVIDEO] || [mediaType isEqualToString:MEDIAPDF]) {
+            [self removeBookmarkedMedia:media];
+        } 
     }
 }
 
@@ -854,6 +820,65 @@
     return video;
 }
 
++(void) removeBookmarkedMedia:(FMedia *)media
+{
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    NSString *usr = [FCommon getUser];
+    [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",media.itemID,usr,media.mediaType];
+    
+    FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",media.itemID,media.mediaType]];
+    BOOL flag=NO;
+    while([resultsBookmarked next]) {
+        flag=YES;
+    }
+    if (!flag) {
+        [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=?",@"0",media.itemID];
+        
+        NSString *downloadFilename = [FMedia createLocalPathForLink:[media path] andMediaType:[media mediaType]];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error;
+        [fileManager removeItemAtPath:downloadFilename error:&error];
+        
+        NSArray *pathComp=[[media mediaImage] pathComponents];
+        NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[media mediaImage] lastPathComponent]];
+        [fileManager removeItemAtPath:pathTmp error:&error];
+    }
+    
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+}
+
++(void)removeFromBookmarkForMediaID:(NSString *)mediaID withMediaType:(NSString *)mediaType;
+{
+    FMedia *media = [self getMediaWithId:mediaID andType:mediaType];
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    NSString *usr = [FCommon getUser];
+    
+    [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",media.itemID,usr,media.mediaType];
+    
+    FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",media.itemID,media.mediaType]];
+    BOOL flag=NO;
+    while([resultsBookmarked next]) {
+        flag=YES;
+    }
+    if (!flag) {
+        [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=?",@"0",media.itemID];
+        
+        NSString *downloadFilename = [FMedia createLocalPathForLink:[media path] andMediaType:[media mediaType]];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error;
+        [fileManager removeItemAtPath:downloadFilename error:&error];
+        
+        NSArray *pathComp=[[media mediaImage] pathComponents];
+        NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[media mediaImage] lastPathComponent]];
+        [fileManager removeItemAtPath:pathTmp error:&error];
+    }
+    
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+}
 
 
 

@@ -36,6 +36,7 @@
     [cellViewCase setItem:item];
     [cellViewCase setIndex:index];
     [cellViewCase setParentIphone:parentIphone];
+    [cellViewCase setParentIpad:nil];
     [cellViewCase setContentForCase:fcase];
 }
 
@@ -50,8 +51,11 @@
 -(void)setContentForMedia:(FMedia *)media forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath{
     enabled = true;;
     if (cellViewFotona == nil) {
-         cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
-         [[self contentView] addSubview: cellViewFotona];
+        cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
+        [cellViewFotona setParentIphone:parentIphone];
+        [cellViewFotona setParentIpad:nil];
+         [cellViewFotona setIndex:index];
+        [[self contentView] addSubview: cellViewFotona];
     }
     [cellViewFotona setContentForMedia:media andMediaType:[media mediaType]];
     if ([[media bookmark] isEqualToString:@"0"] && ![APP_DELEGATE connectedToInternet]) {

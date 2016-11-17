@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "FItemFavorite.h"
 #import "FIFavoriteViewController.h"
+#import "FFavoriteViewController.h"
 
 @interface FCaseGalleryView : UIView
 
@@ -26,7 +27,8 @@
 
 @property (strong, nonatomic) FCase *caseToShow;
 @property (strong, nonatomic) FItemFavorite *item;
-@property (strong, nonatomic) FIFavoriteViewController *parentIphone;//TODO: dodat ipad parenta
+@property (strong, nonatomic) FIFavoriteViewController *parentIphone;
+@property (strong, nonatomic) FFavoriteViewController *parentIpad;
 @property (strong, nonatomic) NSIndexPath *index;
 @property (nonatomic) BOOL enabled;
 

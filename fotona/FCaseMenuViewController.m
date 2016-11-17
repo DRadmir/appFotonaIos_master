@@ -295,14 +295,13 @@ NSString *count = @"";
                 temp = [[NSMutableArray alloc] init];
                 switch (casesType) {
                     case -1:
-                        temp=[self getCasesWithAuthorID:category];
+                        temp=[FDB getCasesWithAuthorID:category];
                         break;
                     case 1:
-                        temp=[self getCases:category];
+                        temp=[FDB getCasesWithCategoryID:category];
                         break;
                         
                     default:
-//                        temp=[self getAlphabeticalCases];
                         break;
                 }
                 casesInMenu = temp;
@@ -382,10 +381,10 @@ NSString *count = @"";
                 temp = [[NSMutableArray alloc] init];
                 switch (casesType) {
                     case -1:
-                        temp=[self getCasesWithAuthorID:category];
+                        temp=[FDB getCasesWithAuthorID:category];
                         break;
                     case 1:
-                        temp=[self getCases:category];
+                        temp=[FDB getCasesWithCategoryID:category];
                         break;
                         
                     default:
@@ -438,7 +437,6 @@ NSString *count = @"";
                         NSMutableArray *videos = [[NSMutableArray alloc] init];
                         for (NSDictionary *videoLink in [caseObj video]) {
                             FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink forMediType:MEDIAVIDEO];
-                            
                             [videos addObject:videoTemp];
                         }
                         [caseObj setVideo:videos];
@@ -468,7 +466,7 @@ NSString *count = @"";
             
         }else if ([[menuItems objectAtIndex:indexPath.row] isKindOfClass:[FAuthor class]]) {
             casesType = 0;
-            NSMutableArray *newItems=[self getCasesWithAuthorID:[[menuItems objectAtIndex:indexPath.row] authorID]];
+            NSMutableArray *newItems=[FDB getCasesWithAuthorID:[[menuItems objectAtIndex:indexPath.row] authorID]];
             NSLog(@"case author");
             if (newItems.count>0) {
                 FCaseMenuViewController *subMenu=[[FCaseMenuViewController alloc] init];
@@ -522,7 +520,7 @@ NSString *count = @"";
                 NSMutableArray *newItems=[FDB getCaseCategoryWithPrev:[[menuItems objectAtIndex:indexPath.row] categoryID]];
                 if (newItems.count==0)
                 {
-                    newItems=[self getCases:[[menuItems objectAtIndex:indexPath.row] categoryID]];
+                    newItems=[FDB getCasesWithCategoryID:[[menuItems objectAtIndex:indexPath.row] categoryID]];
                     if (newItems.count==0)
                     {
                         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"EMPTYCASECATEGORY", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -555,7 +553,7 @@ NSString *count = @"";
                     }
                     [subMenu  setMenuTitles:[NSMutableArray arrayWithObject:[[menuItems objectAtIndex:indexPath.row] title]]];
                     [subMenu  setAllItems:[NSMutableArray arrayWithObject:newItems]];
-                    casesInMenu=[self getCases:[[menuItems objectAtIndex:indexPath.row] categoryID]];
+                    casesInMenu=[FDB getCasesWithCategoryID:[[menuItems objectAtIndex:indexPath.row] categoryID]]; 
                     category =[[menuItems objectAtIndex:indexPath.row] categoryID];
                     [subMenu setCasesInMenu:casesInMenu];
                     [self.navigationController pushViewController:subMenu animated:YES];
@@ -573,42 +571,6 @@ NSString *count = @"";
 #pragma mark DB
 
 
--(NSMutableArray *)getCasesWithAuthorID:(NSString *)authorID{
-    NSMutableArray *cases=[[NSMutableArray alloc] init];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and authorID=%@",authorID]];
-    while([results next]) {
-        casesType = -1;
-        category = authorID;
-        FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]]) {
-            [cases addObject:f];
-        }
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return cases;
-}
--(NSMutableArray *)getCases:(NSString *)catID{
-    NSMutableArray *cases=[[NSMutableArray alloc] init];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT c.* FROM Cases as c,CasesInCategories as cic where cic.categorieID=%@ and cic.caseID=c.caseID and c.active=1",catID]];
-    while([results next]) {
-        casesType = 1;
-        category = catID;
-        FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]]) {
-            [cases addObject:f];
-        }
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return cases;
-}
 
 - (void)didReceiveMemoryWarning
 {

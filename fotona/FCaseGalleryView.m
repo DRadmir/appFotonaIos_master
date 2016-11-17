@@ -28,6 +28,7 @@
 @synthesize caseToShow;
 @synthesize item;
 @synthesize parentIphone;
+@synthesize parentIpad;
 @synthesize index;
 @synthesize enabled;
 
@@ -95,6 +96,10 @@
     [FDB removeFromFavoritesItem:[[item itemID] intValue] ofType:[item typeID]];
     if (parentIphone != nil) {
         [parentIphone deleteRowAtIndex:index];
+    } else {
+        if (parentIpad != nil) {
+            [parentIpad deleteRowAtIndex:index];
+        }
     }
     btnFavoriteRemove.hidden = true;
     btnFavoriteAdd.hidden = false;

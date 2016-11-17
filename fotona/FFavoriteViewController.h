@@ -13,11 +13,7 @@
     NSString *pathToPDF;
     
     IBOutlet UIButton *feedbackBtn;
-    
-    IBOutlet UILabel *menuTitle;
-    IBOutlet UITableView *menuTable;
-    IBOutlet UIView *menuHeader;
-    IBOutlet UIButton *back;
+
     
     IBOutlet UIView *header;
     
@@ -98,24 +94,20 @@
 @property(strong, nonatomic) UIViewController *lastOpenedFavoriteVC;
 
 
--(void)openCase;
+-(void)openCaseWithID:(NSString *)caseID;
 -(void)setCaseOutlets;
 -(void)setPatameters;
 
 -(IBAction)expand:(id)sender;
 
--(IBAction)backBtn:(id)sender;
-
-
 - (IBAction)removeFromBookmarks:(id)sender;
 - (IBAction)openSettings:(id)sender;
 - (IBAction)closeSettings:(id)sender;
 
--(NSMutableArray *)getVideos;
-
 -(void)openContentWithTitle:(NSString *)title;
 
-
 - (IBAction)showDisclaimer:(id)sender;
+
+-(void)deleteRowAtIndex:(NSIndexPath *) index;
 
 @end

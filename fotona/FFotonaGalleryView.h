@@ -10,6 +10,8 @@
 #import "FItemFavorite.h"
 #import "FMedia.h"
 #import "FIFavoriteViewController.h"
+#import "FFavoriteViewController.h"
+
 
 @interface FFotonaGalleryView : UIView
 
@@ -21,7 +23,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnFavoriteAdd;
 @property (strong, nonatomic) IBOutlet UIButton *btnFavoriteRemove;
 @property (strong, nonatomic) IBOutlet UIView *containerView;
-@property (strong, nonatomic) FIFavoriteViewController *parentIphone;//TODO: dodat ipad parenta
+@property (strong, nonatomic) FIFavoriteViewController *parentIphone;
+@property (strong, nonatomic) FFavoriteViewController *parentIpad;
 @property (strong, nonatomic) NSIndexPath *index;
 
 @property (nonatomic) NSString *type;

@@ -88,20 +88,18 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     FItemFavorite *item = favorites[indexPath.row];
-    
+    FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
+    [cell setItem:item];
+    [cell setIndex:indexPath];
+    [cell setParentIphone:self];
     if ([[item typeID] intValue] == BOOKMARKCASEINT) {
         
-        FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
         FCase *caseToShow = [FDB getCaseWithID:[item itemID]];
-        [cell setItem:item];
-        [cell setIndex:indexPath];
-        [cell setParentIphone:self];
+       
         [cell setContentForCase:caseToShow];
         return cell;
     } else {
         if ([[item typeID] intValue] == BOOKMARKVIDEOINT || [[item typeID] intValue] == BOOKMARKPDFINT) {
-            
-            FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
             [cell setContentForFavorite:item forTableView:tableView onIndex:indexPath];
             return cell;
         }

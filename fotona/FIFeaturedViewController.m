@@ -264,7 +264,7 @@
     //set up data
     wrap = YES;
     
-    self.items = [FDB getCasesForCarouselFromDB];//self.getCasesForCarouselFromDB;
+    self.items = [FDB getCasesForCarouselFromDB];
     //random mixing carousel
     for (int x = 0; x < [items count]; x++) {
         int randInt = (arc4random() % ([items count] - x)) + x;
@@ -287,7 +287,6 @@
     
     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 2), ^{
         //code to be executed in the background
-        //NSData *imgData=[FDB getAuthorImage:[(FCase *)items[index] authorID]];//[self getAuthorImage:[(FCase *)items[index] authorID]];
         dispatch_async(dispatch_get_main_queue(), ^{
             card.carouselDoctorImage.layer.cornerRadius = card.carouselDoctorImage.frame.size.height /2;
             card.carouselDoctorImage.layer.masksToBounds = YES;

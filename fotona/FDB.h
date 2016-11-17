@@ -49,17 +49,17 @@
 
 +(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
 +(NSMutableArray *)getVideoswithCategory:(NSString *)videoCategory;
-+(void)removeBookmarkedVideo:(FMedia *)videoToRemove;
 
 
 +(BOOL)checkIfBookmarkedForDocumentID:(NSString *)documentID andType:(NSString *)type;
-+(void)removeFromBookmarkForDocumentID:(NSString *)documentID;
+
 
 +(void)addMedia:(NSMutableArray *)m withType:(int)type andDownload:(BOOL) toDownload;
 +(void)updateMedia:(NSMutableArray *)mediaArray andType:(NSString *) type  andDownload:(BOOL)download forCase:(NSString *) caseID;
 +(FMedia *)getMediaWithId:(NSString *) videoId andType: (NSString *)mediaType;
 +(NSMutableArray *)getMediaForGallery:(NSString *)galleryItems withMediType: (NSString *)mediaType;
-
++(void) removeBookmarkedMedia:(FMedia *)media;
++(void)removeFromBookmarkForMediaID:(NSString *)mediaID withMediaType:(NSString *)mediaType;
 
 +(NSMutableArray *)getFotonaMenu:(NSString *)catID;
 +(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;

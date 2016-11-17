@@ -482,26 +482,6 @@
                 lastUpdate = @"2.4";
             }
             if ([lastUpdate isEqualToString:@"2.4"]){
-                //                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                //                [database open];
-                //                //Favorites
-                //                [database executeUpdate:@"CREATE TABLE UserFavorites (userFavoriteID INTEGER PRIMARY KEY, username TEXT NOT NULL, documentID INTEGER NOT NULL, typeID INTEGER NOT NULL);"];
-                //                //Media
-                //                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN userPermissions TEXT"];
-                //                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN active TEXT"];
-                //                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN deleted TEXT"];
-                //                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN download TEXT"];
-                //                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN fileSize TEXT"];
-                //                [database executeUpdate:@"ALTER TABLE Media REMOVE COLUMN galleryID TEXT"];
-                //                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-                //                [database close];
-                //                [defaults setObject:@"3.0" forKey:@"DBLastUpdate"];
-                //                [defaults setObject:@"" forKey:@"lastUpdate"];
-                //                [defaults synchronize];
-                //                lastUpdate = @"3.0";
-                
-                
-                //TODO: NRdite de se zbrišejo vsi bookmarki
                 
                 [fileManager removeItemAtPath:dbPath error:&error];
                 NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"fotona.db"];
@@ -522,12 +502,32 @@
                     [defaults setObject:@"" forKey:@"lastUpdate"];
                     [defaults setObject:userBookmarked forKey:@"userBookmarked"];
                     [defaults synchronize];
-                    
                 }
-                lastUpdate = @"3.0";
                 
-            }
+                NSFileManager *fileMgr = [NSFileManager defaultManager];
+                NSString *directory = [NSString stringWithFormat:@"%@/%@/",docDir,FOLDERVIDEO];
+                NSArray *fileArray = [fileMgr contentsOfDirectoryAtPath:directory error:nil];
+                for (NSString *filename in fileArray)  {
+                    
+                    [fileMgr removeItemAtPath:[directory stringByAppendingPathComponent:filename] error:NULL];
+                }
+                
+                directory = [NSString stringWithFormat:@"%@/%@/",docDir,FOLDERIMAGE];
+                fileArray = [fileMgr contentsOfDirectoryAtPath:directory error:nil];
+                for (NSString *filename in fileArray)  {
+                    
+                    [fileMgr removeItemAtPath:[directory stringByAppendingPathComponent:filename] error:NULL];
+                }
 
+                directory = [NSString stringWithFormat:@"%@/%@/",docDir,FOLDERPDF];
+                fileArray = [fileMgr contentsOfDirectoryAtPath:directory error:nil];
+                for (NSString *filename in fileArray)  {
+                    
+                    [fileMgr removeItemAtPath:[directory stringByAppendingPathComponent:filename] error:NULL];
+                }
+                
+                lastUpdate = @"3.0";
+            }
         }
     }
     [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:dbPath]];
