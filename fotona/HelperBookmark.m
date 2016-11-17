@@ -18,6 +18,7 @@
 #import "FDB.h"
 #import "FMediaManager.h"
 #import "FIFavoriteViewController.h"
+#import "FFavoriteViewController.h"
 
 @implementation HelperBookmark
 {
@@ -559,6 +560,7 @@ int bookmarkedCount;
                 if ([item.type intValue] == [BOOKMARKPDF intValue]) {
                     // typeID 0-case 1-video 2-pdf
                     //check if both items were downloaded
+                    [database close];
                     BOOL pdfComplete = true;
                     for (int i = 0; i < [[APP_DELEGATE downloadList] count]; i++) {
                         FItemBookmark * temp = [[APP_DELEGATE downloadList] objectAtIndex:i];
@@ -613,16 +615,14 @@ int bookmarkedCount;
      FIFlowController *flow = [FIFlowController sharedInstance];
     if ([FCommon isIpad]) {
         if ([itemType intValue] == [BOOKMARKCASE intValue] && [[[[APP_DELEGATE casebookController] currentCase] caseID] intValue] == [itemID intValue] ) {
+            //TODO: kako je če je ta casebook na favorites?
             [[APP_DELEGATE casebookController] refreshBookmarkBtn];
         } else {
             if ([[APP_DELEGATE tabBar] selectedIndex] == 2){
-                UINavigationController *tempC = [[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:2] centerController];
-                [(FFotonaViewController *)[tempC topViewController] refreshCellForMedia:itemID andMediaType:itemType];
+                [[APP_DELEGATE fotonaController] refreshCellForMedia:itemID andMediaType:itemType];
             } else {
                 if ([[APP_DELEGATE tabBar] selectedIndex] == 4){
-//                    UINavigationController *tempC = [[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:2] centerController];
-//                    [(FFotonaViewController *)[tempC topViewController] setOpenGal:YES forMedia:media];
-               // TODO: favorites
+                    [[APP_DELEGATE favoriteController] refreshCellForMedia:itemID andMediaType:itemType];
                 }
             }
         }
@@ -858,15 +858,15 @@ int bookmarkedCount;
         if (delete) {
             [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? AND username=? AND typeID=? AND bookmarkType=?",[media itemID],usr,itemType, [NSString stringWithFormat:@"%d", bookType]];
         } else {
-            [database executeUpdate:@"DELETE UserBookmark  set caseIDs=? WHERE documentID=? AND username=? AND typeID=? AND bookmarkType=?",cases,[media itemID],usr,itemType, [NSString stringWithFormat:@"%d", bookType]];
+            [database executeUpdate:@"UPDATE UserBookmark set caseIDs=? WHERE documentID=? AND username=? AND typeID=? AND bookmarkType=?",cases,[media itemID],usr,itemType, [NSString stringWithFormat:@"%d", bookType]];
         }
         
-        FMResultSet *resultsRemove = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=? AND bookmarkType=?" withArgumentsInArray:@[usr, itemType, [media itemID],[NSString stringWithFormat:@"%d", bookType]]];
+        FMResultSet *resultsRemove = [database executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:@[itemType, [media itemID]]];
         while([resultsRemove next]) {
             remove = NO;
         }
         if (remove) {
-             [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=? AND mediaType=?",@"0",[resultsBookmarked stringForColumn:@"documentID"], itemType];
+             [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=? AND mediaType=?",@"0",[media itemID], itemType];
             NSString *downloadFilename = [FMedia createLocalPathForLink:[media path] andMediaType:itemType];
             NSFileManager *fileManager = [NSFileManager defaultManager];
             NSError *error;

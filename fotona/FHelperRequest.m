@@ -50,7 +50,8 @@ static FUser *lastSent;
     FUser *u = [APP_DELEGATE currentLogedInUser];
     if (deviceData != nil && u!=nil && (lastSent == nil || ![lastSent.username isEqualToString: u.username])) {
         lastSent = u;
-        NSString *requestData =[NSString stringWithFormat:@"%@,\"fotUserType\":%@,\"fotUserSubType\":\"%@\"}",deviceData,[u userType],[[u userTypeSubcategory] componentsJoinedByString:@";"]];
+        
+        NSString *requestData =[NSString stringWithFormat:@"%@,\"fotUserType\":%@,\"fotUserSubType\":\"%@\"}",deviceData,[u userType],[FCommon arrayToString:[u userTypeSubcategory] withSeparator:@";"]];
         
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, LINKWRITEDEVICE]];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];

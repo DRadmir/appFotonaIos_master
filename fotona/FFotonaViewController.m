@@ -191,6 +191,8 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         [self openMediaFromSearch:mediaFromSearch];
     }
     
+    [APP_DELEGATE setFotonaController:self];
+    
 }
 
 #pragma mark Search
@@ -404,9 +406,9 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:video.localPath] && downloaded && flag) {
-        [FCommon playVideoFromURL:video.localPath onViewController:self localSaved:YES];
+    NSString *localPath = [FMedia createLocalPathForLink:[video path] andMediaType:MEDIAVIDEO];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:localPath] && downloaded && flag) {
+        [FCommon playVideoFromURL:localPath onViewController:self localSaved:YES];
     }else
     {
         if([APP_DELEGATE connectedToInternet]){

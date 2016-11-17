@@ -60,6 +60,7 @@
 
 @synthesize settingsController;
 @synthesize fotonaController;
+@synthesize favoriteController;
 @synthesize casebookController;
 
 @synthesize bookmarkCountAll;
@@ -676,9 +677,6 @@
                                stringByReplacingOccurrencesOfString:@"<"withString:@""]
                               stringByReplacingOccurrencesOfString:@">" withString:@""]
                              stringByReplacingOccurrencesOfString: @" " withString: @""];
-    
-    
-    
     
     NSString *requestData =[NSString stringWithFormat:@"{\"deviceID\":null,\"appname\":\"%@\",\"appversion\":\"%@\",\"deviceuid\":\"%@\",\"devicetoken\":\"%@\",\"devicename\":\"%@\",\"devicemodel\":\"%@\",\"deviceversion\":\"%@\",\"pushbadge\":true,\"pushalert\":true,\"pushsound\":true,\"active\":true",appName,appVersion,deviceUuid,devToken,deviceName,deviceModel,deviceSystemVersion];
     [FHelperRequest setDeviceData:requestData];

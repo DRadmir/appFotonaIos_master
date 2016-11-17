@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" colorMatched="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -12,7 +12,6 @@
                 <outlet property="addToFavorite" destination="yap-ft-w9G" id="aHN-in-WqL"/>
                 <outlet property="additionalInfo" destination="A06-bq-THZ" id="ImO-iS-S1e"/>
                 <outlet property="authorImg" destination="B73-T1-hO5" id="dJ1-hJ-RTb"/>
-                <outlet property="authorNameLbl" destination="Y0m-PK-N2P" id="j0S-Vt-v9a"/>
                 <outlet property="caseScroll" destination="Zfm-Lt-xX3" id="Wh8-JN-Ex4"/>
                 <outlet property="caseView" destination="qcW-fZ-dvJ" id="gB3-Nk-DBm"/>
                 <outlet property="contentVideoModeView" destination="yQi-cB-Bpf" id="3aM-gP-eR4"/>
@@ -295,6 +294,9 @@
             </subviews>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="authorNameLbl" destination="Y0m-PK-N2P" id="etT-RN-lF1"/>
+            </connections>
             <point key="canvasLocation" x="887" y="20.5"/>
         </view>
         <view clipsSubviews="YES" contentMode="scaleToFill" id="yQi-cB-Bpf">
@@ -336,14 +338,14 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="content" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0FO-YI-6pj" customClass="FDLabelView">
-                            <rect key="frame" x="50" y="25" width="2204" height="41"/>
+                            <rect key="frame" x="50" y="25" width="2972" height="41"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="32"/>
                             <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FDLabel" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="AxU-N8-YXR" customClass="FDLabelView">
-                            <rect key="frame" x="50" y="123" width="2204" height="211"/>
+                            <rect key="frame" x="50" y="123" width="2972" height="211"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                             <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

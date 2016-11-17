@@ -105,8 +105,6 @@
 
 -(IBAction)expand:(id)sender;
 
--(IBAction)backBtn:(id)sender;
-
 - (IBAction)addToBookmarks:(id)sender;
 - (IBAction)removeFromBookmarks:(id)sender;
 
@@ -122,5 +120,6 @@
 - (IBAction)showDisclaimer:(id)sender;
 
 -(void)deleteRowAtIndex:(NSIndexPath *) index;
+- (void) refreshCellForMedia:(NSString *)mediaID andMediaType:(NSString *)mediaType;
 
 @end

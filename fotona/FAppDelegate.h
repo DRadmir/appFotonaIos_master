@@ -17,6 +17,7 @@
 #import "FSettingsViewController.h"
 #import "FMainViewController.h"
 #import <Google/Analytics.h>
+#import "FFavoriteViewController.h"
 
 #define APP_DELEGATE (FAppDelegate *)[[UIApplication sharedApplication] delegate]
 #define langID  @"1"
@@ -34,6 +35,7 @@
 @property (nonatomic,retain) FMainViewController *main;
 @property (nonatomic,retain) FSettingsViewController *settingsController;
 @property (nonatomic,retain) FFotonaViewController *fotonaController;
+@property (nonatomic,retain) FFavoriteViewController *favoriteController;
 @property (nonatomic,retain) FCasebookViewController *casebookController;
 @property (nonatomic,retain) FUser *currentLogedInUser;
 @property (nonatomic,retain) NSString *userFolderPath;
