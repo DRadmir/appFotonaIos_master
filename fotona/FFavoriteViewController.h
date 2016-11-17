@@ -6,7 +6,7 @@
 #import "FSearchViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "EBPhotoPagesController.h"
-
+#import "Bubble.h"
 
 @interface FFavoriteViewController : UIViewController <UINavigationControllerDelegate,UISearchBarDelegate,UIAlertViewDelegate,EBPhotoPagesDelegate,EBPhotoPagesDataSource>//,UIImagePickerControllerDelegate
 {
@@ -49,7 +49,13 @@
     IBOutlet UIView *additionalInfo;
     BOOL flagParameters;
     
+    
+    IBOutlet UIButton *addBookmarks;
     IBOutlet UIButton *removeBookmarks;
+    
+    IBOutlet UIButton *addToFavorite;
+    IBOutlet UIButton *removeFavorite;
+    
     
     IBOutlet UIScrollView *caseScroll;
     
@@ -106,8 +112,13 @@
 
 -(IBAction)backBtn:(id)sender;
 
-
+- (IBAction)addToBookmarks:(id)sender;
 - (IBAction)removeFromBookmarks:(id)sender;
+
+- (IBAction)addToFavorite:(id)sender;
+- (IBAction)removeFavorite:(id)sender;
+
+
 - (IBAction)openSettings:(id)sender;
 - (IBAction)closeSettings:(id)sender;
 
