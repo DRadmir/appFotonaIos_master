@@ -35,7 +35,7 @@ static UIImage *defaultVideoImage;
 }
 
 
-+(void)preloadImage:(NSMutableArray *)mediaArray mediaType:(NSString *)mediaType forTableView:(UITableView *)tableView onIndex:(NSIndexPath *) indexPath;
++(void)preloadImage:(NSMutableArray *)mediaArray mediaType:(NSString *)mediaType forTableView:(UITableView *)tableView orCollectionView:(UICollectionView *) collectionView onIndex:(NSIndexPath *) indexPath
 {
     NSMutableDictionary *temp;
     if ([APP_DELEGATE videoImages]==nil) {
@@ -139,11 +139,22 @@ static UIImage *defaultVideoImage;
                 } else {
                     tableIndexPath = indexPath;
                 }
-                if ([[tableView cellForRowAtIndexPath:tableIndexPath] isKindOfClass:[FIGalleryTableViewCell class]]) {
-                    FIGalleryTableViewCell *cell = (FIGalleryTableViewCell *)[tableView cellForRowAtIndexPath:tableIndexPath];
-                    if (cell)
-                    {
-                        [cell refreshMediaThumbnail:imageToLoad];
+                if (tableView != nil) {
+                    if ([[tableView cellForRowAtIndexPath:tableIndexPath] isKindOfClass:[FIGalleryTableViewCell class]]) {
+                        FIGalleryTableViewCell *cell = (FIGalleryTableViewCell *)[tableView cellForRowAtIndexPath:tableIndexPath];
+                        if (cell)
+                        {
+                            [cell refreshMediaThumbnail:imageToLoad];
+                        }
+                    }
+                } else {
+                    if (collectionView != nil) {
+                        FIGalleryTableViewCell *cell = (FIGalleryTableViewCell *)[collectionView cellForItemAtIndexPath:tableIndexPath];
+                        if (cell)
+                        {
+                            [cell refreshMediaThumbnail:imageToLoad];
+                        }
+                       
                     }
                 }
             });
@@ -162,8 +173,8 @@ static UIImage *defaultVideoImage;
     return [NSString stringWithFormat:@"%@_%@", mediaId, medaiType];
 }
 
-+(void)getThumbnailForMedia:(FMedia *)media onTableView:(UITableView *)tableView withIndex:(NSIndexPath *)indexPath{
-    [self preloadImage:[NSMutableArray arrayWithObjects:media, nil] mediaType:[media mediaType] forTableView:tableView onIndex:indexPath];
++(void)getThumbnailForMedia:(FMedia *)media onTableView:(UITableView *)tableView orCollectionView:(UICollectionView *)collectionView withIndex:(NSIndexPath *)indexPath{
+    [self preloadImage:[NSMutableArray arrayWithObjects:media, nil] mediaType:[media mediaType] forTableView:tableView orCollectionView:collectionView onIndex:indexPath];
 }
 
 @end

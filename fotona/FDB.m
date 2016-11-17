@@ -16,7 +16,7 @@
 #import "FItemFavorite.h"
 #import "FMediaManager.h"
 #import "HelperBookmark.h"
-
+#import "FDocument.h"
 
 @implementation FDB
 
@@ -141,7 +141,7 @@
 {
     NSMutableArray *tmp=[[NSMutableArray alloc] init];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and allowedForGuests=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt];
     
     if (![APP_DELEGATE connectedToInternet]) {
         query = [NSString stringWithFormat:@"%@ AND (isBookmark=1 OR alloweInCoverFlow=1)",query];
@@ -150,6 +150,7 @@
 
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
+        //TODO: glede na pravice?
         [tmp addObject:f];
     }
     return tmp;
@@ -809,7 +810,7 @@
             [self removeBookmarkedVideo:media];
         } else {
             if ([mediaType isEqualToString:MEDIAPDF]) {
-                [self removeFromBookmarkForDocumentID:[media itemID]];
+               //TODO: remove za pdf [self removeFromBookmarkForDocumentID:[media itemID]];
             }
         }
     }
@@ -829,7 +830,6 @@
                 if ([FCommon userPermission:[video userPermissions]]) {
                     [videosTmp addObject:video];
                 }
-                
             }
         }
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -934,5 +934,30 @@ NSComparisonResult dateSortForNews(FNews *n1, FNews *n2, void *context) {
 }
 
 
++(NSMutableArray *)getDocuments
+{
+    NSMutableArray *doc=[[NSMutableArray alloc] init];
+    
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Documents where active=1"]];
+    while([results next]) {
+        FDocument *f=[[FDocument alloc] init];
+        [f setDocumentID:[results stringForColumn:@"documentID"]];
+        [f setTitle:[results stringForColumn:@"title"]];
+        [f setIconType:[results stringForColumn:@"iconType"]];
+        [f setDescription:[results stringForColumn:@"description"]];
+        [f setIsLink:[results stringForColumn:@"isLink"]];
+        [f setLink:[results stringForColumn:@"link"]];
+        [f setSrc:[results stringForColumn:@"src"]];
+        [f setActive:[results stringForColumn:@"active"]];
+        
+        [doc addObject:f];
+    }
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+    
+    return doc;
+}
 
 @end

@@ -145,9 +145,10 @@
             }
             break;
         case 2:
-            if (videosSearchRes.count>0) {
+            if (newsSearchRes.count>0 && casesSearchRes.count>0 && videosSearchRes.count>0) {
                 return @"Videos";
             }
+
             break;
         default:
             return @"PDFs";
@@ -189,7 +190,7 @@
             }
             break;
         case 2:
-            if (videosSearchRes.count>0) {
+            if (newsSearchRes.count>0 && casesSearchRes.count>0 && videosSearchRes.count>0) {
                 [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
             } else {
                 [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
@@ -221,9 +222,9 @@
                 }else
                 {
                     if (videosSearchRes.count>0) {
-                        [self openVideo:indexPath];
+                        [self openMedia:videosSearchRes[indexPath.row]];
                     }else {
-                        [self openPDF:indexPath];
+                        [self openMedia:pdfsSearchRes[indexPath.row]];
                     }
                 }
             }
@@ -234,21 +235,21 @@
             }else
             {
                 if (videosSearchRes.count>0) {
-                    [self openVideo:indexPath];
+                    [self openMedia:videosSearchRes[indexPath.row]];
                 }else {
-                    [self openPDF:indexPath];
+                    [self openMedia:pdfsSearchRes[indexPath.row]];
                 }
             }
             break;
         case 2:
             if (videosSearchRes.count>0) {
-                [self openVideo:indexPath];
+                [self openMedia:videosSearchRes[indexPath.row]];
             } else {
-                [self openPDF:indexPath];
+                [self openMedia:pdfsSearchRes[indexPath.row]];
             }
             break;
         case 3:
-            [self openPDF:indexPath];
+            [self openMedia:pdfsSearchRes[indexPath.row]];
             break;
         default:
             break;
@@ -294,11 +295,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    
 }
 
 
@@ -410,31 +406,16 @@
     
 }
 
--(void) openVideo:(NSIndexPath*) index
+-(void) openMedia:(FMedia*) media
 {
     [[(FFotonaViewController *)parent popover] dismissPopoverAnimated:YES];
     UINavigationController *tempC = [[[parent.tabBarController viewControllers] objectAtIndex:2] centerController];
-    
-    [(FFotonaViewController *)[tempC topViewController] setOpenGal:YES];
-    [parent.tabBarController setSelectedIndex:2];
-    
-    [(FFotonaViewController *)[tempC topViewController] openVideoFromSearch:[videosSearchRes objectAtIndex:index.row]];
-    
-}
-
--(void) openPDF:(NSIndexPath*) index
-{
-    [[(FFotonaViewController *)parent popover] dismissPopoverAnimated:YES];
-    UINavigationController *tempC = [[[parent.tabBarController viewControllers] objectAtIndex:2] centerController];
-    
-    [(FFotonaViewController *)[tempC topViewController] setOpenGal:YES];
-    [(FFotonaViewController *)[tempC topViewController] setPDF:[pdfsSearchRes objectAtIndex:index.row] ];
+    [(FFotonaViewController *)[tempC topViewController] setOpenGal:YES forMedia:media];
     if (parent.tabBarController.selectedIndex == 2) {
-        [(FFotonaViewController *)[tempC topViewController] openPDFFromSearch];
+        [(FFotonaViewController *)[tempC topViewController] openMediaFromSearch:media];
     } else {
         [parent.tabBarController setSelectedIndex:2];
     }
 }
-
 
 @end

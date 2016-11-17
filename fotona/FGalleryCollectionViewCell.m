@@ -1,16 +1,18 @@
 //
-//  FIGalleryTableViewCell.m
+//  FGalleryCollectionViewCell.m
 //  fotona
 //
-//  Created by Janos on 10/10/16.
+//  Created by Janos on 14/11/16.
 //  Copyright © 2016 4egenus. All rights reserved.
 //
 
-#import "FIGalleryTableViewCell.h"
+#import "FGalleryCollectionViewCell.h"
 #import "FDB.h"
 #import "FHelperThumbnailImg.h"
+#import "UIColor+Hex.h"
 
-@implementation FIGalleryTableViewCell
+@implementation FGalleryCollectionViewCell
+
 @synthesize caseToShow;
 @synthesize item;
 @synthesize parentIphone;
@@ -21,17 +23,15 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
+ 
 }
 
 -(void)setContentForCase:(FCase *)fcase{
-   
+    
     cellViewCase = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:0];
+     [[cellViewCase containerView] setBackgroundColor:[UIColor lightBackgroundColor]];
     [[self contentView] addSubview: cellViewCase];
+    [cellViewCase setFrame:[[self contentView] bounds]];
     enabled = true;
     [cellViewCase setItem:item];
     [cellViewCase setIndex:index];
@@ -39,29 +39,34 @@
     [cellViewCase setContentForCase:fcase];
 }
 
--(void)setContentForFavorite:(FItemFavorite *)fitem forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath{
+-(void)setContentForFavorite:(FItemFavorite *)fitem forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath{
     if ([[fitem typeID] intValue] == BOOKMARKVIDEOINT || [[fitem typeID] intValue] == BOOKMARKPDFINT) {
         FMedia * media =[FDB getMediaWithId:[fitem itemID] andType:[fitem typeID]];
-        [self setContentForMedia:media forTableView:tableView onIndex:indexPath];
-        [FHelperThumbnailImg getThumbnailForMedia:media onTableView:tableView orCollectionView:nil withIndex:indexPath];
+        [self setContentForMedia:media forColectionView:collectionView onIndex:indexPath];
+        [FHelperThumbnailImg getThumbnailForMedia:media onTableView:nil orCollectionView:collectionView withIndex:indexPath];
     }
 }
 
--(void)setContentForMedia:(FMedia *)media forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath{
+-(void)setContentForMedia:(FMedia *)media forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath{
     enabled = true;;
     if (cellViewFotona == nil) {
-         cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
-         [[self contentView] addSubview: cellViewFotona];
+        cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
+          [[cellViewFotona containerView] setBackgroundColor:[UIColor lightBackgroundColor]];
+        [[self contentView] addSubview: cellViewFotona];
+        [cellViewFotona setFrame:[[self contentView] bounds]];
     }
     [cellViewFotona setContentForMedia:media andMediaType:[media mediaType]];
     if ([[media bookmark] isEqualToString:@"0"] && ![APP_DELEGATE connectedToInternet]) {
         enabled = false;
     }
-     [FHelperThumbnailImg getThumbnailForMedia:media onTableView:tableView orCollectionView:nil withIndex:indexPath];
+    [FHelperThumbnailImg getThumbnailForMedia:media onTableView:nil orCollectionView:collectionView withIndex:indexPath];
+    
+    
 }
 
 -(void)refreshMediaThumbnail:(UIImage *)img{
     [cellViewFotona reloadVideoThumbnail:img];
 }
+
 
 @end

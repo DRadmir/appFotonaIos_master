@@ -20,6 +20,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnDownloadRemove;
 @property (strong, nonatomic) IBOutlet UIButton *btnFavoriteAdd;
 @property (strong, nonatomic) IBOutlet UIButton *btnFavoriteRemove;
+@property (strong, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) FIFavoriteViewController *parentIphone;//TODO: dodat ipad parenta
 @property (strong, nonatomic) NSIndexPath *index;
 

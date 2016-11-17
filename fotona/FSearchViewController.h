@@ -11,7 +11,6 @@
 @interface FSearchViewController : UIViewController <UITableViewDelegate,UITableViewDataSource>
 {
     UIView *tmpNews;
-    
     int updateCounter;
     int success;
     

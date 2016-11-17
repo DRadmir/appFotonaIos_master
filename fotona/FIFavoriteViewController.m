@@ -17,6 +17,8 @@
 #import "FImage.h"
 #import "FGoogleAnalytics.h"
 #import "FIPDFViewController.h"
+#import "FIContentViewController.h"
+
 
 @interface FIFavoriteViewController ()
 
@@ -25,6 +27,10 @@
     int updateCounter;
     int success;
     FIPDFViewController *pdfViewController;
+    FICaseViewController *caseViewController;
+    FIContentViewController *disclaimerView;
+
+    UIViewController *lastOpened;
 }
 
 @end
@@ -55,6 +61,9 @@
     updateCounter = 0;
     success = 0;
     [FGoogleAnalytics writeGAForItem:nil andType:GAFAVORITETABINT];
+    
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    [flow setFavoriteTab:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -192,15 +201,23 @@
 
 
 -(void) openCase:(FCase *) caseToOpen{
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    flow.caseFlow = caseToOpen;
-    if (flow.caseMenu != nil)
-    {
-        [[[flow caseMenu] navigationController] popToRootViewControllerAnimated:false];
-    }
-    flow.lastIndex = 3;
-    [flow.tabControler setSelectedIndex:3];
     
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    if ([flow caseView] != nil) {
+        caseViewController = [flow caseView];
+    } else {
+        if (caseViewController == nil) {
+            caseViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil]  instantiateViewControllerWithIdentifier:@"caseView"];
+        }
+        [flow setCaseView:caseViewController];
+    }
+    caseViewController.caseToOpen = caseToOpen;
+    caseViewController.parent = nil;
+    caseViewController.favoriteParent = self;
+    caseViewController.canBookmark = true;
+    [[self navigationController] pushViewController:caseViewController animated:YES];
+    lastOpened = caseViewController;
+ 
 }
 
 -(void)openMedia:(NSString *)mediaID  andType:(NSString *)mediaType{
@@ -212,7 +229,6 @@
             [self openPdf:media];
         }
     }
-    
 }
 
 #pragma mark - HUD
@@ -245,11 +261,35 @@
 }
     
 -(void) openPdf:(FMedia *) pdf{
-        if (pdfViewController == nil) {
-            pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
-        }
-        pdfViewController.pdfMedia = pdf;
-        [[self navigationController] pushViewController:pdfViewController animated:YES];
+    if (pdfViewController == nil) {
+        pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
+    }
+    pdfViewController.pdfMedia = pdf;
+    [[self navigationController] pushViewController:pdfViewController animated:YES];
+    lastOpened = pdfViewController;
+}
+
+#pragma mark - Rest
+
+-(void)clearViews
+{
+    if (lastOpened != nil) {
+        lastOpened = nil;
+        
+    }
+    [[self navigationController] popViewControllerAnimated:YES];
+}
+
+-(void)openDisclaimer{
+    [[self navigationController] popViewControllerAnimated:YES];
+    if (disclaimerView == nil) {
+        disclaimerView = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil]  instantiateViewControllerWithIdentifier:@"contentViewController"];
+    }
+    
+    disclaimerView.titleContent = @"Disclaimer";
+    disclaimerView.descriptionContent = [[NSUserDefaults standardUserDefaults] stringForKey:@"disclaimerLong"];
+    [[self navigationController] pushViewController:disclaimerView animated:YES];
+    lastOpened = disclaimerView;
 }
 
 

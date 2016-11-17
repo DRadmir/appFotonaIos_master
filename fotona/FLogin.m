@@ -135,7 +135,6 @@ UIButton *tmp;
     tmp=(UIButton *)sender;
     if([ConnectionHelper isConnected])
     {
-        //[self updateStart];
         [self loginOnFotona:tmp];
     } else{
         logintype = 0;
@@ -239,9 +238,7 @@ UIButton *tmp;
             [self showUserFolder:[NSString stringWithFormat:@".%@",usr.username]];
             [self updateStart];
         }
-        
-        
-        
+                
         [sender setEnabled:YES];
 
     }

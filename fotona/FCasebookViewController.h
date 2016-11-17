@@ -73,8 +73,6 @@
     IBOutlet FDLabelView *cDescriptionLbl;
     IBOutlet UIScrollView *contentModeScrollView;
     
-    
-    UIImage *imageToSave;
     NSString *imageName;
     UIImagePickerController *imagePicker;
     int caseTittleFlag;

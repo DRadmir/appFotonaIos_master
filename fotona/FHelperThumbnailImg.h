@@ -12,6 +12,6 @@
 
 
 
-+(void) getThumbnailForMedia:(FMedia *)media onTableView:(UITableView *)tableView withIndex:(NSIndexPath *)indexPath;
-+(void) preloadImage:(NSMutableArray *)mediaArray mediaType:(NSString *)mediaType forTableView:(UITableView *)tableView onIndex:(NSIndexPath *) indexPath;
++(void) getThumbnailForMedia:(FMedia *)media onTableView:(UITableView *)tableView orCollectionView:(UICollectionView *)collectionView withIndex:(NSIndexPath *)indexPath;
++(void)preloadImage:(NSMutableArray *)mediaArray mediaType:(NSString *)mediaType forTableView:(UITableView *)tableView orCollectionView:(UICollectionView *) collectionView onIndex:(NSIndexPath *) indexPath;
 @end

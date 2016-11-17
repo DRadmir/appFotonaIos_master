@@ -101,7 +101,7 @@
     }
     
     if (mediaArray.count > 0) {
-        [FHelperThumbnailImg preloadImage:mediaArray mediaType:galleryType  forTableView:videoGalleryTableView onIndex:nil];
+        [FHelperThumbnailImg preloadImage:mediaArray mediaType:galleryType  forTableView:videoGalleryTableView orCollectionView:nil onIndex:nil];
     }
     
 }

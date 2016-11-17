@@ -195,7 +195,6 @@ int forgotenBottom = 0;
         
         [self.navigationController presentViewController:vc animated:true completion:nil];
     }
-    
 }
 
 //adding tabs to tabcontroler

@@ -124,7 +124,6 @@
         openedView = disclaimerView;
         lastCase = nil;
     }
-    
 }
 
 - (void)openViewInContainer: (UIViewController *) viewToOpen
@@ -146,7 +145,8 @@
         }
         caseView.caseToOpen = caseToOpen;
         caseView.parent = self;
-        caseView.canBookmark = true; //true if opened in casebooktab
+        caseView.favoriteParent = nil;
+        caseView.canBookmark = true; 
         [openedView willMoveToParentViewController:nil];
         [openedView.view removeFromSuperview];
         [openedView removeFromParentViewController];

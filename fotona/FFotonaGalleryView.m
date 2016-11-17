@@ -19,6 +19,7 @@
 @synthesize btnDownloadRemove;
 @synthesize btnFavoriteAdd;
 @synthesize btnFavoriteRemove;
+@synthesize containerView;
 
 @synthesize parentIphone;
 @synthesize index;
@@ -30,25 +31,25 @@
 -(void)setContentForMedia:(FMedia *)media andMediaType:(NSString *)mediaType{
     cellMedia = media;
     type = mediaType;
-
-
+    btnDownloadAdd.enabled = YES;
+    
     [lblTitle setText:[media title]];
     [lblDesc setText:[media description]];
-    [btnFavoriteRemove setHidden:YES];
    
     if([FDB checkIfBookmarkedForDocumentID:[media itemID] andType:type]){
-        btnDownloadRemove.hidden = false;
-        btnDownloadAdd.hidden = true;
+        btnDownloadRemove.hidden = NO;
+        btnDownloadAdd.hidden = YES;
     } else {
-        btnDownloadRemove.hidden = true;
-        btnDownloadAdd.hidden = false;
+        btnDownloadRemove.hidden = YES;
+        btnDownloadAdd.hidden = NO;
     }
+    
     if([FDB checkIfFavoritesItem: [[media itemID] intValue] ofType:type]){
-        btnFavoriteRemove.hidden = false;
-        btnFavoriteAdd.hidden = true;
+        btnFavoriteRemove.hidden = NO;
+        btnFavoriteAdd.hidden = YES;
     } else {
-        btnFavoriteRemove.hidden = true;
-        btnFavoriteAdd.hidden = false;
+        btnFavoriteRemove.hidden = YES;
+        btnFavoriteAdd.hidden = NO;
     }
 }
 
@@ -66,26 +67,27 @@
 - (IBAction)downloadAdd:(id)sender {
     if ([type intValue] == [MEDIAPDF intValue] || [type intValue] == [MEDIAVIDEO intValue]) {
         if ([HelperBookmark bookmarkMedia:cellMedia]) {
-            btnDownloadAdd.enabled = false;
+            btnDownloadAdd.enabled = NO;
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"BOOKMARKING", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [av show];
         } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"ADDBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [av show];
-            btnDownloadRemove.hidden = false;
-            btnDownloadAdd.hidden = true;
+            btnDownloadRemove.hidden = NO;
+            btnDownloadAdd.hidden = YES;
         }
     }
 }
 
 - (IBAction)downloadRemove:(id)sender {
+    
     [HelperBookmark removeBookmarkForMedia:cellMedia andType:[cellMedia mediaType] forBookmarkType:BSOURCEFOTONA];
 }
 
 - (IBAction)favoriteAdd:(id)sender {
     [FDB addTooFavoritesItem:[[cellMedia itemID] intValue] ofType:[cellMedia mediaType]];
-    btnFavoriteRemove.hidden = false;
-    btnFavoriteAdd.hidden = true;
+    btnFavoriteRemove.hidden = NO;
+    btnFavoriteAdd.hidden = YES;
 }
 
 - (IBAction)favoriteRemove:(id)sender {
@@ -93,8 +95,9 @@
     if (parentIphone != nil) {
         [parentIphone deleteRowAtIndex:index];
     }
-    btnFavoriteRemove.hidden = true;
-    btnFavoriteAdd.hidden = false;
+    //TODO: dodat odstranjevanje iz seznama na ipadu
+    btnFavoriteRemove.hidden = YES;
+    btnFavoriteAdd.hidden = NO;
 }
 
 @end

@@ -8,11 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "FIBaseView.h"
+#import "FFotonaViewController.h"
+#import "FFavoriteViewController.h"
 
 @interface FIPDFViewController : FIBaseView <QLPreviewControllerDelegate, QLPreviewControllerDataSource, UIWebViewDelegate>
 
 @property FMedia *pdfMedia;
 @property (strong, nonatomic) IBOutlet UIWebView *pdfWebView;
+@property (strong, nonatomic) FFotonaViewController *ipadFotonaParent;
+@property (strong, nonatomic) FFavoriteViewController *ipadFavoriteParent;
 
 -(void) openPdf:(FMedia *) pdf;
 

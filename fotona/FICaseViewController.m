@@ -48,6 +48,7 @@
 @synthesize btnReadMore;
 @synthesize caseToOpen;
 @synthesize parent;
+@synthesize favoriteParent;
 @synthesize scrollViewMain;
 
 @synthesize parametersContainer;
@@ -58,7 +59,6 @@
 @synthesize parametersHeight;
 @synthesize headerHeight;
 @synthesize canBookmark;
-@synthesize parentBookmarks;
 
 @synthesize btnAddFavorite;
 @synthesize btnRemoveFavorite;
@@ -135,10 +135,9 @@
     dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
     dispatch_async(queue, ^{
         //code to be executed in the background
-        NSData *imgData=[FDB getAuthorImage:[caseToOpen authorID]];
         dispatch_async(dispatch_get_main_queue(), ^{
             //code to be executed on the main thread when background task is finished
-            [imgAuthor setImage:[FDB getAuthorImage:[caseToOpen authorID]]];//[UIImage imageWithData:imgData]];
+            [imgAuthor setImage:[FDB getAuthorImage:[caseToOpen authorID]]];
         });
     });
     [lblDate setText:[APP_DELEGATE timestampToDateString:[caseToOpen date]]];
@@ -459,7 +458,7 @@
         [parent openDisclaimer];
     } else
     {
-        [parentBookmarks openDisclaimer];
+        [favoriteParent openDisclaimer];
     }
 }
 

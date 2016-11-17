@@ -13,7 +13,7 @@
 #import "FDLabelView.h"
 
 
-@interface FFeaturedViewController_iPad : UIViewController <iCarouselDataSource, iCarouselDelegate,UISearchBarDelegate,UISearchDisplayDelegate,UIActionSheetDelegate,UIAlertViewDelegate,UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UITabBarControllerDelegate>//,UIImagePickerControllerDelegate
+@interface FFeaturedViewController_iPad : UIViewController <iCarouselDataSource, iCarouselDelegate,UISearchBarDelegate,UISearchDisplayDelegate,UIActionSheetDelegate,UIAlertViewDelegate,UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UITabBarControllerDelegate>
 {
     IBOutlet UIScrollView *newsScroll;
     UIView *column1;
@@ -63,12 +63,8 @@
 
 @property (strong, nonatomic) IBOutlet UIView *aboutView;
 @property (weak, nonatomic) IBOutlet UIScrollView *aboutScrollView;
-//@property (weak, nonatomic) IBOutlet FDLabelView *aboutContent;
 @property (weak, nonatomic) IBOutlet FDLabelView *aboutTitle;
 @property (weak, nonatomic) IBOutlet UITextView *aboutDescription;
-
-
-//-(IBAction)openCamera:(id)sender;
 
 - (IBAction)openSettings:(id)sender;
 

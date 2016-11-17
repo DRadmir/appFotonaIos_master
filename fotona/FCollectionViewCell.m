@@ -185,9 +185,7 @@ static int category = 0;
         [[APP_DELEGATE tabBar] setSelectedIndex:1];
         FEventViewController * tempEventVC = [[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:1];
         [tempEventVC  openPopupOutside];
-        
     }
-    
 }
 
 @end

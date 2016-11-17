@@ -284,7 +284,6 @@
     }
     self.progressPercentige.text = [NSString stringWithFormat:@"0%%"];
     btnBookmark.layer.borderColor = [[UIColor grayColor] CGColor];
-    [[APP_DELEGATE fotonaController] refreshVideoCells];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

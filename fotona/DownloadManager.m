@@ -135,7 +135,7 @@
     {
         [self.delegate didFinishLoadingAllForManager:self];
     }
-        }
+}
 
 - (void)tryDownloading
 {

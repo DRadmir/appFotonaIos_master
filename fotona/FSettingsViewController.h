@@ -13,7 +13,6 @@
     IBOutlet UILabel *logedAs;
     IBOutlet UIButton *feedbackBtn;
     IBOutlet UIButton *changePassBtn;
-    UIImage *imageToSave;
     NSString *imageName;
     IBOutlet UIButton *logoutBtn;
 

@@ -534,14 +534,9 @@ int bookmarkedCount;
                             NSLog(@"Bookmarked %@",caseObj.title);
                             [database executeUpdate:@"UPDATE Cases set title=?,langID=?,coverTypeID=?,name=?,image=?,introduction=?,procedure=?,results=?,'references'=?,parameters=?,date=?,active=?,authorID=?,alloweInCoverFlow=?,isBookmark=?, deleted=?, download=?, userPermissions=?, galleryItemVideoIDs=?, galleryItemImagesIDs=? where caseID=?",caseObj.title,langID,caseObj.coverTypeID,caseObj.name,caseObj.image,caseObj.introduction,caseObj.procedure,caseObj.results,caseObj.references,caseObj.parameters,caseObj.date,caseObj.active,caseObj.authorID,caseObj.coverflow,@"1", caseObj.deleted, caseObj.download, caseObj.userPermissions, caseObj.galleryItemVideoIDs, caseObj.galleryItemImagesIDs, caseObj.caseID];
                             
-                            if ([FCommon isIpad]) {
-                                if ([[[APP_DELEGATE casebookController] currentCase] caseID] == selected.caseID ) {
-                                    [[APP_DELEGATE casebookController] refreshBookmarkBtn];
-                                }//TODO: dodat da pogleda na favorite in če je tm da refresha tisto celico
-                            } else{
-                                [self refreshViewWithItem:selected.caseID forItemType:BOOKMARKCASE];
+                           
+                            [self refreshViewWithItem:selected.caseID forItemType:BOOKMARKCASE];
 
-                            }
 
                         }
                                                          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -582,12 +577,7 @@ int bookmarkedCount;
                             [[APP_DELEGATE pdfToDownload] removeObject:local];
                             [[APP_DELEGATE imagesToDownload] removeObject:local];
                         }
-                        if ([FCommon isIpad]) {
-                            //TODO:refresh celice ne menuja [[APP_DELEGATE fotonaController] refreshMenu:item.link];
-                        } else
-                        {
-                            [self refreshViewWithItem:item.itemID forItemType:BOOKMARKPDF];
-                        }
+                        [self refreshViewWithItem:item.itemID forItemType:BOOKMARKPDF];
                     }
                 } else {
                     [database close];
@@ -609,12 +599,7 @@ int bookmarkedCount;
                                 [[APP_DELEGATE videosToDownload] removeObject:local];
                                 [[APP_DELEGATE imagesToDownload] removeObject:local];
                             }
-                            if ([FCommon isIpad]) {
-                                //TODO:refresh celice ne menuja [[APP_DELEGATE fotonaController] refreshMenu:item.link];
-                            } else
-                            {
-                                [self refreshViewWithItem:item.itemID forItemType:BOOKMARKVIDEO];
-                            }
+                            [self refreshViewWithItem:item.itemID forItemType:BOOKMARKVIDEO];
                         }
                     }
                 }
@@ -625,20 +610,38 @@ int bookmarkedCount;
 }
 
 +(void)refreshViewWithItem:(NSString *)itemID forItemType:(NSString *)itemType{
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    if ([[[flow caseOpened] caseID] intValue] == [itemID intValue] ) {
-        [[flow caseView] refreshBookmarkBtn];
-    } else {
-        if ([[flow lastOpenedView] isKindOfClass:[FIFavoriteViewController class]]) {
-            FIFavoriteViewController *favorView =(FIFavoriteViewController *)[flow lastOpenedView];
-            [favorView refreshCellWithItemID:itemID andItemType:itemType];
-        }else {
-            if ([[flow lastOpenedView] isKindOfClass:[FIGalleryViewController class]]) {
-                FIGalleryViewController *gallView =(FIGalleryViewController *)[flow lastOpenedView];
-                [gallView refreshCellWithItemID:itemID andItemType:itemType];
+     FIFlowController *flow = [FIFlowController sharedInstance];
+    if ([FCommon isIpad]) {
+        if ([itemType intValue] == [BOOKMARKCASE intValue] && [[[[APP_DELEGATE casebookController] currentCase] caseID] intValue] == [itemID intValue] ) {
+            [[APP_DELEGATE casebookController] refreshBookmarkBtn];
+        } else {
+            if ([[APP_DELEGATE tabBar] selectedIndex] == 2){
+                UINavigationController *tempC = [[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:2] centerController];
+                [(FFotonaViewController *)[tempC topViewController] refreshCellForMedia:itemID andMediaType:itemType];
+            } else {
+                if ([[APP_DELEGATE tabBar] selectedIndex] == 4){
+//                    UINavigationController *tempC = [[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:2] centerController];
+//                    [(FFotonaViewController *)[tempC topViewController] setOpenGal:YES forMedia:media];
+               // TODO: favorites
+                }
+            }
+        }
+    } else{
+        if ([itemType intValue] == [BOOKMARKCASE intValue] && [[[flow caseOpened] caseID] intValue] == [itemID intValue] ) {
+            [[flow caseView] refreshBookmarkBtn];
+        } else {
+            if ([[flow lastOpenedView] isKindOfClass:[FIFavoriteViewController class]]) {
+                FIFavoriteViewController *favorView =(FIFavoriteViewController *)[flow lastOpenedView];
+                [favorView refreshCellWithItemID:itemID andItemType:itemType];
+            }else {
+                if ([[flow lastOpenedView] isKindOfClass:[FIGalleryViewController class]]) {
+                    FIGalleryViewController *gallView =(FIGalleryViewController *)[flow lastOpenedView];
+                    [gallView refreshCellWithItemID:itemID andItemType:itemType];
+                }
             }
         }
     }
+    
 }
 
 +(void) insertToDB:(FMDatabase *)database forUser:(NSString *)usr item:(NSString *)itemID withType:(NSString *) itemType forCaseIDs:(NSString *)caseIDs andBookmarkType:(int) bookmarkType{
@@ -753,7 +756,6 @@ int bookmarkedCount;
             } else {
                 if ([type isEqualToString:BOOKMARKVIDEO] || [type isEqualToString:BOOKMARKPDF]) {//video and pdf
                     [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,type];
-                    [[APP_DELEGATE fotonaController] refreshCellUnbookmark:[[resultsBookmarked stringForColumn:@"documentID"] intValue]];
                     FMResultSet *results =  [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",[resultsBookmarked stringForColumn:@"documentID"],type]];
                     BOOL flag=NO;
                     while([results next]) {

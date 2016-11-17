@@ -302,7 +302,6 @@
     }
     self.progressPercentige.text = [NSString stringWithFormat:@"0%%"];
     btnBookmark.layer.borderColor = [[UIColor grayColor] CGColor];
-    [[APP_DELEGATE fotonaController] refreshVideoCells];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -376,7 +375,6 @@
             } else {
                 if ([type isEqualToString:BOOKMARKVIDEO]) {//video
                     [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,BOOKMARKVIDEO];
-                        [[APP_DELEGATE fotonaController] refreshCellUnbookmark:[[resultsBookmarked stringForColumn:@"documentID"] intValue]];
                     FMResultSet *results =  [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKVIDEO]];
                     BOOL flag=NO;
                     while([results next]) {

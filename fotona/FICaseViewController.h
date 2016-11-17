@@ -11,8 +11,8 @@
 #import "FCase.h"
 #import "FICasebookContainerViewController.h"
 #import "FIGalleryController.h"
-#import "FIBookmarkViewController.h"
 #import "Bubble.h"
+#import "FIFavoriteViewController.h"
 
 
 @interface FICaseViewController : UIViewController <UIActionSheetDelegate, BubbleDelegate>
@@ -48,7 +48,7 @@
 
 @property (strong, nonatomic) FCase* caseToOpen;
 @property (strong, nonatomic) FICasebookContainerViewController *parent;
-@property (strong, nonatomic) FIBookmarkViewController *parentBookmarks;
+@property (strong, nonatomic) FIFavoriteViewController *favoriteParent;
 
 - (IBAction)readMore:(id)sender;
 - (IBAction)removeBookmark:(id)sender;

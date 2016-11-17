@@ -70,4 +70,5 @@
 +(BOOL) checkIfFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(NSMutableArray *) getAllFavoritesForUser;
 
++(NSMutableArray *)getDocuments;
 @end

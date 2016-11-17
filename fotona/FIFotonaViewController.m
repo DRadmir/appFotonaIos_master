@@ -228,10 +228,7 @@
     {
         [contentView reloadView];
     }
-    
 }
-
-
 
 #pragma mark - Open menu
 
@@ -253,29 +250,8 @@
     
 }
 
-
-
 -(void)clearViews
 {
-    
-    //    if (openedView != nil) {
-    //        [openedView willMoveToParentViewController:nil];
-    //        [openedView.view removeFromSuperview];
-    //        [openedView removeFromParentViewController];
-    //    }
-    //     FIFlowController *flow = [FIFlowController sharedInstance];
-    //    //[flow.fotonaMenu closeMenu:self];
-    //    if (flow.fotonaMenu != nil )
-    //    {
-    //        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
-    //    }
-    //    openedView = nil;
-    //    lastCategory = @"";
-    //    [flow.fotonaMenuArray removeAllObjects];
-    //    if (![self.navigationController.visibleViewController isKindOfClass:[FIFotonaMenuViewController class]]) {
-    //        [self showMenu:self];
-    //    }
-    
     FIFlowController *flow = [FIFlowController sharedInstance];
     if (openedView != nil) {
         [openedView willMoveToParentViewController:nil];
@@ -298,9 +274,9 @@
     if (![self.navigationController.visibleViewController isKindOfClass:[FIFotonaMenuViewController class]]) {
         [self showMenu:self];
     }
-    
-    
 }
+
+
 
 #pragma mark - BUBBLES :D
 

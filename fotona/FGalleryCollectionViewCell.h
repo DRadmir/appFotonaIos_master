@@ -1,0 +1,34 @@
+//
+//  FGalleryCollectionViewCell.h
+//  fotona
+//
+//  Created by Janos on 14/11/16.
+//  Copyright © 2016 4egenus. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "FItemFavorite.h"
+#import "FIFavoriteViewController.h"
+#import "FCaseGalleryView.h"
+#import "FFotonaGalleryView.h"
+#import "FMedia.h"
+
+@interface FGalleryCollectionViewCell : UICollectionViewCell
+
+@property (strong, nonatomic) FCase *caseToShow;
+@property (strong, nonatomic) FItemFavorite *item;
+@property (strong, nonatomic) FIFavoriteViewController *parentIphone;//TODO: dodat ipad parenta
+@property (strong, nonatomic) NSIndexPath *index;
+@property (nonatomic) BOOL enabled;
+@property (strong, nonatomic) FCaseGalleryView *cellViewCase;
+@property (strong, nonatomic) FFotonaGalleryView *cellViewFotona;
+
+-(void)setContentForCase:(FCase *)fcase;
+
+-(void)setContentForFavorite:(FItemFavorite *)fitem forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath;
+
+-(void)setContentForMedia:(FMedia *) video forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath;
+
+-(void)refreshMediaThumbnail:(UIImage *)img;
+
+@end

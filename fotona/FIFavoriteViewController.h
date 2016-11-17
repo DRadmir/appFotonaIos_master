@@ -16,4 +16,7 @@
 
 -(void)deleteRowAtIndex:(NSIndexPath *) index;
 -(void) refreshCellWithItemID:(NSString *)itemID andItemType:(NSString *) itemType;
+
+-(void)clearViews;
+-(void)openDisclaimer;
 @end

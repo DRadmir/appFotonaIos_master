@@ -31,6 +31,7 @@
 #import "HelperDate.h"
 #import "FDB.h"
 #import "FGoogleAnalytics.h"
+#import "UIColor+Hex.h"
 
 
 @interface FFeaturedViewController_iPad ()
@@ -280,7 +281,7 @@ FNewsView *newsViewController;
     if ([[[APP_DELEGATE currentLogedInUser] userType]intValue] == 0 || [[[APP_DELEGATE currentLogedInUser] userType] intValue] == 3){
         if (indexPath.row == 0) {
             FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-            [cell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+            [cell setBackgroundColor:[UIColor lightBackgroundColor]];
             [cell setTag:ABOUT_CELL_VIEW_START_TAG];
             [cell.eventCell setHidden:YES];
             [cell.aboutCell setHidden:NO];
@@ -304,7 +305,7 @@ FNewsView *newsViewController;
                 status = 1; //guest landscape
                 if (indexPath.row==2) {
                     FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-                    [cell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+                    [cell setBackgroundColor:[UIColor lightBackgroundColor]];
                     [cell.eventCell setHidden:NO];
                     [cell.aboutCell setHidden:YES];
                     [cell setTag:EVENT_CELL_VIEW_START_TAG];
@@ -328,7 +329,7 @@ FNewsView *newsViewController;
                 status = 2; //guest portrait
                 if (indexPath.row==1) {
                     FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-                    [cell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+                    [cell setBackgroundColor:[UIColor lightBackgroundColor]];
                     [cell.aboutCell setHidden:YES];
                     [cell.eventCell setHidden:NO];
                     cell.events = eventsArray;
@@ -347,7 +348,7 @@ FNewsView *newsViewController;
             status = 3; //usr landscape
             if (indexPath.row==2) {
                 FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-                [cell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+                [cell setBackgroundColor:[UIColor lightBackgroundColor]];
                 [cell.aboutCell setHidden:YES];
                 [cell.eventCell setHidden:NO];
                 cell.events = eventsArray;
@@ -368,7 +369,7 @@ FNewsView *newsViewController;
             status = 4; //usr portrait
             if (indexPath.row==1) {
                 FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-                [cell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+                [cell setBackgroundColor:[UIColor lightBackgroundColor]];
                 [cell.aboutCell setHidden:YES];
                 [cell.eventCell setHidden:NO];
                 cell.events = eventsArray;
@@ -390,20 +391,14 @@ FNewsView *newsViewController;
 
 - (NewsViewCell *) fillNewsCell:(NewsViewCell *) cell2 withIndex:(int) index{
     NewsViewCell *tempCell = cell2;
-    [tempCell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+    [tempCell setBackgroundColor:[UIColor lightBackgroundColor]];
     tempCell.newsNew.hidden = YES;
     [tempCell setTag:NEWS_CELL_VIEW_START_TAG];
     tempCell.newsTitle.text = [[newsArray objectAtIndex:index] title];
     tempCell.newsDate.text = [HelperDate formatedDate: [[newsArray objectAtIndex:index] nDate]];
     if (index>=cellNumber) {
-//        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:mainScroll];
-//        [mainScroll addSubview:hud];
-//        hud.labelText = @"Loading...";
-//        //        [[MBProgressHUD showHUDAddedTo:self.view animated:YES]  setLabelText:@"Loading"];
-//        [hud show:YES];
         CGPoint offset = collectionView.contentOffset;
         offset.y-=30;
-        //collectionView.scrollEnabled =NO;
         [collectionView setContentOffset:offset animated:NO];
         int l = 4;
         cellNumber+=l;
@@ -415,11 +410,7 @@ FNewsView *newsViewController;
         dispatch_async(queue, ^{
             newsArray = [FNews getImages:newsArray fromStart:index forNumber:l];
             dispatch_async(dispatch_get_main_queue(), ^{
-//                collectionView.scrollEnabled = YES;
-//                [collectionView reloadData ];
-//                [MBProgressHUD hideAllHUDsForView:mainScroll animated:YES];
-                
-                
+
                 int g = 1;
                 if ([FCommon isGuest]) {
                     g = 2;
@@ -518,7 +509,7 @@ FNewsView *newsViewController;
 
 
 
-
+//Size of collection cells
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if(UIDeviceOrientationIsLandscape(self.interfaceOrientation)){

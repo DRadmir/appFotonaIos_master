@@ -8,8 +8,7 @@
 
 #import "FMainViewController_iPad.h"
 #import "FFeaturedViewController_iPad.h"
-#import "FBookmarkViewController.h"
-#import "FBookmarkMenuViewController.h"
+#import "FFavoriteViewController.h"
 #import "FCasebookViewController.h"
 #import "FCaseMenuViewController.h"
 #import "FEventViewController.h"
@@ -33,7 +32,6 @@
 @implementation FMainViewController_iPad
 @synthesize letToLogin;
 @synthesize caseMenuNav;
-@synthesize bookMenuNav;
 @synthesize username;
 @synthesize password;
 @synthesize loginBtn;
@@ -86,7 +84,6 @@ UIButton *tmp;
 -(void)viewWillAppear:(BOOL)animated
 {
      [super viewWillAppear:animated];
-    [APP_DELEGATE setLoginShown:true];
     if (self.view.frame.size.width>900) {
         [APP_DELEGATE setCurrentOrientation:1];
     }else
@@ -94,8 +91,8 @@ UIButton *tmp;
         [APP_DELEGATE setCurrentOrientation:0];
     }
     
-//    [username setText:@"radovanovic"];
-//    [password setText:@"n3cuqaKU"];
+    [username setText:@"radovanovic"];
+    [password setText:@"n3cuqaKU"];
     
 }
 
@@ -106,11 +103,10 @@ UIButton *tmp;
     
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
         
-        
         NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
         if (![usrName isEqualToString:@""])
         {
-        [login autoLogin];
+            [login autoLogin];
         }
     }else
     {
@@ -308,16 +304,11 @@ UIButton *tmp;
     [[navigationForEvent navigationBar] setTintColor:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
     
     //bookmark tab
-    FBookmarkViewController *bookmarkVC=[[FBookmarkViewController alloc] init];
-    self.bookMenu=[[FBookmarkMenuViewController alloc] init];
-    bookMenuNav=[[UINavigationController alloc] initWithRootViewController:self.bookMenu];
-    [self.bookMenu setParent:bookmarkVC];
-    [[bookMenuNav navigationBar] setTintColor:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-    IIViewDeckController *bookDeck=[[IIViewDeckController alloc] initWithCenterViewController:bookmarkVC leftViewController:bookMenuNav];
-    [bookDeck setLeftSize:[APP_DELEGATE window].frame.size.width-320];
-    
-    
-    
+    FFavoriteViewController *favoriteVC=[[FFavoriteViewController alloc] init];
+    UINavigationController *favDeck=[[UINavigationController alloc] initWithRootViewController:favoriteVC];
+    [favDeck.navigationBar setHidden:YES];
+    [[favDeck navigationBar] setTintColor:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
+
     
     //fotona tab
     FFotonaViewController *fotonaVC=[APP_DELEGATE fotonaController];
@@ -331,11 +322,11 @@ UIButton *tmp;
     [fotonaDeckController setLeftSize:[APP_DELEGATE window].frame.size.width-320];
     
     //tabbar
-    [[APP_DELEGATE tabBar] setViewControllers:@[featuredVC,eventVC,fotonaDeckController,caseDeckController,bookDeck]];
+    [[APP_DELEGATE tabBar] setViewControllers:@[featuredVC,eventVC,fotonaDeckController,caseDeckController,favoriteVC]];
     [[[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:1] tabBarItem] setImage:[UIImage imageNamed:@"events.png"]];
     [[[[[APP_DELEGATE tabBar]viewControllers] objectAtIndex:2] tabBarItem] setImage:[UIImage imageNamed:@"fotona_red.png"]];
     [[[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:3] tabBarItem] setImage:[UIImage imageNamed:@"casebook_grey.png"]];
-    [[[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:4] tabBarItem] setImage:[UIImage imageNamed:@"bookmarks.png"]];
+    [[[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:4] tabBarItem] setImage:[UIImage imageNamed:@"favorites_grey.png"]];
     [[APP_DELEGATE tabBar] setSelectedIndex:[APP_DELEGATE indexToSelect]];
     
 }

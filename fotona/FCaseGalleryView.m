@@ -23,6 +23,8 @@
 @synthesize btnDownloadRemove;
 @synthesize btnFavoriteRemove;
 
+@synthesize containerView;
+
 @synthesize caseToShow;
 @synthesize item;
 @synthesize parentIphone;
@@ -36,7 +38,8 @@
     caseToShow = fcase;
     [lblTitle setText:[caseToShow title]];
     [lblAuthorName setText:[caseToShow name]];
-    //todo dodat vse ostale podatke
+    [lblDescription setText:[caseToShow introduction]];
+    
     imgBackground.image = [UIImage imageNamed:[NSString stringWithFormat:@"fav_cell_bg%@.png",[caseToShow coverTypeID]]];
     
     switch ([[caseToShow coverTypeID] intValue]) {

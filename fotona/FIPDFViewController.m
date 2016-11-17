@@ -16,6 +16,7 @@
 @interface FIPDFViewController (){
     NSString *pathOnline;
     FIExternalLinkViewController *externalView;
+    BOOL reopen;
 }
 
 @end
@@ -24,15 +25,26 @@
 
 @synthesize pdfWebView;
 @synthesize pdfMedia;
+@synthesize ipadFotonaParent;
+@synthesize ipadFavoriteParent;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    reopen = YES;
     
     // Do any additional setup after loading the view.
 }
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+}
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [self openPdf:pdfMedia];
+    [self openExternalLink:@""];
+    if (reopen) {
+        [self openPdf:pdfMedia];
+    } else {
+       reopen = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -43,6 +55,7 @@
 #pragma mark - Open PDF
 
 -(void) openPdf:(FMedia *) pdf{
+    
     [FGoogleAnalytics writeGAForItem:[pdf title] andType:GAFOTONAPDFINT];
     pathOnline = [pdf path];
     if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@",docDir,FOLDERPDF]]) {
@@ -77,8 +90,9 @@
     previewController.delegate = self;
     [[previewController.navigationController navigationBar] setHidden:YES];
     previewController.currentPreviewItemIndex = 0;
-    
+    reopen = NO;
     [self presentViewController:previewController animated:YES completion:nil];
+    
 }
 
 - (NSInteger) numberOfPreviewItemsInPreviewController: (QLPreviewController *) controller
@@ -92,7 +106,15 @@
 }
 
 -(void)previewControllerDidDismiss:(QLPreviewController *)controller {
-    [[self navigationController] popViewControllerAnimated:YES];
+    if (ipadFotonaParent!= nil) {
+        [ipadFotonaParent closeSettings:nil];
+    } else {
+        if (ipadFavoriteParent!= nil) {
+            [ipadFavoriteParent closeSettings:nil];
+        } else {
+            [[self navigationController] popViewControllerAnimated:YES];
+        }
+    }
 }
 
 #pragma mark - Open Link
@@ -110,8 +132,6 @@
     }
     
 }
-
-
 
 #pragma mark WebView
 

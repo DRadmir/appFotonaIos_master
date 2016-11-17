@@ -37,7 +37,6 @@
 @synthesize lastSelectedCategory;
 
 
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -87,12 +86,6 @@
         menuItems=[allItems lastObject];
     }
     [table reloadData];
-    
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-    
 }
 
 #pragma mark TabelView
@@ -110,7 +103,7 @@
     
     int icon = [[[menuItems objectAtIndex:indexPath.row] iconName] intValue];
     if (icon < iconsInMenu.count) {
-        iconaName = [iconsInMenu objectAtIndex:icon-1];
+        iconaName = [iconsInMenu objectAtIndex:icon];
     } else{
         if (selectedIcon) {
             iconaName=selectedIcon;
@@ -138,29 +131,12 @@
     cell.textLabel.highlightedTextColor = [UIColor whiteColor];
     cell.imageView.highlightedImage =[UIImage imageNamed:[NSString stringWithFormat:@"%@",iconaName]];
     
-    
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-    
     [cell setBackgroundColor:[UIColor clearColor]];
     
     return cell;
 }
 
-
-
-
-
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[[menuItems objectAtIndex:indexPath.row] fotonaCategoryType] isEqualToString:@"6"]) {
-        return YES;
-    }
-    return NO;
-}
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-}
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 0;
@@ -204,10 +180,10 @@
         [self.navigationController pushViewController:subMenu animated:YES];
     }else
     {
-        if ([[clicked fotonaCategoryType] isEqualToString:@"4"]) {
-            //video+content
-            NSArray *videos = [clicked getMedia];
-            if (videos.count >0) {
+        if ([[clicked fotonaCategoryType] intValue] == 4 || [[clicked fotonaCategoryType] intValue] == 6) {
+            //video + pdf gallery
+            NSArray *media = [clicked getMedia];
+            if (media.count >0) {
                 [self.viewDeckController closeLeftViewAnimated:YES];
                 [parent closeMenu];
                 for (UIView *v in parent.containerView.subviews) {
@@ -216,7 +192,7 @@
                 
                 [[parent fotonaImg] setHidden:YES];
                 [parent setItem:clicked];
-               //TODO: [parent openContentWithTitle:[clicked title] description:[clicked text] videoGallery:[clicked videoGalleryID] videos:[clicked getVideos]];
+                [parent openContentWithTitle:[clicked title] description:[clicked text] media:[clicked getMedia] andMediaType:MEDIAVIDEO];
             } else
             {
                 UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"EMPTYCATEGORY", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -224,49 +200,41 @@
             }
         } else
         {
-
-        [self.viewDeckController closeLeftViewAnimated:YES];
-        [parent closeMenu];
-        for (UIView *v in parent.containerView.subviews) {
-            [v removeFromSuperview];
-        }
-        
-        [[parent fotonaImg] setHidden:YES];
-        //logic open screen
-        if ([[clicked fotonaCategoryType] isEqualToString:@"2"]) {
-            //external link
-            [FGoogleAnalytics writeGAForItem:[clicked title] andType:GAFOTONAWEBPAGEINT];
-            [parent setItem:nil];
-            [parent externalLink:[clicked externalLink]];
-        }
-        if ([[clicked fotonaCategoryType] isEqualToString:@"3"]) {
-            //case
-            [parent setItem:nil];
-            FCase *item = [FDB getCaseForFotona:[clicked caseID]];       //[self getCase:[clicked caseID]];
-            [(FCasebookViewController *)[(IIViewDeckController *)[[self.tabBarController viewControllers] objectAtIndex:1] centerController] setCurrentCase:item];
-            [(FCasebookViewController *)[(IIViewDeckController *)[[self.tabBarController viewControllers] objectAtIndex:1] centerController] setFlagCarousel:YES];
-            [self.tabBarController setSelectedIndex:3];
-        }
             
+            [self.viewDeckController closeLeftViewAnimated:YES];
+            [parent closeMenu];
+            for (UIView *v in parent.containerView.subviews) {
+                [v removeFromSuperview];
+            }
             
-        if ([[clicked fotonaCategoryType] isEqualToString:@"5"]) {
-            //content
-            [parent setItem:nil];
-            [parent openContentWithTitle:[clicked title] description:[clicked text]];
+            [[parent fotonaImg] setHidden:YES];
+            //logic open screen
+            if ([[clicked fotonaCategoryType] intValue] == 2) {
+                //external link
+                [FGoogleAnalytics writeGAForItem:[clicked title] andType:GAFOTONAWEBPAGEINT];
+                [parent setItem:nil];
+                [parent externalLink:[clicked externalLink]];
+            }
+            if ([[clicked fotonaCategoryType] intValue] == 3) {
+                //case
+                [parent setItem:nil];
+                FCase *item = [FDB getCaseForFotona:[clicked caseID]];       //[self getCase:[clicked caseID]];
+                [(FCasebookViewController *)[(IIViewDeckController *)[[self.tabBarController viewControllers] objectAtIndex:1] centerController] setCurrentCase:item];
+                [(FCasebookViewController *)[(IIViewDeckController *)[[self.tabBarController viewControllers] objectAtIndex:1] centerController] setFlagCarousel:YES];
+                [self.tabBarController setSelectedIndex:3];
+            }
+            
+            if ([[clicked fotonaCategoryType] intValue] == 5) {
+                //content
+                [parent setItem:nil];
+                [parent openContentWithTitle:[clicked title] description:[clicked text]];
+            }
+            if ([[clicked fotonaCategoryType] intValue] == 7) {
+                //preloaded
+                [parent setItem:nil];
+                [parent openPreloaded];
+            }
         }
-        if ([[clicked fotonaCategoryType] isEqualToString:@"6"]) {
-            //pdf
-            [FGoogleAnalytics writeGAForItem:[clicked title] andType:GAFOTONAPDFINT];
-            [parent setItem:nil];
-            //TODO:[parent downloadFile:[NSString stringWithFormat:@"%@",[clicked pdfSrc]] inFolder:@".PDF" type:6 withCategoryID:[clicked categoryID]];
-        }
-        if ([[clicked fotonaCategoryType] isEqualToString:@"7"]) {
-            //preloaded
-            [parent setItem:nil];
-            [parent openPreloaded];
-        }
-        }
-        
     }
 }
 
@@ -275,20 +243,14 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-
 - (void) resetViewAnime:(BOOL) anime{
     [self.navigationController popToRootViewControllerAnimated:anime];
 }
-
-
-
-
 
 @end

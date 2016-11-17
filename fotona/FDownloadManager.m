@@ -1,4 +1,4 @@
-//
+  //
 //  FDownloadManager.m
 //  fotona
 //
@@ -304,7 +304,6 @@
     }
     
     if ([APP_DELEGATE loginShown]) {
-        //[MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
         id<UpdateDelegate> strongDelegate = self.updateDelegate;
         if ([strongDelegate respondsToSelector:@selector(updateProcess)])
         {

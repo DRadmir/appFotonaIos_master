@@ -26,6 +26,7 @@
 #import "FIExternalLinkViewController.h"
 #import <AVKit/AVKit.h>
 #import "FHelperRequest.h"
+#import "FFavoriteViewController.h"
 
 
 
@@ -146,23 +147,23 @@
     [self.window makeKeyAndVisible];
     
     
-    UILocalNotification *localNotif = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-    if (localNotif) {
-        NSString *type = [localNotif valueForKey:@"type"];
-        // Parse your string to dictionary
-        if ([type isEqualToString:@"news"]) {
-            [[NSUserDefaults standardUserDefaults] setValue:@"news" forKey:@"pushType"];
-            [[NSUserDefaults standardUserDefaults] setValue:[localNotif valueForKey:@"ID"] forKey:@"pushID"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }else
-        {
-            [[NSUserDefaults standardUserDefaults] setValue:@"case" forKey:@"pushType"];
-            [[NSUserDefaults standardUserDefaults] setValue:[localNotif valueForKey:@"ID"] forKey:@"pushID"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            [self setIndexToSelect:1];
-        }
-        
-    }
+//    UILocalNotification *localNotif = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+//    if (localNotif) {
+//        NSString *type = [localNotif valueForKey:@"type"];
+//        // Parse your string to dictionary
+//        if ([type isEqualToString:@"news"]) {
+//            [[NSUserDefaults standardUserDefaults] setValue:@"news" forKey:@"pushType"];
+//            [[NSUserDefaults standardUserDefaults] setValue:[localNotif valueForKey:@"ID"] forKey:@"pushID"];
+//            [[NSUserDefaults standardUserDefaults] synchronize];
+//        }else
+//        {
+//            [[NSUserDefaults standardUserDefaults] setValue:@"case" forKey:@"pushType"];
+//            [[NSUserDefaults standardUserDefaults] setValue:[localNotif valueForKey:@"ID"] forKey:@"pushID"];
+//            [[NSUserDefaults standardUserDefaults] synchronize];
+//            [self setIndexToSelect:1];
+//        }
+//        
+//    }
     
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"wifiOnly"]) {
         [self setWifiOnlyConnection:[[NSUserDefaults standardUserDefaults] boolForKey:@"wifiOnly"] ];
@@ -180,9 +181,9 @@
     
     
     [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIRemoteNotificationTypeAlert |UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound categories:nil]];
-    [application registerForRemoteNotificationTypes: UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeNone)];
+
     application.applicationIconBadgeNumber=0;
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
     return YES;
 }
@@ -897,8 +898,6 @@
         UINavigationController *tempC = [(IIViewDeckController *)[[tabBar viewControllers] objectAtIndex:1] centerController];
         [(FCasebookViewController *)[tempC visibleViewController] setCurrentCase:item];
         [(FCasebookViewController *)[tempC visibleViewController] setFlagCarousel:YES];
-//        [(FCasebookViewController *)[(IIViewDeckController *)[[tabBar viewControllers] objectAtIndex:1] centerController] setCurrentCase:item];
-//        [(FCasebookViewController *)[(IIViewDeckController *)[[tabBar viewControllers] objectAtIndex:1] centerController] setFlagCarousel:YES];
         [tabBar setSelectedIndex:1];
     }
     [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"pushType"];
@@ -960,9 +959,9 @@
 
 -(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
-
-    if ([self.window.visibleViewController isKindOfClass:[AVPlayerViewController class]] || [self.window.visibleViewController isKindOfClass:[FIFotonaViewController class]] || [self.window.visibleViewController isKindOfClass:[QLPreviewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] ||[self.window.visibleViewController isKindOfClass:[EBPhotoPagesController class]] || [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]] || [FCommon isIpad]) {
-        if ( [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]]) {
+//TODO: nrdit rotacijo na favorite zaslonu  || [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]]
+    if ([self.window.visibleViewController isKindOfClass:[AVPlayerViewController class]] || [self.window.visibleViewController isKindOfClass:[FIFotonaViewController class]] || [self.window.visibleViewController isKindOfClass:[QLPreviewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] ||[self.window.visibleViewController isKindOfClass:[EBPhotoPagesController class]] || [FCommon isIpad]) {
+        if ( [self.window.visibleViewController isKindOfClass:[FFavoriteViewController class]]) {
             for (UIView *object in self.window.visibleViewController.childViewControllers ) {
                 if([object isKindOfClass:[FICaseViewController class]])
                 {

@@ -49,7 +49,7 @@
                 [[flow caseTab] clearViews];
                 break;
             case 4:
-                [[flow bookmarkTab] clearViews];
+                [[flow favoriteTab] clearViews];
                 break;
                 
             default:

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -172,6 +172,7 @@
                 <outlet property="btnDownloadRemove" destination="Y67-DF-VwL" id="b9s-B7-yOo"/>
                 <outlet property="btnFavoriteAdd" destination="npG-Fc-3K5" id="Nty-J3-Jwn"/>
                 <outlet property="btnFavoriteRemove" destination="Rek-Rv-56L" id="RwU-f3-rdg"/>
+                <outlet property="containerView" destination="m5W-ZV-bFy" id="fBb-y2-Nox"/>
                 <outlet property="imgAuthor" destination="PWV-FE-37i" id="2XG-GQ-WgC"/>
                 <outlet property="imgBackground" destination="Khz-wo-0RF" id="VdH-g5-mEd"/>
                 <outlet property="lblAuthorName" destination="i6W-Sv-1OT" id="9jD-kT-Y1l"/>
@@ -191,7 +192,7 @@
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fav_cell_bg1" translatesAutoresizingMaskIntoConstraints="NO" id="wLv-0A-5do" userLabel="backgroundImg"/>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="wLv-0A-5do" firstAttribute="top" secondItem="acR-uI-U7p" secondAttribute="top" id="Rpd-kG-Dcj"/>
                                 <constraint firstAttribute="trailing" secondItem="wLv-0A-5do" secondAttribute="trailing" id="Vc4-kN-n0k"/>
@@ -257,7 +258,7 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="p5e-GN-GBV" firstAttribute="top" secondItem="Lrm-Qq-pvG" secondAttribute="bottom" constant="8" id="2Zw-df-TAv"/>
                                 <constraint firstAttribute="bottom" secondItem="eYe-9W-Bn2" secondAttribute="bottom" constant="8" id="45O-uc-ls4"/>
@@ -277,7 +278,7 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="acR-uI-U7p" firstAttribute="width" secondItem="8bW-O9-K4l" secondAttribute="width" multiplier="1:2" id="0TJ-pp-SCu"/>
                         <constraint firstItem="acR-uI-U7p" firstAttribute="leading" secondItem="8bW-O9-K4l" secondAttribute="leading" id="AAn-Py-5NZ"/>
@@ -303,6 +304,7 @@
                 <outlet property="btnDownloadRemove" destination="oAg-5b-g2r" id="l9a-Ai-A51"/>
                 <outlet property="btnFavoriteAdd" destination="fSg-0t-DIj" id="cXA-AS-NVB"/>
                 <outlet property="btnFavoriteRemove" destination="eIy-5N-xSr" id="Yah-6m-hUk"/>
+                <outlet property="containerView" destination="8bW-O9-K4l" id="cKV-OS-vTT"/>
                 <outlet property="imgThumbnail" destination="wLv-0A-5do" id="csH-7A-j0p"/>
                 <outlet property="lblDesc" destination="p5e-GN-GBV" id="sEy-R2-4Lb"/>
                 <outlet property="lblTitle" destination="Lrm-Qq-pvG" id="TY7-gq-IEV"/>

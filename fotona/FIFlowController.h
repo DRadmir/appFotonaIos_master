@@ -15,8 +15,7 @@
 #import "FIEventViewController.h"
 #import "FIFeaturedViewController.h"
 #import "FMainViewController.h"
-#import "FIBookmarkMenuViewController.h"
-#import "FIBookmarkViewController.h"
+#import "FIFavoriteViewController.h"
 #import "FICaseViewController.h"
 #import "FITabbarController.h"
 #import "FIGalleryViewController.h"
@@ -40,8 +39,7 @@
 @property (strong, nonatomic, readwrite) FIEventViewController *eventTab;
 @property (strong, nonatomic, readwrite) FIFeaturedViewController *newsTab;
 @property (strong, nonatomic, readwrite) FISettingsViewController *fotonaSettings;
-@property (strong, nonatomic, readwrite) FIBookmarkMenuViewController *bookmarkMenu;
-@property (strong, nonatomic, readwrite) FIBookmarkViewController *bookmarkTab;
+@property (strong, nonatomic, readwrite) FIFavoriteViewController *favoriteTab;
 @property (strong, nonatomic, readwrite) NSMutableArray *bookmarkMenuArray;
 
 @property (strong, nonatomic, readwrite) FICaseViewController *caseView;
