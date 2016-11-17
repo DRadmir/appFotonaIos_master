@@ -7,7 +7,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import "EBPhotoPagesController.h"
 
-
 @interface FFavoriteViewController : UIViewController <UINavigationControllerDelegate,UISearchBarDelegate,UIAlertViewDelegate,EBPhotoPagesDelegate,EBPhotoPagesDataSource>//,UIImagePickerControllerDelegate
 {
     NSString *pathToPDF;
@@ -45,7 +44,13 @@
     IBOutlet UIView *additionalInfo;
     BOOL flagParameters;
     
+    
+    IBOutlet UIButton *addBookmarks;
     IBOutlet UIButton *removeBookmarks;
+    
+    IBOutlet UIButton *addToFavorite;
+    IBOutlet UIButton *removeFavorite;
+    
     
     IBOutlet UIScrollView *caseScroll;
     
@@ -100,7 +105,15 @@
 
 -(IBAction)expand:(id)sender;
 
+-(IBAction)backBtn:(id)sender;
+
+- (IBAction)addToBookmarks:(id)sender;
 - (IBAction)removeFromBookmarks:(id)sender;
+
+- (IBAction)addToFavorite:(id)sender;
+- (IBAction)removeFavorite:(id)sender;
+
+
 - (IBAction)openSettings:(id)sender;
 - (IBAction)closeSettings:(id)sender;
 

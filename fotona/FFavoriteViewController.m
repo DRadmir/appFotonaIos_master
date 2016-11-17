@@ -130,10 +130,21 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
             currentCase.bookmark = [results stringForColumn:@"isBookmark"];
         }
         if ([currentCase.bookmark boolValue]) {
+            [addBookmarks setHidden:YES];
             [removeBookmarks setHidden:NO];
+            
         } else {
+            [addBookmarks setHidden:NO];
             [removeBookmarks setHidden:YES];
         }
+        if ([FDB checkIfFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE]) {
+            [removeFavorite setHidden:NO];
+            [addToFavorite setHidden:YES];
+        } else {
+            [removeFavorite setHidden:YES];
+            [addToFavorite setHidden:NO];
+        }
+
     }
 }
 -(void)viewDidAppear:(BOOL)animated
@@ -902,8 +913,74 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     }
     UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [av show];
-    
 }
+
+- (IBAction)addToBookmarks:(id)sender {
+    //[APP_DELEGATE setCasebookController:self];
+    if ([APP_DELEGATE wifiOnlyConnection]) {
+        [self bookmarkCase];
+    } else {
+        UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
+        [av showInView:self.view];
+    }
+}
+
+- (void) refreshBookmarkBtn  {
+    [addBookmarks setHidden:YES];
+    [removeBookmarks setHidden:NO];
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex > -1) {
+        NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
+        if  ([buttonTitle isEqualToString:@"OK"]) {
+            [self bookmarkCase];
+        }
+        if ([buttonTitle isEqualToString:NSLocalizedString(@"CHECKWIFIONLYBTN", nil)]) {
+            [APP_DELEGATE setWifiOnlyConnection:TRUE];
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
+            //            [ wifiSwitch setOn:YES animated:YES];
+            [self bookmarkCase];
+        }
+    }
+}
+
+-(void) bookmarkCase{
+    
+    if([APP_DELEGATE connectedToInternet] || [[currentCase coverflow] boolValue]){
+        //[addBookmarks setHidden:YES];
+        //[removeBookmarks setHidden:NO];
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [av show];
+        
+    } else {
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTIONBOOKMARK", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [av show];
+    }
+}
+
+//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    if ([alertView.message isEqualToString:NSLocalizedString(@"BOOKMARKING", nil)]) {
+//        [FAppDelegate bookmarkCase:currentCase];
+//        [APP_DELEGATE setBookmarkAll:YES];
+//        [[FDownloadManager shared] prepareForDownloadingFiles];
+//    }
+//}
+
+
+- (IBAction)addToFavorite:(id)sender {
+    [FDB addTooFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE];
+    [removeFavorite setHidden:NO];
+    [addToFavorite setHidden:YES];
+}
+
+- (IBAction)removeFavorite:(id)sender {
+    [FDB removeFromFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE];
+    [removeFavorite setHidden:YES];
+    [addToFavorite setHidden:NO];
+}
+
 
 -(void)expand:(id)sender
 {
@@ -1376,14 +1453,6 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         [UIView commitAnimations];
     }
     [self.view bringSubviewToFront:[self.view viewWithTag:1000]];
-}
-
-
-#pragma mark - Favorites
-
--(void)deleteRowAtIndex:(NSIndexPath *) index{
-    mediaArray = [FDB getAllFavoritesForUser];
-    [contentsVideoModeCollectionView deleteItemsAtIndexPaths:[NSArray arrayWithObject: index]];
 }
 
 @end

@@ -488,6 +488,16 @@
     while([resultsBookmarked next]) {
         bookmarked = YES;
     }
+    if ([FDB checkIfFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE]) {
+        [removeFavorite setHidden:NO];
+        [addToFavorite setHidden:YES];
+    } else {
+        [removeFavorite setHidden:YES];
+        [addToFavorite setHidden:NO];
+    }
+
+    
+    
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     
@@ -1017,7 +1027,7 @@
 
 #pragma mark Bookmarks
 
-- (IBAction)addToFavorite:(id)sender {
+- (IBAction)addToFavorite:(id)sender {    
     [FDB addTooFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE];
     [removeFavorite setHidden:NO];
     [addToFavorite setHidden:YES];
@@ -1081,7 +1091,7 @@
 - (void) refreshBookmarkBtn  {
     [addBookmarks setHidden:YES];
     [removeBookmarks setHidden:NO];
-    
+
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{

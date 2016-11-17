@@ -311,7 +311,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7tk-9b-Wfb">
-                    <frame key="frameInset" minY="25" width="30" height="30" maxX="62"/>
+                    <frame key="frameInset" minY="35" width="30" height="30" maxX="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                     <state key="normal" image="download_add"/>
                     <connections>
@@ -319,7 +319,7 @@
                     </connections>
                 </button>
                 <button hidden="YES" opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="K8q-Wn-7QV">
-                    <frame key="frameInset" minY="25" width="30" height="30" maxX="62"/>
+                    <frame key="frameInset" minY="35" width="30" height="30" maxX="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                     <state key="normal" image="download_remove"/>
                     <connections>
@@ -327,7 +327,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bn6-Dt-zGG" userLabel="Add Favorites">
-                    <frame key="frameInset" minY="25" width="30" height="30" maxX="127"/>
+                    <frame key="frameInset" minY="35" width="30" height="30" maxX="81"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                     <state key="normal" image="favorites_add"/>
                     <connections>
@@ -335,7 +335,7 @@
                     </connections>
                 </button>
                 <button hidden="YES" opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ZeK-pt-BgJ" userLabel="Remove Favorites">
-                    <frame key="frameInset" minY="25" width="30" height="30" maxX="127"/>
+                    <frame key="frameInset" minY="35" width="30" height="30" maxX="81"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                     <state key="normal" image="favorites_remove"/>
                     <connections>

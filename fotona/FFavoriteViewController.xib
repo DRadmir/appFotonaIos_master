@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" colorMatched="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -8,6 +8,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FFavoriteViewController">
             <connections>
+                <outlet property="addBookmarks" destination="hnm-hB-yPb" id="gQM-jW-gaO"/>
+                <outlet property="addToFavorite" destination="yap-ft-w9G" id="aHN-in-WqL"/>
                 <outlet property="additionalInfo" destination="A06-bq-THZ" id="ImO-iS-S1e"/>
                 <outlet property="authorImg" destination="B73-T1-hO5" id="dJ1-hJ-RTb"/>
                 <outlet property="authorNameLbl" destination="Y0m-PK-N2P" id="j0S-Vt-v9a"/>
@@ -36,6 +38,7 @@
                 <outlet property="parametersScrollView" destination="0iQ-Ol-IwJ" id="HCi-Nb-m7q"/>
                 <outlet property="popupCloseBtn" destination="vl1-Bh-sYZ" id="uFi-dj-eJP"/>
                 <outlet property="removeBookmarks" destination="7tk-9b-Wfb" id="7go-Pr-4eD"/>
+                <outlet property="removeFavorite" destination="xVm-82-cJg" id="eLH-eo-i98"/>
                 <outlet property="settingsBtn" destination="DES-Mv-ja8" id="mob-Lz-aEQ"/>
                 <outlet property="tableParameters" destination="NkB-M2-4WD" id="2mZ-wK-jcc"/>
                 <outlet property="titleLbl" destination="KHC-ka-XF7" id="bt5-Ar-dUO"/>
@@ -122,6 +125,7 @@
                 </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <point key="canvasLocation" x="-452" y="-182"/>
         </view>
         <view contentMode="scaleToFill" id="y4r-4d-vCB">
             <rect key="frame" x="0.0" y="0.0" width="768" height="889"/>
@@ -250,16 +254,20 @@
                     <fontDescription key="fontDescription" name="HelveticaNeue-LightItalic" family="Helvetica Neue" pointSize="15"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="7tk-9b-Wfb">
-                    <frame key="frameInset" minY="40" width="180" height="30" maxX="34"/>
+                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hnm-hB-yPb" userLabel="Add Bookmark">
+                    <frame key="frameInset" minY="35" width="30" height="30" maxX="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                    <state key="normal" title="Remove from bookmarks">
-                        <color key="titleColor" red="1" green="0.044164965989999999" blue="0.075740484080000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </state>
+                    <state key="normal" image="download_add"/>
                     <connections>
-                        <action selector="removeFromBookmarks:" destination="-1" eventType="touchUpInside" id="bfc-xq-6GH"/>
+                        <action selector="addToBookmarks:" destination="-1" eventType="touchUpInside" id="iY3-oe-xvV"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="yap-ft-w9G" userLabel="Add Favourites">
+                    <frame key="frameInset" minY="35" width="30" height="30" maxX="81"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="favorites_add"/>
+                    <connections>
+                        <action selector="addToFavorite:" destination="-1" eventType="touchUpInside" id="aVf-pR-aCc"/>
                     </connections>
                 </button>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1064 nm Nd:YAG Laser Treatment of Leg Veins" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KHC-ka-XF7">
@@ -268,9 +276,26 @@
                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="35"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button hidden="YES" opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xVm-82-cJg" userLabel="Remove Favourites">
+                    <frame key="frameInset" minY="35" width="30" height="30" maxX="81"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="favorites_remove"/>
+                    <connections>
+                        <action selector="removeFavorite:" destination="-1" eventType="touchUpInside" id="4J4-j9-HsS"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7tk-9b-Wfb">
+                    <frame key="frameInset" minY="35" width="30" height="30" maxX="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="download_remove"/>
+                    <connections>
+                        <action selector="removeFromBookmarks:" destination="-1" eventType="touchUpInside" id="bfc-xq-6GH"/>
+                    </connections>
+                </button>
             </subviews>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="887" y="20.5"/>
         </view>
         <view clipsSubviews="YES" contentMode="scaleToFill" id="yQi-cB-Bpf">
             <rect key="frame" x="0.0" y="0.0" width="768" height="909"/>
@@ -311,14 +336,14 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="content" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0FO-YI-6pj" customClass="FDLabelView">
-                            <rect key="frame" x="50" y="25" width="1436" height="41"/>
+                            <rect key="frame" x="50" y="25" width="2204" height="41"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="32"/>
                             <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FDLabel" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="AxU-N8-YXR" customClass="FDLabelView">
-                            <rect key="frame" x="50" y="123" width="1436" height="211"/>
+                            <rect key="frame" x="50" y="123" width="2204" height="211"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                             <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -334,6 +359,10 @@
         </view>
     </objects>
     <resources>
+        <image name="download_add" width="45" height="45"/>
+        <image name="download_remove" width="45" height="45"/>
+        <image name="favorites_add" width="45" height="45"/>
+        <image name="favorites_remove" width="45" height="45"/>
         <image name="feedback.png" width="36" height="28"/>
         <image name="logo_fotona.png" width="597" height="285"/>
         <image name="menu_arrow_red.png" width="10" height="16"/>
