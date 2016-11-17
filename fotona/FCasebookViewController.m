@@ -1017,6 +1017,20 @@
 
 #pragma mark Bookmarks
 
+- (IBAction)addToFavorite:(id)sender {
+    [FDB addTooFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE];
+    [removeFavorite setHidden:NO];
+    [addToFavorite setHidden:YES];
+}
+
+- (IBAction)removeFavorite:(id)sender {
+    [FDB removeFromFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE];
+    [removeFavorite setHidden:YES];
+    [addToFavorite setHidden:NO];
+}
+
+
+
 - (IBAction)removeFromBookmarks:(id)sender {
     //[currentCase setBookmark:@"0"];
     [addBookmarks setHidden:NO];

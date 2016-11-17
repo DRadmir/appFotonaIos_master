@@ -66,6 +66,10 @@
     IBOutlet UIButton *addBookmarks;
     IBOutlet UIButton *removeBookmarks;
     
+    IBOutlet UIButton *addToFavorite;
+    IBOutlet UIButton *removeFavorite;
+
+    
     IBOutlet UIScrollView *caseScroll;
     
     IBOutlet UIView *contentModeView;
@@ -123,6 +127,9 @@
 - (IBAction)removeFromBookmarks:(id)sender;
 - (IBAction)openSettings:(id)sender;
 - (IBAction)closeSettings:(id)sender;
+- (IBAction)addToFavorite:(id)sender;
+- (IBAction)removeFavorite:(id)sender;
+
 
 - (IBAction)showDisclaimer:(id)sender;
 -(void) openDisclaimer;

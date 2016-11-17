@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" colorMatched="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FCasebookViewController">
             <connections>
                 <outlet property="addBookmarks" destination="7tk-9b-Wfb" id="2lC-9B-ULw"/>
+                <outlet property="addToFavorite" destination="bn6-Dt-zGG" id="F0o-Aw-RFS"/>
                 <outlet property="additionalInfo" destination="A06-bq-THZ" id="ImO-iS-S1e"/>
                 <outlet property="authorImg" destination="B73-T1-hO5" id="dJ1-hJ-RTb"/>
                 <outlet property="authorNameLbl" destination="Y0m-PK-N2P" id="j0S-Vt-v9a"/>
@@ -38,6 +40,7 @@
                 <outlet property="parametersScrollView" destination="0iQ-Ol-IwJ" id="HCi-Nb-m7q"/>
                 <outlet property="popupCloseBtn" destination="8EL-40-kdH" id="QIz-mq-J0Y"/>
                 <outlet property="removeBookmarks" destination="K8q-Wn-7QV" id="tp3-sc-a7S"/>
+                <outlet property="removeFavorite" destination="ZeK-pt-BgJ" id="Ew1-FE-Cmq"/>
                 <outlet property="settingsBtn" destination="AtF-dT-aT7" id="G5V-eI-J5K"/>
                 <outlet property="tableParameters" destination="NkB-M2-4WD" id="2mZ-wK-jcc"/>
                 <outlet property="titleLbl" destination="KHC-ka-XF7" id="bt5-Ar-dUO"/>
@@ -51,88 +54,88 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" id="zRC-NE-FhF">
-                    <rect key="frame" x="0.0" y="0.0" width="768" height="65"/>
+                    <frame key="frameInset" height="65"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="8EL-40-kdH">
-                            <rect key="frame" x="5" y="27" width="71" height="21"/>
+                            <frame key="frameInset" minX="5" minY="27" width="71" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="19"/>
                             <state key="normal" title=" Back" image="menu_arrow_red.png">
-                                <color key="titleColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleColor" red="0.89915549755096436" green="0.0" blue="0.11069309711456299" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
                                 <action selector="closeSettings:" destination="-1" eventType="touchUpInside" id="Kcs-Re-P6t"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="AtF-dT-aT7" userLabel="Settings">
-                            <rect key="frame" x="566" y="27" width="36" height="28"/>
+                            <frame key="frameInset" minY="27" width="36" height="28" maxX="166"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                             <state key="normal" image="settings2x.png">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
                                 <action selector="openSettings:" destination="-1" eventType="touchUpInside" id="2k9-B8-FGE"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hdv-8k-Gck">
-                            <rect key="frame" x="0.0" y="14" width="70" height="50"/>
+                            <frame key="frameInset" minY="14" width="70" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" image="menu.png">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
                                 <action selector="menu:" destination="-1" eventType="touchUpInside" id="0BL-ds-5ka"/>
                             </connections>
                         </button>
                         <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fotona" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tH2-h8-8Ka">
-                            <rect key="frame" x="326" y="20" width="117" height="44"/>
+                            <frame key="frameInset" minX="326" minY="20" width="117" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
-                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" id="ND1-Hk-j51">
-                            <rect key="frame" x="0.0" y="64" width="768" height="1"/>
+                            <frame key="frameInset" minY="64" height="1"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </view>
                         <view hidden="YES" contentMode="scaleToFill" id="8Yu-Sq-LfB">
-                            <rect key="frame" x="0.0" y="0.0" width="318" height="64"/>
+                            <frame key="frameInset" width="318" height="64"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="vOa-dh-nUp">
-                                    <rect key="frame" x="0.0" y="20" width="74" height="34"/>
+                                    <frame key="frameInset" minY="20" width="74" height="34"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="-6" maxY="0.0"/>
                                     <state key="normal" title="Back" image="menu_arrow_red.png">
-                                        <color key="titleColor" red="0.92941176469999998" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleColor" red="0.92941176469999998" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
                                     <connections>
                                         <action selector="backBtn:" destination="-1" eventType="touchUpInside" id="znu-zA-jxY"/>
                                     </connections>
                                 </button>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Medical field" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZqE-kf-1Fy">
-                                    <rect key="frame" x="70" y="25" width="185" height="21"/>
+                                    <frame key="frameInset" minX="70" minY="25" width="185" height="21"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="CAM-No-uKx">
-                            <rect key="frame" x="508" y="13" width="50" height="56"/>
+                            <frame key="frameInset" minY="13" width="50" height="56" maxX="210"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                             <state key="normal" image="feedback.png">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                         </button>
                         <searchBar contentMode="redraw" searchBarStyle="minimal" id="gVR-N9-7uB">
-                            <rect key="frame" x="602" y="19" width="167" height="44"/>
+                            <frame key="frameInset" minY="19" width="167" height="44" maxX="-1"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits"/>
                             <connections>
@@ -140,24 +143,24 @@
                             </connections>
                         </searchBar>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
                 <view contentMode="scaleToFill" id="qcW-fZ-dvJ">
-                    <rect key="frame" x="0.0" y="65" width="768" height="900"/>
+                    <frame key="frameInset" minY="6.35%" height="87.89%"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_fotona.png" id="Sog-CZ-DPo">
-                            <rect key="frame" x="234" y="300" width="300" height="300"/>
+                            <frame key="frameInset" minX="50.00%" minY="50.00%" width="300" height="300"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         </imageView>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="Zfm-Lt-xX3">
-                            <rect key="frame" x="0.0" y="0.0" width="768" height="911"/>
+                            <frame key="frameInset" height="100.00%" maxY="-11"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="2SO-zo-dhL">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="889"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="1088" height="1800"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <connections>
                                         <outlet property="dataSource" destination="-1" id="oyt-e9-Vts"/>
                                         <outlet property="delegate" destination="-1" id="QLN-pu-pjM"/>
@@ -166,72 +169,72 @@
                             </subviews>
                         </scrollView>
                     </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </view>
         <view contentMode="scaleToFill" id="y4r-4d-vCB">
             <rect key="frame" x="0.0" y="0.0" width="768" height="889"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="B73-T1-hO5">
-                    <rect key="frame" x="38" y="41" width="40" height="40"/>
+                    <frame key="frameInset" minX="38" minY="41" width="40" height="40"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
                 <view contentMode="scaleToFill" id="XMb-cg-D93">
-                    <rect key="frame" x="80" y="73" width="668" height="1"/>
+                    <frame key="frameInset" minX="80" minY="73" height="1" maxX="20"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" red="0.5725490196078431" green="0.5725490196078431" blue="0.5725490196078431" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.5725490196078431" green="0.5725490196078431" blue="0.5725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Lastname" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Y0m-PK-N2P">
-                    <rect key="frame" x="86" y="44" width="357" height="21"/>
+                    <frame key="frameInset" minX="86" minY="44" width="357" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
-                    <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="textColor" red="0.21191233396530151" green="0.21190600097179413" blue="0.21190959215164185" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Parameters used" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="UlM-9d-db4">
-                    <rect key="frame" x="38" y="216" width="357" height="21"/>
+                    <frame key="frameInset" minX="38" minY="216" width="357" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1064 nm Nd:YAG Laser Treatment of Leg Veins" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KHC-ka-XF7">
-                    <rect key="frame" x="38" y="112" width="692" height="125"/>
+                    <frame key="frameInset" minX="38" minY="112" height="125" maxX="38"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="35"/>
-                    <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="textColor" red="0.21191233396530151" green="0.21190600097179413" blue="0.21190959215164185" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view clipsSubviews="YES" contentMode="scaleToFill" id="wVi-Mc-TJG">
-                    <rect key="frame" x="0.0" y="245" width="768" height="2"/>
+                    <frame key="frameInset" minY="245" height="2"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" id="NkB-M2-4WD">
-                            <rect key="frame" x="0.0" y="-7" width="768" height="335"/>
+                            <frame key="frameInset" minY="-7" height="335"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <view contentMode="scaleToFill" id="NTs-Lr-P7J">
-                                    <rect key="frame" x="0.0" y="8" width="768" height="191"/>
+                                    <frame key="frameInset" minY="8" height="191"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                    <color key="backgroundColor" red="0.92941176470588238" green="0.10980392156862745" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.92941176470588238" green="0.10980392156862745" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </view>
                                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" id="0iQ-Ol-IwJ">
-                                    <rect key="frame" x="230" y="0.0" width="500" height="337"/>
+                                    <frame key="frameInset" minX="230" height="337" maxX="38"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 </scrollView>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </view>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zeC-wc-ff1">
-                            <rect key="frame" x="2" y="336" width="96" height="30"/>
+                            <frame key="frameInset" minX="2" minY="336" width="96" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" title="expand">
-                                <color key="titleColor" red="0.92941176469999998" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleColor" red="0.92941176469999998" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <state key="selected" title="hide"/>
                             <connections>
@@ -239,99 +242,108 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
                 <view contentMode="scaleToFill" id="A06-bq-THZ">
-                    <rect key="frame" x="0.0" y="667" width="768" height="231"/>
+                    <frame key="frameInset" minY="667" height="231"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="-1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Introduction" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="daE-GO-HmR">
+                            <frame key="frameInset" height="1000" maxX="-232"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8cs-Ar-KWU">
-                            <rect key="frame" x="114" y="116" width="89" height="30"/>
+                            <frame key="frameInset" minX="114" width="89" height="30" maxY="85"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                            <color key="tintColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="tintColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
                             <state key="normal" title="Read more">
-                                <color key="titleColor" red="0.92941176470588238" green="0.10980392156862745" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleColor" red="0.92941176470588238" green="0.10980392156862745" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
                                 <action selector="showDisclaimer:" destination="-1" eventType="touchUpInside" id="ebW-eK-dM8"/>
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
                 <view contentMode="scaleToFill" id="du9-qN-a3h">
-                    <rect key="frame" x="0.0" y="266" width="768" height="230"/>
+                    <frame key="frameInset" minY="266" height="230"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="dlt-Bn-jFG">
-                            <rect key="frame" x="38" y="3" width="168" height="193"/>
+                            <frame key="frameInset" minX="38" minY="3" width="168" height="193"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
                                 <action selector="openVideo:" destination="-1" eventType="touchUpInside" id="RPS-m2-gNu"/>
                             </connections>
                         </button>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="NCA-sb-xG4">
-                            <rect key="frame" x="260" y="3" width="168" height="193"/>
+                            <frame key="frameInset" minX="260" minY="3" width="168" height="193"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal">
-                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
                                 <action selector="openGallery:" destination="-1" eventType="touchUpInside" id="wxP-NL-Bn2"/>
                             </connections>
                         </button>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" id="RQ8-gR-ph9">
-                            <rect key="frame" x="38" y="0.0" width="692" height="230"/>
+                            <frame key="frameInset" minX="38" width="692" height="230"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </scrollView>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22.05.2014" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7j0-mx-0gr">
-                    <rect key="frame" x="86" y="82" width="267" height="21"/>
+                    <frame key="frameInset" minX="86" minY="82" width="267" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-LightItalic" family="Helvetica Neue" pointSize="15"/>
-                    <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="textColor" red="0.21191233396530151" green="0.21190600097179413" blue="0.21190959215164185" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="7tk-9b-Wfb">
-                    <rect key="frame" x="601" y="42" width="140" height="26"/>
+                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7tk-9b-Wfb">
+                    <frame key="frameInset" minY="25" width="30" height="30" maxX="62"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                    <state key="normal" title="Add to Bookmarks">
-                        <color key="titleColor" red="1" green="0.044164965989999999" blue="0.075740484080000003" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
+                    <state key="normal" image="download_add"/>
                     <connections>
                         <action selector="addToBookmarks:" destination="-1" eventType="touchUpInside" id="6rm-fc-ZTp"/>
                     </connections>
                 </button>
-                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="K8q-Wn-7QV">
-                    <rect key="frame" x="561" y="40" width="180" height="30"/>
+                <button hidden="YES" opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="K8q-Wn-7QV">
+                    <frame key="frameInset" minY="25" width="30" height="30" maxX="62"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                    <state key="normal" title="Remove from Bookmarks">
-                        <color key="titleColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
+                    <state key="normal" image="download_remove"/>
                     <connections>
                         <action selector="removeFromBookmarks:" destination="-1" eventType="touchUpInside" id="Exs-SN-AkS"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bn6-Dt-zGG" userLabel="Add Favorites">
+                    <frame key="frameInset" minY="25" width="30" height="30" maxX="127"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="favorites_add"/>
+                    <connections>
+                        <action selector="addToFavorite:" destination="-1" eventType="touchUpInside" id="lJF-b5-MNX"/>
+                    </connections>
+                </button>
+                <button hidden="YES" opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ZeK-pt-BgJ" userLabel="Remove Favorites">
+                    <frame key="frameInset" minY="25" width="30" height="30" maxX="127"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="favorites_remove"/>
+                    <connections>
+                        <action selector="removeFavorite:" destination="-1" eventType="touchUpInside" id="ldd-FI-3Dk"/>
+                    </connections>
+                </button>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="1009" y="1663.5"/>
@@ -341,37 +353,46 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" id="FKI-qV-Keb">
-                    <rect key="frame" x="0.0" y="0.0" width="768" height="909"/>
+                    <frame key="frameInset" height="100.00%"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="content" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="90P-hH-OnC" customClass="FDLabelView">
-                            <rect key="frame" x="50" y="25" width="668" height="41"/>
+                            <rect key="frame" x="50" y="25" width="1436" height="41"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="32"/>
-                            <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FDLabel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZDN-uD-JOS" customClass="FDLabelView">
-                            <rect key="frame" x="50" y="123" width="668" height="211"/>
+                            <rect key="frame" x="50" y="123" width="1436" height="211"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
-                            <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                 </scrollView>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
     </objects>
     <resources>
+        <image name="download_add" width="45" height="45"/>
+        <image name="download_remove" width="45" height="45"/>
+        <image name="favorites_add" width="45" height="45"/>
+        <image name="favorites_remove" width="45" height="45"/>
         <image name="feedback.png" width="36" height="28"/>
         <image name="logo_fotona.png" width="597" height="285"/>
         <image name="menu.png" width="19" height="16"/>
         <image name="menu_arrow_red.png" width="10" height="16"/>
         <image name="settings2x.png" width="72" height="57"/>
     </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
 </document>
