@@ -15,4 +15,12 @@
 @property (weak, nonatomic) IBOutlet UILabel *newsDate;
 @property (weak, nonatomic) IBOutlet UITextView *newsTitle;
 
+@property (strong, nonatomic) IBOutlet UILabel *lblAbout;
+@property (nonatomic) FNews *news;
+@property (nonatomic) BOOL related;
+@property (nonatomic) NSMutableArray *newsArray;
+@property (nonatomic) BOOL enabled;
+@property (strong, nonatomic) FMainViewController_iPad *parent;
+-(void)fillCell;
+
 @end

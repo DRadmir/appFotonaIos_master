@@ -41,7 +41,9 @@ NSMutableArray *relatedNews;
 -(void)viewWillAppear:(BOOL)animated{
      [super viewWillAppear:animated];
     [self openNews:[self news] andNewsArray:[self newsArray]];
+    
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -405,6 +407,8 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     }
     
 }
+
+
 
 
 
