@@ -392,7 +392,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         [database open];
         FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where caseID=%@",caseID]];
         while([results next]) {
-            currentCase.coverflow = [results stringForColumn:@"alloweInCoverFlow"];
+            currentCase = [[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
         }
         
         [tableParameters setHidden:YES];
@@ -430,7 +430,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
    NSString *usr = [FCommon getUser];
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
-    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKCASE, [currentCase caseID]]];
+    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKCASE, caseID]];
     BOOL flag=NO;
     while([resultsBookmarked next]) {
         flag=YES;
