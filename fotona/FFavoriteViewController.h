@@ -7,7 +7,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "EBPhotoPagesController.h"
 
-@interface FFavoriteViewController : UIViewController <UINavigationControllerDelegate,UISearchBarDelegate,UIAlertViewDelegate,EBPhotoPagesDelegate,EBPhotoPagesDataSource>//,UIImagePickerControllerDelegate
+@interface FFavoriteViewController : UIViewController <UINavigationControllerDelegate,UISearchBarDelegate,UIAlertViewDelegate,EBPhotoPagesDelegate,EBPhotoPagesDataSource>
 {
     NSString *pathToPDF;
     

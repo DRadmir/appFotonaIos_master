@@ -12,6 +12,7 @@
                 <outlet property="addToFavorite" destination="yap-ft-w9G" id="aHN-in-WqL"/>
                 <outlet property="additionalInfo" destination="A06-bq-THZ" id="ImO-iS-S1e"/>
                 <outlet property="authorImg" destination="B73-T1-hO5" id="dJ1-hJ-RTb"/>
+                <outlet property="authorNameLbl" destination="Y0m-PK-N2P" id="j0S-Vt-v9a"/>
                 <outlet property="caseScroll" destination="Zfm-Lt-xX3" id="Wh8-JN-Ex4"/>
                 <outlet property="caseView" destination="qcW-fZ-dvJ" id="gB3-Nk-DBm"/>
                 <outlet property="contentVideoModeView" destination="yQi-cB-Bpf" id="3aM-gP-eR4"/>
@@ -294,9 +295,6 @@
             </subviews>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <connections>
-                <outlet property="authorNameLbl" destination="Y0m-PK-N2P" id="etT-RN-lF1"/>
-            </connections>
             <point key="canvasLocation" x="887" y="20.5"/>
         </view>
         <view clipsSubviews="YES" contentMode="scaleToFill" id="yQi-cB-Bpf">

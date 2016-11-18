@@ -213,19 +213,12 @@
             UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
             [av showInView:self.view];
         } else {
-            
-            
             MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
             [self.view addSubview:hud];
             hud.labelText = @"Preparing to download";
             [hud show:YES];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0),^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    
-                });
                 [self bookmark];
-                
             });
         }
     } else {

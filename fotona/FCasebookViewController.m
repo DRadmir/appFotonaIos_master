@@ -22,7 +22,6 @@
 #import "FMainViewController_iPad.h"
 #import "FSettingsViewController.h"
 #import "FDownloadManager.h"
-#import "BubbleControler.h"
 #import "HelperBookmark.h"
 #import "FDB.h"
 #import "FGoogleAnalytics.h"
@@ -31,9 +30,6 @@
 @interface FCasebookViewController ()
 {
     int numberOfSpaces;//between texts introduction, procedure ...
-    BubbleControler *bubbleC;
-    Bubble *b1;
-    Bubble *b2;
     int state;
     BOOL openGal;
     FSettingsViewController *settingsController;
@@ -213,8 +209,6 @@
             direction = TRUE;
             
         }
-        // }
-        //[APP_DELEGATE setOpenCase:NO];
     }
     beforeOrient=[APP_DELEGATE currentOrientation];
     openGal = NO;
@@ -230,7 +224,6 @@
     if (!settingsView.isHidden && settingsView != nil) {
         [self closeSettings:nil];
     }
-    //    currentCase = nil;
 }
 
 
@@ -541,12 +534,6 @@
     } else{
         [addBookmarks setHidden:NO];
         [removeBookmarks setHidden:YES];
-    }
-    if(![usersarray containsObject:usr]){
-        [bubbleC removeFromSuperview];
-        bubbleC = nil;
-        [caseScroll setScrollEnabled:NO];
-        [self showBubbles];
     }
 }
 
@@ -1016,11 +1003,6 @@
         [self.viewDeckController toggleLeftViewAnimated:YES];
         direction = !direction;
     } completion:^(BOOL finished) {
-        if (state<2 && bubbleC != nil) {
-            [bubbleC removeFromSuperview];
-            bubbleC = nil;
-            [self showBubbles];
-        }
     }];
     
 }
@@ -1525,18 +1507,6 @@
         
     }
     [self.view bringSubviewToFront:[self.view viewWithTag:1000]];
-    
-    NSString *usr = [FCommon getUser];
-    NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-    if(![usersarray containsObject:usr]){
-        if (bubbleC != nil) {
-            //[exCaseView setUserInteractionEnabled:NO];
-            [caseScroll setScrollEnabled:NO];
-            [bubbleC removeFromSuperview];
-            bubbleC = nil;
-            [self showBubbles];
-        }
-    }
 }
 
 
@@ -1929,113 +1899,6 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     }
 }
 
-#pragma mark - BUBBLES :D
-
--(void)showBubbles
-{
-    
-    // You should check before this, if any of bubbles needs to be displayed
-    NSString *usr = [FCommon getUser];
-    NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-    if(![usersarray containsObject:usr]){
-        
-        if(bubbleC == nil)
-        {
-            bubbleC = [[BubbleControler alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-            
-            // [bubbleC setBlockUserInteraction:NO];
-            //[bubbleC setBackgroundTint:[UIColor clearColor]];
-            b1 = [[Bubble alloc] init];
-            
-            // Calculate point of caret
-            CGPoint loc = addBookmarks.frame.origin;
-            CGRect newFrame = addBookmarks.frame;
-            if (state<1) {
-                if (!removeBookmarks.isHidden) {
-                    newFrame= removeBookmarks.frame;
-                    loc = removeBookmarks.frame.origin;
-                    loc.x += removeBookmarks.frame.size.width / 2; // Center
-                    loc.y += 68 +  removeBookmarks.frame.size.height; // Bottom
-                } else{
-                    loc.x += addBookmarks.frame.size.width / 2; // Center
-                    loc.y += 68 +  addBookmarks.frame.size.height; // Bottom
-                }
-                
-                
-                // Set if highlight is desired
-                
-                newFrame.origin.y += 65;
-                if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
-                    loc.y -=16;
-                    newFrame.origin.y -= 16;
-                }
-                [b1 setHighlight:newFrame];
-                [b1 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-                [b1 setFontColor:[UIColor whiteColor]];
-                // Set buble size and position (first size, then position!!)
-                [b1 setSize:CGSizeMake(200, 130)];
-                [b1 setCornerRadius:5];
-                [b1 setPositionOfCaret:loc withCaretFrom:TOP_RIGHT];
-                [b1 setCaretSize:15]; // Because tablet, we want a bigger bubble caret
-                // Set font, paddings and text
-                [b1 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
-                [b1 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLECASE1", nil)]];
-                [b1 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]]; // Default font is helvetica-neue, size 12
-                
-                // Add bubble to controler
-                [bubbleC addBubble:b1];
-                [b1 setDelegate:self];
-            }
-            if (state<2) {
-                b2 = [[Bubble alloc] init];
-                loc =[[[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4] frame].origin;
-                loc.x =[[APP_DELEGATE tabBar] tabBar].frame.size.width/2 + 182 + [[[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4]frame].size.width/2; // Center//loc.x += [[[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4] frame].size.width/2; // Center
-                //            if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
-                //                //loc.y +=16;
-                //            }
-                loc.y = self.view.frame.size.height - 50;//+= [[[self tabBarController] tabBar] frame].origin.y-3; // Bottom
-                [b2 setCornerRadius:10];
-                [b2 setSize:CGSizeMake(200, 130)];
-                CGRect newFrame =[ [[[[APP_DELEGATE tabBar] tabBar] subviews] objectAtIndex:4] frame];
-                newFrame.origin.y += self.view.frame.size.height-newFrame.size.height-2;
-                newFrame.origin.x = [[APP_DELEGATE tabBar] tabBar].frame.size.width/2 + 182;
-                newFrame.size.height += 1;
-                [b2 setHighlight:newFrame];
-                
-                [b2 setPositionOfCaret:loc withCaretFrom:BOTTOM_RIGHT];
-                [b2 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLECASE2", nil)]];
-                [b2 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-                [b2 setFontColor:[UIColor whiteColor]];
-                [b2 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
-                [b2 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]];
-                
-                [bubbleC addBubble:b2];
-                [b2 setDelegate:self];
-            }
-            UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-            [window addSubview:bubbleC];
-        }
-    }
-}
-
-- (void)bubbleRequestedExit:(Bubble*)bubbleObject
-{
-    
-    state++;
-    [bubbleC displayNextBubble];
-    [bubbleObject removeFromSuperview];
-    [exCaseView setUserInteractionEnabled:YES];
-    [caseScroll setScrollEnabled:YES];
-    if (state>1) {
-        NSMutableArray *helperArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-        NSString *usr = [FCommon getUser];
-        [helperArray addObject:usr];
-        [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"casebookHelper"];
-        state = 0;
-    }
-    
-    
-}
 
 #pragma mark swipeMenu
 

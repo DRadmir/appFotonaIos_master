@@ -11,11 +11,10 @@
 #import "FCase.h"
 #import "FICasebookContainerViewController.h"
 #import "FIGalleryController.h"
-#import "Bubble.h"
 #import "FIFavoriteViewController.h"
 
 
-@interface FICaseViewController : UIViewController <UIActionSheetDelegate, BubbleDelegate>
+@interface FICaseViewController : UIViewController <UIActionSheetDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel *lblAuthor;
 @property (strong, nonatomic) IBOutlet UILabel *lblDate;

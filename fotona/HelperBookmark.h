@@ -25,8 +25,8 @@
 + (void) warning;
 + (void) success;
 
-+(void)addImageToDownloadLis:(FImage *)img forCase:(NSString *)caseID;
-+(void)addVideoToDownloadLis:(FMedia *)video forCase:(NSString *)caseID;
++(void)addImageToDownloadList:(FImage *)img forCase:(NSString *)caseID;
++(void)addVideoToDownloadList:(FMedia *)video forCase:(NSString *)caseID;
 
 +(void) unbookmarkAll;
 

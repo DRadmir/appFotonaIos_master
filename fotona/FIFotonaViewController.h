@@ -10,9 +10,9 @@
 #import "FIBaseView.h"
 #import "FFotonaMenu.h"
 #import <QuickLook/QuickLook.h>
-#import "Bubble.h"
 
-@interface FIFotonaViewController : FIBaseView < BubbleDelegate>
+
+@interface FIFotonaViewController : FIBaseView
 
 @property (strong, nonatomic) IBOutlet UIView *continerViewFotona;
 @property(nonatomic) NSMutableDictionary *bookmarkMenu;

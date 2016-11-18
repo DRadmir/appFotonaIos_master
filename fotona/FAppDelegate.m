@@ -27,6 +27,7 @@
 #import <AVKit/AVKit.h>
 #import "FHelperRequest.h"
 #import "FFavoriteViewController.h"
+#import "FIPDFViewController.h"
 
 
 
@@ -671,7 +672,6 @@
             [defaults setObject:deviceUuid forKey:@"deviceUuid"];
         }
     }
-    //TODO: premaknt pošiljanje po loginu, zaradi dodajanja usetype (int) - tyin subtype(string)
     // Prepare the Device Token for Registration (remove spaces and < >)
     NSString *devToken = [[[[deviceToken description]
                                stringByReplacingOccurrencesOfString:@"<"withString:@""]
@@ -958,16 +958,8 @@
 -(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
 //TODO: nrdit rotacijo na favorite zaslonu  || [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]]
-    if ([self.window.visibleViewController isKindOfClass:[AVPlayerViewController class]] || [self.window.visibleViewController isKindOfClass:[FIFotonaViewController class]] || [self.window.visibleViewController isKindOfClass:[QLPreviewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] ||[self.window.visibleViewController isKindOfClass:[EBPhotoPagesController class]] || [FCommon isIpad]) {
-        if ( [self.window.visibleViewController isKindOfClass:[FFavoriteViewController class]]) {
-            for (UIView *object in self.window.visibleViewController.childViewControllers ) {
-                if([object isKindOfClass:[FICaseViewController class]])
-                {
-                    return UIInterfaceOrientationMaskAllButUpsideDown;
-                }
-            }
-            return UIInterfaceOrientationMaskPortrait;
-        } else if ( [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]]) {
+    if ([self.window.visibleViewController isKindOfClass:[AVPlayerViewController class]] || [self.window.visibleViewController isKindOfClass:[FIFotonaViewController class]] || [self.window.visibleViewController isKindOfClass:[QLPreviewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] ||[self.window.visibleViewController isKindOfClass:[EBPhotoPagesController class]] || [self.window.visibleViewController isKindOfClass:[FICaseViewController class]] || [self.window.visibleViewController isKindOfClass:[FIPDFViewController class]] || [FCommon isIpad]) {
+        if ( [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]]) {
             for (UIView *object in self.window.visibleViewController.childViewControllers ) {
                 if([object isKindOfClass:[FICaseViewController class]])
                 {
@@ -977,7 +969,7 @@
             return UIInterfaceOrientationMaskPortrait;
         } else if ( [self.window.visibleViewController isKindOfClass:[FIFotonaViewController class]]) {
             for (UIView *object in self.window.visibleViewController.childViewControllers ) {
-                if([object isKindOfClass:[FIExternalLinkViewController class]])
+                if([object isKindOfClass:[FIExternalLinkViewController class]] || [object isKindOfClass:[FIPDFViewController class]])
                 {
                     return UIInterfaceOrientationMaskAllButUpsideDown;
                 }

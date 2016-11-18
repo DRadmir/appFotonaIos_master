@@ -27,9 +27,11 @@ NSMutableArray *newsToBookmark;
 NSMutableArray *eventsToBookmark;
 NSMutableArray *casesToBookmark;
 NSMutableArray *fotonaToBookmark;
+
 int bookmarkedCount;
 
 +(void)bookmarkAll:(NSArray *)categorys{
+
     bookmarkedCount = 0;
     for (NSIndexPath *obj in categorys) {
         NSArray *temp =[APP_DELEGATE currentLogedInUser].userTypeSubcategory;
@@ -231,7 +233,7 @@ int bookmarkedCount;
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
             for (FImage *img in m) {
-                [self addImageToDownloadLis:img forCase:caseID];
+                [self addImageToDownloadList:img forCase:caseID];
             }
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
             [database close];
@@ -239,21 +241,21 @@ int bookmarkedCount;
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
             for (FMedia *vid in m) {
-                [self addVideoToDownloadLis:vid forCase:caseID];}
+                [self addVideoToDownloadList:vid forCase:caseID];}
             [database close];
         }
         
     }
 }
 
-+(void)addImageToDownloadLis:(FImage *)img forCase:(NSString *)caseID{
++(void)addImageToDownloadList:(FImage *)img forCase:(NSString *)caseID{
     FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:[caseID intValue] ofType:MEDIAIMAGE fromSource:BSOURCECASE forCases:caseID withLink:img.path withFileSize:[[img fileSize] intValue]];
     [[APP_DELEGATE downloadList] addObject:headerImage];
     [[APP_DELEGATE imagesToDownload] addObject:img.path];
     [HelperBookmark countBookmarks:1  withSize:[headerImage fileSize]];
 }
 
-+(void)addVideoToDownloadLis:(FMedia *)video forCase:(NSString *)caseID{
++(void)addVideoToDownloadList:(FMedia *)video forCase:(NSString *)caseID{
     FItemBookmark *headerImage = [[FItemBookmark alloc] initWithItemIDint:[caseID intValue] ofType:MEDIAVIDEO fromSource:BSOURCECASE forCases:caseID withLink:video.path withFileSize:[[video filesize] intValue]];
     [[APP_DELEGATE downloadList] addObject:headerImage];
     [[APP_DELEGATE videosToDownload] addObject:video.path];
@@ -316,8 +318,8 @@ int bookmarkedCount;
                 }
             }
         }
-        [fotonaDatabase close];
     }
+     [fotonaDatabase close];
 }
 
 

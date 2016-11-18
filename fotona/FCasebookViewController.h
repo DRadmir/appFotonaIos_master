@@ -13,11 +13,10 @@
 #import "IIViewDeckController.h"
 #import "FSearchViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "Bubble.h"
 #import "EBPhotoPagesController.h"
 
 
-@interface FCasebookViewController : UIViewController <UITableViewDelegate,UITableViewDataSource,QLPreviewControllerDelegate,QLPreviewControllerDataSource,UINavigationControllerDelegate,UISearchBarDelegate,UIAlertViewDelegate,EBPhotoPagesDelegate,EBPhotoPagesDataSource, BubbleDelegate, UIActionSheetDelegate>
+@interface FCasebookViewController : UIViewController <UITableViewDelegate,UITableViewDataSource,QLPreviewControllerDelegate,QLPreviewControllerDataSource,UINavigationControllerDelegate,UISearchBarDelegate,UIAlertViewDelegate,EBPhotoPagesDelegate,EBPhotoPagesDataSource, UIActionSheetDelegate>
 {
     IBOutlet UIButton *feedbackBtn;
     IBOutlet UIButton *menuBtn;

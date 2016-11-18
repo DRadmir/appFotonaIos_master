@@ -15,7 +15,6 @@
 #import "FIContentViewController.h"
 #import "FDownloadManager.h"
 #import "FDB.h"
-#import "BubbleControler.h"
 #import "FGoogleAnalytics.h"
 
 
@@ -31,9 +30,6 @@
     FIGalleryViewController *galleryView;
     FIContentViewController *contentView;
     NSString *pathToPdf;
-    BubbleControler *bubbleCFotona;
-    Bubble *b3;
-    Bubble *b4;
     int stateHelper;
     BOOL menuShown;
 }
@@ -84,8 +80,6 @@
     if (flow.fromSearch) {
         [self openGalleryFromSearch:flow.galToOpen andReplace:false andType:[[flow mediaToOpen] mediaType]];
     }
-    [self showBubbles];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -275,127 +269,5 @@
         [self showMenu:self];
     }
 }
-
-
-
-#pragma mark - BUBBLES :D
-
--(void)showBubbles
-{
-    NSString *usr = [FCommon getUser];
-    NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"fotonaHelper"]];
-    if(![usersarray containsObject:usr]){
-        [self.viewDeckController.leftController.view setUserInteractionEnabled:NO];
-        FIFlowController *flow = [FIFlowController sharedInstance];
-        if (flow.fotonaHelperState > 1) {
-            flow.fotonaHelperState = 0;
-        }
-        
-        stateHelper = flow.fotonaHelperState;
-        // You should check before this, if any of bubbles needs to be displayed
-        if(bubbleCFotona == nil)
-        {
-            bubbleCFotona =[[BubbleControler alloc] initWithFrame:CGRectMake(0, 0, [flow tabControler].view.frame.size.width, [flow tabControler].view.frame.size.height)];
-            //[bubbleC setBlockUserInteraction:NO];
-            //[bubbleCFotona setBackgroundTint:[UIColor clearColor]];
-            
-            // Calculate point of caret
-            b3 = [[Bubble alloc] init];
-            
-            int orientation = 0;
-            if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
-                orientation = -1;
-            }
-            // Calculate point of caret
-            CGPoint loc = contentView.view.frame.origin;
-            CGRect newFrame = contentView.view.frame;
-            if (stateHelper<1) {
-                loc.x = [[flow tabControler] tabBar].frame.size.width/2; // Center
-                loc.y = 155; // Bottom
-                
-                // Set if highlight is desired
-                
-                [b3 setCornerRadius:10];
-                [b3 setSize:CGSizeMake(200, 130)];
-                newFrame = flow.fotonaTab.view.frame;
-                
-                [b3 setHighlight:newFrame];
-                
-                [b3 setHighlight:newFrame];
-                [b3 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-                [b3 setFontColor:[UIColor whiteColor]];
-                // Set buble size and position (first size, then position!!)
-                [b3 setSize:CGSizeMake(200, 130)];
-                [b3 setCornerRadius:5];
-                [b3 setPositionOfCaret:loc withCaretFrom:TOP_CENTER];
-                [b3 setCaretSize:15]; // Because tablet, we want a bigger bubble caret
-                // Set font, paddings and text
-                [b3 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
-                [b3 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLEFOTONA1", nil)]];
-                [b3 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]]; // Default font is helvetica-neue, size 12
-                
-                // Add bubble to controler
-                [bubbleCFotona addBubble:b3];
-                [b3 setDelegate:self];
-            }
-            if (stateHelper<2) {
-                b4 = [[Bubble alloc] init];
-                FIFlowController *flow = [FIFlowController sharedInstance];
-                loc =[[[[[flow tabControler] tabBar] subviews] objectAtIndex:4] frame].origin;
-                loc.x =[flow tabControler].view.frame.size.width -  [[[[[flow tabControler] tabBar] subviews] objectAtIndex:4]frame].size.width/2;
-                loc.y = [flow tabControler].view.frame.size.height - [[flow tabControler] tabBar].frame.size.height;
-                [b4 setCornerRadius:10];
-                [b4 setSize:CGSizeMake(200, 130)];
-                CGRect newFrame =[ [[[[flow tabControler] tabBar] subviews] objectAtIndex:4] frame];
-                newFrame.origin.y = [flow tabControler].view.frame.size.height - [[flow tabControler] tabBar].frame.size.height;
-                newFrame.origin.x =  [flow tabControler].view.frame.size.width -  [[[[[flow tabControler] tabBar] subviews] objectAtIndex:4]frame].size.width;
-                newFrame.size.height += 1;
-                [b4 setHighlight:newFrame];
-                
-                [b4 setPositionOfCaret:loc withCaretFrom:BOTTOM_RIGHT];
-                [b4 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLECASE2", nil)]];
-                [b4 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-                [b4 setFontColor:[UIColor whiteColor]];
-                [b4 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
-                [b4 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]];
-                
-                [bubbleCFotona addBubble:b4];
-                [b4 setDelegate:self];
-            }
-            
-            
-            //[containerView addSubview:bubbleCFotona];
-            UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-            [window addSubview:bubbleCFotona];
-        }
-        
-    }
-}
-
-- (void)bubbleRequestedExit:(Bubble*)bubbleObject
-{
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    flow.fotonaHelperState++;
-    stateHelper = flow.fotonaHelperState;
-    [bubbleCFotona displayNextBubble];
-    [bubbleObject removeFromSuperview];
-    [self.viewDeckController.leftController.view setUserInteractionEnabled:YES];
-    if (stateHelper>1) {
-        NSMutableArray *helperArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"fotonaHelper"]];
-        NSString *usr = [FCommon getUser];
-        [helperArray addObject:usr];
-        [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"fotonaHelper"];
-        stateHelper = 0;
-        [bubbleCFotona removeFromSuperview];
-        bubbleCFotona = nil;
-        [self showMenu:self];
-    } else if (stateHelper > 0)
-    {
-        [flow.fotonaMenuArray removeAllObjects];
-        [flow.fotonaMenu closeMenu:flow.fotonaMenu];
-    }
-    
-}
-
 
 @end

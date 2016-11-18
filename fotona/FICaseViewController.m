@@ -9,8 +9,6 @@
 #import "FICaseViewController.h"
 #import "FAuthor.h"
 #import "FDB.h"
-#import "Bubble.h"
-#import "BubbleControler.h"
 #import "FIGalleryController.h"
 #import "FImage.h"
 #import "FDownloadManager.h"
@@ -23,12 +21,7 @@
 {
     NSArray *videoArray;
     NSArray *imagesArry;
-    BubbleControler *bubbleC;
-    Bubble *b1;
-    Bubble *b2;
     int state;
-   
-    
 }
 @end
 
@@ -89,14 +82,7 @@
     
     NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-    if(![usersarray containsObject:usr]){
-        [bubbleC removeFromSuperview];
-        bubbleC = nil;
-        [scrollViewMain setScrollEnabled:NO];
-        
-        [self showBubbles];
-    }
-    
+   
     if ([FDB checkIfFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE]) {
         [btnRemoveFavorite setHidden:NO];
         [btnAddFavorite setHidden:YES];
@@ -275,12 +261,11 @@
     btnReadMore.layer.cornerRadius = 3;
     btnReadMore.layer.borderWidth = 1;
     btnReadMore.layer.borderColor = btnReadMore.tintColor.CGColor;
-
+    [btnBookmark setNeedsLayout];
+    [btnBookmark layoutIfNeeded];
 
     lblIntroduction.attributedText=allAdditionalInfo;
     [lblIntroduction sizeToFit];
-
-    
 }
 
 
@@ -540,144 +525,5 @@
         [[FDownloadManager shared] prepareForDownloadingFiles];
     }
 }
-
-#pragma mark - BUBBLES :D
-
--(void)showBubbles
-{
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    // You should check before this, if any of bubbles needs to be displayed
-    NSString *usr = [FCommon getUser];
-    NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-    if(![usersarray containsObject:usr]){
-        
-        if(bubbleC == nil)
-        {
-            bubbleC = [[BubbleControler alloc] initWithFrame:CGRectMake(0, 0, flow.tabControler.view.frame.size.width, flow.tabControler.view.frame.size.height)];
-            
-            // [bubbleC setBlockUserInteraction:NO];
-            //[bubbleC setBackgroundTint:[UIColor clearColor]];
-            b1 = [[Bubble alloc] init];
-        
-            int orientation = 0;
-            if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
-                orientation = -1;
-            }
-            // Calculate point of caret
-            CGPoint loc = btnBookmark.frame.origin;
-            CGRect newFrame = btnBookmark.frame;
-            if (state<1) {
-                if (!btnRemoveBookmark.isHidden) {
-                    newFrame= btnRemoveBookmark.frame;
-                    loc = btnRemoveBookmark.frame.origin;
-                    loc.x =  [flow tabControler].view.frame.size.width - btnRemoveBookmark.frame.size.width + 25 ; // Center
-                    loc.y += 65 +  btnRemoveBookmark.frame.size.height + (orientation * 32); // Bottom
-                } else{
-                    loc.x =  [flow tabControler].view.frame.size.width - btnBookmark.frame.size.width + 25; // Center
-                    loc.y += 65 +  btnBookmark.frame.size.height + (orientation * 32); // Bottom
-                }
-                
-                
-                // Set if highlight is desired
-                
-                newFrame.origin.y += 65;
-
-                [b1 setCornerRadius:10];
-                [b1 setSize:CGSizeMake(200, 130)];
-                newFrame =btnBookmark.frame;
-                if (!btnRemoveBookmark.isHidden) {
-                    newFrame= btnRemoveBookmark.frame;
-                    newFrame.origin.y = 62 + btnRemoveBookmark.frame.origin.y + (orientation * 32);
-                    newFrame.origin.x =  [flow tabControler].view.frame.size.width - btnRemoveBookmark.frame.size.width - 25;
-                } else{
-                    newFrame.origin.y = 62 + btnBookmark.frame.origin.y + (orientation * 32);
-                    newFrame.origin.x =  [flow tabControler].view.frame.size.width - btnBookmark.frame.size.width - 25;
-                }
-                
-                newFrame.size.height += 1;
-                [b1 setHighlight:newFrame];
-
-                [b1 setHighlight:newFrame];
-                [b1 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-                [b1 setFontColor:[UIColor whiteColor]];
-                // Set buble size and position (first size, then position!!)
-                [b1 setSize:CGSizeMake(200, 130)];
-                [b1 setCornerRadius:5];
-                [b1 setPositionOfCaret:loc withCaretFrom:TOP_RIGHT];
-                [b1 setCaretSize:15]; // Because tablet, we want a bigger bubble caret
-                // Set font, paddings and text
-                [b1 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
-                [b1 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLECASE1", nil)]];
-                [b1 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]]; // Default font is helvetica-neue, size 12
-                
-                // Add bubble to controler
-                [bubbleC addBubble:b1];
-                [b1 setDelegate:self];
-            }
-            if (state<2) {
-                b2 = [[Bubble alloc] init];
-                FIFlowController *flow = [FIFlowController sharedInstance];
-                loc =[[[[[flow tabControler] tabBar] subviews] objectAtIndex:4] frame].origin;
-                loc.x =[flow tabControler].view.frame.size.width -  [[[[[flow tabControler] tabBar] subviews] objectAtIndex:4]frame].size.width/2;
-                loc.y = [flow tabControler].view.frame.size.height - [[flow tabControler] tabBar].frame.size.height;
-                [b2 setCornerRadius:10];
-                [b2 setSize:CGSizeMake(200, 130)];
-                CGRect newFrame =[ [[[[flow tabControler] tabBar] subviews] objectAtIndex:4] frame];
-                newFrame.origin.y = [flow tabControler].view.frame.size.height - [[flow tabControler] tabBar].frame.size.height;
-                newFrame.origin.x =  [flow tabControler].view.frame.size.width -  [[[[[flow tabControler] tabBar] subviews] objectAtIndex:4]frame].size.width;
-                newFrame.size.height += 1;
-                [b2 setHighlight:newFrame];
-                
-                [b2 setPositionOfCaret:loc withCaretFrom:BOTTOM_RIGHT];
-                [b2 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLECASE2", nil)]];
-                [b2 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-                [b2 setFontColor:[UIColor whiteColor]];
-                [b2 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
-                [b2 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]];
-                
-                [bubbleC addBubble:b2];
-                [b2 setDelegate:self];
-            }
-            UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-            [window addSubview:bubbleC];
-        }
-    }
-    
-}
-
-- (void)bubbleRequestedExit:(Bubble*)bubbleObject
-{
-    state++;
-    [bubbleC displayNextBubble];
-    [bubbleObject removeFromSuperview];
-    [self.view setUserInteractionEnabled:YES];
-    [scrollViewMain setScrollEnabled:YES];
-    if (state>1) {
-        NSMutableArray *helperArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-        NSString *usr = [FCommon getUser];
-        [helperArray addObject:usr];
-        [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"casebookHelper"];
-        state = 0;
-        [bubbleC removeFromSuperview];
-        bubbleC = nil;
-    }
-}
-
--(void) reloadBubbles
-{
-    if(bubbleC != nil)
-    {
-        [bubbleC removeFromSuperview];
-        bubbleC = nil;
-         [self showBubbles];
-    }
-}
-
-
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    [self reloadBubbles];
-}
-
 
 @end

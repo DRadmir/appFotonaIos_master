@@ -156,7 +156,6 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     [self.contentsVideoModeCollectionView reloadData];
     
     beforeOrient=[APP_DELEGATE currentOrientation];
-     [APP_DELEGATE setFavoriteController:self];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -1454,21 +1453,6 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         [UIView commitAnimations];
     }
     [self.view bringSubviewToFront:[self.view viewWithTag:1000]];
-}
-
-#pragma mark - Refresh
-
-- (void) refreshCellForMedia:(NSString *)mediaID andMediaType:(NSString *)mediaType{
-    if (mediaArray.count >0) {
-        for (int i = 0; i<[mediaArray count]; i++){
-            FMedia *media = mediaArray[i];
-            if ([[media itemID] intValue]== [mediaID intValue]) {
-                NSIndexPath *index = [NSIndexPath  indexPathForItem:i inSection:0];
-                [contentsVideoModeCollectionView reloadItemsAtIndexPaths:[NSArray arrayWithObjects:index, nil]];
-                break;
-            }
-        }
-    }
 }
 
 @end

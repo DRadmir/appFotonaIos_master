@@ -148,7 +148,7 @@
 
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]]) {
+        if ([FCommon userPermission:[f userPermissions]] || [[f coverflow] isEqualToString:@"1"]) {
              [tmp addObject:f];
         }
     }
@@ -182,7 +182,7 @@
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    if ([FCommon userPermission:[f userPermissions]]) {
+    if ([FCommon userPermission:[f userPermissions]] || [[f coverflow] isEqualToString:@"1"]) {
         return f;
     }
     return nil;
@@ -713,7 +713,7 @@
                 if (!exists) {
                     [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,sort,deleted, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?)",  img.itemID,img.title,img.path,@"",img.description,@"0",@"0",img.sort, img.deleted, img.fileSize];
                     if (download) {
-                        [HelperBookmark addImageToDownloadLis:img forCase:caseID];
+                        [HelperBookmark addImageToDownloadList:img forCase:caseID];
                     }
                 } else {
                     [database executeUpdate:@"UPDATE Media set title=?,path=?,description=?,sort=?, deleted=?, fileSize=? WHERE mediaID=? AND mediaType=1",img.title,img.path,img.description, img.sort, img.deleted, img.fileSize,img.itemID];
