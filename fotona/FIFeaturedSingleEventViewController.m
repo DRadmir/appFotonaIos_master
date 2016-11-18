@@ -31,7 +31,7 @@
     lblDate.text = [[HelperDate formatedDate:[event eventdate]] stringByAppendingString:[NSString stringWithFormat:@" - %@",  [HelperDate formatedDate:[event eventdateTo]]]];
     lblLocation.text = event.eventplace;
     if (category==0) {
-        UIImage *test = [UIImage imageNamed:@"event_gyno_red"];
+        UIImage *test = [UIImage imageNamed:[event getDot]];
         [imageDot setContentMode:UIViewContentModeScaleAspectFit];
         [imageDot setImage:test];//[UIImage imageNamed:[event getDot]]];
     } else{

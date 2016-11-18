@@ -208,16 +208,7 @@ int bookmarkedCount;
             [self addMedia:videosA withType:MEDIAVIDEO fromcase:currentCase.caseID];
           
         }else{
-            if ([FCommon isIpad]) {
-                if ([[[APP_DELEGATE casebookController] currentCase] caseID] == currentCase.caseID ) {
-                    [[APP_DELEGATE casebookController] refreshBookmarkBtn];
-                }
-            } else{
-                FIFlowController *flow = [FIFlowController sharedInstance];
-                if ([[flow caseOpened] caseID] == currentCase.caseID ) {
-                    [[flow caseView] refreshBookmarkBtn];
-                }
-            }
+            [self refreshViewWithItem:currentCase.caseID forItemType:BOOKMARKCASE];
         }
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     }
@@ -610,19 +601,17 @@ int bookmarkedCount;
 }
 
 +(void)refreshViewWithItem:(NSString *)itemID forItemType:(NSString *)itemType{
-     FIFlowController *flow = [FIFlowController sharedInstance];
+    FIFlowController *flow = [FIFlowController sharedInstance];
     if ([FCommon isIpad]) {
         if ([itemType intValue] == [BOOKMARKCASE intValue] && [[[[APP_DELEGATE casebookController] currentCase] caseID] intValue] == [itemID intValue] ) {
+            //TODO: kako je če je ta casebook na favorites?
             [[APP_DELEGATE casebookController] refreshBookmarkBtn];
         } else {
             if ([[APP_DELEGATE tabBar] selectedIndex] == 2){
-                UINavigationController *tempC = [[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:2] centerController];
-                [(FFotonaViewController *)[tempC topViewController] refreshCellForMedia:itemID andMediaType:itemType];
+                [[APP_DELEGATE fotonaController] refreshCellForMedia:itemID andMediaType:itemType];
             } else {
                 if ([[APP_DELEGATE tabBar] selectedIndex] == 4){
-//                    UINavigationController *tempC = [[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:2] centerController];
-//                    [(FFotonaViewController *)[tempC topViewController] setOpenGal:YES forMedia:media];
-               // TODO: favorites
+            //        [[APP_DELEGATE favoriteController] refreshCellForMedia:itemID andMediaType:itemType];
                 }
             }
         }
@@ -643,6 +632,9 @@ int bookmarkedCount;
     }
     
 }
+
+
+
 
 +(void) insertToDB:(FMDatabase *)database forUser:(NSString *)usr item:(NSString *)itemID withType:(NSString *) itemType forCaseIDs:(NSString *)caseIDs andBookmarkType:(int) bookmarkType{
     if (caseIDs == nil) {

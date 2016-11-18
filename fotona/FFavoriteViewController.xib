@@ -283,14 +283,12 @@
                     <fontDescription key="fontDescription" name="HelveticaNeue-LightItalic" family="Helvetica Neue" pointSize="15"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hnm-hB-yPb" userLabel="Add Bookmark">
-                    <frame key="frameInset" minY="35" width="30" height="30" maxX="20"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="download_add"/>
-                    <connections>
-                        <action selector="addToBookmarks:" destination="-1" eventType="touchUpInside" id="iY3-oe-xvV"/>
-                    </connections>
-                </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1064 nm Nd:YAG Laser Treatment of Leg Veins" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KHC-ka-XF7">
+                    <frame key="frameInset" minX="38" minY="112" height="84" maxX="38"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="35"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="yap-ft-w9G" userLabel="Add Favourites">
                     <frame key="frameInset" minY="35" width="30" height="30" maxX="81"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
@@ -299,12 +297,6 @@
                         <action selector="addToFavorite:" destination="-1" eventType="touchUpInside" id="aVf-pR-aCc"/>
                     </connections>
                 </button>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1064 nm Nd:YAG Laser Treatment of Leg Veins" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KHC-ka-XF7">
-                    <frame key="frameInset" minX="38" minY="112" height="84" maxX="38"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="35"/>
-                    <nil key="highlightedColor"/>
-                </label>
                 <button hidden="YES" opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="xVm-82-cJg" userLabel="Remove Favourites">
                     <frame key="frameInset" minY="35" width="30" height="30" maxX="81"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
@@ -313,7 +305,15 @@
                         <action selector="removeFavorite:" destination="-1" eventType="touchUpInside" id="4J4-j9-HsS"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7tk-9b-Wfb">
+                <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hnm-hB-yPb" userLabel="Add Bookmark">
+                    <frame key="frameInset" minY="35" width="30" height="30" maxX="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="download_add"/>
+                    <connections>
+                        <action selector="addToBookmarks:" destination="-1" eventType="touchUpInside" id="iY3-oe-xvV"/>
+                    </connections>
+                </button>
+                <button hidden="YES" opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="7tk-9b-Wfb">
                     <frame key="frameInset" minY="35" width="30" height="30" maxX="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                     <state key="normal" image="download_remove"/>
@@ -365,14 +365,14 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="content" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0FO-YI-6pj" customClass="FDLabelView">
-                            <rect key="frame" x="50" y="25" width="2204" height="41"/>
+                            <rect key="frame" x="50" y="25" width="2972" height="41"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="32"/>
                             <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FDLabel" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="AxU-N8-YXR" customClass="FDLabelView">
-                            <rect key="frame" x="50" y="123" width="2204" height="211"/>
+                            <rect key="frame" x="50" y="123" width="2972" height="211"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                             <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
