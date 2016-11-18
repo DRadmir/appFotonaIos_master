@@ -318,14 +318,6 @@
                         <action selector="addToBookmarks:" destination="-1" eventType="touchUpInside" id="6rm-fc-ZTp"/>
                     </connections>
                 </button>
-                <button hidden="YES" opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="K8q-Wn-7QV">
-                    <frame key="frameInset" minY="35" width="30" height="30" maxX="20"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="download_remove"/>
-                    <connections>
-                        <action selector="removeFromBookmarks:" destination="-1" eventType="touchUpInside" id="Exs-SN-AkS"/>
-                    </connections>
-                </button>
                 <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bn6-Dt-zGG" userLabel="Add Favorites">
                     <frame key="frameInset" minY="35" width="30" height="30" maxX="81"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
@@ -340,6 +332,14 @@
                     <state key="normal" image="favorites_remove"/>
                     <connections>
                         <action selector="removeFavorite:" destination="-1" eventType="touchUpInside" id="ldd-FI-3Dk"/>
+                    </connections>
+                </button>
+                <button hidden="YES" opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="K8q-Wn-7QV">
+                    <frame key="frameInset" minY="35" width="30" height="30" maxX="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="download_remove"/>
+                    <connections>
+                        <action selector="removeFromBookmarks:" destination="-1" eventType="touchUpInside" id="Exs-SN-AkS"/>
                     </connections>
                 </button>
             </subviews>

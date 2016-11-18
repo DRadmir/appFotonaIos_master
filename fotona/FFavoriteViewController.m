@@ -20,6 +20,7 @@
 #import "FMediaManager.h"
 #import "FGoogleAnalytics.h"
 #import "FIPDFViewController.h"
+#import "HelperBookmark.h"
 
 @interface FFavoriteViewController ()
 {
@@ -129,21 +130,19 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         while([results next]) {
             currentCase.bookmark = [results stringForColumn:@"isBookmark"];
         }
-        if ([currentCase.bookmark boolValue]) {
-            [addBookmarks setHidden:YES];
-            [removeBookmarks setHidden:NO];
-            
-        } else {
-            [addBookmarks setHidden:NO];
-            [removeBookmarks setHidden:YES];
-        }
-        if ([FDB checkIfFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE]) {
-            [removeFavorite setHidden:NO];
-            [addToFavorite setHidden:YES];
-        } else {
-            [removeFavorite setHidden:YES];
-            [addToFavorite setHidden:NO];
-        }
+//        if ([currentCase.bookmark boolValue]) {
+//            [removeBookmarks setHidden:NO];
+//            
+//        } else {
+//            [removeBookmarks setHidden:YES];
+//        }
+//        if ([FDB checkIfFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE]) {
+//            [removeFavorite setHidden:NO];
+//            [addToFavorite setHidden:YES];
+//        } else {
+//            [removeFavorite setHidden:YES];
+//            [addToFavorite setHidden:NO];
+//        }
 
     }
 }
@@ -455,6 +454,16 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     } else{
         [removeBookmarks setHidden:YES];
     }
+    
+    if ([FDB checkIfFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE]) {
+        [removeFavorite setHidden:NO];
+        [addToFavorite setHidden:YES];
+    } else {
+        [removeFavorite setHidden:YES];
+        [addToFavorite setHidden:NO];
+    }
+
+    
     [contentVideoModeView setHidden:YES];
     [caseView setTag:OPENVIEW];
     [caseView setHidden:NO];
@@ -948,8 +957,8 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 -(void) bookmarkCase{
     
     if([APP_DELEGATE connectedToInternet] || [[currentCase coverflow] boolValue]){
-        //[addBookmarks setHidden:YES];
-        //[removeBookmarks setHidden:NO];
+//        [addBookmarks setHidden:YES];
+//        [removeBookmarks setHidden:NO];
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
         
@@ -959,14 +968,14 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     }
 }
 
-//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//    if ([alertView.message isEqualToString:NSLocalizedString(@"BOOKMARKING", nil)]) {
-//        [FAppDelegate bookmarkCase:currentCase];
-//        [APP_DELEGATE setBookmarkAll:YES];
-//        [[FDownloadManager shared] prepareForDownloadingFiles];
-//    }
-//}
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView.message isEqualToString:NSLocalizedString(@"BOOKMARKING", nil)]) {
+        [HelperBookmark bookmarkCase:currentCase];
+        [APP_DELEGATE setBookmarkAll:YES];
+        [[FDownloadManager shared] prepareForDownloadingFiles];
+    }
+}
 
 
 - (IBAction)addToFavorite:(id)sender {
