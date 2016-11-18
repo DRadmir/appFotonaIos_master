@@ -21,6 +21,7 @@
 @synthesize btnFavoriteRemove;
 @synthesize containerView;
 
+@synthesize parentIpad;
 @synthesize parentIphone;
 @synthesize index;
 @synthesize type;
@@ -94,8 +95,11 @@
     [FDB removeFromFavoritesItem:[[cellMedia itemID] intValue] ofType:[cellMedia mediaType]];
     if (parentIphone != nil) {
         [parentIphone deleteRowAtIndex:index];
+    } else {
+        if (parentIpad != nil) {
+            [parentIpad deleteRowAtIndex:index];
+        }
     }
-    //TODO: dodat odstranjevanje iz seznama na ipadu
     btnFavoriteRemove.hidden = YES;
     btnFavoriteAdd.hidden = NO;
 }

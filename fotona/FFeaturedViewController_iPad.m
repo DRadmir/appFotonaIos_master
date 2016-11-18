@@ -92,7 +92,6 @@ FNewsView *newsViewController;
         
     }
     return self;
-    
 }
 
 - (void)viewDidLoad
@@ -107,9 +106,6 @@ FNewsView *newsViewController;
     
     //feedback
     [feedbackBtn addTarget:APP_DELEGATE action:@selector(sendFeedback:) forControlEvents:UIControlEventTouchUpInside];
-    
-    //feedback
-    // [settingsBtn addTarget:APP_DELEGATE action:@selector(:) forControlEvents:UIControlEventTouchUpInside];
     
     //search
     FSearchViewController *searchVC=[[FSearchViewController alloc] init];
@@ -128,9 +124,7 @@ FNewsView *newsViewController;
         cellNumber = 5;
     }
     
-
     //swipe closing news
-    
     UISwipeGestureRecognizer *swipeRecognizerAbout = [[UISwipeGestureRecognizer alloc]
                                                       initWithTarget:self action:@selector(closeNews:)];
     [aboutView addGestureRecognizer:swipeRecognizerAbout];
@@ -145,10 +139,6 @@ FNewsView *newsViewController;
                                              selector:@selector(closeOnTabNews:)
                                                  name:@"CloseOnTabNews"
                                                object:nil];
-    //disclaimerScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.parentViewController.view.frame.size.width, self.parentViewController.view.frame.size.height - 63)];
-    // disclaimerLbl = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, 20.0f, disclaimerScrollView.frame.size.width-40, 460.0f)];
-    
-    
     
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -632,7 +622,7 @@ FNewsView *newsViewController;
     //set up data
     wrap = YES;
     
-    self.items = [FDB getCasesForCarouselFromDB];//self.getCasesForCarouselFromDB;
+    self.items = [FDB getCasesForCarouselFromDB];
     //random mixing carousel
     for (int x = 0; x < [items count]; x++) {
         int randInt = (arc4random() % ([items count] - x)) + x;

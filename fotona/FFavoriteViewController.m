@@ -28,6 +28,7 @@
     int success;
     int numberOfImages;
     int rotate;
+    BOOL caseClose;
     FSettingsViewController *settingsController;
     UIPanGestureRecognizer *swipeRecognizerB;
     NSMutableArray *imagesList;
@@ -50,6 +51,7 @@
 @synthesize helpTitle;
 @synthesize helpView;
 @synthesize lastOpenedFavoriteVC;
+@synthesize contentsVideoModeCollectionView;
 
 #define OPENVIEW 1000
 #define CLOSEVIEW 0
@@ -152,16 +154,6 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 
     [self.contentsVideoModeCollectionView reloadData];
     
-    if(flagCarousel){ //when clicked on Carousel ----------------------------------------------------------------------------
-        [[APP_DELEGATE main_ipad].caseMenu resetViewAnime:YES];
-        [self openCase];
-        
-    }else
-    {
-        if (currentCase && beforeOrient!=[APP_DELEGATE currentOrientation]) {
-            [self openCase];
-        }
-    }
     beforeOrient=[APP_DELEGATE currentOrientation];
 }
 
@@ -216,23 +208,21 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     FItemFavorite *item = mediaArray[indexPath.row];
+    FGalleryCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+    [cell setIndex:indexPath];
+    [cell setParentIpad:self];
+    [cell setItem:item];
+
     if ([[item typeID] intValue] == BOOKMARKCASEINT) {
-        
-        FGalleryCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
         FCase *caseToShow = [FDB getCaseWithID:[item itemID]];
-        [cell setItem:item];
-        [cell setIndex:indexPath];
-        [cell setParentIphone:self];
         [cell setContentForCase:caseToShow];
         return cell;
     } else {
         if ([[item typeID] intValue] == BOOKMARKVIDEOINT || [[item typeID] intValue] == BOOKMARKPDFINT) {
-            FGalleryCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
             [cell setContentForFavorite:item forColectionView:collectionView onIndex:indexPath];
             return cell;
         }
     }
-     FGalleryCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
      return cell;
 }
 
@@ -363,23 +353,35 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 }
 
 - (IBAction)closeSettings:(id)sender {
-    
+    caseClose = NO;
     [UIView animateWithDuration:0.3 animations:^{
         if (caseView.tag==OPENVIEW) {
-            caseView.hidden=NO;
+            if (caseView.isHidden) {
+                caseView.hidden=NO;
+            } else {
+                caseClose = YES;
+            }
         } else{
+            
             if (contentVideoModeView.tag==OPENVIEW) {
                 contentVideoModeView.hidden=NO;
             } else{
                 helpView.hidden=NO;
             }
             
-        }        [popupCloseBtn setHidden:YES];
+        }
+        [popupCloseBtn setHidden:YES];
         
     } completion:^(BOOL finished) {
         if ([lastOpenedFavoriteVC isKindOfClass:[FIPDFViewController class]]) {
             [lastOpenedFavoriteVC.view removeFromSuperview];
             lastOpenedFavoriteVC = nil;
+        } else {
+            if (caseClose) {
+                [exCaseView removeFromSuperview];
+                [contentVideoModeView setHidden:NO];
+                 [caseView setHidden:YES];
+            }
         }
         [settingsView removeFromSuperview];
         [self.settingsBtn setEnabled:YES];
@@ -394,10 +396,10 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 
 -(void)openCaseWithID:(NSString *)caseID
 {
-    
+    [popupCloseBtn setHidden:NO];
     imagesList = [[NSMutableArray alloc] init];
     [caseScroll removeGestureRecognizer:swipeRecognizerB];
-    if (![currentCase isEqual:prevCase]) {
+    if (![caseID isEqual:[prevCase caseID]]) {
         FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
         [database open];
         FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where caseID=%@",caseID]];
@@ -408,8 +410,6 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         [tableParameters setHidden:YES];
         [fotonaImg setHidden:YES];
         [exCaseView setHidden:NO];
-        [caseScroll addSubview:exCaseView];
-        [self.view bringSubviewToFront:header];
         [images setImage:nil forState:UIControlStateNormal];
         [videos setImage:nil forState:UIControlStateNormal];
         for (UIView *v in imagesScroll.subviews) {
@@ -424,6 +424,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
             }
         }
     }
+    [caseScroll addSubview:exCaseView];
     
     flagParameters=NO;
     [caseScroll setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height)];
@@ -464,7 +465,6 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 
     
     [contentVideoModeView setHidden:YES];
-    [contentVideoModeView setTag:CLOSEVIEW];
     [caseView setTag:OPENVIEW];
     [caseView setHidden:NO];
     [helpView setTag:CLOSEVIEW];
@@ -997,25 +997,11 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     [self setPatameters];
 }
 
--(void)backBtn:(id)sender
-{}
 
-//TODO: pogledat če lohk uporabiš un zgornji klic
 -(IBAction)openVideo:(id)sender
 {
     FMedia *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
-    BOOL downloaded = YES;
-    for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
-        downloaded = [download checkDownload:vid.localPath];
-    }
-    if (![vid.localPath isEqualToString:@""] && downloaded) {
-        [FCommon playVideoFromURL:vid.localPath onViewController:self localSaved:YES];
-    }else
-    {
-        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"FILEDOWNLOAD", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [av show];
-    }
-    
+    [self playVideo:vid];
 }
 
 -(IBAction)openGallery:(id)sender
@@ -1374,35 +1360,6 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     return NO;
 }
 
-//TODO: nrdit da kliče na fdb
--(NSMutableArray *)getVideos
-{
-    NSMutableArray *videosTmp=[[NSMutableArray alloc] init];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    NSString *usr = [FCommon getUser];
-    
-    FMResultSet *results = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? " withArgumentsInArray:@[usr, BOOKMARKVIDEO]];
-    while([results next]) {
-        
-        int videoId = [results intForColumn:@"documentID"];
-        
-        FMResultSet *results2 = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%d order by sort",videoId]];
-        
-        while([results2 next]) {
-            FMedia *f=[[FMedia alloc] initWithDictionary:[results2 resultDictionary]];
-            [videosTmp addObject:f];
-        }
-        
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"title"  ascending:YES];
-    videosTmp=[videosTmp sortedArrayUsingDescriptors:[NSArray arrayWithObjects:descriptor,nil]];
-    return videosTmp;
-}
-
 
 #pragma mark - Disclaimer
 
@@ -1432,7 +1389,6 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     helpContent.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
     helpContent.minimumScaleFactor = 0.50;
     helpContent.numberOfLines = 0;
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     NSAttributedString * attrStr = [[NSAttributedString alloc] initWithData:[[[NSUserDefaults standardUserDefaults] stringForKey:@"disclaimerLong"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
     [helpContent setText:attrStr.string];
     helpContent.shadowColor = nil; // fill your color here
@@ -1447,8 +1403,6 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     
     [helpScrollView setContentSize:CGSizeMake(768, helpContent.frame.origin.y+helpContent.frame.size.height+20)];
 }
-
-//TODO: pregled kej se rabi
 
 //TODO: za kaj se to uporablja?
 - (void)closeOnTabBookmarks:(NSNotification *)n {
@@ -1506,7 +1460,6 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         [UIView setAnimationDelegate:self];
         [self setContentSize];
         [UIView commitAnimations];
-        
     }
     [self.view bringSubviewToFront:[self.view viewWithTag:1000]];
 }

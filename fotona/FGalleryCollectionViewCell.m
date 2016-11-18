@@ -15,7 +15,7 @@
 
 @synthesize caseToShow;
 @synthesize item;
-@synthesize parentIphone;
+@synthesize parentIpad;
 @synthesize index;
 @synthesize enabled;
 @synthesize cellViewCase;
@@ -35,7 +35,8 @@
     enabled = true;
     [cellViewCase setItem:item];
     [cellViewCase setIndex:index];
-    [cellViewCase setParentIphone:parentIphone];
+    [cellViewCase setParentIphone:nil];
+    [cellViewCase setParentIpad:parentIpad];
     [cellViewCase setContentForCase:fcase];
 }
 
@@ -51,7 +52,10 @@
     enabled = true;;
     if (cellViewFotona == nil) {
         cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
-          [[cellViewFotona containerView] setBackgroundColor:[UIColor lightBackgroundColor]];
+        [[cellViewFotona containerView] setBackgroundColor:[UIColor lightBackgroundColor]];
+        [cellViewFotona setParentIphone:nil];
+        [cellViewFotona setParentIpad:parentIpad];
+        [cellViewFotona setIndex:index];
         [[self contentView] addSubview: cellViewFotona];
         [cellViewFotona setFrame:[[self contentView] bounds]];
     }

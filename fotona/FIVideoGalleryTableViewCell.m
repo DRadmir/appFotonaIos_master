@@ -67,7 +67,7 @@
 }
 
 - (IBAction)removeFromBookmark:(id)sender {
-    [FDB removeBookmarkedVideo:media];
+    [FDB removeBookmarkedMedia:media];
     media.bookmark = @"0";
     FIFlowController *flow = [FIFlowController sharedInstance];
     if (flow.lastIndex == 2)

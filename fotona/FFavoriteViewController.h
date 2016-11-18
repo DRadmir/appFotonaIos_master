@@ -6,18 +6,13 @@
 #import "FSearchViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "EBPhotoPagesController.h"
-#import "Bubble.h"
 
 @interface FFavoriteViewController : UIViewController <UINavigationControllerDelegate,UISearchBarDelegate,UIAlertViewDelegate,EBPhotoPagesDelegate,EBPhotoPagesDataSource>//,UIImagePickerControllerDelegate
 {
     NSString *pathToPDF;
     
     IBOutlet UIButton *feedbackBtn;
-    
-    IBOutlet UILabel *menuTitle;
-    IBOutlet UITableView *menuTable;
-    IBOutlet UIView *menuHeader;
-    IBOutlet UIButton *back;
+
     
     IBOutlet UIView *header;
     
@@ -104,7 +99,7 @@
 @property(strong, nonatomic) UIViewController *lastOpenedFavoriteVC;
 
 
--(void)openCase;
+-(void)openCaseWithID:(NSString *)caseID;
 -(void)setCaseOutlets;
 -(void)setPatameters;
 
@@ -122,11 +117,10 @@
 - (IBAction)openSettings:(id)sender;
 - (IBAction)closeSettings:(id)sender;
 
--(NSMutableArray *)getVideos;
-
 -(void)openContentWithTitle:(NSString *)title;
 
-
 - (IBAction)showDisclaimer:(id)sender;
+
+-(void)deleteRowAtIndex:(NSIndexPath *) index;
 
 @end
