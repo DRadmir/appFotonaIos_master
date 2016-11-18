@@ -34,7 +34,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="23" id="Ykg-Cl-yvM"/>
                                 </constraints>
-                                <state key="normal" image="event_surgery_gray">
+                                <state key="normal" image="event_aesthetics_gray">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -56,7 +56,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="23" id="Ibp-wh-4Hb"/>
                                 </constraints>
-                                <state key="normal" image="event_aesthetics_gray">
+                                <state key="normal" image="event_gyno_gray">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -67,7 +67,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="23" id="6m8-Io-Uyb"/>
                                 </constraints>
-                                <state key="normal" image="event_gyno_gray">
+                                <state key="normal" image="event_surgery_gray">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -331,9 +331,9 @@
                 <outlet property="allBtn" destination="d8H-Ju-Rky" id="9X2-lr-87l"/>
                 <outlet property="blueBtn" destination="JfC-YD-nJc" id="mbW-VF-pvv"/>
                 <outlet property="eventCell" destination="OKO-SU-KbH" id="JII-QG-o5J"/>
-                <outlet property="greenBtn" destination="FqI-ma-XCq" id="71W-JF-OIR"/>
-                <outlet property="orangeBtn" destination="o2m-RO-bpv" id="lrT-5M-Bjj"/>
-                <outlet property="pinkBtn" destination="c1v-qy-666" id="l92-X4-7Vb"/>
+                <outlet property="greenBtn" destination="c1v-qy-666" id="2nO-QV-7oH"/>
+                <outlet property="orangeBtn" destination="FqI-ma-XCq" id="OAj-UC-lyC"/>
+                <outlet property="pinkBtn" destination="o2m-RO-bpv" id="oUb-Fr-0Sl"/>
                 <outletCollection property="eventTitle" destination="2mU-4f-NkA" id="5ch-HV-lBV"/>
                 <outletCollection property="eventTitle" destination="Nkn-Sv-GbA" id="CGz-Vm-P5q"/>
                 <outletCollection property="eventTitle" destination="ji6-sL-AYe" id="kdl-wF-xkI"/>
@@ -350,7 +350,7 @@
                 <outletCollection property="eventCategoryImage" destination="laZ-83-Ama" id="8zG-63-nlX"/>
                 <outletCollection property="eventCategoryImage" destination="zkE-DJ-uo8" id="npB-T1-t7F"/>
             </connections>
-            <point key="canvasLocation" x="228" y="279.5"/>
+            <point key="canvasLocation" x="131" y="275"/>
         </collectionViewCell>
     </objects>
     <resources>
