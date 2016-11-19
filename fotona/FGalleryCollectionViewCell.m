@@ -29,7 +29,6 @@
 -(void)setContentForCase:(FCase *)fcase{
     
     cellViewCase = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:0];
-     [[cellViewCase containerView] setBackgroundColor:[UIColor lightBackgroundColor]];
     [[self contentView] addSubview: cellViewCase];
     [cellViewCase setFrame:[[self contentView] bounds]];
     enabled = true;
@@ -52,7 +51,6 @@
     enabled = true;;
     if (cellViewFotona == nil) {
         cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
-        [[cellViewFotona containerView] setBackgroundColor:[UIColor lightBackgroundColor]];
         [cellViewFotona setParentIphone:nil];
         [cellViewFotona setParentIpad:parentIpad];
         [cellViewFotona setIndex:index];

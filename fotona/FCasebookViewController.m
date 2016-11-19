@@ -67,7 +67,7 @@
     self = [super init];
     if (self) {
         // Custom initialization
-        [self setTitle:@"Casebook"];
+        [self setTitle:NSLocalizedString(@"CASEBOOOKTABTITLE", nil)];
         [self.tabBarItem setImage:[UIImage imageNamed:@"casebook_grey.png"]];
     }
     return self;
@@ -95,7 +95,8 @@
     state = 0;
     
     CGRect newFrame = fotonaImg.frame;
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation))
+    
+    if ([FCommon isOrientationLandscape])
         newFrame.origin.x -= 105;
     
     else
@@ -294,7 +295,6 @@
             else{
                 imageName=selectedIcon;
             }
-            
             
             if ([[casesInMenu objectAtIndex:indexPath.row] isKindOfClass:[FCase class]])
             {
@@ -551,15 +551,8 @@
     authorImg.layer.cornerRadius = authorImg.frame.size.height /2;
     authorImg.layer.masksToBounds = YES;
     authorImg.layer.borderWidth = 0;
-    dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
-    dispatch_async(queue, ^{
-        //code to be executed in the background
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //code to be executed on the main thread when background task is finished
-            [authorImg setImage: [FDB getAuthorImage:[currentCase authorID]]];
-        });
-    });
-    
+   
+    [authorImg setImage: [FDB getAuthorImage:[currentCase authorID]]];
     [authorNameLbl setText:[currentCase name]];
     [dateLbl setText:[APP_DELEGATE timestampToDateString:[currentCase date]]];
     [titleLbl setText:[currentCase title]];
@@ -979,9 +972,10 @@
     [additionalInfo setFrame:CGRectMake(0, 658, self.view.frame.size.width, 231)];
     [introductionTitle sizeToFit];
     float additionalInfoH=introductionTitle.frame.size.height+100;
+    NSLog(@"%f, %f",exCaseView.frame.size.width,additionalInfo.frame.size.width );
     [additionalInfo setFrame:CGRectMake(additionalInfo.frame.origin.x, galleryView.frame.origin.y+galleryView.frame.size.height+20, additionalInfo.frame.size.width,additionalInfoH)];
     [disclaimerBtn setHidden:NO];
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [disclaimerBtn setFrame:CGRectMake(225, introductionTitle.frame.size.height-15, 99, 40)];
     }else
     {
@@ -990,6 +984,7 @@
     
     [additionalInfo addSubview:disclaimerBtn ];
     [exCaseView setFrame:CGRectMake(0, 0, self.view.frame.size.width, additionalInfo.frame.origin.y+additionalInfo.frame.size.height)];
+    NSLog(@"%f, %f",exCaseView.frame.size.width,additionalInfo.frame.size.width );
     [caseScroll setContentSize:CGSizeMake(self.view.frame.size.width, exCaseView.frame.size.height)];
 }
 
@@ -1142,7 +1137,7 @@
 - (IBAction)openSettings:(id)sender {
     self.viewDeckController.panningMode = IIViewDeckNoPanning;
     [self.settingsBtn setEnabled:NO];
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         settingsView=[[UIView alloc] initWithFrame:CGRectMake(0,65, self.view.frame.size.width, 654)];
         [settingsController.view setFrame:CGRectMake(0,0, self.view.frame.size.width, 654)];
     }else

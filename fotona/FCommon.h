@@ -9,8 +9,12 @@
 @interface FCommon : NSObject
 
 +(BOOL) isIpad;
++(BOOL)isOrientationLandscape;
+
 +(NSString *)currentTimeInLjubljana;
+
 +(NSString *)getUser;
++(BOOL) isGuest;
 
 +(UIImageView *)imageCutWithRect:(CGRect) rect;
 
@@ -18,7 +22,7 @@
 +(void)playVideoOnIphone:(FMedia *) video onViewController:(UIViewController *)viewController;
 +(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController  localSaved:(BOOL) isLocalSaved;
 
-+(BOOL) isGuest;
+
 +(BOOL)userPermission:(NSString*)permissions;
 +(BOOL)checkItemPermissions:(NSString *) permissions ForCategory:(NSString *)category;
 

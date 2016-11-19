@@ -9,6 +9,7 @@
 #import "FFotonaGalleryView.h"
 #import "FDB.h"
 #import "HelperBookmark.h"
+#import "UIColor+Hex.h"
 
 @implementation FFotonaGalleryView
 
@@ -52,6 +53,12 @@
         btnFavoriteRemove.hidden = YES;
         btnFavoriteAdd.hidden = NO;
     }
+    if ([FCommon isIpad]) {
+        [containerView setBackgroundColor:[UIColor lightBackgroundColor]];
+    } else {
+        [containerView setBackgroundColor:[UIColor whiteColor]];
+    }
+
 }
 
 -(void)reloadVideoThumbnail:(UIImage *)img{

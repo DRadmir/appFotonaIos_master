@@ -15,6 +15,7 @@
 
 @implementation FCommon
 
+#pragma mark - Device
 +(BOOL)isIpad
 {
     if (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad)
@@ -26,6 +27,15 @@
     }
 }
 
++(BOOL)isOrientationLandscape{
+    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+        return true;
+    else
+        return false;
+}
+
+#pragma mark - Time
+
 +(NSString *)currentTimeInLjubljana
 {
     NSDateFormatter *dateFormater=[[NSDateFormatter alloc] init];
@@ -34,6 +44,8 @@
     
     return [dateFormater stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]];
 }
+
+#pragma mark - User
 
 +(NSString *)getUser{
     NSString *usr =[APP_DELEGATE currentLogedInUser].username;
@@ -55,6 +67,7 @@
     
 }
 
+#pragma mark - ImageView
 
 +(UIImageView *)imageCutWithRect:(CGRect) rect
 {
@@ -66,6 +79,8 @@
     
     return img;
 }
+
+#pragma mark - Video
 
 +(void)playVideoOnIphone:(FMedia *)video  onViewController:(UIViewController *)viewController{
     [FGoogleAnalytics writeGAForItem:[video title] andType:GAFOTONAVIDEOINT];
@@ -103,6 +118,8 @@
     [viewController presentViewController:controller animated:YES completion:nil];
     [player play];
 }
+
+#pragma mark - Permissions
 
 +(BOOL)userPermission:(NSString*)permissions{
     NSArray *ary = [permissions componentsSeparatedByString:@";"];
@@ -143,6 +160,8 @@
     return false;
 }
 
+#pragma mark - String/Array
+
 +(NSString *)arrayToString:(NSMutableArray *)array withSeparator:(NSString *)separator{
     if (![array isKindOfClass:[NSNull class]] && [array count] > 0) {
         NSString *string = array[0];
@@ -156,10 +175,13 @@
 
 +(NSArray *)stringToArray:(NSString *)string withSeparator:(NSString *)separator{
     NSArray *array = [[NSArray alloc] init];
-    if (![string isEqualToString:@""]) {
-        array = [string componentsSeparatedByString:separator];
+    NSString *stringToSplit = [NSString stringWithFormat:@"%@",string];
+    if (![stringToSplit isEqualToString:@""]) {
+        array = [stringToSplit componentsSeparatedByString:separator];
     }
     return array;
 }
+
+
 
 @end

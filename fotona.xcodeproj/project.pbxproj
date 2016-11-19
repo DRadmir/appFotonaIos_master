@@ -76,6 +76,7 @@
 		1B48CDB81C58C00900E5F039 /* FICaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B48CDB71C58C00900E5F039 /* FICaseViewController.m */; };
 		1B4A96A81C5CBD090070C8BF /* FICarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4A96A61C5CBD090070C8BF /* FICarousel.m */; };
 		1B4A96A91C5CBD090070C8BF /* FICarousel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B4A96A71C5CBD090070C8BF /* FICarousel.xib */; };
+		1B59E9CE1DE08BC600FA5E85 /* FNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B59E9CD1DE08BC600FA5E85 /* FNotificationManager.m */; };
 		1B5B0E201C3AA6C800CCD084 /* FIFeaturedNewsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B5B0E1E1C3AA6C800CCD084 /* FIFeaturedNewsTableViewCell.m */; };
 		1B5B0E211C3AA6C800CCD084 /* FIFeaturedNewsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B5B0E1F1C3AA6C800CCD084 /* FIFeaturedNewsTableViewCell.xib */; };
 		1B7777EA1B345DC600660472 /* HelperDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B7777E91B345DC600660472 /* HelperDate.m */; };
@@ -475,6 +476,8 @@
 		1B4A96A51C5CBD090070C8BF /* FICarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FICarousel.h; sourceTree = "<group>"; };
 		1B4A96A61C5CBD090070C8BF /* FICarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FICarousel.m; sourceTree = "<group>"; };
 		1B4A96A71C5CBD090070C8BF /* FICarousel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FICarousel.xib; sourceTree = "<group>"; };
+		1B59E9CC1DE08BC600FA5E85 /* FNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FNotificationManager.h; path = fotona/FNotificationManager.h; sourceTree = SOURCE_ROOT; };
+		1B59E9CD1DE08BC600FA5E85 /* FNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FNotificationManager.m; path = fotona/FNotificationManager.m; sourceTree = SOURCE_ROOT; };
 		1B5B0E1D1C3AA6C800CCD084 /* FIFeaturedNewsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FIFeaturedNewsTableViewCell.h; path = fotona/FIFeaturedNewsTableViewCell.h; sourceTree = SOURCE_ROOT; };
 		1B5B0E1E1C3AA6C800CCD084 /* FIFeaturedNewsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FIFeaturedNewsTableViewCell.m; path = fotona/FIFeaturedNewsTableViewCell.m; sourceTree = SOURCE_ROOT; };
 		1B5B0E1F1C3AA6C800CCD084 /* FIFeaturedNewsTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FIFeaturedNewsTableViewCell.xib; path = fotona/FIFeaturedNewsTableViewCell.xib; sourceTree = SOURCE_ROOT; };
@@ -1107,6 +1110,8 @@
 				1BD662391C4E30C1009BA994 /* FCommon.m */,
 				1B3ABA511DCB9B6B00AF1F60 /* FMediaManager.h */,
 				1B3ABA521DCB9B6B00AF1F60 /* FMediaManager.m */,
+				1B59E9CC1DE08BC600FA5E85 /* FNotificationManager.h */,
+				1B59E9CD1DE08BC600FA5E85 /* FNotificationManager.m */,
 			);
 			name = Common;
 			path = icon_round_square;
@@ -2536,6 +2541,7 @@
 				C9E0A3CB195F7B5D00CFFBDD /* EBCommentsView.m in Sources */,
 				1B7A22A21C567F7F0031CEB3 /* FIOptionsViewController.m in Sources */,
 				1BCE0BED1BBA8155002255B5 /* Logger.m in Sources */,
+				1B59E9CE1DE08BC600FA5E85 /* FNotificationManager.m in Sources */,
 				1BD310321BFCD71B007A983B /* DisclaimerViewController.m in Sources */,
 				C9A3D1A218ED1898007A0E49 /* AFHTTPRequestOperationManager.m in Sources */,
 				1B7A22AC1C5777110031CEB3 /* FIContentViewController.m in Sources */,

@@ -71,4 +71,6 @@
 +(NSMutableArray *) getAllFavoritesForUser;
 
 +(NSMutableArray *)getDocuments;
+
++ (void) copyDatabaseIfNeeded;
 @end

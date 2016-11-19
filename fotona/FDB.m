@@ -641,7 +641,6 @@
                 } else {
                     [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,,fileSize=?, deleted=?, sort=? WHERE mediaID=? AND mediaType=0",img.title, img.path, pathTmp, img.description, @"0", img.fileSize, img.deleted, img.sort, img.itemID];
                 }
-                //TODO: nrdit de prever če že obstaja in jo zbrisat
                 [links addObject:img.path];
             }
             
@@ -984,5 +983,195 @@ NSComparisonResult dateSortForNews(FNews *n1, FNews *n2, void *context) {
     
     return doc;
 }
+
+#pragma mark - Migration
+
++ (void) copyDatabaseIfNeeded {
+    NSMutableArray *userBookmarked = [[NSMutableArray alloc] init];
+    //Using NSFileManager we can perform many file system operations.
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    NSString *dbPath = [self getDBPath];
+    BOOL success = [fileManager fileExistsAtPath:dbPath];
+    
+    if(!success) {
+        
+        NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"fotona.db"];
+        success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
+        [defaults setObject:userBookmarked forKey:@"userBookmarked"];
+        [defaults synchronize];
+        [[NSUserDefaults standardUserDefaults] setObject:@"2.4" forKey:@"DBLastUpdate"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        [APP_DELEGATE setBookmarkCountAll:0];
+        [APP_DELEGATE setBookmarkCountLeft:0];
+        [APP_DELEGATE setBookmarkSizeAll:0];
+        [APP_DELEGATE setBookmarkSizeLeft:0];
+        if (!success)
+            NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
+    } else {
+        NSString *lastUpdate=[[NSUserDefaults standardUserDefaults] objectForKey:@"DBLastUpdate"];
+        if (![[NSUserDefaults standardUserDefaults] objectForKey:@"DBLastUpdate"] || ([lastUpdate floatValue]<2)) {
+            [fileManager removeItemAtPath:dbPath error:&error];
+            NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"fotona.db"];
+            success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
+            
+            if (!success)
+                NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
+            else{
+                [[NSUserDefaults standardUserDefaults] setObject:@"2.4" forKey:@"DBLastUpdate"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [defaults setObject:@"" forKey:@"newsLastUpdate"];
+                [defaults setObject:@"" forKey:@"eventsLastUpdate"];
+                [defaults setObject:@"" forKey:@"caseCategoriesLastUpdate"];
+                [defaults setObject:@"" forKey:@"casesLastUpdate"];
+                [defaults setObject:@"" forKey:@"authorsLastUpdate"];
+                [defaults setObject:@"" forKey:@"documentsLastUpdate"];
+                [defaults setObject:@"" forKey:@"fotonaLastUpdate"];
+                [defaults setObject:@"" forKey:@"lastUpdate"];
+                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
+                [defaults synchronize];
+                
+                
+            }
+        } else {
+            //add sort column into media table if the database is 2.0 version
+            if ([lastUpdate isEqualToString:@"2.0"]){
+                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+                [database open];
+                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN sort INTEGER"];
+                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+                [database close];
+                [[NSUserDefaults standardUserDefaults] setObject:@"2.1" forKey:@"DBLastUpdate"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [defaults setObject:@"" forKey:@"lastUpdate"];
+                userBookmarked = [[NSMutableArray alloc] init];
+                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
+                [defaults synchronize];
+                lastUpdate = @"2.1";
+            }
+            //added bookmarking for event and news
+            if ([lastUpdate isEqualToString:@"2.1"]){
+                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+                [database open];
+                [database executeUpdate:@"ALTER TABLE Events ADD COLUMN isBookmark TEXT"];
+                [database executeUpdate:@"ALTER TABLE News ADD COLUMN isBookmark TEXT"];
+                [database executeUpdate:@"ALTER TABLE UserBookmark ADD COLUMN categories TEXT"];
+                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+                [database close];
+                [[NSUserDefaults standardUserDefaults] setObject:@"2.2" forKey:@"DBLastUpdate"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [defaults setObject:@"" forKey:@"lastUpdate"];
+                userBookmarked = [[NSMutableArray alloc] init];
+                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
+                [defaults synchronize];
+                
+                [APP_DELEGATE setBookmarkCountAll:0];
+                [APP_DELEGATE setBookmarkCountLeft:0];
+                [APP_DELEGATE setBookmarkSizeAll:0];
+                [APP_DELEGATE setBookmarkSizeLeft:0];
+                lastUpdate = @"2.2";
+                
+            }
+            if ([lastUpdate isEqualToString:@"2.2"]){
+                //added itemType for videos
+                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+                [database open];
+                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN userType TEXT"];
+                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN userSubType TEXT"];
+                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+                [database close];
+                [[NSUserDefaults standardUserDefaults] setObject:@"2.3" forKey:@"DBLastUpdate"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [defaults setObject:@"" forKey:@"lastUpdate"];
+                userBookmarked = [[NSMutableArray alloc] init];
+                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
+                [defaults synchronize];
+                
+                [APP_DELEGATE setBookmarkCountAll:0];
+                [APP_DELEGATE setBookmarkCountLeft:0];
+                [APP_DELEGATE setBookmarkSizeAll:0];
+                [APP_DELEGATE setBookmarkSizeLeft:0];
+                lastUpdate = @"2.3";
+            }
+            if ([lastUpdate isEqualToString:@"2.3"]){
+                //added itemType for videos
+                [[NSUserDefaults standardUserDefaults] setObject:@"2.4" forKey:@"DBLastUpdate"];
+                [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"casesLastUpdate"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [defaults setObject:@"" forKey:@"lastUpdate"];
+                userBookmarked = [[NSMutableArray alloc] init];
+                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
+                [defaults synchronize];
+                lastUpdate = @"2.4";
+            }
+            if ([lastUpdate isEqualToString:@"2.4"]){
+                
+                [fileManager removeItemAtPath:dbPath error:&error];
+                NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"fotona.db"];
+                success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
+                
+                if (!success)
+                    NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
+                else{
+                    [[NSUserDefaults standardUserDefaults] setObject:@"3.0" forKey:@"DBLastUpdate"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    [defaults setObject:@"" forKey:@"newsLastUpdate"];
+                    [defaults setObject:@"" forKey:@"eventsLastUpdate"];
+                    [defaults setObject:@"" forKey:@"caseCategoriesLastUpdate"];
+                    [defaults setObject:@"" forKey:@"casesLastUpdate"];
+                    [defaults setObject:@"" forKey:@"authorsLastUpdate"];
+                    [defaults setObject:@"" forKey:@"documentsLastUpdate"];
+                    [defaults setObject:@"" forKey:@"fotonaLastUpdate"];
+                    [defaults setObject:@"" forKey:@"lastUpdate"];
+                    [defaults setObject:userBookmarked forKey:@"userBookmarked"];
+                    [defaults synchronize];
+                }
+                
+                NSFileManager *fileMgr = [NSFileManager defaultManager];
+                NSString *directory = [NSString stringWithFormat:@"%@/%@/",docDir,FOLDERVIDEO];
+                NSArray *fileArray = [fileMgr contentsOfDirectoryAtPath:directory error:nil];
+                for (NSString *filename in fileArray)  {
+                    
+                    [fileMgr removeItemAtPath:[directory stringByAppendingPathComponent:filename] error:NULL];
+                }
+                
+                directory = [NSString stringWithFormat:@"%@/%@/",docDir,FOLDERIMAGE];
+                fileArray = [fileMgr contentsOfDirectoryAtPath:directory error:nil];
+                for (NSString *filename in fileArray)  {
+                    
+                    [fileMgr removeItemAtPath:[directory stringByAppendingPathComponent:filename] error:NULL];
+                }
+                
+                directory = [NSString stringWithFormat:@"%@/%@/",docDir,FOLDERPDF];
+                fileArray = [fileMgr contentsOfDirectoryAtPath:directory error:nil];
+                for (NSString *filename in fileArray)  {
+                    
+                    [fileMgr removeItemAtPath:[directory stringByAppendingPathComponent:filename] error:NULL];
+                }
+                
+                lastUpdate = @"3.0";
+            }
+        }
+    }
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:dbPath]];
+}
+
+
++ (NSString *) getDBPath
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
+    NSString *documentsDir = [paths objectAtIndex:0];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/.db",documentsDir]]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@/.db",documentsDir] withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    NSString *path=[NSString stringWithFormat:@"%@/.db/fotona.db",documentsDir];
+    return path;
+}
+
+
+
+
 
 @end

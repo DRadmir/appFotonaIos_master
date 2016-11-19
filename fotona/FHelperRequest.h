@@ -11,6 +11,7 @@
 @interface FHelperRequest : NSObject
 
 +(NSMutableURLRequest *) requestToGetCaseByID:(NSString *) caseID onView:(UIView *)view;
++(NSMutableURLRequest *) requestToGetCaseFromNotification:(NSString *) notificationUrl;
     
 +(void) setDeviceData:(NSString *) _deviceData;
 

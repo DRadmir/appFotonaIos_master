@@ -8,6 +8,7 @@
 
 #import "FCaseGalleryView.h"
 #import "FDB.h"
+#import "UIColor+Hex.h"
 
 @implementation FCaseGalleryView
 
@@ -95,6 +96,12 @@
         [lblDescription setAlpha:DISABLEDCOLORALPHA];
         [lblCaseType setAlpha:DISABLEDCOLORALPHA];
         btnDownloadAdd.hidden = true;
+    }
+    
+    if ([FCommon isIpad]) {
+         [containerView setBackgroundColor:[UIColor lightBackgroundColor]];
+    } else {
+        [containerView setBackgroundColor:[UIColor whiteColor]];
     }
 }
 

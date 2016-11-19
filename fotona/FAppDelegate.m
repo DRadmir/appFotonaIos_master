@@ -28,10 +28,15 @@
 #import "FHelperRequest.h"
 #import "FFavoriteViewController.h"
 #import "FIPDFViewController.h"
-
+#import "FDB.h"
+#import "FNotificationManager.h"
 
 
 @implementation FAppDelegate
+
+int notificationType = 0;
+NSString *notificationUrl = @"";
+
 @synthesize  DEVELOP;
 
 @synthesize tabBar;
@@ -51,7 +56,6 @@
 @synthesize eventArray;
 @synthesize caseArray;
 @synthesize downloadManagerArray = _downloadManagerArray;
-@synthesize userBookmarked;
 @synthesize videoImages;
 
 @synthesize closedNews;
@@ -106,7 +110,7 @@
         }
     }
     
-    [self copyDatabaseIfNeeded];
+    [FDB copyDatabaseIfNeeded];
     [self setBookmarkAll:NO];
     [self prepareDownloadArrays];
     tabBar=[[FTabBarController alloc] init];
@@ -148,24 +152,6 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
-    
-//    UILocalNotification *localNotif = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-//    if (localNotif) {
-//        NSString *type = [localNotif valueForKey:@"type"];
-//        // Parse your string to dictionary
-//        if ([type isEqualToString:@"news"]) {
-//            [[NSUserDefaults standardUserDefaults] setValue:@"news" forKey:@"pushType"];
-//            [[NSUserDefaults standardUserDefaults] setValue:[localNotif valueForKey:@"ID"] forKey:@"pushID"];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
-//        }else
-//        {
-//            [[NSUserDefaults standardUserDefaults] setValue:@"case" forKey:@"pushType"];
-//            [[NSUserDefaults standardUserDefaults] setValue:[localNotif valueForKey:@"ID"] forKey:@"pushID"];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
-//            [self setIndexToSelect:1];
-//        }
-//        
-//    }
     
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"wifiOnly"]) {
         [self setWifiOnlyConnection:[[NSUserDefaults standardUserDefaults] boolForKey:@"wifiOnly"] ];
@@ -294,12 +280,7 @@
     
     NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
     NSMutableArray *tmpAuthors=authorsImageToDownload;
-//    for (NSString *fileName in tmpAuthors) {
-//        NSString *local=[NSString stringWithFormat:@"%@/.Authors/%@",docDir,fileName.lastPathComponent];
-//        if ([[NSFileManager defaultManager] fileExistsAtPath:local]) {
-//            [authorsImageToDownload removeObject:fileName];
-//        }
-//    }
+
     for (int i=0; i<tmpAuthors.count; i++){
         NSString *fileName = [tmpAuthors objectAtIndex:i];
         NSString *local=[NSString stringWithFormat:@"%@/.Authors/%@",docDir,fileName.lastPathComponent];
@@ -310,13 +291,7 @@
     }
     
     NSMutableArray *tmpImgs=imagesToDownload;
-//    for (NSString *fileName in tmpImgs) {
-//        NSString *local=[NSString stringWithFormat:@"%@/.Cases/%@",docDir,fileName.lastPathComponent];
-//        
-//        if ([[NSFileManager defaultManager] fileExistsAtPath:local]) {
-//            [imagesToDownload removeObject:fileName];
-//        }
-//    }
+
     for (int i=0; i<tmpImgs.count; i++){
         NSString *fileName = [tmpImgs objectAtIndex:i];
         NSString *local=[NSString stringWithFormat:@"%@/.Cases/%@",docDir,fileName.lastPathComponent];
@@ -335,15 +310,8 @@
             [videosToDownload removeObjectAtIndex:i];
         }
     }
-//    for (NSString *fileName in tmpVideos) {
-//        NSString *local=[NSString stringWithFormat:@"%@/.Cases/%@",docDir,fileName.lastPathComponent];
-//        
-//        if ([[NSFileManager defaultManager] fileExistsAtPath:local]) {
-//            [videosToDownload removeObject:fileName];
-//        }
-//    }
+
     NSMutableArray *tmpPDF=pdfToDownload;
-    //for (NSString *fileName in tmpPDF)
     for (int i=0; i<tmpPDF.count; i++){
         NSString *fileName = [tmpPDF objectAtIndex:i];
         NSString *local=[NSString stringWithFormat:@"%@/.PDF/%@",docDir,fileName.lastPathComponent];
@@ -362,191 +330,6 @@
     [defaults synchronize];
 }
 
-#pragma mark Copy DB
-- (void) copyDatabaseIfNeeded {
-    userBookmarked = [[NSMutableArray alloc] init];
-    //Using NSFileManager we can perform many file system operations.
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSError *error;
-    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
-    NSString *dbPath = [self getDBPath];
-    BOOL success = [fileManager fileExistsAtPath:dbPath];
-    
-    if(!success) {
-        
-        NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"fotona.db"];
-        success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
-        [defaults setObject:userBookmarked forKey:@"userBookmarked"];
-        [defaults synchronize];
-        [[NSUserDefaults standardUserDefaults] setObject:@"2.4" forKey:@"DBLastUpdate"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        [APP_DELEGATE setBookmarkCountAll:0];
-        [APP_DELEGATE setBookmarkCountLeft:0];
-        [APP_DELEGATE setBookmarkSizeAll:0];
-        [APP_DELEGATE setBookmarkSizeLeft:0];
-        if (!success)
-            NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
-    } else {
-        NSString *lastUpdate=[[NSUserDefaults standardUserDefaults] objectForKey:@"DBLastUpdate"];
-        if (![[NSUserDefaults standardUserDefaults] objectForKey:@"DBLastUpdate"] || ([lastUpdate floatValue]<2)) {
-            [fileManager removeItemAtPath:dbPath error:&error];
-            NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"fotona.db"];
-            success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
-            
-            if (!success)
-                NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
-            else{
-                [[NSUserDefaults standardUserDefaults] setObject:@"2.4" forKey:@"DBLastUpdate"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                [defaults setObject:@"" forKey:@"newsLastUpdate"];
-                [defaults setObject:@"" forKey:@"eventsLastUpdate"];
-                [defaults setObject:@"" forKey:@"caseCategoriesLastUpdate"];
-                [defaults setObject:@"" forKey:@"casesLastUpdate"];
-                [defaults setObject:@"" forKey:@"authorsLastUpdate"];
-                [defaults setObject:@"" forKey:@"documentsLastUpdate"];
-                [defaults setObject:@"" forKey:@"fotonaLastUpdate"];
-                [defaults setObject:@"" forKey:@"lastUpdate"];
-                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
-                [defaults synchronize];
-               
-                
-            }
-        } else {
-            //add sort column into media table if the database is 2.0 version
-            if ([lastUpdate isEqualToString:@"2.0"]){
-                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                [database open];
-                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN sort INTEGER"];
-                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-                [database close];
-                [[NSUserDefaults standardUserDefaults] setObject:@"2.1" forKey:@"DBLastUpdate"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                [defaults setObject:@"" forKey:@"lastUpdate"];
-                userBookmarked = [[NSMutableArray alloc] init];
-                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
-                [defaults synchronize];
-                lastUpdate = @"2.1";
-            }
-            //added bookmarking for event and news
-            if ([lastUpdate isEqualToString:@"2.1"]){
-                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                [database open];
-                [database executeUpdate:@"ALTER TABLE Events ADD COLUMN isBookmark TEXT"];
-                [database executeUpdate:@"ALTER TABLE News ADD COLUMN isBookmark TEXT"];
-                [database executeUpdate:@"ALTER TABLE UserBookmark ADD COLUMN categories TEXT"];
-                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-                [database close];
-                [[NSUserDefaults standardUserDefaults] setObject:@"2.2" forKey:@"DBLastUpdate"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                [defaults setObject:@"" forKey:@"lastUpdate"];
-                userBookmarked = [[NSMutableArray alloc] init];
-                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
-                [defaults synchronize];
-                
-                [APP_DELEGATE setBookmarkCountAll:0];
-                [APP_DELEGATE setBookmarkCountLeft:0];
-                [APP_DELEGATE setBookmarkSizeAll:0];
-                [APP_DELEGATE setBookmarkSizeLeft:0];
-                lastUpdate = @"2.2";
-                
-            }
-            if ([lastUpdate isEqualToString:@"2.2"]){
-                //added itemType for videos
-                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                [database open];
-                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN userType TEXT"];
-                [database executeUpdate:@"ALTER TABLE Media ADD COLUMN userSubType TEXT"];
-                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-                [database close];
-                [[NSUserDefaults standardUserDefaults] setObject:@"2.3" forKey:@"DBLastUpdate"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                [defaults setObject:@"" forKey:@"lastUpdate"];
-                userBookmarked = [[NSMutableArray alloc] init];
-                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
-                [defaults synchronize];
-                
-                [APP_DELEGATE setBookmarkCountAll:0];
-                [APP_DELEGATE setBookmarkCountLeft:0];
-                [APP_DELEGATE setBookmarkSizeAll:0];
-                [APP_DELEGATE setBookmarkSizeLeft:0];
-                lastUpdate = @"2.3";
-            }
-            if ([lastUpdate isEqualToString:@"2.3"]){
-                //added itemType for videos
-                [[NSUserDefaults standardUserDefaults] setObject:@"2.4" forKey:@"DBLastUpdate"];
-                [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"casesLastUpdate"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                [defaults setObject:@"" forKey:@"lastUpdate"];
-                userBookmarked = [[NSMutableArray alloc] init];
-                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
-                [defaults synchronize];
-                lastUpdate = @"2.4";
-            }
-            if ([lastUpdate isEqualToString:@"2.4"]){
-                
-                [fileManager removeItemAtPath:dbPath error:&error];
-                NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"fotona.db"];
-                success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
-                
-                if (!success)
-                    NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
-                else{
-                    [[NSUserDefaults standardUserDefaults] setObject:@"3.0" forKey:@"DBLastUpdate"];
-                    [[NSUserDefaults standardUserDefaults] synchronize];
-                    [defaults setObject:@"" forKey:@"newsLastUpdate"];
-                    [defaults setObject:@"" forKey:@"eventsLastUpdate"];
-                    [defaults setObject:@"" forKey:@"caseCategoriesLastUpdate"];
-                    [defaults setObject:@"" forKey:@"casesLastUpdate"];
-                    [defaults setObject:@"" forKey:@"authorsLastUpdate"];
-                    [defaults setObject:@"" forKey:@"documentsLastUpdate"];
-                    [defaults setObject:@"" forKey:@"fotonaLastUpdate"];
-                    [defaults setObject:@"" forKey:@"lastUpdate"];
-                    [defaults setObject:userBookmarked forKey:@"userBookmarked"];
-                    [defaults synchronize];
-                }
-                
-                NSFileManager *fileMgr = [NSFileManager defaultManager];
-                NSString *directory = [NSString stringWithFormat:@"%@/%@/",docDir,FOLDERVIDEO];
-                NSArray *fileArray = [fileMgr contentsOfDirectoryAtPath:directory error:nil];
-                for (NSString *filename in fileArray)  {
-                    
-                    [fileMgr removeItemAtPath:[directory stringByAppendingPathComponent:filename] error:NULL];
-                }
-                
-                directory = [NSString stringWithFormat:@"%@/%@/",docDir,FOLDERIMAGE];
-                fileArray = [fileMgr contentsOfDirectoryAtPath:directory error:nil];
-                for (NSString *filename in fileArray)  {
-                    
-                    [fileMgr removeItemAtPath:[directory stringByAppendingPathComponent:filename] error:NULL];
-                }
-
-                directory = [NSString stringWithFormat:@"%@/%@/",docDir,FOLDERPDF];
-                fileArray = [fileMgr contentsOfDirectoryAtPath:directory error:nil];
-                for (NSString *filename in fileArray)  {
-                    
-                    [fileMgr removeItemAtPath:[directory stringByAppendingPathComponent:filename] error:NULL];
-                }
-                
-                lastUpdate = @"3.0";
-            }
-        }
-    }
-    [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:dbPath]];
-}
-
-
-
-- (NSString *) getDBPath
-{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
-    NSString *documentsDir = [paths objectAtIndex:0];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/.db",documentsDir]]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:[NSString stringWithFormat:@"%@/.db",documentsDir] withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-    NSString *path=[NSString stringWithFormat:@"%@/.db/fotona.db",documentsDir];
-    return path;
-}
 
 #pragma mark Other
 
@@ -706,41 +489,19 @@
     NSLog(@"Received Push Badge: %@", badge);
     application.applicationIconBadgeNumber = [[apsInfo objectForKey:@"badge"] integerValue];
     
+    notificationUrl = [userInfo objectForKey:@"url"];
+    notificationType = [[userInfo objectForKey:@"notificationType"] intValue];
+    
     [[FUpdateContent shared] updateContent:[self.window rootViewController]];
     
     if (application.applicationState == UIApplicationStateActive ) {
         NSLog(@"app is active");
-        if ([[userInfo valueForKey:@"type"] isEqualToString:@"news"]) {
-            [self setNewNews:YES];
-            [[NSUserDefaults standardUserDefaults] setValue:@"news" forKey:@"pushType"];
-            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            
-        }else
-        {
-            [[NSUserDefaults standardUserDefaults] setValue:@"case" forKey:@"pushType"];
-            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"New notification!" message:@"" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"View", nil];
         [av setTag:100];
         [av show];
     }else
     {
-        
-        if ([[userInfo valueForKey:@"type"] isEqualToString:@"news"]) {
-            [self setNewNews:YES];
-            [[NSUserDefaults standardUserDefaults] setValue:@"news" forKey:@"pushType"];
-            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            
-        }else
-        {
-            [[NSUserDefaults standardUserDefaults] setValue:@"case" forKey:@"pushType"];
-            [[NSUserDefaults standardUserDefaults] setValue:[userInfo valueForKey:@"ID"] forKey:@"pushID"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        [self showPushNotificationFromViewController:nil];
+        [FNotificationManager openNotification:notificationUrl ofType:notificationType];
     }
     
 #endif
@@ -801,7 +562,9 @@
     }else if (alertView.tag==100)
     {
         if (buttonIndex==1) {
-            [self showPushNotificationFromViewController:nil];
+            [FNotificationManager openNotification:notificationUrl ofType:notificationType];
+            notificationType = 0;
+            notificationUrl = @"";
         }else{
             [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"pushType"];
             [[NSUserDefaults standardUserDefaults] synchronize];
@@ -878,31 +641,6 @@
         }
     }
 }
-
--(void)showPushNotificationFromViewController:(UIViewController *)vc
-{
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"pushType"] isEqualToString:@"news"]) {
-               if ([tabBar selectedIndex]==0) {
-            [[[tabBar viewControllers] objectAtIndex:0] viewWillAppear:YES];
-            [[[tabBar viewControllers] objectAtIndex:0] viewDidAppear:YES];
-        }else
-        {
-            [tabBar setSelectedIndex:0];
-        }
-        
-        
-    }else{
-        FCase *item = [self getCase:[[NSUserDefaults standardUserDefaults] valueForKey:@"pushID"]];
-        UINavigationController *tempC = [(IIViewDeckController *)[[tabBar viewControllers] objectAtIndex:1] centerController];
-        [(FCasebookViewController *)[tempC visibleViewController] setCurrentCase:item];
-        [(FCasebookViewController *)[tempC visibleViewController] setFlagCarousel:YES];
-        [tabBar setSelectedIndex:1];
-    }
-    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"pushType"];
-    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"pushID"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
 
 -(FNews *)getNewsByID:(NSString *)newsID
 {

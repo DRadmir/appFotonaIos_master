@@ -63,17 +63,22 @@
 //LINKS
 #define FOTONAWEBSERVICE @"https://www.fotona.com/inc/verzija2/ajax/" // link to news in events
 
-#define WEBSERVICEPLUTON @"https://plutontest.4egenus.com/fot-dev/fotApi"//pluton test new
-#define WEBSERVICEPROD @"https://fotonaapp.4egenus.com/rest/WebService.asmx/"//production
+#define WEBSERVICEPLUTON @"https://plutontest.4egenus.com/fot-dev/fotApi/api/"//pluton test new
+#define WEBSERVICEPROD @"https://fotonaapp.4egenus.com/rest/WebService.asmx/api/"//production
 #define WEBSERVICE [NSString stringWithFormat:@"%@",WEBSERVICEPLUTON]
 
-#define LINKDISCLAIMER @"/api/FotDisclaimer/Get"
-#define LINKCASECATEGORY @"/api/FotCaseCategories/GetAllCaseCategories"
-#define LINKCASES @"/api/FotCases/GetAllCases"
-#define LINKCASEBYID @"/api/FotCases/GetCaseByID"
-#define LINKAUTHORS @"/api/FotAuthors/GetAllAuthors"
-#define LINKDOCUMENTS @"/api/FotDocuments/GetAllDocuments"
-#define LINKFOTONATAB @"/api/FotFotonaContent/GetFotonaTab"
-#define LINKWRITEDEVICE @"/api/FotDevices/WriteDevice"
+#define LINKDISCLAIMER @"/FotDisclaimer/Get"
+#define LINKCASECATEGORY @"/FotCaseCategories/GetAllCaseCategories"
+#define LINKCASES @"/FotCases/GetAllCases"
+#define LINKCASEBYID @"/FotCases/GetCaseByID"
+#define LINKAUTHORS @"/FotAuthors/GetAllAuthors"
+#define LINKDOCUMENTS @"/FotDocuments/GetAllDocuments"
+#define LINKFOTONATAB @"/FotFotonaContent/GetFotonaTab"
+#define LINKWRITEDEVICE @"/FotDevices/WriteDevice"
+
+//NOTIFICATION TYPE
+
+#define NOTIFICATIONMEDIA 1
+#define NOTIFICATIONCASE 2
 
 #endif

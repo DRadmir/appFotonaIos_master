@@ -24,7 +24,7 @@
 @property (nonatomic,retain) NSString *time;
 
 -(id)initWithDictionary:(NSDictionary *)dic;
--(id)initWithDictionaryFromServer:(NSDictionary *)dic forMediType: (NSString *)type;
+-(id)initWithDictionaryFromServer:(NSDictionary *)dic;
 
 -(void)downloadFile:(NSString *)fileUrl inFolder:(NSString *)folder;
 

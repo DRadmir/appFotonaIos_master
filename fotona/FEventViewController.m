@@ -61,7 +61,7 @@
     self = [super init];
     if (self) {
         // Custom initialization
-        [self setTitle:@"Events"];
+        [self setTitle:NSLocalizedString(@"EVENTSTABTITLE", nil)];
         [self.tabBarItem setImage:[UIImage imageNamed:@"events.png"]];
     }
     return self;
@@ -231,7 +231,7 @@
     }
     [self addImageScroll:[tableData objectAtIndex:indexPath.row]];
     [popupImg setImage:[UIImage imageNamed:img]];
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [popEvent setFrame:CGRectMake(0,65, 1024, 654)];
     }else
     {
@@ -283,7 +283,7 @@
    
     [self addImageScroll:openEvent];
     
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [popEvent setFrame:CGRectMake(0,65, 1024, 654)];
     }else
     {
@@ -307,7 +307,7 @@
    
     [popupCloseBtn setHidden:NO];
     
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         settingsView=[[UIView alloc] initWithFrame:CGRectMake(0,65, self.view.frame.size.width, 654)];
         [settingsController.view setFrame:CGRectMake(0,0, self.view.frame.size.width, 654)];
     }else

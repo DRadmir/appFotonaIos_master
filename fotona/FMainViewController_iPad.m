@@ -194,7 +194,7 @@ UIButton *tmp;
 - (IBAction)existing:(id)sender
 {
     if (loginView.isHidden) {
-        if (UIDeviceOrientationIsLandscape(self.interfaceOrientation))
+        if ([FCommon isOrientationLandscape])
         {
             [scrollView setContentOffset:CGPointMake(0, 50) animated:YES];
         }
@@ -220,7 +220,7 @@ UIButton *tmp;
             loginView.hidden = YES;
             forgotView.hidden = YES;
         }];
-        if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
+        if ([FCommon isOrientationLandscape]){
             [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
         }
     }
@@ -235,13 +235,13 @@ UIButton *tmp;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [scrollView setContentOffset:CGPointMake(0, 352) animated:YES];
     }
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [scrollView setContentOffset:CGPointMake(0, 50) animated:YES];
     }
 }

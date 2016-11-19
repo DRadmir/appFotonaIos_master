@@ -300,19 +300,7 @@
 #pragma mark - Open Case
 -(void) openCase:(NSIndexPath*) index
 {
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    flow.caseFlow = casesSearchResIPhone[index.row];
-    if (flow.caseMenu != nil)
-    {
-        [[[flow caseMenu] navigationController] popToRootViewControllerAnimated:false];
-    }
-    if (flow.lastIndex != 3) {
-        flow.lastIndex = 3;
-        [flow.tabControler setSelectedIndex:3];
-    } else {
-        flow.caseTab.caseToOpen = flow.caseFlow;
-        [flow.caseTab openCase];
-    }
+    [FCase openCase:casesSearchResIPhone[index.row]];
 }
 
 #pragma mark - Open Video
