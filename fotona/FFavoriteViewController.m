@@ -22,6 +22,7 @@
 #import "FIPDFViewController.h"
 #import "HelperBookmark.h"
 
+
 @interface FFavoriteViewController ()
 {
     int numberOfSpaces;//between texts introduction, procedure ...
@@ -34,6 +35,7 @@
     NSMutableArray *imagesList;
     FIPDFViewController *pdfViewController;
 }
+
 @property (nonatomic, strong)UIImage *defaultVideoImage;
 @end
 
@@ -130,20 +132,6 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         while([results next]) {
             currentCase.bookmark = [results stringForColumn:@"isBookmark"];
         }
-//        if ([currentCase.bookmark boolValue]) {
-//            [removeBookmarks setHidden:NO];
-//            
-//        } else {
-//            [removeBookmarks setHidden:YES];
-//        }
-//        if ([FDB checkIfFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE]) {
-//            [removeFavorite setHidden:NO];
-//            [addToFavorite setHidden:YES];
-//        } else {
-//            [removeFavorite setHidden:YES];
-//            [addToFavorite setHidden:NO];
-//        }
-
     }
 }
 -(void)viewDidAppear:(BOOL)animated
@@ -155,6 +143,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     [self.contentsVideoModeCollectionView reloadData];
     
     beforeOrient=[APP_DELEGATE currentOrientation];
+    [APP_DELEGATE setFavoriteController:self];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -888,44 +877,13 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     [caseScroll setContentSize:CGSizeMake(self.view.frame.size.width, exCaseView.frame.size.height)];
 }
 
-//TODO: nrdit klic na FDB
 - (IBAction)removeFromBookmarks:(id)sender {
     
     [removeBookmarks setHidden:YES];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    NSString *usr = [FCommon getUser];
-    [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=0",currentCase.caseID,usr,nil];
-    BOOL bookmarked = NO;
-    
-    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where typeID=0 and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:currentCase.caseID, nil]];
-    while([resultsBookmarked next]) {
-        bookmarked = YES;
-    }
-    
-    if (!bookmarked) {
-        if ([[currentCase coverflow] boolValue]) {
-            [database executeUpdate:@"UPDATE Cases set isBookmark=? where caseID=?",@"0",currentCase.caseID];
-            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-            [database close];
-            
-        }
-        else{
-            [database executeUpdate:@"DELETE FROM Cases WHERE caseID=?",currentCase.caseID];
-            [database executeUpdate:@"INSERT INTO Cases (caseID,title,name,active,authorID,isBookmark,alloweInCoverFlow) VALUES (?,?,?,?,?,?,?)",currentCase.caseID,currentCase.title,currentCase.name,currentCase.active,currentCase.authorID,@"0",currentCase.coverflow];
-            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-            [database close];
-            [FMediaManager deleteMedia:currentCase.images andType:0 andFromDB:YES];
-            [FMediaManager deleteMedia:currentCase.video andType:1 andFromDB:YES];
-        }
-        
-    }
-    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [av show];
+    [HelperBookmark removeBookmarkedCase:currentCase];
 }
 
 - (IBAction)addToBookmarks:(id)sender {
-    //[APP_DELEGATE setCasebookController:self];
     if ([APP_DELEGATE wifiOnlyConnection]) {
         [self bookmarkCase];
     } else {
@@ -955,10 +913,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 }
 
 -(void) bookmarkCase{
-    
     if([APP_DELEGATE connectedToInternet] || [[currentCase coverflow] boolValue]){
-//        [addBookmarks setHidden:YES];
-//        [removeBookmarks setHidden:NO];
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
         
@@ -982,12 +937,14 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     [FDB addTooFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE];
     [removeFavorite setHidden:NO];
     [addToFavorite setHidden:YES];
+    [self refreshCollection];
 }
 
 - (IBAction)removeFavorite:(id)sender {
     [FDB removeFromFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE];
     [removeFavorite setHidden:YES];
     [addToFavorite setHidden:NO];
+    [self refreshCollection];
 }
 
 
@@ -1462,6 +1419,31 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         [UIView commitAnimations];
     }
     [self.view bringSubviewToFront:[self.view viewWithTag:1000]];
+}
+
+-(void)deleteRowAtIndex:(NSIndexPath *) index{
+    mediaArray = [FDB getAllFavoritesForUser];
+    [contentsVideoModeCollectionView deleteItemsAtIndexPaths:[NSArray arrayWithObject: index]];
+}
+
+#pragma mark - Refresh
+
+- (void) refreshCellForMedia:(NSString *)mediaID andMediaType:(NSString *)mediaType{
+    if (mediaArray.count >0) {
+        for (int i = 0; i<[mediaArray count]; i++){
+            FItemFavorite *item = mediaArray[i];
+            if ([[item itemID] intValue]== [mediaID intValue] && [[item typeID] intValue] == [mediaType intValue]) {
+                NSIndexPath *index = [NSIndexPath  indexPathForItem:i inSection:0];
+                [contentsVideoModeCollectionView reloadItemsAtIndexPaths:[NSArray arrayWithObjects:index, nil]];
+                break;
+            }
+        }
+    }
+}
+
+-(void) refreshCollection{
+    mediaArray = [FDB getAllFavoritesForUser];
+    [contentsVideoModeCollectionView reloadData];
 }
 
 @end

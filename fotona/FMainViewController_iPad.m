@@ -265,7 +265,8 @@ UIButton *tmp;
         [self prepareTabBarController];
         
         //check if tabbar is already on stack else add
-        //TODO: če bo čas se pregleda zakaj se 2 pokliče ta del po 2 istem loginu
+        //TODO: če bo čas se pregleda zakaj se 2 pokliče ta del po 2 istem loginu, mogoče ker kje primerja lastupadte in updated in nista enaka
+        
         BOOL addTabbar = YES;
         for (UIView *child in [[self navigationController] childViewControllers]) {
             if ([child isKindOfClass:[UITabBarController class]]) {

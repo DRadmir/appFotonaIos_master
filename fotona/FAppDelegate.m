@@ -957,7 +957,6 @@
 
 -(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
-//TODO: nrdit rotacijo na favorite zaslonu  || [self.window.visibleViewController isKindOfClass:[FIBookmarkViewController class]]
     if ([self.window.visibleViewController isKindOfClass:[AVPlayerViewController class]] || [self.window.visibleViewController isKindOfClass:[FIFotonaViewController class]] || [self.window.visibleViewController isKindOfClass:[QLPreviewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] || [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]] ||[self.window.visibleViewController isKindOfClass:[EBPhotoPagesController class]] || [self.window.visibleViewController isKindOfClass:[FICaseViewController class]] || [self.window.visibleViewController isKindOfClass:[FIPDFViewController class]] || [FCommon isIpad]) {
         if ( [self.window.visibleViewController isKindOfClass:[FICasebookContainerViewController class]]) {
             for (UIView *object in self.window.visibleViewController.childViewControllers ) {

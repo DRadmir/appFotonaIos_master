@@ -17,7 +17,7 @@
 
 @property (strong, nonatomic) FCase *caseToShow;
 @property (strong, nonatomic) FItemFavorite *item;
-@property (strong, nonatomic) FIFavoriteViewController *parentIphone;//TODO: dodat ipad parenta
+@property (strong, nonatomic) FIFavoriteViewController *parentIphone;
 @property (strong, nonatomic) NSIndexPath *index;
 @property (nonatomic) BOOL enabled;
 @property (strong, nonatomic) FCaseGalleryView *cellViewCase;

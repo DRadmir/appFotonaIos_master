@@ -1024,40 +1024,9 @@
 
 
 - (IBAction)removeFromBookmarks:(id)sender {
-    //[currentCase setBookmark:@"0"];
     [addBookmarks setHidden:NO];
     [removeBookmarks setHidden:YES];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    NSString *usr = [FCommon getUser];
-    [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=0",currentCase.caseID,usr,nil];
-    BOOL bookmarked = NO;
-    
-    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where typeID=0 and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:currentCase.caseID, nil]];
-    while([resultsBookmarked next]) {
-        bookmarked = YES;
-    }
-    
-    if (!bookmarked) {
-        if ([[currentCase coverflow] boolValue]) {
-            [database executeUpdate:@"UPDATE Cases set isBookmark=? where caseID=?",@"0",currentCase.caseID];
-            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-            [database close];
-        }
-        else{
-            [database executeUpdate:@"DELETE FROM Cases WHERE caseID=?",currentCase.caseID];
-            [database executeUpdate:@"INSERT INTO Cases (caseID,title,name,active,authorID,isBookmark,alloweInCoverFlow) VALUES (?,?,?,?,?,?,?)",currentCase.caseID,currentCase.title,currentCase.name,currentCase.active,currentCase.authorID,@"0",currentCase.coverflow];
-            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-            [database close];
-            
-            [FMediaManager deleteMedia:currentCase.images andType:0 andFromDB:YES];
-            [FMediaManager deleteMedia:currentCase.video andType:1 andFromDB:YES];
-        }
-        
-    }
-    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [av show];
-    
+    [HelperBookmark removeBookmarkedCase:currentCase];
 }
 - (IBAction)addToBookmarks:(id)sender {
     //[APP_DELEGATE setCasebookController:self];
@@ -1073,7 +1042,6 @@
 - (void) refreshBookmarkBtn  {
     [addBookmarks setHidden:YES];
     [removeBookmarks setHidden:NO];
-
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{

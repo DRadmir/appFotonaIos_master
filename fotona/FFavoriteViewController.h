@@ -121,5 +121,5 @@
 
 -(void)deleteRowAtIndex:(NSIndexPath *) index;
 - (void) refreshCellForMedia:(NSString *)mediaID andMediaType:(NSString *)mediaType;
-
+- (void) refreshBookmarkBtn;
 @end
