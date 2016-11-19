@@ -29,7 +29,7 @@
                         <constraints>
                             <constraint firstAttribute="width" constant="23" id="Ikc-Qg-Ipo"/>
                         </constraints>
-                        <state key="normal" image="event_aesthetics_gray">
+                        <state key="normal" image="event_gyno_gray">
                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
@@ -40,7 +40,7 @@
                         <constraints>
                             <constraint firstAttribute="width" constant="23" id="EXO-aV-F2y"/>
                         </constraints>
-                        <state key="normal" image="event_gyno_gray">
+                        <state key="normal" image="event_surgery_gray">
                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
@@ -62,7 +62,7 @@
                         <constraints>
                             <constraint firstAttribute="width" constant="23" id="czE-2S-TrB"/>
                         </constraints>
-                        <state key="normal" image="event_surgery_gray">
+                        <state key="normal" image="event_aesthetics_gray">
                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
@@ -118,13 +118,13 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <connections>
                 <outlet property="btnBlue" destination="hCr-CU-Q1t" id="T7m-Fl-aK8"/>
-                <outlet property="btnGreen" destination="h5W-md-dyv" id="bRQ-Ab-qlm"/>
+                <outlet property="btnGreen" destination="GW1-8B-TGW" id="9dg-tv-TfY"/>
                 <outlet property="btnGrey" destination="yvJ-pK-gRY" id="Bb8-ox-Cg7"/>
-                <outlet property="btnOrange" destination="HSe-ao-sgL" id="Qh3-C4-Wiz"/>
-                <outlet property="btnPink" destination="GW1-8B-TGW" id="ita-tm-Sv0"/>
+                <outlet property="btnOrange" destination="h5W-md-dyv" id="duk-SY-5jf"/>
+                <outlet property="btnPink" destination="HSe-ao-sgL" id="pv0-Ar-nFr"/>
                 <outlet property="eventsCarousel" destination="3dt-ej-3Mt" id="nHa-dv-5Yp"/>
             </connections>
-            <point key="canvasLocation" x="537" y="595"/>
+            <point key="canvasLocation" x="363" y="619"/>
         </tableViewCell>
     </objects>
     <resources>
