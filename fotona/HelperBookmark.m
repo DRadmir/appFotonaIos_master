@@ -210,18 +210,8 @@ int bookmarkedCount;
             [self addMedia:imgs withType:MEDIAIMAGE fromcase:currentCase.caseID];
             [self addMedia:videosA withType:MEDIAVIDEO fromcase:currentCase.caseID];
           
-        }else{
-            if ([FCommon isIpad]) {
-                if ([[[APP_DELEGATE casebookController] currentCase] caseID] == currentCase.caseID ) {
-                    [[APP_DELEGATE casebookController] refreshBookmarkBtn];
-                }
-            } else{
-                FIFlowController *flow = [FIFlowController sharedInstance];
-                if ([[flow caseOpened] caseID] == currentCase.caseID ) {
-                    [[flow caseView] refreshBookmarkBtn];
-                }
-            }
         }
+        [self refreshViewWithItem:currentCase.caseID forItemType:BOOKMARKCASE];
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     }
 }
@@ -311,7 +301,6 @@ int bookmarkedCount;
                     
                     [HelperBookmark countBookmarks:2  withSize:[pdfBookmarkItem fileSize]];
                     [APP_DELEGATE setBookmarkAll:YES];
-                    
                 }
                 else{
                     [self insertToDB:fotonaDatabase forUser:usr item:[NSString stringWithFormat:@"%d", [media.itemID intValue]] withType:[media mediaType] forCaseIDs:@"" andBookmarkType:BSOURCEFOTONA];
@@ -377,8 +366,6 @@ int bookmarkedCount;
         }
     }
 }
-
-
 
 
 + (BOOL) bookmarkMedia: (FMedia *)media{
@@ -539,8 +526,6 @@ int bookmarkedCount;
                             
                            
                             [self refreshViewWithItem:selected.caseID forItemType:BOOKMARKCASE];
-
-
                         }
                                                          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                              NSLog(@"Cases bookmark failed %@",error.localizedDescription);
@@ -617,18 +602,24 @@ int bookmarkedCount;
      FIFlowController *flow = [FIFlowController sharedInstance];
     if ([FCommon isIpad]) {
         if ([itemType intValue] == [BOOKMARKCASE intValue] && [[[[APP_DELEGATE casebookController] currentCase] caseID] intValue] == [itemID intValue] ) {
-            //TODO: kako je če je ta casebook na favorites?
+            if ([[APP_DELEGATE tabBar] selectedIndex] == 3){
             [[APP_DELEGATE casebookController] refreshBookmarkBtn];
-        } else {
-            if ([[APP_DELEGATE tabBar] selectedIndex] == 2){
-                [[APP_DELEGATE fotonaController] refreshCellForMedia:itemID andMediaType:itemType];
             } else {
                 if ([[APP_DELEGATE tabBar] selectedIndex] == 4){
-                    [[APP_DELEGATE favoriteController] refreshCellForMedia:itemID andMediaType:itemType];
+                     [[APP_DELEGATE favoriteController] refreshBookmarkBtn];
                 }
             }
         }
+        if ([[APP_DELEGATE tabBar] selectedIndex] == 2){
+            [[APP_DELEGATE fotonaController] refreshCellForMedia:itemID andMediaType:itemType];
+        } else {
+            if ([[APP_DELEGATE tabBar] selectedIndex] == 4){
+                [[APP_DELEGATE favoriteController] refreshCellForMedia:itemID andMediaType:itemType];
+            }
+        }
+        
     } else{
+        //TODO: osvežit celico na seznamu favorites
         if ([itemType intValue] == [BOOKMARKCASE intValue] && [[[flow caseOpened] caseID] intValue] == [itemID intValue] ) {
             [[flow caseView] refreshBookmarkBtn];
         } else {

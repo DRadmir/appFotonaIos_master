@@ -436,7 +436,7 @@ NSString *count = @"";
                         [caseObj setImages:imgs];
                         NSMutableArray *videos = [[NSMutableArray alloc] init];
                         for (NSDictionary *videoLink in [caseObj video]) {
-                            FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink forMediType:MEDIAVIDEO];
+                            FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink];
                             [videos addObject:videoTemp];
                         }
                         [caseObj setVideo:videos];

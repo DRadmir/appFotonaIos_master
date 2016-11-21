@@ -67,7 +67,7 @@
     self = [super init];
     if (self) {
         // Custom initialization
-        [self setTitle:@"Casebook"];
+        [self setTitle:NSLocalizedString(@"CASEBOOOKTABTITLE", nil)];
         [self.tabBarItem setImage:[UIImage imageNamed:@"casebook_grey.png"]];
     }
     return self;
@@ -95,7 +95,8 @@
     state = 0;
     
     CGRect newFrame = fotonaImg.frame;
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation))
+    
+    if ([FCommon isOrientationLandscape])
         newFrame.origin.x -= 105;
     
     else
@@ -294,7 +295,6 @@
             else{
                 imageName=selectedIcon;
             }
-            
             
             if ([[casesInMenu objectAtIndex:indexPath.row] isKindOfClass:[FCase class]])
             {
@@ -551,15 +551,8 @@
     authorImg.layer.cornerRadius = authorImg.frame.size.height /2;
     authorImg.layer.masksToBounds = YES;
     authorImg.layer.borderWidth = 0;
-    dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
-    dispatch_async(queue, ^{
-        //code to be executed in the background
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //code to be executed on the main thread when background task is finished
-            [authorImg setImage: [FDB getAuthorImage:[currentCase authorID]]];
-        });
-    });
-    
+   
+    [authorImg setImage: [FDB getAuthorImage:[currentCase authorID]]];
     [authorNameLbl setText:[currentCase name]];
     [dateLbl setText:[APP_DELEGATE timestampToDateString:[currentCase date]]];
     [titleLbl setText:[currentCase title]];
@@ -979,9 +972,10 @@
     [additionalInfo setFrame:CGRectMake(0, 658, self.view.frame.size.width, 231)];
     [introductionTitle sizeToFit];
     float additionalInfoH=introductionTitle.frame.size.height+100;
+    NSLog(@"%f, %f",exCaseView.frame.size.width,additionalInfo.frame.size.width );
     [additionalInfo setFrame:CGRectMake(additionalInfo.frame.origin.x, galleryView.frame.origin.y+galleryView.frame.size.height+20, additionalInfo.frame.size.width,additionalInfoH)];
     [disclaimerBtn setHidden:NO];
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [disclaimerBtn setFrame:CGRectMake(225, introductionTitle.frame.size.height-15, 99, 40)];
     }else
     {
@@ -990,6 +984,7 @@
     
     [additionalInfo addSubview:disclaimerBtn ];
     [exCaseView setFrame:CGRectMake(0, 0, self.view.frame.size.width, additionalInfo.frame.origin.y+additionalInfo.frame.size.height)];
+    NSLog(@"%f, %f",exCaseView.frame.size.width,additionalInfo.frame.size.width );
     [caseScroll setContentSize:CGSizeMake(self.view.frame.size.width, exCaseView.frame.size.height)];
 }
 
@@ -1024,40 +1019,9 @@
 
 
 - (IBAction)removeFromBookmarks:(id)sender {
-    //[currentCase setBookmark:@"0"];
     [addBookmarks setHidden:NO];
     [removeBookmarks setHidden:YES];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    NSString *usr = [FCommon getUser];
-    [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=0",currentCase.caseID,usr,nil];
-    BOOL bookmarked = NO;
-    
-    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where typeID=0 and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:currentCase.caseID, nil]];
-    while([resultsBookmarked next]) {
-        bookmarked = YES;
-    }
-    
-    if (!bookmarked) {
-        if ([[currentCase coverflow] boolValue]) {
-            [database executeUpdate:@"UPDATE Cases set isBookmark=? where caseID=?",@"0",currentCase.caseID];
-            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-            [database close];
-        }
-        else{
-            [database executeUpdate:@"DELETE FROM Cases WHERE caseID=?",currentCase.caseID];
-            [database executeUpdate:@"INSERT INTO Cases (caseID,title,name,active,authorID,isBookmark,alloweInCoverFlow) VALUES (?,?,?,?,?,?,?)",currentCase.caseID,currentCase.title,currentCase.name,currentCase.active,currentCase.authorID,@"0",currentCase.coverflow];
-            [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-            [database close];
-            
-            [FMediaManager deleteMedia:currentCase.images andType:0 andFromDB:YES];
-            [FMediaManager deleteMedia:currentCase.video andType:1 andFromDB:YES];
-        }
-        
-    }
-    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [av show];
-    
+    [HelperBookmark removeBookmarkedCase:currentCase];
 }
 - (IBAction)addToBookmarks:(id)sender {
     //[APP_DELEGATE setCasebookController:self];
@@ -1073,7 +1037,6 @@
 - (void) refreshBookmarkBtn  {
     [addBookmarks setHidden:YES];
     [removeBookmarks setHidden:NO];
-
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -1174,7 +1137,7 @@
 - (IBAction)openSettings:(id)sender {
     self.viewDeckController.panningMode = IIViewDeckNoPanning;
     [self.settingsBtn setEnabled:NO];
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         settingsView=[[UIView alloc] initWithFrame:CGRectMake(0,65, self.view.frame.size.width, 654)];
         [settingsController.view setFrame:CGRectMake(0,0, self.view.frame.size.width, 654)];
     }else

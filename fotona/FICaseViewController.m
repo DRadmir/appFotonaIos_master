@@ -70,7 +70,7 @@
     [self refreshBookmarkBtn];
     
     
-    [self loadCase];
+    
     [self createGallery];
     
     FIFlowController *flow = [FIFlowController sharedInstance];
@@ -79,10 +79,7 @@
     {
         flow.caseView = self;
     }
-    
-    NSString *usr = [FCommon getUser];
-    NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-   
+       
     if ([FDB checkIfFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE]) {
         [btnRemoveFavorite setHidden:NO];
         [btnAddFavorite setHidden:YES];
@@ -91,6 +88,11 @@
         [btnAddFavorite setHidden:NO];
     }
 
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [self loadCase];
 }
 
 -(void)viewDidLayoutSubviews
@@ -115,17 +117,7 @@
     FAuthor* author = [FDB getAuthorWithID:[caseToOpen authorID]];
     
     [lblAuthor setText:[author name]];
-    imgAuthor.layer.cornerRadius = imgAuthor.frame.size.height /2;
-    imgAuthor.layer.masksToBounds = YES;
-    imgAuthor.layer.borderWidth = 0;
-    dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
-    dispatch_async(queue, ^{
-        //code to be executed in the background
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //code to be executed on the main thread when background task is finished
-            [imgAuthor setImage:[FDB getAuthorImage:[caseToOpen authorID]]];
-        });
-    });
+    
     [lblDate setText:[APP_DELEGATE timestampToDateString:[caseToOpen date]]];
     [lblTitle setText:caseToOpen.title];
     
@@ -272,6 +264,14 @@
 
 -(void)setPatameters
 {
+    
+    imgAuthor.layer.cornerRadius = imgAuthor.frame.size.height /2;
+    imgAuthor.layer.masksToBounds = YES;
+    imgAuthor.layer.borderWidth = 0;
+    [imgAuthor setContentMode:UIViewContentModeScaleAspectFill];
+    [imgAuthor setImage:[FDB getAuthorImage:[caseToOpen authorID]]];
+
+    
     for (UIView *v in parametersScrollView.subviews) {
         if ([v isKindOfClass:[UILabel class]]) {
             [v removeFromSuperview];

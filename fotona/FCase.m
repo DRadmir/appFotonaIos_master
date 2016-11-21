@@ -9,6 +9,7 @@
 #import "FImage.h"
 #import "FMedia.h"
 #import "FMDatabase.h"
+#import "FIFlowController.h"
 
 @implementation FCase
 @synthesize caseID;
@@ -238,7 +239,7 @@
         for (NSDictionary *videDic in self.video) {
             FMedia *v;
             if (fromServer){
-                 v=[[FMedia alloc] initWithDictionaryFromServer:videDic forMediType:MEDIAVIDEO ];
+                 v=[[FMedia alloc] initWithDictionaryFromServer:videDic];
             }else {
                  v=[[FMedia alloc] initWithDictionary:videDic ];
             }
@@ -263,6 +264,22 @@
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     return result;
+}
+
++(void)openCase:(FCase *)caseToOpen{
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.caseFlow = caseToOpen;
+    if (flow.caseMenu != nil)
+    {
+        [[[flow caseMenu] navigationController] popToRootViewControllerAnimated:false];
+    }
+    if (flow.lastIndex != 3) {
+        flow.lastIndex = 3;
+        [flow.tabControler setSelectedIndex:3];
+    } else {
+        flow.caseTab.caseToOpen = flow.caseFlow;
+        [flow.caseTab openCase];
+    }
 }
 
 @end

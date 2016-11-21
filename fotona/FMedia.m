@@ -26,7 +26,7 @@
 @synthesize mediaType;
 @synthesize time;
 
--(id)initWithDictionaryFromServer:(NSDictionary *)dic forMediType: (NSString *)type
+-(id)initWithDictionaryFromServer:(NSDictionary *)dic
 {
     self=[super init];
     if (self) {
@@ -56,7 +56,7 @@
             [self setActive:@"0"];
         }
         [self setTime:[dic valueForKey:@"imageCapturedTime"]];
-        [self setMediaType:type];
+        [self setMediaType:[dic valueForKey:@"galleryType"]];
     }
     return self;
 }

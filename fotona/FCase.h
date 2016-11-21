@@ -43,4 +43,6 @@
 -(NSMutableArray *)parseVideosFromServer: (BOOL)fromServer;
 -(NSString *)getAuthorName;
 
++(void) openCase:(FCase *)caseToOpen;
+
 @end

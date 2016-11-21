@@ -18,6 +18,7 @@ static NSString *deviceData;
 static FUser *lastSent;
 
 
+#pragma mark - Case
 +(NSMutableURLRequest *) requestToGetCaseByID:(NSString *) caseID onView:(UIView *)view{
     if (view != nil) {
         MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:view];
@@ -40,18 +41,32 @@ static FUser *lastSent;
     return request;
 }
 
++(NSMutableURLRequest *) requestToGetCaseFromNotification:(NSString *) notificationUrl{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, notificationUrl]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"GET"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:globalAccessToken forHTTPHeaderField:@"access_key"];
+    [request setTimeoutInterval:180];
+    return request;
+}
+
+#pragma mark - Device
+
 +(void)setDeviceData:(NSString *)_deviceData{
     deviceData = _deviceData;
     [self sendDeviceData];
     
 }
 
+
+
 +(void)sendDeviceData{
     FUser *u = [APP_DELEGATE currentLogedInUser];
     if (deviceData != nil && u!=nil && (lastSent == nil || ![lastSent.username isEqualToString: u.username])) {
         lastSent = u;
         
-        NSString *requestData =[NSString stringWithFormat:@"%@,\"fotUserType\":%@,\"fotUserSubType\":\"%@\"}",deviceData,[u userType],[FCommon arrayToString:[u userTypeSubcategory] withSeparator:@";"]];
+        NSString *requestData =[NSString stringWithFormat:@"%@,\"fotUserType\":%@,\"fotUserSubType\":\"%@\"}",deviceData,[u userType],[FCommon arrayToString:[[u userTypeSubcategory] mutableCopy] withSeparator:@";"]];
         
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, LINKWRITEDEVICE]];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];

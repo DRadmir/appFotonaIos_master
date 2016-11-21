@@ -86,7 +86,7 @@ FNewsView *newsViewController;
     self = [super init];
     if (self) {
         // Custom initialization
-        [self setTitle:@"Featured"];
+        [self setTitle:NSLocalizedString(@"FEATUREDTABTITLE", nil)];
         [self.tabBarItem setImage:[UIImage imageNamed:@"homepage_red.png"]];
         status = 0;
         
@@ -291,7 +291,7 @@ FNewsView *newsViewController;
             return cell;
         } else {
             
-            if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+            if ([FCommon isOrientationLandscape]) {
                 status = 1; //guest landscape
                 if (indexPath.row==2) {
                     FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
@@ -334,7 +334,7 @@ FNewsView *newsViewController;
             }
         }
     }else {
-        if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+        if ([FCommon isOrientationLandscape]) {
             status = 3; //usr landscape
             if (indexPath.row==2) {
                 FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
@@ -502,7 +502,7 @@ FNewsView *newsViewController;
 //Size of collection cells
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
+    if([FCommon isOrientationLandscape]){
         return CGSizeMake(312, 321);
     }
     else
@@ -568,7 +568,7 @@ FNewsView *newsViewController;
     [popupCloseBtn setHidden:NO];
     
     
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         settingsView=[[UIView alloc] initWithFrame:CGRectMake(0,65, self.view.frame.size.width, 654)];
         [settingsController.view setFrame:CGRectMake(0,0, self.view.frame.size.width, 654)];
     }else
@@ -971,7 +971,7 @@ FNewsView *newsViewController;
     UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
     NSDictionary *attrsDictionary = @{ NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
     aboutDescription.attributedText = [[NSAttributedString alloc] initWithString:attrStr.string attributes:attrsDictionary];
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation))
+    if ([FCommon isOrientationLandscape])
         [aboutView setFrame:CGRectMake(0,65, 1024, 650)];
     else
         [aboutView setFrame:CGRectMake(0,65, 768, 909)];

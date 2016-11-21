@@ -120,7 +120,7 @@
         for (NSDictionary *dicMedia in arrMedia) {
             FMedia *media;
             if (server) {
-                media=[[FMedia alloc] initWithDictionaryFromServer:dicMedia forMediType:mediatype];
+                media=[[FMedia alloc] initWithDictionaryFromServer:dicMedia];
             } else {
                  media=[[FMedia alloc] initWithDictionary:dicMedia];
             }

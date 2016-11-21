@@ -7,7 +7,6 @@
 //
 
 #import "FIGalleryViewController.h"
-#import "FIVideoGalleryTableViewCell.h"
 #import "FDB.h"
 #import "MBProgressHUD.h"
 #import "FDownloadManager.h"

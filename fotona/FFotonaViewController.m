@@ -74,7 +74,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     self = [super init];
     if (self) {
         // Custom initialization
-        [self setTitle:@"Fotona"];
+        [self setTitle:NSLocalizedString(@"FOTONATABTITLE", nil)];
         [self.tabBarItem setImage:[UIImage imageNamed:@"fotona_red.png"]];
     }
     return self;
@@ -102,7 +102,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     stateHelper = 0;
     [self.viewDeckController openLeftView];
     CGRect newFrame = fotonaImg.frame;
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation))
+    if ([FCommon isOrientationLandscape])
         newFrame.origin.x -= 105;
     else
         newFrame.origin.x -=  160;
@@ -519,8 +519,8 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 //collection cell size
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
-        return CGSizeMake(300, 131);
+    if([FCommon isOrientationLandscape]){
+        return CGSizeMake(440, 192);
     }
     else
         return CGSizeMake(330, 144);
@@ -569,7 +569,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     [fotonaImg setHidden:YES];
     [popupCloseBtn setHidden:NO];
     [menuBtn setHidden:YES];
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         settingsView=[[UIView alloc] initWithFrame:CGRectMake(0,0, self.view.frame.size.width, 654)];
         [settingsController.view setFrame:CGRectMake(0,0, self.view.frame.size.width, 654)];
     }else

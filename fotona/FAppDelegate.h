@@ -66,7 +66,6 @@
 @property (assign) BOOL openCase;
 @property (assign) BOOL bookmarkAll;
 @property (assign) BOOL loginShown;
-@property (nonatomic,retain) NSMutableArray *userBookmarked;
 @property (nonatomic, retain) NSMutableArray *downloadList;
 @property (nonatomic, retain) NSMutableArray *bookmarkingVideos;
 
@@ -87,8 +86,6 @@
 @property (assign) BOOL logingEnabled;
 
 -(void)rotatePopupSearchedNewsInView:(UIView *)view;
-
--(void)showPushNotificationFromViewController:(UIViewController *)vc;
 
 - (BOOL)connectedToInternet;
 - (BOOL)connectedToWifi;

@@ -42,3 +42,11 @@
 
 //errors
 "ERRORCONTENTFETCH" = "There was a problem with acquiring data, please try again";
+
+//tab titles
+"FAVORITESTABTITLE" = "Favorites";
+"CASEBOOOKTABTITLE" = "Casebook";
+"FOTONATABTITLE" = "Fotona";
+"EVENTSTABTITLE" = "Events";
+"FEATUREDTABTITLE" = "Featured";
+

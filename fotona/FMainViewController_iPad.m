@@ -194,7 +194,7 @@ UIButton *tmp;
 - (IBAction)existing:(id)sender
 {
     if (loginView.isHidden) {
-        if (UIDeviceOrientationIsLandscape(self.interfaceOrientation))
+        if ([FCommon isOrientationLandscape])
         {
             [scrollView setContentOffset:CGPointMake(0, 50) animated:YES];
         }
@@ -220,7 +220,7 @@ UIButton *tmp;
             loginView.hidden = YES;
             forgotView.hidden = YES;
         }];
-        if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
+        if ([FCommon isOrientationLandscape]){
             [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
         }
     }
@@ -235,13 +235,13 @@ UIButton *tmp;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [scrollView setContentOffset:CGPointMake(0, 352) animated:YES];
     }
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [scrollView setContentOffset:CGPointMake(0, 50) animated:YES];
     }
 }
@@ -265,7 +265,8 @@ UIButton *tmp;
         [self prepareTabBarController];
         
         //check if tabbar is already on stack else add
-        //TODO: če bo čas se pregleda zakaj se 2 pokliče ta del po 2 istem loginu
+        //TODO: če bo čas se pregleda zakaj se 2 pokliče ta del po 2 istem loginu, mogoče ker kje primerja lastupadte in updated in nista enaka
+        
         BOOL addTabbar = YES;
         for (UIView *child in [[self navigationController] childViewControllers]) {
             if ([child isKindOfClass:[UITabBarController class]]) {

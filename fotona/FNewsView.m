@@ -120,7 +120,7 @@ NSMutableArray *relatedNews;
     for (int t = nc; t<4; t++) {
         [(UIView *)[newsRelatedView objectAtIndex:t] setHidden:YES];
     }
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
+    if ([FCommon isOrientationLandscape]){
         [newsView setFrame:CGRectMake(0,65, 1024, 655)];
     }
     else{

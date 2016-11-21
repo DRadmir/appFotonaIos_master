@@ -125,13 +125,13 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="7tp-ow-q2h" secondAttribute="bottom" constant="36" id="2iu-sf-uJh"/>
                                 <constraint firstAttribute="bottom" secondItem="Rek-Rv-56L" secondAttribute="bottom" constant="9" id="7HC-L5-ctH"/>
                                 <constraint firstAttribute="trailing" secondItem="Y67-DF-VwL" secondAttribute="trailing" constant="8" id="MCB-PZ-tDa"/>
                                 <constraint firstItem="7tp-ow-q2h" firstAttribute="leading" secondItem="zI6-vh-Y51" secondAttribute="leading" constant="8" id="MVy-3k-IVb"/>
-                                <constraint firstItem="7tp-ow-q2h" firstAttribute="top" secondItem="eHC-Bh-pUO" secondAttribute="bottom" constant="8" id="OCh-eB-Inh"/>
+                                <constraint firstItem="7tp-ow-q2h" firstAttribute="top" secondItem="eHC-Bh-pUO" secondAttribute="bottom" constant="11" id="OCh-eB-Inh"/>
                                 <constraint firstAttribute="trailing" secondItem="eHC-Bh-pUO" secondAttribute="trailing" constant="8" id="XPx-u9-WLP"/>
                                 <constraint firstAttribute="bottom" secondItem="Y67-DF-VwL" secondAttribute="bottom" constant="9" id="Xta-Kb-p6A"/>
                                 <constraint firstItem="eHC-Bh-pUO" firstAttribute="leading" secondItem="zI6-vh-Y51" secondAttribute="leading" constant="8" id="aMg-Tn-H9N"/>
@@ -194,10 +194,10 @@
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstItem="wLv-0A-5do" firstAttribute="top" secondItem="acR-uI-U7p" secondAttribute="top" id="Rpd-kG-Dcj"/>
-                                <constraint firstAttribute="trailing" secondItem="wLv-0A-5do" secondAttribute="trailing" id="Vc4-kN-n0k"/>
-                                <constraint firstAttribute="bottom" secondItem="wLv-0A-5do" secondAttribute="bottom" id="iMm-Og-EPi"/>
-                                <constraint firstItem="wLv-0A-5do" firstAttribute="leading" secondItem="acR-uI-U7p" secondAttribute="leading" id="sDS-sR-7WV"/>
+                                <constraint firstItem="wLv-0A-5do" firstAttribute="top" secondItem="acR-uI-U7p" secondAttribute="top" constant="8" id="Rpd-kG-Dcj"/>
+                                <constraint firstAttribute="trailing" secondItem="wLv-0A-5do" secondAttribute="trailing" constant="8" id="Vc4-kN-n0k"/>
+                                <constraint firstAttribute="bottom" secondItem="wLv-0A-5do" secondAttribute="bottom" constant="8" id="iMm-Og-EPi"/>
+                                <constraint firstItem="wLv-0A-5do" firstAttribute="leading" secondItem="acR-uI-U7p" secondAttribute="leading" constant="8" id="sDS-sR-7WV"/>
                                 <constraint firstAttribute="width" secondItem="acR-uI-U7p" secondAttribute="height" multiplier="55:48" id="zOJ-jy-DQe"/>
                             </constraints>
                         </view>

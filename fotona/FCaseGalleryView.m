@@ -8,6 +8,7 @@
 
 #import "FCaseGalleryView.h"
 #import "FDB.h"
+#import "UIColor+Hex.h"
 
 @implementation FCaseGalleryView
 
@@ -62,13 +63,21 @@
     }
     
     if([FDB checkIfBookmarkedForDocumentID:[item itemID] andType:[item typeID]]){
-        btnDownloadRemove.hidden = false;
-        btnDownloadAdd.hidden = true;
+        btnDownloadRemove.hidden = NO;
+        btnDownloadAdd.hidden = YES;
     } else {
-        btnDownloadRemove.hidden = true;
-        btnDownloadAdd.hidden = false;
+        btnDownloadRemove.hidden = YES;
+        btnDownloadAdd.hidden = NO;
     }
     
+    if([FDB checkIfFavoritesItem: [[item itemID] intValue] ofType:[item typeID]]){
+        btnFavoriteRemove.hidden = NO;
+        btnFavoriteAdd.hidden = YES;
+    } else {
+        btnFavoriteRemove.hidden = YES;
+        btnFavoriteAdd.hidden = NO;
+    }
+
     dispatch_async(dispatch_get_main_queue(), ^{
         imgAuthor.layer.cornerRadius = imgAuthor.frame.size.height /2;
         imgAuthor.layer.masksToBounds = YES;
@@ -87,6 +96,12 @@
         [lblDescription setAlpha:DISABLEDCOLORALPHA];
         [lblCaseType setAlpha:DISABLEDCOLORALPHA];
         btnDownloadAdd.hidden = true;
+    }
+    
+    if ([FCommon isIpad]) {
+         [containerView setBackgroundColor:[UIColor lightBackgroundColor]];
+    } else {
+        [containerView setBackgroundColor:[UIColor whiteColor]];
     }
 }
 
