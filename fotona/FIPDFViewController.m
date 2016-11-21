@@ -36,10 +36,10 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    [self openExternalLink:@""];
 }
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [self openExternalLink:@""];
     if (reopen) {
         [self openPdf:pdfMedia];
     } else {

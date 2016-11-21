@@ -95,6 +95,8 @@
         [lblTitle setAlpha:DISABLEDCOLORALPHA];
         [lblDescription setAlpha:DISABLEDCOLORALPHA];
         [lblCaseType setAlpha:DISABLEDCOLORALPHA];
+    }
+    if (![APP_DELEGATE connectedToInternet]) {
         btnDownloadAdd.hidden = true;
     }
     

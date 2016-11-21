@@ -25,6 +25,8 @@
 @synthesize download;
 @synthesize mediaType;
 @synthesize time;
+@synthesize bookmark;
+@synthesize active;
 
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic
 {
@@ -72,7 +74,7 @@
         [self setPath:[self.path stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
         [self setLocalPath:[dic valueForKey:@"localPath"]];
         [self setDescription:[dic valueForKey:@"description"]];
-        [self setBookmark:[dic valueForKey:@"bookmark"]];
+        [self setBookmark:[dic valueForKey:@"isBookmark"]];
         [self setMediaImage:[dic valueForKey:@"mediaImage"]];
         [self setSort:[dic valueForKey:@"sort"]];
         [self setDeleted:[dic valueForKey:@"deleted"]];
