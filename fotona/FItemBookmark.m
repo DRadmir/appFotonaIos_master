@@ -41,4 +41,14 @@
     }
     return self;
 }
+
++(void) removeFromListItemWithLink:(NSString *)itemLink{
+    NSArray *list = [APP_DELEGATE downloadList];
+    for (FItemBookmark *item in list) {
+        if ([[item link] isEqualToString:itemLink]) {
+            [[APP_DELEGATE downloadList] removeObject:item];
+            break;
+        }
+    }
+}
 @end

@@ -10,6 +10,7 @@
 #import "HelperBookmark.h"
 #import "MBProgressHUD.h"
 #import "FIFlowController.h"
+#import "FItemBookmark.h"
 
 @implementation FDownloadManager
 
@@ -373,11 +374,10 @@
                 [APP_DELEGATE setBookmarkCountLeft:[APP_DELEGATE bookmarkCountLeft]-1];
                 [APP_DELEGATE setBookmarkCountAll:[APP_DELEGATE bookmarkCountAll]-1];
             }
-            
+            [FItemBookmark removeFromListItemWithLink:filePath];
             return NO;
         }
     }
-    
     return YES;
 }
 

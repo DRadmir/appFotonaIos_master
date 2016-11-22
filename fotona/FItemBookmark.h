@@ -18,4 +18,8 @@
 
 -(id)initWithItemID:(NSString *) itemID ofType:(NSString *)type fromSource:(int)bookmarkSourceType forCases:(NSString *) cases withLink:(NSString *)link withFileSize:(int)_fileSize;
 -(id)initWithItemIDint:(int) itemID ofType:(NSString *)type fromSource:(int)bookmarkSourceType forCases:(NSString *) cases withLink:(NSString *)link withFileSize:(int)_fileSize;
+
++(void) removeFromListItemWithLink:(NSString *)itemLink;
 @end
+
+

@@ -28,6 +28,7 @@
 @synthesize type;
 @synthesize cellMedia;
 
+@synthesize enabled;
 #pragma mark - Layout
 
 -(void)setContentForMedia:(FMedia *)media andMediaType:(NSString *)mediaType{
@@ -58,6 +59,18 @@
     } else {
         [containerView setBackgroundColor:[UIColor whiteColor]];
     }
+    
+    //if not accessible change alpha
+    if (([[media bookmark] isEqualToString:@"0"] || [media bookmark] == nil) && ![APP_DELEGATE connectedToInternet]) {
+        enabled = false;
+        [lblTitle setAlpha:DISABLEDCOLORALPHA];
+        [imgThumbnail setAlpha:DISABLEDCOLORALPHA];
+        [lblDesc setAlpha:DISABLEDCOLORALPHA];
+        
+    }
+     if (![APP_DELEGATE connectedToInternet]) {
+         btnDownloadAdd.hidden = true;
+     }
 
 }
 

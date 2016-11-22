@@ -26,6 +26,7 @@
 @property (strong, nonatomic) FIFavoriteViewController *parentIphone;
 @property (strong, nonatomic) FFavoriteViewController *parentIpad;
 @property (strong, nonatomic) NSIndexPath *index;
+@property (nonatomic) BOOL enabled;
 
 @property (nonatomic) NSString *type;
 @property (strong, nonatomic) FMedia *cellMedia;

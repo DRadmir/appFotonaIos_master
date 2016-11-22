@@ -904,85 +904,87 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     if (m.count>0) {
         FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
         [database open];
-        //        if (type==0) {
-        //            for (FImage *img in m) {
-        //
-        //                FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@;",img.itemID]];
-        //                BOOL flag=NO;
-        //                while([results next]) {
-        //                    flag=YES;
-        //                    bookmark = [results objectForColumnName:@"isBookmark"];
-        //                }
-        //                if (!flag) {
-        //                    NSArray *pathComp=[img.path pathComponents];
-        //                    NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-        //                    [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark) VALUES (?,?,?,?,?,?,?,?)",img.itemID,img.galleryID,img.title,img.path,pathTmp,img.description,@"0",@"0"];
-        //
-        //                } else {
-        //                    NSString *pathTmp = [results objectForColumnName:@"localPath"];
-        //                    if ([bookmark boolValue]) {
-        //
-        //                        NSFileManager *fileManager = [NSFileManager defaultManager];
-        //                        NSError *error;
-        //                        [fileManager removeItemAtPath:[results objectForColumnName:@"localPath"] error:&error];
-        //                        NSArray *pathComp=[img.path pathComponents];
-        //                        pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-        //                        [[APP_DELEGATE videosToDownload] addObject:pathTmp];
-        //                    }
-        //                    [database executeUpdate:@"UPDATE Media set galleryID=?,title=?,path=?,localPath=?,description=?,mediaType=? where mediaID=?",img.galleryID,img.title,img.path,pathTmp,img.description,@"0",img.itemID];
-        //
-        //            }
-        //            }
-        //        }else
-        if(type==1){
-            
-            for (FMedia *vid in m) {
-                NSString *pathTmp = @"";
-                NSArray *pathComp;
-                FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@",vid.itemID]];
-                BOOL flag=NO;
-                while([results next]) {
-                    flag=YES;
-                    bookmark = [results objectForColumnName:@"isBookmark"];
-                    pathComp=[[results objectForColumnName:@"path"] pathComponents];
-                    pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                    
-                }
-                if (!flag) {
-                    pathComp=[vid.path pathComponents];
-                    pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                    
-                    [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,time,mediaImage,sort, active, deleted, download, fileSize, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.mediaImage,vid.sort, vid.active, vid.deleted, vid.download, vid.filesize, vid.userPermissions];
-
-                    if ([arrayID containsObject:vid.itemID ])
-                    {
-                        NSFileManager *fileManager = [NSFileManager defaultManager];
-                        NSError *error;
-                        [fileManager removeItemAtPath:pathTmp error:&error];
-                        NSArray *pathComp=[vid.path pathComponents];
+        if (type==0) {
+            NSLog(@"Treba nrdit tud za slike");
+            //            for (FImage *img in m) {
+            //
+            //                FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@;",img.itemID]];
+            //                BOOL flag=NO;
+            //                while([results next]) {
+            //                    flag=YES;
+            //                    bookmark = [results objectForColumnName:@"isBookmark"];
+            //                }
+            //                if (!flag) {
+            //                    NSArray *pathComp=[img.path pathComponents];
+            //                    NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
+            //                    [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark) VALUES (?,?,?,?,?,?,?,?)",img.itemID,img.galleryID,img.title,img.path,pathTmp,img.description,@"0",@"0"];
+            //
+            //                } else {
+            //                    NSString *pathTmp = [results objectForColumnName:@"localPath"];
+            //                    if ([bookmark boolValue]) {
+            //
+            //                        NSFileManager *fileManager = [NSFileManager defaultManager];
+            //                        NSError *error;
+            //                        [fileManager removeItemAtPath:[results objectForColumnName:@"localPath"] error:&error];
+            //                        NSArray *pathComp=[img.path pathComponents];
+            //                        pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
+            //                        [[APP_DELEGATE videosToDownload] addObject:pathTmp];
+            //                    }
+            //                    [database executeUpdate:@"UPDATE Media set galleryID=?,title=?,path=?,localPath=?,description=?,mediaType=? where mediaID=?",img.galleryID,img.title,img.path,pathTmp,img.description,@"0",img.itemID];
+            //
+            //            }
+            //            }
+        }else{
+            if(type==1){
+                
+                for (FMedia *vid in m) {
+                    NSString *pathTmp = @"";
+                    NSArray *pathComp;
+                    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@",vid.itemID]];
+                    BOOL flag=NO;
+                    while([results next]) {
+                        flag=YES;
+                        bookmark = [results objectForColumnName:@"isBookmark"];
+                        pathComp=[[results objectForColumnName:@"path"] pathComponents];
                         pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                        [[APP_DELEGATE videosToDownload] addObject:vid.path];
-                        [[APP_DELEGATE imagesToDownload] addObject:vid.mediaImage];
-                        [arrayID removeObject:vid.itemID];
-                        [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=?",@"1",vid.itemID];
-                    }
-                    
-                } else {
-                    
-                    if ([bookmark boolValue]) {
                         
-                        NSFileManager *fileManager = [NSFileManager defaultManager];
-                        NSError *error;
-                        [fileManager removeItemAtPath:pathTmp error:&error];
-                        NSArray *pathComp=[vid.path pathComponents];
-                        pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                        [[APP_DELEGATE videosToDownload] addObject:vid.path];
-                        [[APP_DELEGATE imagesToDownload] addObject:vid.mediaImage];
                     }
-                    [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaType=?,time=?,mediaImage=?,sort=?, userPermissions=?, active=?, deleted=?, download=?, fileSize=? where mediaID=?",vid.title,vid.path,pathTmp,vid.description,@"1",vid.time,vid.mediaImage,vid.sort, vid.userPermissions, vid.active, vid.deleted, vid.download, vid.filesize, vid.itemID];
+                    if (!flag) {
+                        pathComp=[vid.path pathComponents];
+                        pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
+                        
+                        [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,time,mediaImage,sort, active, deleted, download, fileSize, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.mediaImage,vid.sort, vid.active, vid.deleted, vid.download, vid.filesize, vid.userPermissions];
+                        
+                        if ([arrayID containsObject:vid.itemID ])
+                        {
+                            NSFileManager *fileManager = [NSFileManager defaultManager];
+                            NSError *error;
+                            [fileManager removeItemAtPath:pathTmp error:&error];
+                            NSArray *pathComp=[vid.path pathComponents];
+                            pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
+                            [[APP_DELEGATE videosToDownload] addObject:vid.path];
+                            [[APP_DELEGATE imagesToDownload] addObject:vid.mediaImage];
+                            [arrayID removeObject:vid.itemID];
+                            [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=?",@"1",vid.itemID];
+                        }
+                        
+                    } else {
+                        
+                        if ([bookmark boolValue]) {
+                            
+                            NSFileManager *fileManager = [NSFileManager defaultManager];
+                            NSError *error;
+                            [fileManager removeItemAtPath:pathTmp error:&error];
+                            NSArray *pathComp=[vid.path pathComponents];
+                            pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
+                            [[APP_DELEGATE videosToDownload] addObject:vid.path];
+                            [[APP_DELEGATE imagesToDownload] addObject:vid.mediaImage];
+                        }
+                        [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaType=?,time=?,mediaImage=?,sort=?, userPermissions=?, active=?, deleted=?, download=?, fileSize=? where mediaID=?",vid.title,vid.path,pathTmp,vid.description,@"1",vid.time,vid.mediaImage,vid.sort, vid.userPermissions, vid.active, vid.deleted, vid.download, vid.filesize, vid.itemID];
+                    }
                 }
+                
             }
-            
         }
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
         [database close];
