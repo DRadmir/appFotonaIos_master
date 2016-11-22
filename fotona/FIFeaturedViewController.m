@@ -244,8 +244,11 @@
         
     }
     
+        
+   
     cell.news = newsArray[indexPath.row];
     [cell fillCell];
+
     if (indexPath.row>= 8)
     {
         cell.signNewNewsCell.hidden = true;

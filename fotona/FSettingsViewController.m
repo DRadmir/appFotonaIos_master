@@ -193,10 +193,15 @@
 }
 
 - (IBAction)bookmarkSelected:(id)sender {
-    if ([btnBookmark.titleLabel.text isEqualToString:@"Bookmark"]) {
-        if (!wifiSwitch.isOn) {
-            UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
-            [av showInView:self.view];
+    if ([btnBookmark.titleLabel.text isEqualToString:@"Download"]) {
+        if (![APP_DELEGATE connectedToInternet]) {
+            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTIONBOOKMARK", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [av show];
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
+//            if([wifiSwitch.isOn]){
+//            UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
+//            [av showInView:self.view];}
         } else {
                         MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
             [self.view addSubview:hud];
@@ -240,7 +245,7 @@
 - (void)stopDownload {
     [APP_DELEGATE setBookmarkAll:NO];
     [HelperBookmark cancelBookmark];
-    [btnBookmark setTitle:@"Bookmark" forState:UIControlStateNormal];
+    [btnBookmark setTitle:@"Download" forState:UIControlStateNormal];
     [btnBookmark setEnabled:NO];
     
     [self.categoryTable setUserInteractionEnabled:YES];
@@ -394,7 +399,7 @@
         [APP_DELEGATE setBookmarkAll:NO];
         [[APP_DELEGATE bookmarkingVideos] removeAllObjects];
         [HelperBookmark cancelBookmark];
-        [btnBookmark setTitle:@"Bookmark" forState:UIControlStateNormal];
+        [btnBookmark setTitle:@"Download" forState:UIControlStateNormal];
         [btnBookmark setEnabled:NO];
         btnBookmark.layer.borderColor = [[UIColor grayColor] CGColor];
         [self.categoryTable setUserInteractionEnabled:YES];

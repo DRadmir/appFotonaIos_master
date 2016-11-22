@@ -132,8 +132,7 @@
             [self openPdf:media];
         }
     }
-    
-    
+          
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

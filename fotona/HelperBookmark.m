@@ -662,7 +662,7 @@ int bookmarkedCount;
 }
 
 +(void)warning {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"Some files might be missing and are not bookmarked" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"Some files might be missing and are not downloaded" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
 }
 
