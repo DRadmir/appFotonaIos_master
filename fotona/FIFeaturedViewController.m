@@ -17,7 +17,8 @@
 #import "UIWindow+Fotona.h"
 #import "FINewsViewController.h"
 #import "FGoogleAnalytics.h"
-
+#import "NewsViewCell.h"
+#import "HelperDate.h"
 
 #define ABOUT_CELL_VIEW_START_TAG 600
 #define EVENT_CELL_VIEW_START_TAG 500
@@ -74,11 +75,12 @@
     
     [self.tableViewFeatured setNeedsLayout];
     [self.tableViewFeatured layoutIfNeeded];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
-     [super viewWillAppear:animated];
+    [super viewWillAppear:animated];
     [self setUp];
     carousel.type = iCarouselTypeLinear;
     [carousel reloadData];
@@ -189,6 +191,7 @@
     return CGFLOAT_MIN;
 }
 
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0 && guestBool) {
@@ -206,12 +209,12 @@
     }
     
     FIFeaturedNewsTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:0];
-    
+
     if (indexPath.row == 0) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:1];
     }
     if (indexPath.row > newsCount - 1 && [APP_DELEGATE connectedToInternet]) {
-
+        
         CGPoint offset = self.tableViewFeatured.contentOffset;
         offset.y-=10;
         [self.tableViewFeatured setContentOffset:offset animated:NO];
@@ -229,36 +232,47 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     int diffAfter = newsCount - enabledNewsCount;
                     
+//                    [tableView beginUpdates];
+//                    [tableView endUpdates];
+
+                    
                     NSMutableArray *rowsToReload =[[NSMutableArray alloc] init];
                     
                     for (int i = 0; i < diffAfter; i++){
                         NSIndexPath* index = [NSIndexPath indexPathForRow:enabledNewsCount+i-1 inSection:indexPath.section];
                         [rowsToReload addObject:index];
                     }
+                    
                     enabledNewsCount+= diffAfter;
                     [tableViewFeatured reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
                     
+                    
+                    
+                    //[tableView reloadData];
+                    //[tableViewFeatured reloadData];
+                    //[tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+                    
                 });
-                    }
+                    
+                }
             });
-        
     }
     
-        
-   
+    
+    //[tableViewFeatured reloadData];
     cell.news = newsArray[indexPath.row];
     [cell fillCell];
-
+    
     if (indexPath.row>= 8)
     {
         cell.signNewNewsCell.hidden = true;
+        
     }
     
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [cell setTag:NEWS_CELL_VIEW_START_TAG];
     return cell;
 }
-
 
 #pragma mark - iCarousel methods
 
@@ -443,6 +457,7 @@
             {
                 FINewsViewController *nview = (FINewsViewController *)object;
                 [nview reloadView];
+                
             }
         }
         

@@ -1021,13 +1021,6 @@
 			name = ConnectionHelper;
 			sourceTree = "<group>";
 		};
-		1B2A1A271DB65A1B004F05A0 /* ThumbnailImages */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = ThumbnailImages;
-			sourceTree = "<group>";
-		};
 		1B4767E91DB77CFD0059D774 /* HelperThumbnailImg */ = {
 			isa = PBXGroup;
 			children = (
@@ -1802,7 +1795,6 @@
 				1B3A44A61DD4D86D0091679C /* FIPDFViewController.h */,
 				1B3A44A71DD4D86D0091679C /* FIPDFViewController.m */,
 				1BF4314B1DDA19EB003D85B0 /* GalleryCells */,
-				1B2A1A271DB65A1B004F05A0 /* ThumbnailImages */,
 				1B01D2F61DB4ADBC00CF7391 /* GalleryViews */,
 				1B01D2F51DB4AC6500CF7391 /* BubbleController */,
 				1B01D2F41DB4AC3D00CF7391 /* ErrorLogger */,
@@ -2088,6 +2080,9 @@
 						DevelopmentTeam = NR5BL2Y2D7;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
 							com.apple.DataProtection = {
 								enabled = 1;
 							};

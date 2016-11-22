@@ -39,6 +39,8 @@
             self.lblDateNewsCell.text = @" ";
             [self.lblTitleNewsCell setBackgroundColor:[UIColor lightGrayColor]];
             [self.lblDateNewsCell setBackgroundColor:[UIColor lightGrayColor]];
+            
+
         } else {
             [self setUserInteractionEnabled:YES];
             self.lblTitleNewsCell.text = self.news.title;

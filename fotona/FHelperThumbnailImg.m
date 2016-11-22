@@ -89,11 +89,13 @@ static UIImage *defaultVideoImage;
                         NSData *data2 = UIImagePNGRepresentation([preloadGalleryMoviesImages objectForKey:videoKey]);
                         if (![data1 isEqual:data2]) {
                             [preloadGalleryMoviesImages setValue:imgNew forKey:videoKey];
-                           imageToLoad = imgNew;
+                            imageToLoad = imgNew;
+                            
                         }
                     }
                 }
-               
+                [self setImage:imageToLoad onIndex:indexPath forTableView:tableView orCollectionView:collectionView andPosition:i];
+                
                 done = YES;
             }
             
@@ -132,32 +134,9 @@ static UIImage *defaultVideoImage;
             }
             
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSIndexPath *tableIndexPath;
-                if (indexPath == nil) {
-                    tableIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                } else {
-                    tableIndexPath = indexPath;
-                }
-                if (tableView != nil) {
-                    if ([[tableView cellForRowAtIndexPath:tableIndexPath] isKindOfClass:[FIGalleryTableViewCell class]]) {
-                        FIGalleryTableViewCell *cell = (FIGalleryTableViewCell *)[tableView cellForRowAtIndexPath:tableIndexPath];
-                        if (cell)
-                        {
-                            [cell refreshMediaThumbnail:imageToLoad];
-                        }
-                    }
-                } else {
-                    if (collectionView != nil) {
-                        FIGalleryTableViewCell *cell = (FIGalleryTableViewCell *)[collectionView cellForItemAtIndexPath:tableIndexPath];
-                        if (cell)
-                        {
-                            [cell refreshMediaThumbnail:imageToLoad];
-                        }
-                       
-                    }
-                }
-            });
+            
+            [self setImage:imageToLoad onIndex:indexPath forTableView:tableView orCollectionView:collectionView andPosition:i];
+            
         });
     }
     
@@ -166,6 +145,35 @@ static UIImage *defaultVideoImage;
     [[NSUserDefaults standardUserDefaults] setObject:today forKey:@"thubnailsLastUpdate"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
+}
+
++(void)setImage:(UIImage *) image onIndex:(NSIndexPath *)indexPath forTableView:(UITableView *)tableView orCollectionView:(UICollectionView *)collectionView andPosition:(int)i{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSIndexPath *tableIndexPath;
+        if (indexPath == nil) {
+            tableIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        } else {
+            tableIndexPath = indexPath;
+        }
+        if (tableView != nil) {
+            if ([[tableView cellForRowAtIndexPath:tableIndexPath] isKindOfClass:[FIGalleryTableViewCell class]]) {
+                FIGalleryTableViewCell *cell = (FIGalleryTableViewCell *)[tableView cellForRowAtIndexPath:tableIndexPath];
+                if (cell)
+                {
+                    [cell refreshMediaThumbnail:image];
+                }
+            }
+        } else {
+            if (collectionView != nil) {
+                FIGalleryTableViewCell *cell = (FIGalleryTableViewCell *)[collectionView cellForItemAtIndexPath:tableIndexPath];
+                if (cell)
+                {
+                    [cell refreshMediaThumbnail:image];
+                }
+                
+            }
+        }
+    });
 }
 
 +(NSString *)getpreloadGalleryMoviesImagesKeyWithMediaId:(NSString *)mediaId mediaType:(NSString *)medaiType
