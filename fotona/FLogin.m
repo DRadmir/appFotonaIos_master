@@ -29,6 +29,7 @@
 
 
 UIButton *tmp;
+BOOL showFeatured = YES;
 
 -(void)setDefaultParent:(FMainViewController_iPad * )piPad andiPhone:(FMainViewController *)piPhone
 {
@@ -50,6 +51,7 @@ UIButton *tmp;
  */
 -(void)autoLogin
 {
+    showFeatured = YES;
     UIButton *sender;
      NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
     if(parentiPad != nil)
@@ -86,13 +88,18 @@ UIButton *tmp;
 
 -(void)guest:(id)sender
 {
+    showFeatured = YES;
     logintype = 1;
     if([ConnectionHelper isConnected])
     {
-        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
-        [parent.view addSubview:hud];
-        hud.labelText = @"Updating content";
-        [hud show:YES];
+        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastUpdate"] isEqualToString:@""] || ![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastUpdate"] isEqualToString:@"updated"]) {
+            MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
+            [parent.view addSubview:hud];
+            hud.labelText = NSLocalizedString(@"UPDATING", nil);
+            [hud show:YES];
+        } else {
+            [self goToFeatured];
+        }
         [self setDelegate];
         
     } else{
@@ -115,6 +122,8 @@ UIButton *tmp;
                     }
                 }
                 [self showUserFolder:@".guest"];
+                [self updateStart];
+                
             }else{
                 UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Some data might missing" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Login anyway", nil];
                 [av setTag:1];
@@ -131,6 +140,7 @@ UIButton *tmp;
 //začetek logina
 -(void)login:(id)sender
 {
+     showFeatured = YES;
     logintype = 2;
     tmp=(UIButton *)sender;
     if([ConnectionHelper isConnected])
@@ -197,16 +207,10 @@ UIButton *tmp;
                 
             } else{
                 UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
-                [alertView show];}
-            [MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
-            if(parentiPad != nil)
-            {
-                [parentiPad showLoginForm];
-            } else
-            {
-                [parentiPhone showLoginForm];
+                [alertView show];
             }
-            
+            [MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
+            [self goToFeatured];
         }
         else if([[dic valueForKey:@"msg"] isEqualToString:@"Success"]){
             FUser *usr=[[FUser alloc] initWithDictionary:[[dic objectForKey:@"values"] objectAtIndex:0]];
@@ -248,13 +252,7 @@ UIButton *tmp;
                                          [alertView show];
                                          [sender setEnabled:YES];
                                          [MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
-                                         if(parentiPad != nil)
-                                         {
-                                             [parentiPad showLoginForm];
-                                         } else
-                                         {
-                                             [parentiPhone showLoginForm];
-                                         }
+                                         [self goToFeatured];
                                          
                                      }];
     
@@ -353,13 +351,7 @@ UIButton *tmp;
         [[NSUserDefaults standardUserDefaults] setValue:guest.username forKey:@"autoLogin"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [FHelperRequest sendDeviceData];
-        if(parentiPad != nil)
-        {
-            [parentiPad showFeatured];
-        } else
-        {
-            [parentiPhone showFeatured];
-        }
+        [self goToFeatured];
     }else{
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Some data might missing" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Login anyway", nil];
         [av setTag:1];
@@ -369,13 +361,7 @@ UIButton *tmp;
 
 
 -(void)loginUpdated{
-    if(parentiPad != nil)
-    {
-        [parentiPad showFeatured];
-    } else
-    {
-        [parentiPhone showFeatured];
-    }
+    [self goToFeatured];
 }
 
 -(void)autoLoginUpdated
@@ -432,10 +418,15 @@ UIButton *tmp;
 {
     if (alertView.tag==0) {
         if (buttonIndex==1) {
-            MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
-            [parent.view addSubview:hud];
-            hud.labelText = @"Updating content";
-            [hud show:YES];
+            if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastUpdate"] isEqualToString:@""] || ![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastUpdate"] isEqualToString:@"updated"]) {
+                MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
+                [parent.view addSubview:hud];
+                hud.labelText = NSLocalizedString(@"UPDATING", nil);
+                [hud show:YES];
+            } else {
+                [self goToFeatured];
+            }
+
             if (parentiPad != nil) {
                 [FDownloadManager shared].updateDelegate = parentiPad;
             } else{
@@ -581,13 +572,25 @@ UIButton *tmp;
 {
     [MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
     if([ConnectionHelper isConnected]){  //preverjanje če je internet
-        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
-        [parent.view addSubview:hud];
-        hud.labelText = @"Updating content";
-        [hud show:YES];
+        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastUpdate"] isEqualToString:@""] || ![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastUpdate"] isEqualToString:@"updated"]) {
+            MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
+            [parent.view addSubview:hud];
+            hud.labelText = NSLocalizedString(@"UPDATING", nil);
+            [hud show:YES];
+        } else {
+            [self goToFeatured];
+        }
         [self setDelegate];
     }
     else{
+        [self goToFeatured];
+        //če ga ni se pokliče showfeatured
+    }
+}
+
+-(void) goToFeatured{
+    if (showFeatured) {
+        showFeatured = NO;
         if(parentiPad != nil)
         {
             [parentiPad showFeatured];
@@ -595,7 +598,6 @@ UIButton *tmp;
         {
             [parentiPhone showFeatured];
         }
-        //če ga ni se pokliče showfeatured
     }
 }
 

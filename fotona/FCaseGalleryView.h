@@ -11,7 +11,7 @@
 #import "FIFavoriteViewController.h"
 #import "FFavoriteViewController.h"
 
-@interface FCaseGalleryView : UIView
+@interface FCaseGalleryView : UIView <UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIImageView *imgAuthor;
 @property (strong, nonatomic) IBOutlet UIImageView *imgBackground;

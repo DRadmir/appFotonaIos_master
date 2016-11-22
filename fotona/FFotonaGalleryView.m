@@ -10,6 +10,7 @@
 #import "FDB.h"
 #import "HelperBookmark.h"
 #import "UIColor+Hex.h"
+#import "FDownloadManager.h"
 
 @implementation FFotonaGalleryView
 
@@ -86,18 +87,8 @@
 #pragma mark - Buttons
 
 - (IBAction)downloadAdd:(id)sender {
-    if ([type intValue] == [MEDIAPDF intValue] || [type intValue] == [MEDIAVIDEO intValue]) {
-        if ([HelperBookmark bookmarkMedia:cellMedia]) {
-            btnDownloadAdd.enabled = NO;
-            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"BOOKMARKING", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [av show];
-        } else {
-            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"ADDBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [av show];
-            btnDownloadRemove.hidden = NO;
-            btnDownloadAdd.hidden = YES;
-        }
-    }
+    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [av show];
 }
 
 - (IBAction)downloadRemove:(id)sender {
@@ -123,5 +114,23 @@
     btnFavoriteRemove.hidden = YES;
     btnFavoriteAdd.hidden = NO;
 }
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView.message isEqualToString:NSLocalizedString(@"BOOKMARKING", nil)]) {
+        if ([type intValue] == [MEDIAPDF intValue] || [type intValue] == [MEDIAVIDEO intValue]) {
+            if ([HelperBookmark bookmarkMedia:cellMedia]) {
+                btnDownloadAdd.enabled = NO;
+                 [[FDownloadManager shared] prepareForDownloadingFiles];
+            } else {
+                UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"ADDBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [av show];
+                btnDownloadRemove.hidden = NO;
+                btnDownloadAdd.hidden = YES;
+            }
+        }
+    }
+}
+
 
 @end
