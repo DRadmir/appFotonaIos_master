@@ -9,6 +9,8 @@
 #import "FCaseGalleryView.h"
 #import "FDB.h"
 #import "UIColor+Hex.h"
+#import "HelperBookmark.h"
+#import "FDownloadManager.h"
 
 @implementation FCaseGalleryView
 
@@ -135,8 +137,17 @@
 }
 
 - (IBAction)downloadAdd:(id)sender {
-    btnDownloadRemove.hidden = false;
-    btnDownloadAdd.hidden = true;
+    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [av show];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView.message isEqualToString:NSLocalizedString(@"BOOKMARKING", nil)]) {
+        [HelperBookmark bookmarkCase:caseToShow];
+        [APP_DELEGATE setBookmarkAll:YES];
+        [[FDownloadManager shared] prepareForDownloadingFiles];
+    }
 }
 
 @end

@@ -13,7 +13,7 @@
 #import "FFavoriteViewController.h"
 
 
-@interface FFotonaGalleryView : UIView
+@interface FFotonaGalleryView : UIView <UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIImageView *imgThumbnail;
 @property (strong, nonatomic) IBOutlet UILabel *lblTitle;

@@ -999,11 +999,10 @@ NSComparisonResult dateSortForNews(FNews *n1, FNews *n2, void *context) {
         
         NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"fotona.db"];
         success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
-        [defaults setObject:userBookmarked forKey:@"userBookmarked"];
         [defaults synchronize];
-        [[NSUserDefaults standardUserDefaults] setObject:@"2.4" forKey:@"DBLastUpdate"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"3.0" forKey:@"DBLastUpdate"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        
+        [self resetAllDefaults];
         [APP_DELEGATE setBookmarkCountAll:0];
         [APP_DELEGATE setBookmarkCountLeft:0];
         [APP_DELEGATE setBookmarkSizeAll:0];
@@ -1022,16 +1021,7 @@ NSComparisonResult dateSortForNews(FNews *n1, FNews *n2, void *context) {
             else{
                 [[NSUserDefaults standardUserDefaults] setObject:@"2.4" forKey:@"DBLastUpdate"];
                 [[NSUserDefaults standardUserDefaults] synchronize];
-                [defaults setObject:@"" forKey:@"newsLastUpdate"];
-                [defaults setObject:@"" forKey:@"eventsLastUpdate"];
-                [defaults setObject:@"" forKey:@"caseCategoriesLastUpdate"];
-                [defaults setObject:@"" forKey:@"casesLastUpdate"];
-                [defaults setObject:@"" forKey:@"authorsLastUpdate"];
-                [defaults setObject:@"" forKey:@"documentsLastUpdate"];
-                [defaults setObject:@"" forKey:@"fotonaLastUpdate"];
-                [defaults setObject:@"" forKey:@"lastUpdate"];
-                [defaults setObject:userBookmarked forKey:@"userBookmarked"];
-                [defaults synchronize];
+                [self resetAllDefaults];
                 
                 
             }
@@ -1117,16 +1107,7 @@ NSComparisonResult dateSortForNews(FNews *n1, FNews *n2, void *context) {
                 else{
                     [[NSUserDefaults standardUserDefaults] setObject:@"3.0" forKey:@"DBLastUpdate"];
                     [[NSUserDefaults standardUserDefaults] synchronize];
-                    [defaults setObject:@"" forKey:@"newsLastUpdate"];
-                    [defaults setObject:@"" forKey:@"eventsLastUpdate"];
-                    [defaults setObject:@"" forKey:@"caseCategoriesLastUpdate"];
-                    [defaults setObject:@"" forKey:@"casesLastUpdate"];
-                    [defaults setObject:@"" forKey:@"authorsLastUpdate"];
-                    [defaults setObject:@"" forKey:@"documentsLastUpdate"];
-                    [defaults setObject:@"" forKey:@"fotonaLastUpdate"];
-                    [defaults setObject:@"" forKey:@"lastUpdate"];
-                    [defaults setObject:userBookmarked forKey:@"userBookmarked"];
-                    [defaults synchronize];
+                    [self resetAllDefaults];
                 }
                 
                 NSFileManager *fileMgr = [NSFileManager defaultManager];
@@ -1168,6 +1149,24 @@ NSComparisonResult dateSortForNews(FNews *n1, FNews *n2, void *context) {
     }
     NSString *path=[NSString stringWithFormat:@"%@/.db/fotona.db",documentsDir];
     return path;
+}
+
++(void) resetAllDefaults{
+    NSMutableArray *userBookmarked = [[NSMutableArray alloc] init];
+
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+
+    [defaults setObject:@"" forKey:@"newsLastUpdate"];
+    [defaults setObject:@"" forKey:@"eventsLastUpdate"];
+    [defaults setObject:@"" forKey:@"caseCategoriesLastUpdate"];
+    [defaults setObject:@"" forKey:@"casesLastUpdate"];
+    [defaults setObject:@"" forKey:@"authorsLastUpdate"];
+    [defaults setObject:@"" forKey:@"documentsLastUpdate"];
+    [defaults setObject:@"" forKey:@"fotonaLastUpdate"];
+    [defaults setObject:@"" forKey:@"lastUpdate"];
+    [defaults setObject:userBookmarked forKey:@"userBookmarked"];
+    [defaults synchronize];
+
 }
 
 

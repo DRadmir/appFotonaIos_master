@@ -1291,8 +1291,6 @@
 
 
 
-
-
 -(IBAction)logout:(id)sender
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
@@ -1918,7 +1916,6 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     direction = TRUE;
     
 }
-
 
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
