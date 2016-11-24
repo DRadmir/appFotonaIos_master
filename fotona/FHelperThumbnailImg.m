@@ -77,7 +77,7 @@ static UIImage *defaultVideoImage;
             FMedia *media=[mediaArray objectAtIndex:i];
             //id of image inside preloadGalleryMoviesImages
             NSString *videoKey = [self getpreloadGalleryMoviesImagesKeyWithMediaId:[[mediaArray objectAtIndex:i] itemID] mediaType:mediaType];
-            
+        
             //image is not default
             if ([preloadGalleryMoviesImages objectForKey:videoKey] != self.defaultVideoImage) {
                 imageToLoad = [preloadGalleryMoviesImages objectForKey:videoKey];
@@ -94,31 +94,32 @@ static UIImage *defaultVideoImage;
                         }
                     }
                 }
-                [self setImage:imageToLoad onIndex:indexPath forTableView:tableView orCollectionView:collectionView andPosition:i];
                 
                 done = YES;
             }
-            
+        
+        
             //we are not loading current gallery
             if (!done && [[media mediaType] intValue] != [mediaType intValue]) {
                 done = YES;
             }
-            
+        
             if (!done && [preloadGalleryMoviesImages count] <= i) {
                 done = YES;
             }
-            
+ 
             UIImage *img;
             NSArray *pathComp=[[media mediaImage] pathComponents];
             NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[media mediaImage] lastPathComponent]];
             if ([[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
+                
                 NSData *data=[NSData dataWithContentsOfFile:pathTmp];
                 img = [UIImage imageWithData:data];
             } else{
                 NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[media mediaImage]];
                 img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
             }
-            
+        
             if (img!=nil) {
                 UIGraphicsEndImageContext();
                 [preloadGalleryMoviesImages setValue:img forKey:videoKey];
@@ -132,11 +133,11 @@ static UIImage *defaultVideoImage;
                 [APP_DELEGATE setVideoImages:temp];
                 imageToLoad = img;
             }
-            
+     
             
             
             [self setImage:imageToLoad onIndex:indexPath forTableView:tableView orCollectionView:collectionView andPosition:i];
-            
+        
         });
     }
     

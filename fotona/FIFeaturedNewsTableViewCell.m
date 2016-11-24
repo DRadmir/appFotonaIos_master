@@ -8,12 +8,16 @@
 
 #import "FIFeaturedNewsTableViewCell.h"
 #import "HelperDate.h"
+#import "FDB.h"
 
 @implementation FIFeaturedNewsTableViewCell
 
 @synthesize contentView;
 @synthesize topViewContentView;
 @synthesize enabled;
+
+@synthesize index;
+@synthesize tableView;
 
 //TODO : zbrisat xib file za ta class
 - (void)awakeFromNib {
@@ -40,6 +44,14 @@
             [self.lblTitleNewsCell setBackgroundColor:[UIColor lightGrayColor]];
             [self.lblDateNewsCell setBackgroundColor:[UIColor lightGrayColor]];
             
+                        dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
+                        dispatch_async(queue, ^{
+                            self.news = [[FNews getImages:[[NSMutableArray alloc] initWithObjects:[self news], nil] fromStart:0 forNumber:1] objectAtIndex:0];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [tableView reloadRowsAtIndexPaths:[[NSArray alloc] initWithObjects:index, nil] withRowAnimation:UITableViewRowAnimationNone];
+                            });
+                        });
+
 
         } else {
             [self setUserInteractionEnabled:YES];

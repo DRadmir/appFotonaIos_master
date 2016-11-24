@@ -60,9 +60,9 @@ int forgotenBottom = 0;
     
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.mainControler = self;
-    
-    [textFieldUser setText:@"radovanovic"];
-    [textFieldPass setText:@"n3cuqaKU"];
+//    
+//    [textFieldUser setText:@"radovanovic"];
+//    [textFieldPass setText:@"n3cuqaKU"];
 }
 
 -(void)viewDidAppear:(BOOL)animated

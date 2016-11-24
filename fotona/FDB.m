@@ -480,6 +480,18 @@
     [databaseN close];
 }
 
++(void)setNewsRest:(FNews *)news
+{
+    FMDatabase *databaseN = [FMDatabase databaseWithPath:DB_PATH];
+    [databaseN open];
+    
+    NSString *usr = [FCommon getUser];
+    NSString * newsIDtemp=[NSString stringWithFormat:@"%ld",[news newsID]];
+    [databaseN executeUpdate:@"INSERT INTO NewsRead (newsID, userName) VALUES (?,?)",newsIDtemp,usr];
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [databaseN close];
+}
+
 
 #pragma mark - Videos
 

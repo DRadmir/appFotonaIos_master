@@ -76,6 +76,8 @@
     [self.tableViewFeatured setNeedsLayout];
     [self.tableViewFeatured layoutIfNeeded];
     
+    newsArray = [FDB getNewsSortedDateFromDB];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -85,7 +87,7 @@
     carousel.type = iCarouselTypeLinear;
     [carousel reloadData];
     eventsArray = [FDB getEventsFromDB];
-    newsArray = [FDB getNewsSortedDateFromDB];
+    
     eventsBool =  (eventsArray != nil);
     newsBool = (newsArray != nil);
     guestBool = ([[[APP_DELEGATE currentLogedInUser] userType] intValue] == 0 || [[[APP_DELEGATE currentLogedInUser] userType] intValue] == 3);
@@ -223,43 +225,9 @@
             l = newsArray.count - newsCount;
         }
         newsCount+=l;
-     
-            dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
-            dispatch_async(queue, ^{
-                if (newsCount > enabledNewsCount ) {
-                int diff = newsCount - enabledNewsCount;
-                newsArray = [FNews getImages:newsArray fromStart:enabledNewsCount forNumber:diff];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    int diffAfter = newsCount - enabledNewsCount;
-                    
-//                    [tableView beginUpdates];
-//                    [tableView endUpdates];
-
-                    
-                    NSMutableArray *rowsToReload =[[NSMutableArray alloc] init];
-                    
-                    for (int i = 0; i < diffAfter; i++){
-                        NSIndexPath* index = [NSIndexPath indexPathForRow:enabledNewsCount+i-1 inSection:indexPath.section];
-                        [rowsToReload addObject:index];
-                    }
-                    
-                    enabledNewsCount+= diffAfter;
-                    [tableViewFeatured reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
-                    
-                    
-                    
-                    //[tableView reloadData];
-                    //[tableViewFeatured reloadData];
-                    //[tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
-                    
-                });
-                    
-                }
-            });
     }
     
     
-    //[tableViewFeatured reloadData];
     cell.news = newsArray[indexPath.row];
     [cell fillCell];
     
