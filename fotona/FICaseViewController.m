@@ -66,10 +66,8 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-     [super viewWillAppear:animated];
+    [super viewWillAppear:animated];
     [self refreshBookmarkBtn];
-    
-    
     
     [self createGallery];
     
@@ -451,7 +449,11 @@
     FIFlowController *flow = [FIFlowController sharedInstance];
     if (flow.lastIndex == 3)
     {
-        [btnBookmark setHidden:NO];
+        if ([APP_DELEGATE connectedToInternet]) {
+            [btnBookmark setHidden:NO];
+        } else {
+            [btnBookmark setHidden:YES];
+        }
     }
     [btnRemoveBookmark setHidden:YES];
     
@@ -468,16 +470,18 @@
 }
 
 - (void) refreshBookmarkBtn  {
-     BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
+    BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
     if (bookmarked){
         [btnBookmark setHidden:YES];
         [btnRemoveBookmark setHidden:NO];
     } else {
-        [btnBookmark setHidden:NO];
+        if ([APP_DELEGATE connectedToInternet]) {
+            [btnBookmark setHidden:NO];
+        } else {
+            [btnBookmark setHidden:YES];
+        }
         [btnRemoveBookmark setHidden:YES];
     }
-
-    
 }
 
 - (IBAction)addToFavorite:(id)sender {

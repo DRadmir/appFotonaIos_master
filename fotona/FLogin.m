@@ -125,12 +125,12 @@ BOOL showFeatured = YES;
                 [self updateStart];
                 
             }else{
-                UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Some data might missing" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Login anyway", nil];
+                UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"DATAMISSING", nil) delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Login anyway", nil];
                 [av setTag:1];
                 [av show];
             }
         }else{
-            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"For first login you need to be connected to internet." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"FIRSTLOGIN", nil) delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
             [av setTag:1];
             [av show];
         }
@@ -140,17 +140,37 @@ BOOL showFeatured = YES;
 //začetek logina
 -(void)login:(id)sender
 {
-     showFeatured = YES;
-    logintype = 2;
-    tmp=(UIButton *)sender;
-    if([ConnectionHelper isConnected])
+    BOOL missingData = NO;
+    if(parentiPad != nil)
     {
-        [self loginOnFotona:tmp];
-    } else{
-        logintype = 0;
-        [tmp setEnabled:NO];
-        [self loginUserOffline];
-        [tmp setEnabled:YES];
+        if([parentiPad.username.text isEqualToString:@""] || [parentiPad.password.text isEqualToString:@""]){
+            missingData = YES;
+        }
+    } else
+    {
+        if([parentiPhone.textFieldUser.text isEqualToString:@""] || [parentiPhone.textFieldPass.text isEqualToString:@""]){
+            missingData = YES;
+        }
+    }
+    if (missingData) {
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"MISSINGDATA", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [av setTag:1];
+        [av show];
+
+    } else {
+        showFeatured = YES;
+        logintype = 2;
+        tmp=(UIButton *)sender;
+        if([ConnectionHelper isConnected])
+        {
+            [self loginOnFotona:tmp];
+        } else{
+            logintype = 0;
+            [tmp setEnabled:NO];
+            [self loginUserOffline];
+            [tmp setEnabled:YES];
+        }
+
     }
 }
 
@@ -206,11 +226,10 @@ BOOL showFeatured = YES;
             if ([usrName isEqualToString:@""]) {
                 
             } else{
-                UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
+                UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"WRONGLOGIN", nil) delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
                 [alertView show];
             }
             [MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
-            [self goToFeatured];
         }
         else if([[dic valueForKey:@"msg"] isEqualToString:@"Success"]){
             FUser *usr=[[FUser alloc] initWithDictionary:[[dic objectForKey:@"values"] objectAtIndex:0]];
@@ -294,15 +313,15 @@ BOOL showFeatured = YES;
                 [self showUserFolder:[NSString stringWithFormat:@".%@",localUser.username]];
                 [self updateStart];
             }else{
-                UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
+                UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"WRONGLOGIN", nil) delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
                 [alertView show];
             }
         }else{
-            UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"Wrong username or password!" delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
+            UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"WRONGLOGIN", nil) delegate:nil cancelButtonTitle:@"Try again" otherButtonTitles:nil];
             [alertView show];
         }
     }else{
-        UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:@"For first login you need to be connected to internet." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alertView=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"FIRSTLOGIN", nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
     }
 }
@@ -353,7 +372,7 @@ BOOL showFeatured = YES;
         [FHelperRequest sendDeviceData];
         [self goToFeatured];
     }else{
-        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Some data might missing" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Login anyway", nil];
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"DATAMISSING", nil) delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Login anyway", nil];
         [av setTag:1];
         [av show];
     }

@@ -156,7 +156,11 @@
                 [addBookmarks setHidden:YES];
                 [removeBookmarks setHidden:NO];
             } else {
-                [addBookmarks setHidden:NO];
+                if ([APP_DELEGATE connectedToInternet]) {
+                    [addBookmarks setHidden:NO];
+                } else {
+                    [addBookmarks setHidden:YES];
+                }
                 [removeBookmarks setHidden:YES];
             }
             
@@ -532,7 +536,11 @@
         [addBookmarks setHidden:YES];
         [removeBookmarks setHidden:NO];
     } else{
-        [addBookmarks setHidden:NO];
+        if ([APP_DELEGATE connectedToInternet]) {
+            [addBookmarks setHidden:NO];
+        } else {
+            [addBookmarks setHidden:YES];
+        }
         [removeBookmarks setHidden:YES];
     }
 }
@@ -1019,7 +1027,11 @@
 
 
 - (IBAction)removeFromBookmarks:(id)sender {
-    [addBookmarks setHidden:NO];
+    if ([APP_DELEGATE connectedToInternet]) {
+        [addBookmarks setHidden:NO];
+    } else {
+        [addBookmarks setHidden:YES];
+    }
     [removeBookmarks setHidden:YES];
     [HelperBookmark removeBookmarkedCase:currentCase];
 }

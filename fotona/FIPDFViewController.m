@@ -36,7 +36,7 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self openExternalLink:@""];
+    [self clearWebView];
 }
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
@@ -150,6 +150,10 @@
     [MBProgressHUD hideAllHUDsForView:webView animated:YES];
     UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"LOADINGWEBPAGEERROR", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [av show];
+}
+
+-(void)clearWebView{
+    [pdfWebView loadHTMLString:@"" baseURL:nil];
 }
 
 

@@ -53,3 +53,11 @@
 //update
 "UPDATING" = "Updating content";
 
+//login
+"MISSINGDATA" = "Please enter username and password";
+"FIRSTLOGIN" = "For first login you need to be connected to internet.";
+"WRONGLOGIN" = "Wrong username or password!";
+"DATAMISSING" = "Some data might be missing";
+
+
+
