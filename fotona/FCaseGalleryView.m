@@ -69,7 +69,11 @@
         btnDownloadAdd.hidden = YES;
     } else {
         btnDownloadRemove.hidden = YES;
-        btnDownloadAdd.hidden = NO;
+        if ([APP_DELEGATE connectedToInternet]) {
+            [btnDownloadAdd setHidden:NO];
+        } else {
+            [btnDownloadAdd setHidden:YES];
+        }
     }
     
     if([FDB checkIfFavoritesItem: [[item itemID] intValue] ofType:[item typeID]]){
@@ -97,9 +101,6 @@
         [lblTitle setAlpha:DISABLEDCOLORALPHA];
         [lblDescription setAlpha:DISABLEDCOLORALPHA];
         [lblCaseType setAlpha:DISABLEDCOLORALPHA];
-    }
-    if (![APP_DELEGATE connectedToInternet]) {
-        btnDownloadAdd.hidden = true;
     }
     
     if ([FCommon isIpad]) {
@@ -132,8 +133,13 @@
 }
 
 - (IBAction)downloadRemove:(id)sender {
+    [HelperBookmark removeBookmarkedCase:caseToShow];
     btnDownloadRemove.hidden = true;
-    btnDownloadAdd.hidden = false;
+    if ([APP_DELEGATE connectedToInternet]) {
+        [btnDownloadAdd setHidden:NO];
+    } else {
+        [btnDownloadAdd setHidden:YES];
+    }
 }
 
 - (IBAction)downloadAdd:(id)sender {

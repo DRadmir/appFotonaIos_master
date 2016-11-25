@@ -36,7 +36,6 @@
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="41" id="27Z-9S-jXN"/>
                                         <constraint firstAttribute="bottom" secondItem="i6W-Sv-1OT" secondAttribute="bottom" id="A6l-z8-wkH"/>
                                         <constraint firstAttribute="trailing" secondItem="i6W-Sv-1OT" secondAttribute="trailing" constant="9" id="Bld-Ja-Xfj"/>
                                         <constraint firstItem="i6W-Sv-1OT" firstAttribute="top" secondItem="Hfo-KL-brE" secondAttribute="top" id="X9o-9Q-8p9"/>
@@ -62,6 +61,7 @@
                                 <constraint firstAttribute="trailing" secondItem="Khz-wo-0RF" secondAttribute="trailing" id="SHv-f6-fQC"/>
                                 <constraint firstAttribute="bottom" secondItem="OrY-6R-BNQ" secondAttribute="bottom" constant="8" id="XYS-uq-Ta3"/>
                                 <constraint firstAttribute="trailing" secondItem="Hfo-KL-brE" secondAttribute="trailing" id="Xsh-oB-OVn"/>
+                                <constraint firstItem="OrY-6R-BNQ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="i6W-Sv-1OT" secondAttribute="bottom" constant="2" id="d2P-g6-cMB"/>
                                 <constraint firstItem="Hfo-KL-brE" firstAttribute="leading" secondItem="91g-RE-6QP" secondAttribute="leading" id="hkI-IK-fMO"/>
                                 <constraint firstItem="PWV-FE-37i" firstAttribute="top" secondItem="91g-RE-6QP" secondAttribute="topMargin" id="iv5-Ee-Dam"/>
                                 <constraint firstItem="Khz-wo-0RF" firstAttribute="leading" secondItem="91g-RE-6QP" secondAttribute="leading" id="rCm-9T-6P9"/>
@@ -253,7 +253,6 @@
                                     </constraints>
                                     <state key="normal" backgroundImage="favorites_remove"/>
                                     <connections>
-                                        <action selector="favoriteRemove:" destination="iN0-l3-epB" eventType="touchUpInside" id="abU-Qp-nJi"/>
                                         <action selector="favoriteRemove:" destination="svp-qh-OfF" eventType="touchUpInside" id="rBH-5a-aWm"/>
                                     </connections>
                                 </button>

@@ -477,7 +477,11 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         [addBookmarks setHidden:YES];
         [removeBookmarks setHidden:NO];
     } else{
-        [addBookmarks setHidden:NO];
+        if ([APP_DELEGATE connectedToInternet]) {
+            [addBookmarks setHidden:NO];
+        } else {
+            [addBookmarks setHidden:YES];
+        }
         [removeBookmarks setHidden:YES];
     }
 
@@ -983,7 +987,11 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 - (IBAction)removeFromBookmarks:(id)sender {
     
     [removeBookmarks setHidden:YES];
-    [addBookmarks setHidden:NO];
+    if ([APP_DELEGATE connectedToInternet]) {
+        [addBookmarks setHidden:NO];
+    } else {
+        [addBookmarks setHidden:YES];
+    }
     [HelperBookmark removeBookmarkedCase:currentCase];
 }
 
