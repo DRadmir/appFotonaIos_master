@@ -72,6 +72,6 @@
 - (void)openNews:(FNews *)news;
 
 - (void)setNewsReaded:(NSString *)nID;
-
+- (void)fillCell;
 
 @end

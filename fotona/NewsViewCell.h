@@ -21,6 +21,8 @@
 @property (nonatomic) NSMutableArray *newsArray;
 @property (nonatomic) BOOL enabled;
 @property (strong, nonatomic) FMainViewController_iPad *parent;
+
+
 -(void)fillCell;
 
 @end

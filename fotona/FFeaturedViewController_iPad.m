@@ -405,7 +405,7 @@ FNewsView *newsViewController;
                 if ([FCommon isGuest]) {
                     g = 2;
                 }
-                
+        
                 NSMutableArray *rowsToReload =[[NSMutableArray alloc] init];
                 
                 for (int i = 0; i < l; i++){
@@ -424,11 +424,41 @@ FNewsView *newsViewController;
     [tempCell.newsImage setContentMode:UIViewContentModeScaleAspectFill];
     [tempCell.newsImage setClipsToBounds:YES];
     
+//    [tempCell.newsTitle setBackgroundColor:[UIColor whiteColor]];
+//    [tempCell.newsDate setBackgroundColor:[UIColor whiteColor]];
+//    
+//    [tempCell setUserInteractionEnabled:NO];
+//    if ([[[tempCell news] rest] isEqualToString:@"1"] && [APP_DELEGATE connectedToInternet]) {
+//        tempCell.newsTitle.text = @" ";
+//        tempCell.newsDate.text = @" ";
+//        [tempCell.newsTitle setBackgroundColor:[UIColor lightGrayColor]];
+//        [tempCell.newsDate setBackgroundColor:[UIColor lightGrayColor]];
+//    }
+//    else {
+//        [tempCell setUserInteractionEnabled:YES];
+//        tempCell.newsTitle.text = tempCell.news.title;
+//        tempCell.newsDate.text = [HelperDate formatedDate:tempCell.news.nDate];
+//        [tempCell.newsImage setContentMode:UIViewContentModeScaleAspectFill];
+//        [tempCell.newsImage setClipsToBounds:true];
+//        if (tempCell.related)
+//        {
+//            tempCell.newsNew.hidden = true;
+//            tempCell.newsImage.image =[tempCell.news headerImage];
+//        } else
+//        {
+//            tempCell.newsNew.hidden = tempCell.news.isReaded;
+//            tempCell.newsImage.image =[[tempCell.news images] objectAtIndex:0];
+//        }
+//    }
+
+    //[tempCell fillCell];
+    
     if (![[newsArray objectAtIndex:index] isReaded] && index<8) {
         tempCell.newsNew.hidden = NO;
     }
     return tempCell;
 }
+
 
 //click on news cell
 -(void)collectionView:(UICollectionView *)collectionView2 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
