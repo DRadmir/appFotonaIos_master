@@ -162,6 +162,7 @@
     {
         [externalView reloadView];
     }
+    
 }
 
 #pragma mark - Open Gallery

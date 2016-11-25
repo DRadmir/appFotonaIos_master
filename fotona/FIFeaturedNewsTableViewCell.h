@@ -31,6 +31,7 @@
 @property (strong, nonatomic) NSIndexPath *index;
 @property (strong, nonatomic) UITableView *tableView;
 
+
 - (void) fillCell;
 
 @end

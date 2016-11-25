@@ -35,7 +35,7 @@
 @synthesize casesInMenu;
 @synthesize selectedIcon;
 @synthesize titleMenu;
-
+BOOL enabled;
 
 
 NSString* category =@"";
@@ -244,6 +244,14 @@ NSString *count = @"";
             [caseLbl setNumberOfLines:2];
             [cell addSubview:caseLbl];
             
+            if ([[(FCase *)[menuItems objectAtIndex:indexPath.row] bookmark] isEqualToString:@"0"] && [[(FCase *)[menuItems objectAtIndex:indexPath.row] coverflow] isEqualToString:@"0"] && ![APP_DELEGATE connectedToInternet]) {
+                enabled = false;
+                [caseLbl setTextColor:[[UIColor grayColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
+                [name setTextColor:[[UIColor blackColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
+                img.alpha = DISABLEDCOLORALPHA;
+            }
+
+            
         }else
         {
             if ([[menuItems objectAtIndex:indexPath.row] isKindOfClass:[FAuthor class]])
@@ -275,7 +283,7 @@ NSString *count = @"";
                 
             }
             
-            
+
             
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         }

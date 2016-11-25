@@ -18,6 +18,7 @@
 @synthesize urlString;
 @synthesize previousUrl;
 @synthesize externalWebView;
+@synthesize enabled;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -79,7 +80,8 @@
     [MBProgressHUD hideAllHUDsForView:webView animated:YES];
     UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"LOADINGWEBPAGEERROR", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [av show];
-}
+    
+    }
 
 #pragma mark - Close Menu
 

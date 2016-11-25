@@ -42,6 +42,7 @@
     UIViewController *lastOpenedController;
     BOOL openFromSearch;
     FMedia *mediaFromSearch;
+    BOOL enabled;
 }
 
 @end
@@ -272,7 +273,9 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         [webView setDelegate:self];
         [webView loadRequest:req];
         [self.view bringSubviewToFront:customToolbar];
-    } else {
+        
+        
+    }else {
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
     }

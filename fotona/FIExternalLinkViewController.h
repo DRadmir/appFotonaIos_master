@@ -15,6 +15,7 @@
 @property (strong, nonatomic) NSString* urlString;
 @property (strong, nonatomic) NSString* previousUrl;
 @property (nonatomic) BOOL changePass;
+@property (nonatomic) BOOL enabled;
 
 -(void) reloadView;
 

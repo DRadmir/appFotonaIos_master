@@ -35,7 +35,7 @@
 @synthesize selectedIcon;
 @synthesize parent;
 @synthesize lastSelectedCategory;
-
+BOOL enabled;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -120,6 +120,10 @@
             }
         }
     }
+    
+    
+    cell.backgroundColor = [UIColor clearColor];
+    
     [cell.imageView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@_red",iconaName]]];
     [cell.textLabel setText:[[menuItems objectAtIndex:indexPath.row] title]];
     [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
