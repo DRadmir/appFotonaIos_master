@@ -905,7 +905,6 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
         FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
         [database open];
         if (type==0) {
-            NSLog(@"Treba nrdit tud za slike");
             //            for (FImage *img in m) {
             //
             //                FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@;",img.itemID]];

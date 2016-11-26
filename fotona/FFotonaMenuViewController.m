@@ -138,6 +138,14 @@ BOOL enabled;
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     [cell setBackgroundColor:[UIColor clearColor]];
     
+    //if webpage and no internet
+    if ([[[allItems objectAtIndex:indexPath.row] fotonaCategoryType] intValue] == [FOTONACATEGORYWEBPAGE intValue] && ![APP_DELEGATE connectedToInternet]) {
+        [cell setUserInteractionEnabled:NO];
+        [[cell textLabel] setTextColor:[[UIColor blackColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
+        cell.imageView.alpha = DISABLEDCOLORALPHA;
+    }
+
+    
     return cell;
 }
 

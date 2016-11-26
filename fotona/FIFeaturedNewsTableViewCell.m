@@ -32,7 +32,7 @@
 
 -(void)fillCell
 {
-    if ([self.restorationIdentifier isEqualToString:@""] )
+    if ([self.restorationIdentifier isEqualToString:@""] || [self.restorationIdentifier isEqualToString:@"FIAboutNewsTableViewCell"])
     {
         self.lblAbout.text = NSLocalizedString(@"ABOUTSHORT", nil);
     }else

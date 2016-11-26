@@ -157,10 +157,17 @@
         }
     }
 
-    
     [cell.imageView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@_red",iconaName]]];
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     
+    //if webpage and no internet
+    if ([[[allItems objectAtIndex:indexPath.row] fotonaCategoryType] intValue] == [FOTONACATEGORYWEBPAGE intValue] && ![APP_DELEGATE connectedToInternet]) {
+        [cell setUserInteractionEnabled:NO];
+        [[cell textLabel] setTextColor:[[UIColor blackColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
+        cell.imageView.alpha = DISABLEDCOLORALPHA;
+    }
+    
+
     return cell;
 }
 

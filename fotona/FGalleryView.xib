@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -84,8 +84,7 @@
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hcG-MR-sab" userLabel="BtnDownloadAdd">
-                                    <frame key="frameInset" minX="189" minY="160" width="23" height="23"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hcG-MR-sab" userLabel="BtnDownloadAdd">
                                     <constraints>
                                         <constraint firstAttribute="width" constant="23" id="ABT-mv-L6X"/>
                                         <constraint firstAttribute="height" constant="23" id="eZN-Hr-nUM"/>
@@ -137,7 +136,7 @@
                                 <constraint firstAttribute="bottom" secondItem="Y67-DF-VwL" secondAttribute="bottom" constant="9" id="Xta-Kb-p6A"/>
                                 <constraint firstItem="eHC-Bh-pUO" firstAttribute="leading" secondItem="zI6-vh-Y51" secondAttribute="leading" constant="8" id="aMg-Tn-H9N"/>
                                 <constraint firstItem="eHC-Bh-pUO" firstAttribute="top" secondItem="zI6-vh-Y51" secondAttribute="top" constant="8" id="ctW-w2-JNE"/>
-                                <constraint firstAttribute="bottom" secondItem="hcG-MR-sab" secondAttribute="bottom" constant="8" id="d1C-0v-LTZ"/>
+                                <constraint firstAttribute="bottom" secondItem="hcG-MR-sab" secondAttribute="bottom" constant="9" id="d1C-0v-LTZ"/>
                                 <constraint firstAttribute="bottom" secondItem="npG-Fc-3K5" secondAttribute="bottom" constant="9" id="h4v-0P-q1V"/>
                                 <constraint firstAttribute="trailing" secondItem="7tp-ow-q2h" secondAttribute="trailing" constant="8" id="h9x-MQ-Dif"/>
                                 <constraint firstItem="Y67-DF-VwL" firstAttribute="leading" secondItem="npG-Fc-3K5" secondAttribute="trailing" constant="16" id="jE5-Bd-EUp"/>
@@ -191,7 +190,7 @@
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="acR-uI-U7p">
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fav_cell_bg1" translatesAutoresizingMaskIntoConstraints="NO" id="wLv-0A-5do" userLabel="backgroundImg"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no_thunbail.png" translatesAutoresizingMaskIntoConstraints="NO" id="wLv-0A-5do" userLabel="backgroundImg"/>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
@@ -217,8 +216,7 @@
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eYe-9W-Bn2" userLabel="BtnDownloadAdd">
-                                    <frame key="frameInset" minX="189" minY="160" width="23" height="23"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eYe-9W-Bn2" userLabel="BtnDownloadAdd">
                                     <constraints>
                                         <constraint firstAttribute="height" constant="23" id="0eQ-Hc-34i"/>
                                         <constraint firstAttribute="width" constant="23" id="Kpc-cU-hiz"/>
@@ -262,7 +260,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="p5e-GN-GBV" firstAttribute="top" secondItem="Lrm-Qq-pvG" secondAttribute="bottom" constant="8" id="2Zw-df-TAv"/>
-                                <constraint firstAttribute="bottom" secondItem="eYe-9W-Bn2" secondAttribute="bottom" constant="8" id="45O-uc-ls4"/>
+                                <constraint firstAttribute="bottom" secondItem="eYe-9W-Bn2" secondAttribute="bottom" constant="9" id="45O-uc-ls4"/>
                                 <constraint firstAttribute="bottom" secondItem="fSg-0t-DIj" secondAttribute="bottom" constant="9" id="4lY-72-0GT"/>
                                 <constraint firstAttribute="bottom" secondItem="oAg-5b-g2r" secondAttribute="bottom" constant="9" id="EaU-tQ-g4q"/>
                                 <constraint firstItem="Lrm-Qq-pvG" firstAttribute="top" secondItem="cea-xe-geJ" secondAttribute="top" constant="8" id="IOI-Rd-VeA"/>
@@ -320,5 +318,6 @@
         <image name="fav_cell_bg1" width="370" height="325"/>
         <image name="favorites_add" width="45" height="45"/>
         <image name="favorites_remove" width="45" height="45"/>
+        <image name="no_thunbail.png" width="360" height="201"/>
     </resources>
 </document>
