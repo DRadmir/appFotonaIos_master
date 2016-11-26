@@ -111,7 +111,7 @@ int bottomHeight;
                     UIImage *img;
                     if ([n headerImage] == nil ) {
                         NSString * header = n.headerImageLink;
-                        if (header == nil || [header isEqualToString:@""]|| (![APP_DELEGATE connectedToInternet])) {
+                        if (header == nil || [header isEqualToString:@""]|| (![ConnectionHelper connectedToInternet])) {
                             img = [UIImage imageNamed:@"related_news"];
                         } else {
                             NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",  header];

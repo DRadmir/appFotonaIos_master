@@ -174,7 +174,6 @@
             } else
             {
                 if ([[clicked title] isEqualToString:@"Disclaimer"]) {
-                    // [self.navigationController dismissViewControllerAnimated:true completion:nil];
                     [self.navigationController popToRootViewControllerAnimated:true];
                     [parent openDisclaimer];
                 } else
@@ -374,7 +373,7 @@
     [img setImage:temp];
 
     
-    if ([[(FCase *)[allItems objectAtIndex:indexPath.row] bookmark] isEqualToString:@"0"] && [[(FCase *)[allItems objectAtIndex:indexPath.row] coverflow] isEqualToString:@"0"] && ![APP_DELEGATE connectedToInternet]) {
+    if ([[(FCase *)[allItems objectAtIndex:indexPath.row] bookmark] isEqualToString:@"0"] && [[(FCase *)[allItems objectAtIndex:indexPath.row] coverflow] isEqualToString:@"0"] && ![ConnectionHelper connectedToInternet]) {
         enabled = false;
         [caseLbl setTextColor:[[UIColor grayColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
         [name setTextColor:[[UIColor blackColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
@@ -410,28 +409,12 @@
         caseToReturn = caseTemp;
         [self openCase];
     } else{
-        if([APP_DELEGATE connectedToInternet]){
+        if([ConnectionHelper connectedToInternet]){
 
-             NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[caseTemp caseID] onView:self.view];
+            NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[caseTemp caseID] onView:self.view];
             AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
             [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-                NSArray *caseArray = [dic objectForKey:@"d"];
-                FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:caseArray[0]];
-                NSMutableArray *imgs = [[NSMutableArray alloc] init];
-                for (NSDictionary *imgLink in [caseObj images]) {
-                    FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
-                    
-                    [imgs addObject:img];
-                }
-                [caseObj setImages:imgs];
-                NSMutableArray *videos = [[NSMutableArray alloc] init];
-                for (NSDictionary *videoLink in [caseObj video]) {
-                    FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink];
-                    
-                    [videos addObject:videoTemp];
-                }
-                [caseObj setVideo:videos];
+               FCase *caseObj=[FCase parseCaseFromServer:[operation responseData]];
                 updateCounter++;
                 success++;
                 [self removeHud];

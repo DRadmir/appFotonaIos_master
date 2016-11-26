@@ -35,7 +35,7 @@
         if (![[NSFileManager defaultManager] fileExistsAtPath:downloadFilename]) {
             //image=[NSData dataWithContentsOfURL:[NSURL URLWithString:[results stringForColumn:@"image"]]];
             NSMutableArray *authorsImgs = [[NSMutableArray alloc] init];
-            if ([APP_DELEGATE connectedToInternet]) {
+            if ([ConnectionHelper connectedToInternet]) {
                 [authorsImgs addObject:[imgOnline stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
             }
             if (authorsImgs.count != 0) {
@@ -92,7 +92,7 @@
             [f setImageLocal:downloadFilename];
         } else
         {
-            if ([APP_DELEGATE connectedToInternet]) {
+            if ([ConnectionHelper connectedToInternet]) {
                 [authorsImgs addObject:[f.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
             }
         }
@@ -141,7 +141,7 @@
     
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt];
     
-    if (![APP_DELEGATE connectedToInternet]) {
+    if (![ConnectionHelper connectedToInternet]) {
         query = [NSString stringWithFormat:@"%@ AND (isBookmark=1 OR alloweInCoverFlow=1)",query];
     }
     FMResultSet *results= [database executeQuery:query];
@@ -498,7 +498,7 @@
 +(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database{
     NSMutableArray *tmpVideo=[[NSMutableArray alloc] init];
     FMResultSet *results;
-    if ([APP_DELEGATE connectedToInternet]) {
+    if ([ConnectionHelper connectedToInternet]) {
         results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 and m.active=1 and (m.title like '%%%@%%')",searchTxt]];
     } else {
         results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%')",searchTxt]];
@@ -587,7 +587,7 @@
 +(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database{
     NSMutableArray *tmpPDF=[[NSMutableArray alloc] init];
     FMResultSet *results;
-    if ([APP_DELEGATE connectedToInternet]) {
+    if ([ConnectionHelper connectedToInternet]) {
         results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 and m.active=1 and (m.title like '%%%@%%')",searchTxt]];
     } else {
         results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%')",searchTxt]];

@@ -58,7 +58,7 @@
         [[self contentView] addSubview: cellViewFotona];
     }
     [cellViewFotona setContentForMedia:media andMediaType:[media mediaType]];
-    if ([[media bookmark] isEqualToString:@"0"] && ![APP_DELEGATE connectedToInternet]) {
+    if ([[media bookmark] isEqualToString:@"0"] && ![ConnectionHelper connectedToInternet]) {
         enabled = false;
     }
      [FHelperThumbnailImg getThumbnailForMedia:media onTableView:tableView orCollectionView:nil withIndex:indexPath];

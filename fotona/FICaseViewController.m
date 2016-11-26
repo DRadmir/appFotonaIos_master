@@ -449,7 +449,7 @@
     FIFlowController *flow = [FIFlowController sharedInstance];
     if (flow.lastIndex == 3)
     {
-        if ([APP_DELEGATE connectedToInternet]) {
+        if ([ConnectionHelper connectedToInternet]) {
             [btnBookmark setHidden:NO];
         } else {
             [btnBookmark setHidden:YES];
@@ -461,7 +461,7 @@
 }
 
 - (IBAction)addBookmark:(id)sender {
-    if ([APP_DELEGATE wifiOnlyConnection]) {
+    if ([ConnectionHelper getWifiOnlyConnection]) {
         [self bookmarkCase];
     } else {
         UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
@@ -475,7 +475,7 @@
         [btnBookmark setHidden:YES];
         [btnRemoveBookmark setHidden:NO];
     } else {
-        if ([APP_DELEGATE connectedToInternet]) {
+        if ([ConnectionHelper connectedToInternet]) {
             [btnBookmark setHidden:NO];
         } else {
             [btnBookmark setHidden:YES];
@@ -503,7 +503,7 @@
             [self bookmarkCase];
         }
         if ([buttonTitle isEqualToString:NSLocalizedString(@"CHECKWIFIONLYBTN", nil)]) {
-            [APP_DELEGATE setWifiOnlyConnection:TRUE];
+            [ConnectionHelper setWifiOnlyConnection:TRUE];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
             [self bookmarkCase];
         }
@@ -511,7 +511,7 @@
 }
 
 -(void) bookmarkCase{
-    if([APP_DELEGATE connectedToInternet] || [[caseToOpen coverflow] boolValue]){
+    if([ConnectionHelper connectedToInternet] || [[caseToOpen coverflow] boolValue]){
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
         

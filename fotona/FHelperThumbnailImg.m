@@ -81,7 +81,7 @@ static UIImage *defaultVideoImage;
             //image is not default
             if ([preloadGalleryMoviesImages objectForKey:videoKey] != self.defaultVideoImage) {
                 imageToLoad = [preloadGalleryMoviesImages objectForKey:videoKey];
-                if([APP_DELEGATE connectedToInternet]){
+                if([ConnectionHelper connectedToInternet]){
                     NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",[media mediaImage]];
                     UIImage *imgNew = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
                     if (imgNew!=nil) {

@@ -8,6 +8,12 @@
 
 @interface ConnectionHelper : NSObject
 
-+ (BOOL) isConnected;
++ (BOOL)connectedToInternet;
+
++ (BOOL)connectedToBoth;
++ (BOOL)connectedToWifi;
+
++(void)setWifiOnlyConnection:(BOOL)status;
++(BOOL)getWifiOnlyConnection;
 
 @end

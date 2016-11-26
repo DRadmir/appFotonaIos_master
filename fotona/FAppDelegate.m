@@ -32,6 +32,7 @@
 #import "FNotificationManager.h"
 
 
+
 @implementation FAppDelegate
 
 int notificationType = 0;
@@ -61,7 +62,6 @@ NSString *notificationUrl = @"";
 @synthesize closedNews;
 @synthesize closedEvents;
 
-@synthesize wifiOnlyConnection;
 
 @synthesize settingsController;
 @synthesize fotonaController;
@@ -154,9 +154,9 @@ NSString *notificationUrl = @"";
     
     
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"wifiOnly"]) {
-        [self setWifiOnlyConnection:[[NSUserDefaults standardUserDefaults] boolForKey:@"wifiOnly"] ];
+        [ConnectionHelper setWifiOnlyConnection:[[NSUserDefaults standardUserDefaults] boolForKey:@"wifiOnly"] ];
     } else {
-        self.wifiOnlyConnection = YES;
+        [ConnectionHelper setWifiOnlyConnection:YES];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
     }
     
@@ -195,7 +195,7 @@ NSString *notificationUrl = @"";
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0),^{
         [self prepareDownloadArrays];
-        if ([self connectedToInternet]) {
+        if ([ConnectionHelper connectedToInternet]) {
             if (![self updateInProgress]) {
                 [self setUpdateInProgress:YES];
                 [[FUpdateContent shared] updateContent:[self main]];
@@ -210,7 +210,7 @@ NSString *notificationUrl = @"";
        
     closedNews = YES;
     closedEvents = YES;
-    [self setWifiOnlyConnection:[[NSUserDefaults standardUserDefaults] boolForKey:@"wifiOnly"] ];
+    [ConnectionHelper setWifiOnlyConnection:[[NSUserDefaults standardUserDefaults] boolForKey:@"wifiOnly"] ];
      }
 
 
@@ -227,7 +227,7 @@ NSString *notificationUrl = @"";
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     [self saveDownloadArrays];
-    if ([self wifiOnlyConnection]) {
+    if ([ConnectionHelper getWifiOnlyConnection]) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
     } else {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"wifiOnly"];
@@ -332,33 +332,6 @@ NSString *notificationUrl = @"";
 
 
 #pragma mark Other
-
-- (BOOL)connectedToInternet
-{
-    if (wifiOnlyConnection) {
-        return self.connectedToWifi;
-    } else {
-        return self.connectedToBoth;
-    }
-}
-
-- (BOOL)connectedToBoth
-{
-    Reachability *reachability = [Reachability reachabilityForInternetConnection];
-    NetworkStatus networkStatus = [reachability currentReachabilityStatus];
-    return !(networkStatus == NotReachable);
-}
-
-- (BOOL)connectedToWifi
-{
-    Reachability *reachability = [Reachability reachabilityForInternetConnection];
-    NetworkStatus networkStatus = [reachability currentReachabilityStatus];    
-    if ([[Reachability reachabilityForLocalWiFi] currentReachabilityStatus] != ReachableViaWiFi) {
-        return NO;
-    }
-    return !(networkStatus == NotReachable);
-}
-
 
 -(NSString *) stringByStrippingHTML:(NSString *)s {
     NSRange r;

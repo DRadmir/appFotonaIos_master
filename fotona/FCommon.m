@@ -97,7 +97,7 @@
         [FCommon playVideoFromURL:local onViewController:viewController localSaved:YES];
     }else
     {
-        if([APP_DELEGATE connectedToInternet]){
+        if([ConnectionHelper connectedToInternet]){
             
             [FCommon playVideoFromURL:video.path onViewController:viewController localSaved:NO];
         } else {

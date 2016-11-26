@@ -247,7 +247,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 
 -(void)externalLink:(NSString *)link
 {
-    if([APP_DELEGATE connectedToInternet]){
+    if([ConnectionHelper connectedToInternet]){
         UIInterfaceOrientation orientation=[[UIApplication sharedApplication] statusBarOrientation];
         if (orientation!=UIInterfaceOrientationPortrait){
             [webContentView setFrame:CGRectMake(0, 0, 1024, 653)];
@@ -414,7 +414,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         [FCommon playVideoFromURL:localPath onViewController:self localSaved:YES];
     }else
     {
-        if([APP_DELEGATE connectedToInternet]){
+        if([ConnectionHelper connectedToInternet]){
             [FCommon playVideoFromURL:video.path onViewController:self localSaved:NO];
         } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -457,7 +457,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     }
     
     if ((![[NSFileManager defaultManager] fileExistsAtPath:localPdf]) && (!downloaded)) {
-        if([APP_DELEGATE connectedToInternet]){
+        if([ConnectionHelper connectedToInternet]){
             [self externalLink:fileUrl];
         } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];

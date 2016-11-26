@@ -151,7 +151,7 @@
     
     
     
-    [wifiSwitch setOn: [APP_DELEGATE wifiOnlyConnection]];
+    [wifiSwitch setOn: [ConnectionHelper getWifiOnlyConnection]];
     
     if ([APP_DELEGATE bookmarkCountLeft]>0 && downloadView.isHidden) {
         [btnBookmark setEnabled:YES];
@@ -198,7 +198,7 @@
 }
 
 - (IBAction)changeWifiCheck:(id)sender {
-    [APP_DELEGATE setWifiOnlyConnection:wifiSwitch.isOn];
+    [ConnectionHelper setWifiOnlyConnection:wifiSwitch.isOn];
     if (wifiSwitch.isOn) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
     } else {
@@ -209,7 +209,7 @@
 
 - (IBAction)bookmarkSelected:(id)sender {
     if ([btnBookmark.titleLabel.text isEqualToString:@"Download"]) {
-        if (![APP_DELEGATE connectedToInternet]) {
+        if (![ConnectionHelper connectedToInternet]) {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTIONBOOKMARK", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [av show];
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -234,7 +234,7 @@
 }
 
 -(void) bookmark{
-    if ([APP_DELEGATE connectedToInternet]) {
+    if ([ConnectionHelper connectedToInternet]) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [APP_DELEGATE setBookmarkAll:YES];
@@ -445,7 +445,7 @@
         }
         if ([buttonTitle isEqualToString:NSLocalizedString(@"CHECKWIFIONLYBTN", nil)]) {
             [wifiSwitch setOn:YES animated:YES];
-            [APP_DELEGATE setWifiOnlyConnection:wifiSwitch.isOn];
+            [ConnectionHelper setWifiOnlyConnection:wifiSwitch.isOn];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
             [self bookmark];
         }

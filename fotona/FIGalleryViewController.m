@@ -139,6 +139,7 @@
 {
     FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
     [cell setContentForMedia:mediaArray[indexPath.row] forTableView:tableView onIndex:indexPath];
+    cell.userInteractionEnabled = cell.enabled;
     return cell;
 }
 

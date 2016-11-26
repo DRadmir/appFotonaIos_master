@@ -309,7 +309,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         [FCommon playVideoFromURL:video.localPath onViewController:self localSaved:YES];
     }else
     {
-        if([APP_DELEGATE connectedToInternet]){
+        if([ConnectionHelper connectedToInternet]){
             [FCommon playVideoFromURL:video.path onViewController:self localSaved:NO];
         } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -477,7 +477,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         [addBookmarks setHidden:YES];
         [removeBookmarks setHidden:NO];
     } else{
-        if ([APP_DELEGATE connectedToInternet]) {
+        if ([ConnectionHelper connectedToInternet]) {
             [addBookmarks setHidden:NO];
         } else {
             [addBookmarks setHidden:YES];
@@ -987,7 +987,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 - (IBAction)removeFromBookmarks:(id)sender {
     
     [removeBookmarks setHidden:YES];
-    if ([APP_DELEGATE connectedToInternet]) {
+    if ([ConnectionHelper connectedToInternet]) {
         [addBookmarks setHidden:NO];
     } else {
         [addBookmarks setHidden:YES];
@@ -996,7 +996,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 }
 
 - (IBAction)addToBookmarks:(id)sender {
-    if ([APP_DELEGATE wifiOnlyConnection]) {
+    if ([ConnectionHelper getWifiOnlyConnection]) {
         [self bookmarkCase];
     } else {
         UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
@@ -1016,7 +1016,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
             [self bookmarkCase];
         }
         if ([buttonTitle isEqualToString:NSLocalizedString(@"CHECKWIFIONLYBTN", nil)]) {
-            [APP_DELEGATE setWifiOnlyConnection:TRUE];
+            [ConnectionHelper setWifiOnlyConnection:TRUE];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
             //            [ wifiSwitch setOn:YES animated:YES];
             [self bookmarkCase];
@@ -1025,7 +1025,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 }
 
 -(void) bookmarkCase{
-    if([APP_DELEGATE connectedToInternet] || [[currentCase coverflow] boolValue]){
+    if([ConnectionHelper connectedToInternet] || [[currentCase coverflow] boolValue]){
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
         

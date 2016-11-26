@@ -156,7 +156,7 @@
                 [addBookmarks setHidden:YES];
                 [removeBookmarks setHidden:NO];
             } else {
-                if ([APP_DELEGATE connectedToInternet]) {
+                if ([ConnectionHelper connectedToInternet]) {
                     [addBookmarks setHidden:NO];
                 } else {
                     [addBookmarks setHidden:YES];
@@ -536,7 +536,7 @@
         [addBookmarks setHidden:YES];
         [removeBookmarks setHidden:NO];
     } else{
-        if ([APP_DELEGATE connectedToInternet]) {
+        if ([ConnectionHelper connectedToInternet]) {
             [addBookmarks setHidden:NO];
         } else {
             [addBookmarks setHidden:YES];
@@ -980,7 +980,6 @@
     [additionalInfo setFrame:CGRectMake(0, 658, self.view.frame.size.width, 231)];
     [introductionTitle sizeToFit];
     float additionalInfoH=introductionTitle.frame.size.height+100;
-    NSLog(@"%f, %f",exCaseView.frame.size.width,additionalInfo.frame.size.width );
     [additionalInfo setFrame:CGRectMake(additionalInfo.frame.origin.x, galleryView.frame.origin.y+galleryView.frame.size.height+20, additionalInfo.frame.size.width,additionalInfoH)];
     [disclaimerBtn setHidden:NO];
     if ([FCommon isOrientationLandscape]) {
@@ -992,7 +991,6 @@
     
     [additionalInfo addSubview:disclaimerBtn ];
     [exCaseView setFrame:CGRectMake(0, 0, self.view.frame.size.width, additionalInfo.frame.origin.y+additionalInfo.frame.size.height)];
-    NSLog(@"%f, %f",exCaseView.frame.size.width,additionalInfo.frame.size.width );
     [caseScroll setContentSize:CGSizeMake(self.view.frame.size.width, exCaseView.frame.size.height)];
 }
 
@@ -1027,7 +1025,7 @@
 
 
 - (IBAction)removeFromBookmarks:(id)sender {
-    if ([APP_DELEGATE connectedToInternet]) {
+    if ([ConnectionHelper connectedToInternet]) {
         [addBookmarks setHidden:NO];
     } else {
         [addBookmarks setHidden:YES];
@@ -1036,8 +1034,7 @@
     [HelperBookmark removeBookmarkedCase:currentCase];
 }
 - (IBAction)addToBookmarks:(id)sender {
-    //[APP_DELEGATE setCasebookController:self];
-    if ([APP_DELEGATE wifiOnlyConnection]) {
+    if ([ConnectionHelper getWifiOnlyConnection]) {
         [self bookmarkCase];
     } else {
         UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
@@ -1058,7 +1055,7 @@
             [self bookmarkCase];
         }
         if ([buttonTitle isEqualToString:NSLocalizedString(@"CHECKWIFIONLYBTN", nil)]) {
-            [APP_DELEGATE setWifiOnlyConnection:TRUE];
+            [ConnectionHelper setWifiOnlyConnection:TRUE];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
             //            [ wifiSwitch setOn:YES animated:YES];
             [self bookmarkCase];
@@ -1069,7 +1066,7 @@
 
 -(void) bookmarkCase{
     
-    if([APP_DELEGATE connectedToInternet] || [[currentCase coverflow] boolValue]){
+    if([ConnectionHelper connectedToInternet] || [[currentCase coverflow] boolValue]){
         //[addBookmarks setHidden:YES];
         //[removeBookmarks setHidden:NO];
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];

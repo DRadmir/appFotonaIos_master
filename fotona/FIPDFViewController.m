@@ -72,7 +72,7 @@
         [self openPDFFromUrl:local];
     }else
     {
-        if([APP_DELEGATE connectedToInternet]){
+        if([ConnectionHelper connectedToInternet]){
             [self openExternalLink:pathOnline];
         } else {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -122,7 +122,7 @@
 - (void) openExternalLink:(NSString *) url
 {
     [pdfWebView setDelegate:self];
-    if([APP_DELEGATE connectedToInternet]){
+    if([ConnectionHelper connectedToInternet]){
         NSURL *urlToOpen=[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
         NSURLRequest *requestObj = [NSURLRequest requestWithURL:urlToOpen];
         [pdfWebView loadRequest:requestObj];

@@ -37,7 +37,7 @@
         [self.newsDate setBackgroundColor:[UIColor whiteColor]];
 
     [self setUserInteractionEnabled:NO];
-    if ([[[self news] rest] isEqualToString:@"1"] && [APP_DELEGATE connectedToInternet]) {
+    if ([[[self news] rest] isEqualToString:@"1"] && [ConnectionHelper connectedToInternet]) {
         self.newsTitle.text = @" ";
         self.newsDate.text = @" ";
         [self.newsTitle setBackgroundColor:[UIColor lightGrayColor]];

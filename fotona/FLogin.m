@@ -53,7 +53,7 @@ BOOL showFeatured = YES;
 {
     showFeatured = YES;
     UIButton *sender;
-     NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
+    NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
     if(parentiPad != nil)
     {
         if ([usrName isEqualToString:@"guest"]) {
@@ -73,24 +73,26 @@ BOOL showFeatured = YES;
             sender = parentiPhone.btnLogin;
         }
     }
-
-    logintype = 3;
-    if([ConnectionHelper isConnected])
-    {
-        [self loginOnFotona:sender];
-    } else{
-        logintype = 0;
-        [self loginUserOffline];
-        
-    }
     
+    if (![usrName isEqualToString:@"guest"]) {
+        logintype = 3;
+        
+        if([ConnectionHelper connectedToInternet])
+        {
+            [self loginOnFotona:sender];
+        } else{
+            logintype = 0;
+            [self loginUserOffline];
+            
+        }
+    }
 }
 
 -(void)guest:(id)sender
 {
     showFeatured = YES;
     logintype = 1;
-    if([ConnectionHelper isConnected])
+    if([ConnectionHelper connectedToInternet])
     {
         if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastUpdate"] isEqualToString:@""] || ![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastUpdate"] isEqualToString:@"updated"]) {
             MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
@@ -161,7 +163,7 @@ BOOL showFeatured = YES;
         showFeatured = YES;
         logintype = 2;
         tmp=(UIButton *)sender;
-        if([ConnectionHelper isConnected])
+        if([ConnectionHelper connectedToInternet])
         {
             [self loginOnFotona:tmp];
         } else{
@@ -590,7 +592,7 @@ BOOL showFeatured = YES;
 -(void)updateStart
 {
     [MBProgressHUD hideAllHUDsForView:parent.view animated:YES];
-    if([ConnectionHelper isConnected]){  //preverjanje če je internet
+    if([ConnectionHelper connectedToInternet]){  
         if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastUpdate"] isEqualToString:@""] || ![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastUpdate"] isEqualToString:@"updated"]) {
             MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:parent.view];
             [parent.view addSubview:hud];

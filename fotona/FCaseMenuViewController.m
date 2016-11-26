@@ -244,7 +244,7 @@ NSString *count = @"";
             [caseLbl setNumberOfLines:2];
             [cell addSubview:caseLbl];
             
-            if ([[(FCase *)[menuItems objectAtIndex:indexPath.row] bookmark] isEqualToString:@"0"] && [[(FCase *)[menuItems objectAtIndex:indexPath.row] coverflow] isEqualToString:@"0"] && ![APP_DELEGATE connectedToInternet]) {
+            if ([[(FCase *)[menuItems objectAtIndex:indexPath.row] bookmark] isEqualToString:@"0"] && [[(FCase *)[menuItems objectAtIndex:indexPath.row] coverflow] isEqualToString:@"0"] && ![ConnectionHelper connectedToInternet]) {
                 enabled = false;
                 [caseLbl setTextColor:[[UIColor grayColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
                 [name setTextColor:[[UIColor blackColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
@@ -338,21 +338,14 @@ NSString *count = @"";
                 [(FCasebookViewController*)self.viewDeckController.centerController setCurrentCase:[casesInMenu objectAtIndex:indexPath.row]];
                 [(FCasebookViewController*)self.viewDeckController.centerController openCase];
             } else{
-                if([APP_DELEGATE connectedToInternet]){
+                if([ConnectionHelper connectedToInternet]){
                     
                      NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[[menuItems objectAtIndex:indexPath.row] caseID] onView:[(FCasebookViewController*)self.viewDeckController.centerController view]];
                     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
                     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                         // I get response as XML here and parse it in a function
                         
-                        NSError *jsonError;
-                        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-                        NSString *c = [dic objectForKey:@"d"];
-                        NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                        FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
-                                                                                                         options:NSJSONReadingMutableContainers
-                                                                                                           error:&jsonError]];
-                        NSLog(@"%@",[jsonError localizedDescription]);
+                        FCase *caseObj=[FCase parseCaseFromServer:[operation responseData]];
                         
                         updateCounter++;
                         success++;
@@ -422,32 +415,11 @@ NSString *count = @"";
                 [(FCasebookViewController*)[tempC visibleViewController] setCurrentCase:[menuItems objectAtIndex:indexPath.row]];
                 [(FCasebookViewController*)[tempC visibleViewController]  openCase];
             } else{
-                if([APP_DELEGATE connectedToInternet]){
-                     NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[[menuItems objectAtIndex:indexPath.row] caseID] onView:[(FCasebookViewController*)self.viewDeckController.centerController view]];
+                if([ConnectionHelper connectedToInternet]){
+                    NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[[menuItems objectAtIndex:indexPath.row] caseID] onView:[(FCasebookViewController*)self.viewDeckController.centerController view]];
                     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-                    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                        // I get response as XML here and parse it in a function
-                        
-                        NSError *jsonError;
-                        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-                        NSString *c = [dic objectForKey:@"d"];
-                        NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                        FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
-                                                                                                         options:NSJSONReadingMutableContainers
-                                                                                                           error:&jsonError]];
-                        NSMutableArray *imgs = [[NSMutableArray alloc] init];
-                        for (NSDictionary *imgLink in [caseObj images]) {
-                            FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
-                            
-                            [imgs addObject:img];
-                        }
-                        [caseObj setImages:imgs];
-                        NSMutableArray *videos = [[NSMutableArray alloc] init];
-                        for (NSDictionary *videoLink in [caseObj video]) {
-                            FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink];
-                            [videos addObject:videoTemp];
-                        }
-                        [caseObj setVideo:videos];
+                    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {                        
+                       FCase *caseObj=[FCase parseCaseFromServer:[operation responseData]];
                         updateCounter++;
                         success++;
                         [self removeHud];

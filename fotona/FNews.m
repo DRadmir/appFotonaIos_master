@@ -255,7 +255,7 @@
                 img = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@%@",docDir,header]];
             } else {
                 NSString * header =[[newsArray objectAtIndex:startIndex+c] headerImageLink];
-                if (header == nil || [header isEqualToString:@""] || (![APP_DELEGATE connectedToInternet])) {
+                if (header == nil || [header isEqualToString:@""] || (![ConnectionHelper connectedToInternet])) {
                     img = [UIImage imageNamed:@"related_news"]; 
                 } else {
                     NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",  header];
@@ -272,7 +272,7 @@
                     
                     for (int i=0; i<[sf imagesLinks].count; i++){
                         NSString * featured =[[sf imagesLinks] objectAtIndex:i];
-                        if (featured == nil || [featured isEqualToString:@""] || (![APP_DELEGATE connectedToInternet])) {
+                        if (featured == nil || [featured isEqualToString:@""] || (![ConnectionHelper connectedToInternet])) {
                             
                             img = [UIImage imageNamed:@"featured_news"];
                             [temp addObject: img];
@@ -295,7 +295,7 @@
                     img = [UIImage imageNamed:@"featured_news"];
                     [[sf images] addObject: img];
                 }
-                if([APP_DELEGATE connectedToInternet] && [sf images].count>0)
+                if([ConnectionHelper connectedToInternet] && [sf images].count>0)
                     [sf setRest:@"0"];
             } else {
                 for (int i=0; i<[sf localImages].count; i++){

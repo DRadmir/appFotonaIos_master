@@ -32,7 +32,7 @@
 
 +(void) openCase:(NSString*) url
 {
-    if([APP_DELEGATE connectedToInternet]){
+    if([ConnectionHelper connectedToInternet]){
         UIViewController *topController = [[APP_DELEGATE window] visibleViewController];
         MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:[topController view]];
 
@@ -94,7 +94,7 @@
 +(void) openMedia:(NSString*) url
 {
     
-    if([APP_DELEGATE connectedToInternet]){
+    if([ConnectionHelper connectedToInternet]){
         UIViewController *topController = [[APP_DELEGATE window] visibleViewController];
         MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:[topController view]];
         

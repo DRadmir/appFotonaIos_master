@@ -50,7 +50,7 @@
 
 -(void)reloadView
 {
-    if([APP_DELEGATE connectedToInternet]){
+    if([ConnectionHelper connectedToInternet]){
         NSURL *url=[NSURL URLWithString:[urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
         NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
         [externalWebView loadRequest:requestObj];

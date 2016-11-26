@@ -37,10 +37,11 @@
 @synthesize galleryItemVideoIDs;
 @synthesize galleryItemImagesIDs;
 
+
+#pragma mark - Init
 //befor saving into BD
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic
 {
-    
     self=[super init];
     if (self) {
         [self setCaseID:[dic valueForKey:@"caseID"]];
@@ -170,6 +171,8 @@
     return self;
 }
 
+#pragma mark - Media
+
 -(NSMutableArray *)getImages
 {
     NSMutableArray *arr=[[NSMutableArray alloc] init];
@@ -215,7 +218,7 @@
 -(NSMutableArray *)parseImagesFromServer: (BOOL)fromServer
 {
     NSMutableArray *tmpImgs=[[NSMutableArray alloc] init];
-    //    NSArray *imgsArr=[NSJSONSerialization JSONObjectWithData:[imgs dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+
     
     if (self.images.count>0) {
         for (NSDictionary *imgDic in self.images) {
@@ -251,6 +254,7 @@
     return tmpVideos;
 }
 
+#pragma mark - Author
 
 -(NSString *)getAuthorName
 {
@@ -265,6 +269,8 @@
     [database close];
     return result;
 }
+
+#pragma mark - Open
 
 +(void)openCase:(FCase *)caseToOpen{
     FIFlowController *flow = [FIFlowController sharedInstance];
@@ -281,6 +287,30 @@
         [flow.caseTab openCase];
     }
 }
+
+#pragma mark - Parse
+
++(FCase *) parseCaseFromServer:(NSData *)data{
+    NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+    NSArray *c = [dic objectForKey:@"d"];
+    FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:c[0]];
+    NSMutableArray *imgs = [[NSMutableArray alloc] init];
+    for (NSDictionary *imgLink in [caseObj images]) {
+        FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
+        
+        [imgs addObject:img];
+    }
+    [caseObj setImages:imgs];
+    NSMutableArray *videos = [[NSMutableArray alloc] init];
+    for (NSDictionary *videoLink in [caseObj video]) {
+        FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink];
+        [videos addObject:videoTemp];
+    }
+    [caseObj setVideo:videos];
+    return caseObj;
+}
+
+
 
 @end
 

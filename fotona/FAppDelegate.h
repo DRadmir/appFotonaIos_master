@@ -73,7 +73,7 @@
 @property (assign) BOOL closedNews;
 @property (assign) BOOL closedEvents;
 
-@property (assign) BOOL wifiOnlyConnection;
+
 
 @property (nonatomic,retain) NSMutableDictionary *videoImages;
 
@@ -87,9 +87,6 @@
 
 -(void)rotatePopupSearchedNewsInView:(UIView *)view;
 
-- (BOOL)connectedToInternet;
-- (BOOL)connectedToWifi;
-- (BOOL)connectedToBoth;
 
 - (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 

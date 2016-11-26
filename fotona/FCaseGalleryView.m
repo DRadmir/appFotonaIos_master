@@ -69,7 +69,7 @@
         btnDownloadAdd.hidden = YES;
     } else {
         btnDownloadRemove.hidden = YES;
-        if ([APP_DELEGATE connectedToInternet]) {
+        if ([ConnectionHelper connectedToInternet]) {
             [btnDownloadAdd setHidden:NO];
         } else {
             [btnDownloadAdd setHidden:YES];
@@ -93,7 +93,7 @@
     });
     
     //if not accessible change alpha
-    if ([[caseToShow bookmark] isEqualToString:@"0"] && [[caseToShow coverflow] isEqualToString:@"0"] && ![APP_DELEGATE connectedToInternet]) {
+    if ([[caseToShow bookmark] isEqualToString:@"0"] && [[caseToShow coverflow] isEqualToString:@"0"] && ![ConnectionHelper connectedToInternet]) {
         enabled = false;
         [imgAuthor setAlpha:DISABLEDCOLORALPHA];
         [imgBackground setAlpha:DISABLEDCOLORALPHA];
@@ -101,6 +101,14 @@
         [lblTitle setAlpha:DISABLEDCOLORALPHA];
         [lblDescription setAlpha:DISABLEDCOLORALPHA];
         [lblCaseType setAlpha:DISABLEDCOLORALPHA];
+    } else {
+        enabled = true;
+        [imgAuthor setAlpha:1];
+        [imgBackground setAlpha:1];
+        [lblAuthorName setAlpha:1];
+        [lblTitle setAlpha:1];
+        [lblDescription setAlpha:1];
+        [lblCaseType setAlpha:1];
     }
     
     if ([FCommon isIpad]) {
@@ -135,7 +143,7 @@
 - (IBAction)downloadRemove:(id)sender {
     [HelperBookmark removeBookmarkedCase:caseToShow];
     btnDownloadRemove.hidden = true;
-    if ([APP_DELEGATE connectedToInternet]) {
+    if ([ConnectionHelper connectedToInternet]) {
         [btnDownloadAdd setHidden:NO];
     } else {
         [btnDownloadAdd setHidden:YES];

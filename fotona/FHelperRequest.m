@@ -41,6 +41,7 @@ static FUser *lastSent;
     return request;
 }
 
+
 +(NSMutableURLRequest *) requestToGetCaseFromNotification:(NSString *) notificationUrl{
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, notificationUrl]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];

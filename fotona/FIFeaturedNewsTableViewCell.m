@@ -38,7 +38,7 @@
     }else
     {
         [self setUserInteractionEnabled:NO];
-        if ([[[self news] rest] isEqualToString:@"1"] && [APP_DELEGATE connectedToInternet]) {
+        if ([[[self news] rest] isEqualToString:@"1"] && [ConnectionHelper connectedToInternet]) {
             self.lblTitleNewsCell.text = @" ";
             self.lblDateNewsCell.text = @" ";
             [self.lblTitleNewsCell setBackgroundColor:[UIColor lightGrayColor]];

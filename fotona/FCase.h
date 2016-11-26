@@ -44,5 +44,6 @@
 -(NSString *)getAuthorName;
 
 +(void) openCase:(FCase *)caseToOpen;
++(FCase *) parseCaseFromServer:(NSData *)data;
 
 @end

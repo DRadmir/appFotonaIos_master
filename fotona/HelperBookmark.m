@@ -489,14 +489,7 @@ int bookmarkedCount;
                         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
                         [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                             // I get response as XML here and parse it in a function
-                            NSError *jsonError;
-                            NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-                            NSString *c = [dic objectForKey:@"d"];
-                            NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                            FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
-                                                                                                                       options:NSJSONReadingMutableContainers
-                                                                                                                         error:&jsonError]];
-                            NSLog(@"%@",[jsonError localizedDescription]);
+                            FCase *caseObj=[FCase parseCaseFromServer:[operation responseData]];
                             
                             NSMutableArray *imgs = [caseObj parseImagesFromServer:NO];
                             NSMutableArray *videosA = [caseObj parseVideosFromServer:NO];

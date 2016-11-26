@@ -354,32 +354,12 @@
             }
             
         } else{
-            if([APP_DELEGATE connectedToInternet]){
+            if([ConnectionHelper connectedToInternet]){
              
                  NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[item caseID] onView:[(FCasebookViewController *)[tempC topViewController] view]];
                 AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
                 [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                    NSError *jsonError;
-                    NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-                    NSString *c = [dic objectForKey:@"d"];
-                    NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                    FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
-                                                                                                     options:NSJSONReadingMutableContainers
-                                                                                                       error:&jsonError]];
-                    NSMutableArray *imgs = [[NSMutableArray alloc] init];
-                    for (NSDictionary *imgLink in [caseObj images]) {
-                        FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
-                        
-                        [imgs addObject:img];
-                    }
-                    [caseObj setImages:imgs];
-                    NSMutableArray *videos = [[NSMutableArray alloc] init];
-                    for (NSDictionary *videoLink in [caseObj video]) {
-                        FMedia * videoTemp = [[FMedia alloc] initWithDictionaryFromServer:videoLink];
-                        [videos addObject:videoTemp];
-                    }
-                    [caseObj setVideo:videos];
-                    updateCounter++;
+                   FCase *caseObj=[FCase parseCaseFromServer:[operation responseData]];                    updateCounter++;
                     success++;
                     [self removeHud];
                     

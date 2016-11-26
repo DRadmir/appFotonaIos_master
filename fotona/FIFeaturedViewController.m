@@ -215,7 +215,7 @@
     if (indexPath.row == 0) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:1];
     }
-    if (indexPath.row > newsCount - 1 && [APP_DELEGATE connectedToInternet]) {
+    if (indexPath.row > newsCount - 1 && [ConnectionHelper connectedToInternet]) {
         
         CGPoint offset = self.tableViewFeatured.contentOffset;
         offset.y-=10;

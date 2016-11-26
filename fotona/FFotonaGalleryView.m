@@ -45,7 +45,11 @@
         btnDownloadAdd.hidden = YES;
     } else {
         btnDownloadRemove.hidden = YES;
-        btnDownloadAdd.hidden = NO;
+        if ([ConnectionHelper connectedToInternet]) {
+            [btnDownloadAdd setHidden:NO];
+        } else {
+            [btnDownloadAdd setHidden:YES];
+        }
     }
     
     if([FDB checkIfFavoritesItem: [[media itemID] intValue] ofType:type]){
@@ -62,16 +66,20 @@
     }
     
     //if not accessible change alpha
-    if (([[media bookmark] isEqualToString:@"0"] || [media bookmark] == nil) && ![APP_DELEGATE connectedToInternet]) {
+    if (([[media bookmark] isEqualToString:@"0"] || [media bookmark] == nil) && ![ConnectionHelper connectedToInternet]) {
         enabled = false;
         [lblTitle setAlpha:DISABLEDCOLORALPHA];
         [imgThumbnail setAlpha:DISABLEDCOLORALPHA];
         [lblDesc setAlpha:DISABLEDCOLORALPHA];
         
+    } else {
+        enabled = true;
+        [lblTitle setAlpha:1];
+        [imgThumbnail setAlpha:1];
+        [lblDesc setAlpha:1];
+
     }
-     if (![APP_DELEGATE connectedToInternet]) {
-         btnDownloadAdd.hidden = true;
-     }
+  
 
 }
 

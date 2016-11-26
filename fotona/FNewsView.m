@@ -81,7 +81,7 @@ NSMutableArray *relatedNews;
                     UIImage *img;
                     if ([n headerImage] == nil ) {
                         NSString * header =n.headerImageLink;
-                        if (header == nil || [header isEqualToString:@""]|| (![APP_DELEGATE connectedToInternet])) {
+                        if (header == nil || [header isEqualToString:@""]|| (![ConnectionHelper connectedToInternet])) {
                             img = [UIImage imageNamed:@"related_news"];
                         } else {
                             NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",  header];
@@ -145,7 +145,7 @@ NSMutableArray *relatedNews;
     UIImage *img;
     for (int i=0;i<imgs.count;i++){
         if ([currentNews.rest isEqualToString:@"1"] && [currentNews.bookmark isEqualToString:@"0"]) {
-            if  ([APP_DELEGATE connectedToInternet] &&  ![[imgs objectAtIndex:i] isEqualToString:@""]) {
+            if  ([ConnectionHelper connectedToInternet] &&  ![[imgs objectAtIndex:i] isEqualToString:@""]) {
                 NSString *url_Img_FULL = [imgs objectAtIndex:i];
                 img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
                 [imgs replaceObjectAtIndex:i withObject:img];

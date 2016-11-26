@@ -147,7 +147,7 @@
     UIImage *img;
     for (int i=0;i<imgs.count;i++){
         if ([newsGallery.rest isEqualToString:@"1"] && [newsGallery.bookmark isEqualToString:@"0"]) {
-            if  ([APP_DELEGATE connectedToInternet] &&  ![[imgs objectAtIndex:i] isEqualToString:@""]) {
+            if  ([ConnectionHelper connectedToInternet] &&  ![[imgs objectAtIndex:i] isEqualToString:@""]) {
                 NSString *url_Img_FULL = [imgs objectAtIndex:i];
                 img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
                 [imgs replaceObjectAtIndex:i withObject:img];

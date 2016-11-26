@@ -97,30 +97,28 @@
         FCase *caseToShow = [FDB getCaseWithID:[item itemID]];
        
         [cell setContentForCase:caseToShow];
-        return cell;
     } else {
         if ([[item typeID] intValue] == BOOKMARKVIDEOINT || [[item typeID] intValue] == BOOKMARKPDFINT) {
             [cell setContentForFavorite:item forTableView:tableView onIndex:indexPath];
-            return cell;
+            
         }
     }
-    return [[UITableViewCell alloc] init];
+    cell.userInteractionEnabled = cell.enabled;
+    return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     FItemFavorite *item = favorites[indexPath.row];
-    if (((FIGalleryTableViewCell *) [tableView cellForRowAtIndexPath:indexPath]).enabled) {
-        switch ([[item typeID] intValue]) {
-            case BOOKMARKCASEINT:
-                [self openCaseWithID:[item itemID]];
-                break;
-            case BOOKMARKVIDEOINT:
-            case BOOKMARKPDFINT:
-                [self openMedia:[item itemID]  andType:[item typeID]];
-                break;
-            default:
-                break;
-        }
+    switch ([[item typeID] intValue]) {
+        case BOOKMARKCASEINT:
+            [self openCaseWithID:[item itemID]];
+            break;
+        case BOOKMARKVIDEOINT:
+        case BOOKMARKPDFINT:
+            [self openMedia:[item itemID]  andType:[item typeID]];
+            break;
+        default:
+            break;
     }
 }
 
@@ -147,34 +145,13 @@
     if (( [[caseToOpen bookmark] boolValue] && flag)|| [[caseToOpen coverflow] boolValue]){
         [self openCase:caseToOpen];
     } else{
-        if([APP_DELEGATE connectedToInternet]){
+        if([ConnectionHelper connectedToInternet]){
             NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:caseID onView: self.view];
             AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
             [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                 // I get response as XML here and parse it in a function
                 
-                NSError *jsonError;
-                NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-                NSString *c = [dic objectForKey:@"d"];
-                NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:[NSJSONSerialization JSONObjectWithData:data
-                                                                                                 options:NSJSONReadingMutableContainers
-                                                                                                   error:&jsonError]];
-                NSMutableArray *imgs = [[NSMutableArray alloc] init];
-                for (NSDictionary *imgLink in [caseObj images]) {
-                    FImage * img = [[FImage alloc] initWithDictionaryFromServer:imgLink];
-                    
-                    [imgs addObject:img];
-                }
-                [caseObj setImages:imgs];
-                NSMutableArray *videos = [[NSMutableArray alloc] init];
-                for (NSDictionary *videoLink in [caseObj video]) {
-                    FMedia * videoTemp = [[FMedia alloc] initWithDictionary:videoLink];
-                    
-                    [videos addObject:videoTemp];
-                }
-                [caseObj setVideo:videos];
-                updateCounter++;
+                FCase *caseObj=[FCase parseCaseFromServer:[operation responseData]];                updateCounter++;
                 success++;
                 [self removeHud];
                 [self openCase:caseObj];

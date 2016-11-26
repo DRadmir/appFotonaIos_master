@@ -16,4 +16,5 @@
     #import <Foundation/Foundation.h>
     #import "FAppDelegate.h"
     #import "FCommon.h"
+    #import "ConnectionHelper.h"
 #endif
