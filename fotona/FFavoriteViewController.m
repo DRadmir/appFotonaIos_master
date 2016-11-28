@@ -33,6 +33,7 @@
     BOOL pdfClose;
     BOOL disclaimerClose;
     BOOL showGallery;
+    BOOL videoFromCase;
     FSettingsViewController *settingsController;
     UIPanGestureRecognizer *swipeRecognizerB;
     NSMutableArray *imagesList;
@@ -157,7 +158,10 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     beforeOrient=[APP_DELEGATE currentOrientation];
     [APP_DELEGATE setFavoriteController:self];
     
-    [self openContentWithTitle:NSLocalizedString(@"FAVORITESTABTITLE", nil)];
+    if (!videoFromCase) {
+        [self openContentWithTitle:NSLocalizedString(@"FAVORITESTABTITLE", nil)];
+    }
+    videoFromCase = NO;
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -1045,6 +1049,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 
 -(IBAction)openVideo:(id)sender
 {
+    videoFromCase = YES;
     FMedia *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
     BOOL coverflow = [[currentCase coverflow] isEqualToString:@"1"] ? YES : NO;
     [FCommon playVideo:vid onViewController:self isFromCoverflow:coverflow];
