@@ -125,7 +125,6 @@
         lastCase = nil;
     }
 }
-
 - (void)openViewInContainer: (UIViewController *) viewToOpen
 {
     [viewToOpen.view setFrame:caseContainer.bounds];

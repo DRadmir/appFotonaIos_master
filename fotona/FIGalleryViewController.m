@@ -107,7 +107,7 @@
 
 -(void) openVideo:(FMedia *) video
 {
-    [FCommon playVideoOnIphone:video onViewController:self];
+    [FCommon playVideo:video onViewController:self];
 }
 
 

@@ -29,6 +29,9 @@
 -(void)setContentForCase:(FCase *)fcase{
     
     cellViewCase = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:0];
+    for (UIView *subView in [self.contentView subviews]) {
+        [subView removeFromSuperview];
+    }
     [[self contentView] addSubview: cellViewCase];
     [cellViewCase setFrame:[[self contentView] bounds]];
     enabled = true;
@@ -49,14 +52,17 @@
 
 -(void)setContentForMedia:(FMedia *)media forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath{
     enabled = true;;
+    for (UIView *subView in [self.contentView subviews]) {
+        [subView removeFromSuperview];
+    }
     if (cellViewFotona == nil) {
         cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
-        [cellViewFotona setParentIphone:nil];
-        [cellViewFotona setParentIpad:parentIpad];
-        [cellViewFotona setIndex:index];
-        [[self contentView] addSubview: cellViewFotona];
-        [cellViewFotona setFrame:[[self contentView] bounds]];
     }
+    [cellViewFotona setParentIphone:nil];
+    [cellViewFotona setParentIpad:parentIpad];
+    [cellViewFotona setIndex:index];
+    [[self contentView] addSubview: cellViewFotona];
+    [cellViewFotona setFrame:[[self contentView] bounds]];
     [cellViewFotona setContentForMedia:media andMediaType:[media mediaType]];
     if ([[media bookmark] isEqualToString:@"0"] && ![ConnectionHelper connectedToInternet]) {
         enabled = false;

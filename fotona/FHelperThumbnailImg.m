@@ -68,8 +68,6 @@ static UIImage *defaultVideoImage;
     
     for (int i=0;i<[mediaArray count];i++)
     {
-        
-        
         int activeQueueIndex = i%[activeQueues count];
         dispatch_async([activeQueues objectAtIndex:activeQueueIndex], ^{
             BOOL done = NO;

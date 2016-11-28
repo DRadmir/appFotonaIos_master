@@ -245,16 +245,9 @@
 -(IBAction)openVideo:(id)sender
 {
     FMedia *vid=[videosArray objectAtIndex:[sender tag]];
-    NSString *localPath = [FMedia createLocalPathForLink:vid.path andMediaType:MEDIAVIDEO];
-    if (![localPath isEqualToString:@""]) {
-        [FCommon playVideoFromURL:localPath onViewController:parent localSaved:YES];
-    }else
-    {
-        [FCommon playVideoFromURL:vid.path onViewController:parent localSaved:NO];
-    }
-    
-}
 
+    [FCommon playVideo:vid onViewController:parent];
+}
 
 -(IBAction)openGallery:(id)sender
 {

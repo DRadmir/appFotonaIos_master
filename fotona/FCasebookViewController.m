@@ -1239,12 +1239,7 @@
 -(IBAction)openVideo:(id)sender
 {
     FMedia *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
-    if (![vid.localPath isEqualToString:@""]) {
-        [FCommon playVideoFromURL:vid.localPath onViewController:self  localSaved:YES];
-    }else
-    {
-        [FCommon playVideoFromURL:vid.path onViewController:self localSaved:NO];
-    }
+    [FCommon playVideo:vid onViewController:self];
     
 }
 -(IBAction)openGalleryCase:(id)sender

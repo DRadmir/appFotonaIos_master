@@ -246,8 +246,6 @@
             }else {
                  v=[[FMedia alloc] initWithDictionary:videDic ];
             }
-
-           
             [tmpVideos addObject:v];
         }
     }

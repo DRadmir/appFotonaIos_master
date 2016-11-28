@@ -780,8 +780,6 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             if ([c.coverflow boolValue] || [bookmarked boolValue]) {
                 if (!flag) {
                     [database executeUpdate:@"INSERT INTO Cases (caseID,title,langID,coverTypeID,name,image,introduction,procedure,results,'references',parameters,date,active,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissions, galleryItemVideoIDs, galleryItemImagesIDs) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.authorID,bookmarked,c.coverflow, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs];
-
-
                     [self setCase:c.caseID InCategories:c.categories];
                 }else
                 {

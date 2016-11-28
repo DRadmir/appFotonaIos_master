@@ -198,7 +198,7 @@
 -(void)openMedia:(NSString *)mediaID  andType:(NSString *)mediaType{
     FMedia *media = [FDB getMediaWithId:mediaID andType:mediaType];
     if ([[media mediaType] intValue] == [MEDIAVIDEO intValue]) {
-        [FCommon playVideoOnIphone:media onViewController:self];
+        [FCommon playVideo:media onViewController:self];
     } else {
         if ([[media mediaType] intValue] == [MEDIAPDF intValue]) {
             [self openPdf:media];

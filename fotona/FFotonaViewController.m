@@ -393,34 +393,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 
 
 -(void) playVideo: (FMedia *) video{
-    [FGoogleAnalytics writeGAForItem:[video title] andType:GAFOTONAVIDEOINT];
-    BOOL downloaded = YES;
-    for (FDownloadManager * download in [APP_DELEGATE downloadManagerArray]) {
-        downloaded = [download checkDownload:video.localPath];
-    }
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    NSString *usr = [FCommon getUser];
-    
-    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKVIDEO, [video itemID]]];
-    BOOL flag=NO;
-    while([resultsBookmarked next]) {
-        flag=YES;
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    NSString *localPath = [FMedia createLocalPathForLink:[video path] andMediaType:MEDIAVIDEO];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:localPath] && downloaded && flag) {
-        [FCommon playVideoFromURL:localPath onViewController:self localSaved:YES];
-    }else
-    {
-        if([ConnectionHelper connectedToInternet]){
-            [FCommon playVideoFromURL:video.path onViewController:self localSaved:NO];
-        } else {
-            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [av show];
-        }
-    }
+    [FCommon playVideo:video onViewController:self];
 }
 
 -(void)openPreloaded

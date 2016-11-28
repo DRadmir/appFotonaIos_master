@@ -750,6 +750,9 @@
                     }
                     if (!exists) {
                         [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  vid.itemID,vid.title,vid.path,@"",vid.description,@"1",@"0",vid.mediaImage,vid.sort,vid.userPermissions, vid.active, vid.deleted, vid.download, vid.filesize];
+                        if (download) {
+                            [HelperBookmark addVideoToDownloadList:vid forCase:caseID];
+                        }
                     } else {
                         [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=? WHERE mediaID=? AND mediaType=1",vid.title,vid.path,@"",vid.description,vid.mediaImage, vid.sort, vid.userPermissions, vid.active, vid.deleted, vid.download, vid.filesize,vid.itemID];
                     }
@@ -791,6 +794,7 @@
             [self removeBookmarkedMedia:media];
         } 
     }
+    
 }
 
 

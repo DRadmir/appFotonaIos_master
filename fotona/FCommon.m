@@ -82,7 +82,10 @@
 
 #pragma mark - Video
 
-+(void)playVideoOnIphone:(FMedia *)video  onViewController:(UIViewController *)viewController{
+
+
+
++(void)playVideo:(FMedia *)video  onViewController:(UIViewController *)viewController{
     [FGoogleAnalytics writeGAForItem:[video title] andType:GAFOTONAVIDEOINT];
     BOOL downloaded = YES;
     NSString *local= [FMedia  createLocalPathForLink:[video path] andMediaType:MEDIAVIDEO];
