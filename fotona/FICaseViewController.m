@@ -431,7 +431,7 @@
     gallery = [[FIGalleryController alloc] init];
     gallery.parent = self;
     gallery.type = 1;
-    [gallery createGalleryWithImages:imgs andVideos:vidArr forScrollView:scrollViewImages andScrollHeight:scrollViewImagesHeight];
+    [gallery createGalleryWithImages:imgs andVideos:vidArr forScrollView:scrollViewImages andScrollHeight:scrollViewImagesHeight  fromCase:caseToOpen];
     
 }
 

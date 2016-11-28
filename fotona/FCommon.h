@@ -19,7 +19,7 @@
 +(UIImageView *)imageCutWithRect:(CGRect) rect;
 
 
-+(void)playVideo:(FMedia *) video onViewController:(UIViewController *)viewController;
++(void)playVideo:(FMedia *)video  onViewController:(UIViewController *)viewController isFromCoverflow:(BOOL)coverFlow;
 +(void) playVideoFromURL:(NSString * )url onViewController:(UIViewController *) viewController  localSaved:(BOOL) isLocalSaved;
 
 

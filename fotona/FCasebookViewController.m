@@ -740,10 +740,11 @@
             dispatch_async(queue, ^{
                 //code to be executed in the background
                 NSURL *videoURL;
-                if (![[NSFileManager defaultManager] fileExistsAtPath:vid.localPath]) {
+                NSString *localPath = [FMedia createLocalPathForLink:vid.path andMediaType:MEDIAVIDEO];
+                if (![[NSFileManager defaultManager] fileExistsAtPath:localPath]) {
                     videoURL= [NSURL URLWithString:vid.path] ;
                 }else{
-                    videoURL=[NSURL fileURLWithPath:vid.localPath];
+                    videoURL=[NSURL fileURLWithPath:localPath];
                 }
                 
                 AVURLAsset *asset1 = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
@@ -789,8 +790,8 @@
             dispatch_async(queue, ^{
                 //code to be executed in the background
                 UIImage *image;
-                NSString *pathTmp = [NSString stringWithFormat:@"%@%@",docDir,img.localPath];
-                if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp] || [img.localPath isEqualToString:@""]) {
+                NSString *pathTmp = [FMedia createLocalPathForLink:img.path andMediaType:MEDIAIMAGE];
+                if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
                     image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
                     
                 }else{
@@ -1025,12 +1026,6 @@
 
 
 - (IBAction)removeFromBookmarks:(id)sender {
-    if ([ConnectionHelper connectedToInternet]) {
-        [addBookmarks setHidden:NO];
-    } else {
-        [addBookmarks setHidden:YES];
-    }
-    [removeBookmarks setHidden:YES];
     [HelperBookmark removeBookmarkedCase:currentCase];
 }
 - (IBAction)addToBookmarks:(id)sender {
@@ -1044,8 +1039,16 @@
 }
 
 - (void) refreshBookmarkBtn  {
-    [addBookmarks setHidden:YES];
-    [removeBookmarks setHidden:NO];
+    if ([addBookmarks isHidden]) {
+        if ([ConnectionHelper connectedToInternet]) {
+            [addBookmarks setHidden:NO];
+        } else {
+            [addBookmarks setHidden:YES];
+        }
+    } else {
+        [addBookmarks setHidden:YES];
+    }
+    [removeBookmarks setHidden:![removeBookmarks isHidden]];
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -1204,22 +1207,15 @@
         [contentModeScrollView setFrame:CGRectMake(0, 0, 768, 909)];
     }
     
-    //    for (UIView *v in caseView.subviews) {
-    //        [v removeFromSuperview];
-    //    }
     [fotonaImg setHidden:YES];
-    // [caseScroll setContentSize:CGSizeMake(self.view.frame.size.width, contentModeView.frame.size.height)];
     [caseView addSubview:contentModeView];
     [cTitleLbl setText:@"Disclaimer"];
     
-    
-    //    cDescriptionLbl=[[FDLabelView alloc] initWithFrame:CGRectMake(38, 209, 710, 211)];
     cDescriptionLbl.backgroundColor = [UIColor colorWithWhite:0.00 alpha:0.00];
     cDescriptionLbl.textColor = [UIColor colorWithRed:70.0/255.0 green:70.0/255.0 blue:70.0/255.0 alpha:1.0];
     cDescriptionLbl.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
     cDescriptionLbl.minimumScaleFactor = 0.50;
     cDescriptionLbl.numberOfLines = 0;
-    //[self getDisclamer:NO]
     NSAttributedString * attrStr = [[NSAttributedString alloc] initWithData:[[[NSUserDefaults standardUserDefaults] stringForKey:@"disclaimerLong"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
     [cDescriptionLbl setText:attrStr.string];
     cDescriptionLbl.shadowColor = nil; // fill your color here
@@ -1239,7 +1235,8 @@
 -(IBAction)openVideo:(id)sender
 {
     FMedia *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
-    [FCommon playVideo:vid onViewController:self];
+    BOOL coverflow = [[currentCase coverflow] isEqualToString:@"1"] ? YES : NO;
+    [FCommon playVideo:vid onViewController:self isFromCoverflow:coverflow];
     
 }
 -(IBAction)openGalleryCase:(id)sender
@@ -1262,7 +1259,7 @@
         imgs = [currentCase images];
     }
     
-    return imgs;//[[currentCase getImages] count];
+    return imgs.count;
 }
 
 - (void)previewControllerDidDismiss:(QLPreviewController *)controller
@@ -1930,6 +1927,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         [[FDownloadManager shared] prepareForDownloadingFiles];
     }
 }
+
 
 
 @end

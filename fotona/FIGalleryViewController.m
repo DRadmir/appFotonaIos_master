@@ -107,7 +107,7 @@
 
 -(void) openVideo:(FMedia *) video
 {
-    [FCommon playVideo:video onViewController:self];
+    [FCommon playVideo:video onViewController:self isFromCoverflow:NO];
 }
 
 
@@ -200,5 +200,6 @@
         }
     }
 }
+
 
 @end

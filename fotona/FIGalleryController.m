@@ -20,9 +20,11 @@
 @synthesize imagesArray;
 @synthesize videosArray;
 @synthesize type;
+@synthesize caseWithGallery;
 
--(void)createGalleryWithImages:(NSArray *)images andVideos:(NSArray *)videos forScrollView:(UIScrollView *)scrollView andScrollHeight:(NSLayoutConstraint *)height
+-(void)createGalleryWithImages:(NSArray *)images andVideos:(NSArray *)videos forScrollView:(UIScrollView *)scrollView andScrollHeight:(NSLayoutConstraint *)height  fromCase:(FCase *)caseContainingGallery
 {
+    caseWithGallery = caseContainingGallery;
     for (UIImageView *view in scrollView.subviews) {
         [view removeFromSuperview];
     }
@@ -245,8 +247,8 @@
 -(IBAction)openVideo:(id)sender
 {
     FMedia *vid=[videosArray objectAtIndex:[sender tag]];
-
-    [FCommon playVideo:vid onViewController:parent];
+    BOOL coverflow = [[caseWithGallery coverflow] isEqualToString:@"1"] ? YES : NO;
+    [FCommon playVideo:vid onViewController:parent isFromCoverflow:coverflow];
 }
 
 -(IBAction)openGallery:(id)sender

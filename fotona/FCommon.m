@@ -85,7 +85,7 @@
 
 
 
-+(void)playVideo:(FMedia *)video  onViewController:(UIViewController *)viewController{
++(void)playVideo:(FMedia *)video  onViewController:(UIViewController *)viewController isFromCoverflow:(BOOL)coverFlow{
     [FGoogleAnalytics writeGAForItem:[video title] andType:GAFOTONAVIDEOINT];
     BOOL downloaded = YES;
     NSString *local= [FMedia  createLocalPathForLink:[video path] andMediaType:MEDIAVIDEO];
@@ -96,7 +96,7 @@
     
     BOOL flag = [FDB checkIfBookmarkedForDocumentID:[video itemID] andType:BOOKMARKVIDEO];
     
-    if ([[NSFileManager defaultManager] fileExistsAtPath:local] && downloaded && flag) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:local] && downloaded && (flag || coverFlow)) {
         [FCommon playVideoFromURL:local onViewController:viewController localSaved:YES];
     }else
     {
@@ -118,6 +118,7 @@
     AVQueuePlayer * player = [[AVQueuePlayer alloc] initWithURL:videoURL];
     AVPlayerViewController *controller = [[AVPlayerViewController alloc] init];
     controller.player = player;
+
     [viewController presentViewController:controller animated:YES completion:nil];
     [player play];
 }

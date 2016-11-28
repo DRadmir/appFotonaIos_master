@@ -281,7 +281,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 -(void)openMedia:(NSString *)mediaID  andType:(NSString *)mediaType{
     FMedia *media = [FDB getMediaWithId:mediaID andType:mediaType];
     if ([[media mediaType] intValue] == [MEDIAVIDEO intValue]) {
-        [FCommon playVideo:media onViewController:self];
+        [FCommon playVideo:media onViewController:self isFromCoverflow:NO];
     } else {
         if ([[media mediaType] intValue] == [MEDIAPDF intValue]) {
             [self openPDF:media];
@@ -289,8 +289,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     }
 }
 
--(void) playVideo: (FMedia *) video{
-   [FCommon playVideo:video onViewController:self];}
+
 
 -(void) openPDF:(FMedia *)pdf{
     
@@ -696,11 +695,13 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
             dispatch_async(queue, ^{
                 //code to be executed in the background
                 NSURL *videoURL;
-                if (![[NSFileManager defaultManager] fileExistsAtPath:vid.localPath]) {
+                NSString *localPath = [FMedia createLocalPathForLink:vid.path andMediaType:MEDIAVIDEO];
+                if (![[NSFileManager defaultManager] fileExistsAtPath:localPath]) {
                     videoURL= [NSURL URLWithString:vid.path] ;
                 }else{
-                    videoURL=[NSURL fileURLWithPath:vid.localPath];
+                    videoURL=[NSURL fileURLWithPath:localPath];
                 }
+
                 
                 AVURLAsset *asset1 = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
                 AVAssetImageGenerator *generate1 = [[AVAssetImageGenerator alloc] initWithAsset:asset1];
@@ -745,13 +746,14 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
             dispatch_async(queue, ^{
                 //code to be executed in the background
                 UIImage *image;
-                NSString *pathTmp = [NSString stringWithFormat:@"%@%@",docDir,img.localPath];
-                if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp] || [img.localPath isEqualToString:@""]) {
+                NSString *pathTmp = [FMedia createLocalPathForLink:img.path andMediaType:MEDIAIMAGE];
+                if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
                     image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
                     
                 }else{
                     image = [UIImage imageWithData:[NSData dataWithContentsOfFile:[NSURL URLWithString:pathTmp]]];
                 }
+
                 dispatch_async(dispatch_get_main_queue(), ^{
                     //code to be executed on the main thread when background task is finished
                     [tmpImg setImage:image forState:UIControlStateNormal];
@@ -1044,7 +1046,8 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 -(IBAction)openVideo:(id)sender
 {
     FMedia *vid=[[currentCase getVideos] objectAtIndex:[sender tag]];
-    [self playVideo:vid];
+    BOOL coverflow = [[currentCase coverflow] isEqualToString:@"1"] ? YES : NO;
+    [FCommon playVideo:vid onViewController:self isFromCoverflow:coverflow];
 }
 
 -(IBAction)openGallery:(id)sender
@@ -1526,5 +1529,11 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     mediaArray = [FDB getAllFavoritesForUser];
     [contentsVideoModeCollectionView reloadData];
 }
+
+-(void)itemDidFinishPlaying:(NSNotification *) notification {
+    NSLog(@"end");
+}
+
+
 
 @end

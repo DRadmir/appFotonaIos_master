@@ -393,7 +393,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 
 
 -(void) playVideo: (FMedia *) video{
-    [FCommon playVideo:video onViewController:self];
+    [FCommon playVideo:video onViewController:self isFromCoverflow:NO];
 }
 
 -(void)openPreloaded

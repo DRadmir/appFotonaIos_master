@@ -14,9 +14,12 @@
 #import "FSearchViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "EBPhotoPagesController.h"
+#import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 
 
-@interface FCasebookViewController : UIViewController <UITableViewDelegate,UITableViewDataSource,QLPreviewControllerDelegate,QLPreviewControllerDataSource,UINavigationControllerDelegate,UISearchBarDelegate,UIAlertViewDelegate,EBPhotoPagesDelegate,EBPhotoPagesDataSource, UIActionSheetDelegate>
+
+@interface FCasebookViewController : UIViewController <UITableViewDelegate,UITableViewDataSource,QLPreviewControllerDelegate,QLPreviewControllerDataSource,UINavigationControllerDelegate,UISearchBarDelegate,UIAlertViewDelegate,EBPhotoPagesDelegate,EBPhotoPagesDataSource, UIActionSheetDelegate >
 {
     IBOutlet UIButton *feedbackBtn;
     IBOutlet UIButton *menuBtn;
