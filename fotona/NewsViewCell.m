@@ -17,6 +17,7 @@
 @synthesize newsImage;
 @synthesize newsNew;
 @synthesize newsTitle;
+@synthesize news;
 
 - (void)awakeFromNib {
     // Initialization code
@@ -27,7 +28,7 @@
 {
     
 
-    if ([self.restorationIdentifier isEqualToString:@""] )
+    if ([self.restorationIdentifier isEqualToString:@""])
     {
         self.lblAbout.text = NSLocalizedString(@"ABOUTSHORT", nil);
     }else

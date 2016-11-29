@@ -420,6 +420,8 @@ FNewsView *newsViewController;
         
     }
     
+    [tempCell setNews:[newsArray objectAtIndex:index]];
+    [tempCell fillCell];
     tempCell.newsImage.image =[[[newsArray objectAtIndex:index] images] objectAtIndex:0];
     [tempCell.newsImage setContentMode:UIViewContentModeScaleAspectFill];
     [tempCell.newsImage setClipsToBounds:YES];
