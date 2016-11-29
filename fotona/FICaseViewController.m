@@ -9,19 +9,21 @@
 #import "FICaseViewController.h"
 #import "FAuthor.h"
 #import "FDB.h"
+
+#import "FAppDelegate.h"
 #import "FIGalleryController.h"
 #import "FImage.h"
 #import "FDownloadManager.h"
 #import "HelperBookmark.h"
 #import "FIFlowController.h"
 #import "FITabbarController.h"
-#import "FGoogleAnalytics.h"
 
 @interface FICaseViewController ()
 {
     NSArray *videoArray;
     NSArray *imagesArry;
-    int state;
+
+    
 }
 @end
 
@@ -31,9 +33,10 @@
 @synthesize lblDate;
 @synthesize btnBookmark;
 @synthesize btnRemoveBookmark;
+@synthesize btnAddFavorite;
+@synthesize btnRemoveFavorite;
 @synthesize imgAuthor;
 @synthesize lblTitle;
-@synthesize viewParametrs;
 @synthesize scrollViewImages;
 @synthesize scrollViewImagesHeight;
 @synthesize viewIntroduction;
@@ -41,7 +44,6 @@
 @synthesize btnReadMore;
 @synthesize caseToOpen;
 @synthesize parent;
-@synthesize favoriteParent;
 @synthesize scrollViewMain;
 
 @synthesize parametersContainer;
@@ -52,23 +54,28 @@
 @synthesize parametersHeight;
 @synthesize headerHeight;
 @synthesize canBookmark;
-
-@synthesize btnAddFavorite;
-@synthesize btnRemoveFavorite;
+@synthesize favoriteParent;
 
 @synthesize gallery;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    state = 0;
+
     // Do any additional setup after loading the view.
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    [self refreshBookmarkBtn];
+    BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
+    if (bookmarked){//[currentCase.bookmark boolValue]) {
+        [btnBookmark setHidden:YES];
+        [btnRemoveBookmark setHidden:NO];
+    } else {
+        [btnBookmark setHidden:NO];
+        [btnRemoveBookmark setHidden:YES];
+    }
     
+    [self loadCase];
     [self createGallery];
     
     FIFlowController *flow = [FIFlowController sharedInstance];
@@ -77,26 +84,17 @@
     {
         flow.caseView = self;
     }
-       
-    if ([FDB checkIfFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE]) {
-        [btnRemoveFavorite setHidden:NO];
-        [btnAddFavorite setHidden:YES];
-    } else {
-        [btnRemoveFavorite setHidden:YES];
-        [btnAddFavorite setHidden:NO];
+    
+    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
+    if (usr == nil) {
+        usr =@"guest";
     }
-
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    [self loadCase];
 }
 
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-     [self setPatameters];
+    [self setPatameters];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -106,16 +104,14 @@
 
 -(void) loadCase
 {
-    [FGoogleAnalytics writeGAForItem:[caseToOpen title] andType:GACASEINT];
-    
     [scrollViewMain setContentOffset:CGPointMake(0, 0) animated:YES];
-   
+    
     int lineSpace =7;
     int fontSizeText = 15;
     FAuthor* author = [FDB getAuthorWithID:[caseToOpen authorID]];
     
     [lblAuthor setText:[author name]];
-    
+
     [lblDate setText:[APP_DELEGATE timestampToDateString:[caseToOpen date]]];
     [lblTitle setText:caseToOpen.title];
     
@@ -156,7 +152,7 @@
     check=[check stringByReplacingOccurrencesOfString:@"<br />" withString:@""];
     check=[check stringByReplacingOccurrencesOfString:@"<br type=\"_moz\" />" withString:@""];
     if ([caseToOpen procedure] && ![check isEqualToString:@""]) {
-    
+        
         
         title =[title stringByAppendingString:@"<br/><p>Procedure</p><br/>"];
         NSMutableAttributedString * titleAttrStr = [[NSMutableAttributedString alloc] initWithData:[title dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
@@ -201,14 +197,14 @@
                         range:NSMakeRange(0, attrStr.length)];
         [allAdditionalInfo appendAttributedString:attrStr];
         title = @"<br/><br/>";
-
+        
     }
     
     check=[[caseToOpen references] stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@""];
     check=[check stringByReplacingOccurrencesOfString:@"<br />" withString:@""];
     check=[check stringByReplacingOccurrencesOfString:@"<br type=\"_moz\" />" withString:@""];
     if ([caseToOpen references] && ![check isEqualToString:@""]) {
-       
+        
         title =[title stringByAppendingString:@"<br/><p>References</p><br/>"];
         NSMutableAttributedString * titleAttrStr = [[NSMutableAttributedString alloc] initWithData:[title dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
         [titleAttrStr addAttribute:NSFontAttributeName value: [UIFont fontWithName:@"HelveticaNeue" size:17] range: NSMakeRange(0, titleAttrStr.length)];
@@ -228,7 +224,7 @@
                         range:NSMakeRange(0, attrStr.length)];
         [allAdditionalInfo appendAttributedString:attrStr];
         title = @"<br/><br/>";
- 
+        
     }
     
     //DISCLAMER
@@ -251,24 +247,23 @@
     btnReadMore.layer.cornerRadius = 3;
     btnReadMore.layer.borderWidth = 1;
     btnReadMore.layer.borderColor = btnReadMore.tintColor.CGColor;
-    [btnBookmark setNeedsLayout];
-    [btnBookmark layoutIfNeeded];
-
+    
+    
     lblIntroduction.attributedText=allAdditionalInfo;
     [lblIntroduction sizeToFit];
+    
+    
 }
 
 
 
 -(void)setPatameters
 {
-    
     imgAuthor.layer.cornerRadius = imgAuthor.frame.size.height /2;
     imgAuthor.layer.masksToBounds = YES;
     imgAuthor.layer.borderWidth = 0;
     [imgAuthor setContentMode:UIViewContentModeScaleAspectFill];
     [imgAuthor setImage:[FDB getAuthorImage:[caseToOpen authorID]]];
-
     
     for (UIView *v in parametersScrollView.subviews) {
         if ([v isKindOfClass:[UILabel class]]) {
@@ -280,19 +275,19 @@
         }
         
     }
-
-
+    
+    
     int allDataCount=0;
     int allDataObjectAtIndex0Count=0;
     int columnWidth = 150;
     
     int y=0;
-    if (caseToOpen.parameters && caseToOpen.parameters != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
+    if (caseToOpen.parameters && caseToOpen.parameters  != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
         NSArray*allData=[NSJSONSerialization JSONObjectWithData:[caseToOpen.parameters dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
         
         
         NSMutableArray *allDataM=[allData mutableCopy];
-
+        
         
         int j=0;
         //        int tableheight=0;
@@ -394,10 +389,10 @@
     else
     {
         [tableParameters setFrame:CGRectMake(tableParameters.frame.origin.x, tableParameters.frame.origin.y, tableParameters.frame.size.width, 0)];
-       
+        
     }
     [parametersScrollView setFrame:CGRectMake(parametersScrollView.frame.origin.x, parametersScrollView.frame.origin.y, parametersScrollView.frame.size.width, y)];
-
+    
     if (allDataCount>0) {
         [parametersContainer setFrame:CGRectMake(parametersContainer.frame.origin.x, lblTitle.frame.origin.y+lblTitle.frame.size.height+40, parametersContainer.frame.size.width, tableParameters.frame.size.height)];
     }else
@@ -469,6 +464,7 @@
     }
 }
 
+
 - (void) refreshBookmarkBtn  {
     BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
     if (bookmarked){
@@ -495,6 +491,8 @@
     [btnRemoveFavorite setHidden:YES];
     [btnAddFavorite setHidden:NO];
 }
+
+
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex > -1) {
@@ -529,5 +527,7 @@
         [[FDownloadManager shared] prepareForDownloadingFiles];
     }
 }
+
+
 
 @end

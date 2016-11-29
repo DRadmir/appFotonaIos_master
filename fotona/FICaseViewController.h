@@ -22,13 +22,13 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnRemoveBookmark;
 @property (strong, nonatomic) IBOutlet UIImageView *imgAuthor;
 @property (strong, nonatomic) IBOutlet UILabel *lblTitle;
-@property (strong, nonatomic) IBOutlet UIView *viewParametrs;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollViewImages;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewImagesHeight;
 @property (strong, nonatomic) IBOutlet UIView *viewIntroduction;
 @property (strong, nonatomic) IBOutlet UILabel *lblIntroduction;
 @property (strong, nonatomic) IBOutlet UIButton *btnReadMore;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollViewMain;
+@property (strong, nonatomic) IBOutlet UIView *mainView;
 
 @property (strong, nonatomic) IBOutlet UIView *parametersContainer;
 @property (strong, nonatomic) IBOutlet UIView *tableParameters;
