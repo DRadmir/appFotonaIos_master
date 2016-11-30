@@ -18,7 +18,7 @@
     //only wifi view
     IBOutlet UIView *wifiView;
     IBOutlet UISwitch *wifiSwitch;
-    
+    IBOutlet UISwitch *notifSwitch;
     
     
     IBOutlet NSLayoutConstraint *tableviewHeight;
@@ -44,10 +44,12 @@
 -(IBAction)changePassword:(id)sender;
 
 - (IBAction)changeWifiCheck:(id)sender;
+- (IBAction)changeNotifCheck:(id)sender;
 
 - (IBAction)bookmarkSelected:(id)sender;
 - (IBAction)unbookmarkAll:(id)sender;
 
 -(void) refreshStatusBar;
++(void)sendDeviceData;
 
 @end

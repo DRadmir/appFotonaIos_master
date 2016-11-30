@@ -214,6 +214,7 @@ BOOL showFeatured = YES;
         // I get response as XML here and parse it in a function
         //        NSLog(@"%@",[operation responseString]);
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
+        NSLog(@"%@",[dic objectForKey:@"values"]);
         if (![[dic valueForKey:@"msg"] isEqualToString:@"Success"]) {
             
             ///

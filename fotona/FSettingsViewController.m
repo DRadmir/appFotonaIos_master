@@ -16,6 +16,7 @@
 #import "FUpdateContent.h"
 #import "FRegistrationViewController.h"
 #import "FMediaManager.h"
+#import "FHelperRequest.h"
 
 @interface FSettingsViewController ()
 
@@ -28,7 +29,7 @@
 }
 @synthesize popover;
 @synthesize unbookmarAll;
-
+@synthesize active;
 
 - (void)didReceiveMemoryWarning
 {
@@ -181,6 +182,17 @@
     [self.view addSubview:registrationView.view];
 }
   
+- (IBAction)changeNotifiCheck:(id)sender{
+
+    [FHelperRequest sendDeviceData];
+    if () {
+        
+        [self setActive:@"1"];
+    } else {
+        [self setActive:@"0"];
+        
+    }
+}
 
 - (IBAction)changeWifiCheck:(id)sender {
     [ConnectionHelper setWifiOnlyConnection:wifiSwitch.isOn];

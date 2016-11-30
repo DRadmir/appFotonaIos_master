@@ -13,6 +13,7 @@
 #import "FIFlowController.h"
 #import "FIExternalLinkViewController.h"
 #import "FMediaManager.h"
+#import "FHelperRequest.h"
 
 @interface FISettingsViewController ()
 
@@ -195,6 +196,11 @@
     externalView.urlString = @"http://www.fotona.com/en/support/passreset/";
     externalView.changePass = true;
     [self.navigationController pushViewController:externalView animated:true];
+}
+
+- (IBAction)changeNotifCheck:(id)sender{
+    [FHelperRequest sendDeviceData];
+
 }
 
 - (IBAction)changeWifiCheck:(id)sender {
