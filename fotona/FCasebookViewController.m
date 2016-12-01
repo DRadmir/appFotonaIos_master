@@ -472,7 +472,6 @@
 {
     [contentModeView removeFromSuperview];
     NSString *usr = [FCommon getUser];
-    NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
     
     [caseScroll removeGestureRecognizer:swipeRecognizerB];
     
@@ -954,13 +953,13 @@
         [tableParameters setFrame:CGRectMake(tableParameters.frame.origin.x, tableParameters.frame.origin.y, tableParameters.frame.size.width, 0)];
     }
     [parametersScrollView setFrame:CGRectMake(parametersScrollView.frame.origin.x, parametersScrollView.frame.origin.y, parametersScrollView.frame.size.width, y)];
+    
     if (allDataCount>0) {
         [parametersConteiner setFrame:CGRectMake(parametersConteiner.frame.origin.x, titleLbl.frame.origin.y+titleLbl.frame.size.height+40, parametersConteiner.frame.size.width, tableParameters.frame.size.height)];
     }else
     {
         [parametersConteiner setFrame:CGRectMake(parametersConteiner.frame.origin.x, titleLbl.frame.origin.y+titleLbl.frame.size.height, parametersConteiner.frame.size.width, 0)];
     }
-    
     
     [parametersScrollView setContentSize:CGSizeMake(167*(allDataObjectAtIndex0Count-1), tableParameters.frame.size.height-40)];
     //setting the size of image gallery

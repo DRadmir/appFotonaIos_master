@@ -164,6 +164,29 @@
     return false;
 }
 
++(NSString *)getUserPermissionsForDBWithColumnName:(NSString *)columnName{
+    
+    NSMutableArray *sql = [[NSMutableArray alloc] initWithObjects:@"%",@"%",@"%",@"%",@"%", nil];
+    FUser *user = [APP_DELEGATE currentLogedInUser];
+    if (user.userTypeSubcategory == nil || user.userTypeSubcategory.count == 0) {
+        sql[[user.userType intValue]] = [[NSString alloc] initWithFormat:@"%@%@", user.userType,@"%"];
+    }else {
+        if (user.userTypeSubcategory.count == 1) {
+            sql[[user.userType intValue]] = [[NSString alloc] initWithFormat:@"%@%@", user.userTypeSubcategory[0],@"%"];
+        }else {
+            NSMutableArray *compoundStatement = [[NSMutableArray alloc] initWithCapacity:user.userTypeSubcategory.count];
+            for (int i = 0; i <user.userTypeSubcategory.count; i++){
+                sql[[user.userType intValue]] = [[NSString alloc] initWithFormat:@"%@%@", user.userTypeSubcategory[i],@"%"];
+                compoundStatement[i] = [[NSString alloc] initWithFormat:@"'%@'", [self arrayToString:sql withSeparator:@";"]];
+            }
+            NSString *delimiter =  [[NSString alloc] initWithFormat:@" OR %@ LIKE ", columnName];
+            return [[NSString alloc] initWithFormat:@"( %@ LIKE %@ )", columnName, [self arrayToString:compoundStatement withSeparator:delimiter]];
+        }
+    }
+    
+    return [[NSString alloc] initWithFormat:@"%@ LIKE '%@'", columnName, [self arrayToString:sql withSeparator:@";"]];
+}
+
 #pragma mark - String/Array
 
 +(NSString *)arrayToString:(NSMutableArray *)array withSeparator:(NSString *)separator{

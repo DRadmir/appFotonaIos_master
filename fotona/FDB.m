@@ -139,21 +139,21 @@
 {
     NSMutableArray *tmp=[[NSMutableArray alloc] init];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%')",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%') AND (%@ OR alloweInCoverFlow=1)",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt, [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME]];
     
     if (![ConnectionHelper connectedToInternet]) {
-        query = [NSString stringWithFormat:@"%@ AND (isBookmark=1 OR alloweInCoverFlow=1)",query];
+        query = [NSString stringWithFormat:@"%@ AND isBookmark=1",query];
     }
     FMResultSet *results= [database executeQuery:query];
 
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]] || [[f coverflow] isEqualToString:@"1"]) {
-             [tmp addObject:f];
-        }
+        [tmp addObject:f];
     }
     return tmp;
 }
+
+
 
 
 +(FCase *)getCaseForFotona:(NSString *)caseID{
@@ -499,15 +499,13 @@
     NSMutableArray *tmpVideo=[[NSMutableArray alloc] init];
     FMResultSet *results;
     if ([ConnectionHelper connectedToInternet]) {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 and m.active=1 and (m.title like '%%%@%%')",searchTxt]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 and m.active=1 and (m.title like '%%%@%%') AND %@",searchTxt, [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME]]];
     } else {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%')",searchTxt]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@",searchTxt, [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME]]];
     }
     while([results next]) {
         FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]]) {
             [tmpVideo addObject:f];
-        }
         
     }
     
@@ -588,15 +586,13 @@
     NSMutableArray *tmpPDF=[[NSMutableArray alloc] init];
     FMResultSet *results;
     if ([ConnectionHelper connectedToInternet]) {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 and m.active=1 and (m.title like '%%%@%%')",searchTxt]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 and m.active=1 and (m.title like '%%%@%%') AND %@",searchTxt, [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME]]];
     } else {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%')",searchTxt]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@",searchTxt, [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME]]];
     }
         while([results next]) {
         FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];
-         if ([FCommon userPermission:[f userPermissions]]) {
              [tmpPDF addObject:f];
-         }
     }
     
     return tmpPDF;

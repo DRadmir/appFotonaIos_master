@@ -92,4 +92,9 @@
 #define FOTONACATEGORYPDF @"6"
 #define FOTONACATEGORYPRELODED @"7"
 
+//DB COLUMN NAMES
+
+#define USERPERMISSIONCOLUMNNAME @"userPermissions"
+
+
 #endif
