@@ -14,6 +14,7 @@
 #import "FIExternalLinkViewController.h"
 #import "FMediaManager.h"
 #import "FHelperRequest.h"
+#import "FNotificationManager.h"
 
 @interface FISettingsViewController ()
 
@@ -199,6 +200,7 @@
 }
 
 - (IBAction)changeNotifCheck:(id)sender{
+    [FNotificationManager setActiveNotificationa:@"1"];
     [FHelperRequest sendDeviceData];
 
 }

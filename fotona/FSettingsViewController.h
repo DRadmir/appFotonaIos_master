@@ -53,5 +53,5 @@
 
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
 -(void) refreshStatusBar;
-+(void)sendDeviceData;
+
 @end

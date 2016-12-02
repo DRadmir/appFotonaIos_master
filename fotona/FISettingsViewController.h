@@ -50,6 +50,6 @@
 - (IBAction)unbookmarkAll:(id)sender;
 
 -(void) refreshStatusBar;
-+(void)sendDeviceData;
+
 
 @end

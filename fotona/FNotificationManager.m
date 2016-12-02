@@ -136,17 +136,20 @@
         [av show];
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    }
+}
 
+
++(void) setActiveNotificationa:(NSString *)active{
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    [defaults setObject:active forKey:@"notificationEnabled"];
+    [defaults synchronize];
+}
+
++(NSString *)getActiveNotification{
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    NSString *active = [defaults valueForKey:@"notificationEnabled"];
+    return active;
+}
 
 
 @end

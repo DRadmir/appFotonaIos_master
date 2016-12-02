@@ -1177,12 +1177,11 @@ NSComparisonResult dateSortForNews(FNews *n1, FNews *n2, void *context) {
     [defaults setObject:@"" forKey:@"documentsLastUpdate"];
     [defaults setObject:@"" forKey:@"fotonaLastUpdate"];
     [defaults setObject:@"" forKey:@"lastUpdate"];
+    [defaults setObject:@"1" forKey:@"notificationEnabled"];
     [defaults setObject:userBookmarked forKey:@"userBookmarked"];
     [defaults synchronize];
 
 }
-
-
 
 
 

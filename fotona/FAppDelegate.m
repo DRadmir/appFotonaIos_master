@@ -358,7 +358,7 @@ NSString *notificationUrl = @"";
     [application registerForRemoteNotifications];
 }
 
-
+//registering notificationa
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 #if !TARGET_IPHONE_SIMULATOR
     
@@ -434,7 +434,9 @@ NSString *notificationUrl = @"";
                               stringByReplacingOccurrencesOfString:@">" withString:@""]
                              stringByReplacingOccurrencesOfString: @" " withString: @""];
     
-    NSString *requestData =[NSString stringWithFormat:@"{\"deviceID\":null,\"appname\":\"%@\",\"appversion\":\"%@\",\"deviceuid\":\"%@\",\"devicetoken\":\"%@\",\"devicename\":\"%@\",\"devicemodel\":\"%@\",\"deviceversion\":\"%@\",\"pushbadge\":true,\"pushalert\":true,\"pushsound\":true,\"active\":true",appName,appVersion,deviceUuid,devToken,deviceName,deviceModel,deviceSystemVersion];
+    NSString *requestData =[NSString stringWithFormat:@"{\"deviceID\":null,\"appname\":\"%@\",\"appversion\":\"%@\",\"deviceuid\":\"%@\",\"devicetoken\":\"%@\",\"devicename\":\"%@\",\"devicemodel\":\"%@\",\"deviceversion\":\"%@\",\"pushbadge\":true,\"pushalert\":true,\"pushsound\":true",appName,appVersion,deviceUuid,devToken,deviceName,deviceModel,deviceSystemVersion];
+    
+    [FNotificationManager setActiveNotificationa:@"1"];
     [FHelperRequest setDeviceData:requestData];
 #endif
 }

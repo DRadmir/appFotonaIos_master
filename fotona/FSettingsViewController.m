@@ -17,6 +17,7 @@
 #import "FRegistrationViewController.h"
 #import "FMediaManager.h"
 #import "FHelperRequest.h"
+#import "FNotificationManager.h"
 
 @interface FSettingsViewController ()
 
@@ -143,6 +144,8 @@
     
     [wifiSwitch setOn: [ConnectionHelper getWifiOnlyConnection]];
     
+    //TODO: set notification switch (if @"1" - true else false)
+    
     if ([APP_DELEGATE bookmarkCountLeft]>0 && downloadView.isHidden) {
         [btnBookmark setEnabled:YES];
         [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
@@ -183,15 +186,17 @@
 }
   
 - (IBAction)changeNotifiCheck:(id)sender{
-
-    [FHelperRequest sendDeviceData];
-    if () {
-        
-        [self setActive:@"1"];
+  //TODO - preverjanje če je uporabnik dovolil pošiljanje, drugače spet vprašat za dovoljenje
+    /*UIApplication *application = [UIApplication sharedApplication]; 
+     [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIRemoteNotificationTypeAlert |UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound categories:nil]];
+     [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeNone)];*/
+    if (notifSwitch.isOn) {
+         [FNotificationManager setActiveNotificationa:@"1"];
     } else {
-        [self setActive:@"0"];
-        
+         [FNotificationManager setActiveNotificationa:@"0"];
     }
+   
+    [FHelperRequest sendDeviceData];
 }
 
 - (IBAction)changeWifiCheck:(id)sender {

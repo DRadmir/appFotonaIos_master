@@ -12,4 +12,8 @@
 
 +(void) openNotification:(NSString *)url ofType:(int)type;
 
++(void) setActiveNotificationa:(NSString *)active;
++(NSString *)getActiveNotification;
+
+
 @end

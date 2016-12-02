@@ -10,12 +10,14 @@
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
 #import "FUser.h"
+#import "FNotificationManager.h"
 
 
 @implementation FHelperRequest
 
 static NSString *deviceData;
 static FUser *lastSent;
+static NSString *lastActiveState;
 
 
 #pragma mark - Case
@@ -60,14 +62,19 @@ static FUser *lastSent;
     
 }
 
-
-
 +(void)sendDeviceData{
     FUser *u = [APP_DELEGATE currentLogedInUser];
-    if (deviceData != nil && u!=nil && (lastSent == nil || ![lastSent.username isEqualToString: u.username])) {
+    NSString *active = [FNotificationManager getActiveNotification];
+    if (deviceData != nil && u!=nil && (lastSent == nil || ![lastSent.username isEqualToString: u.username] || (lastActiveState == nil) || !([lastActiveState isEqualToString:active]))) {
+       
+        //if user changes set notification to active
+        if (![lastSent.username isEqualToString: u.username]) {
+            active =@"1";
+            [FNotificationManager setActiveNotificationa:active];
+        }
         lastSent = u;
-        
-        NSString *requestData =[NSString stringWithFormat:@"%@,\"fotUserType\":%@,\"fotUserSubType\":\"%@\"}",deviceData,[u userType],[FCommon arrayToString:[[u userTypeSubcategory] mutableCopy] withSeparator:@";"]];
+        lastActiveState = active;
+        NSString *requestData =[NSString stringWithFormat:@"%@,\"active\":%@,\"fotUserType\":%@,\"fotUserSubType\":\"%@\"}",deviceData,active,[u userType],[FCommon arrayToString:[[u userTypeSubcategory] mutableCopy] withSeparator:@";"]];
         
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, LINKWRITEDEVICE]];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
