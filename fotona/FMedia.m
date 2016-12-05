@@ -83,7 +83,7 @@
         [self setDownload:[dic valueForKey:@"download"]];
         [self setActive:[dic valueForKey:@"active"]];
         [self setMediaType:[dic valueForKey:@"mediaType"]];
-        [self setTime:[dic valueForKey:@"mediaType"]];
+        [self setTime:[dic valueForKey:@"time"]];
     }
     return self;
 }

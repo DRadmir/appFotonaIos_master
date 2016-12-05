@@ -666,9 +666,9 @@
                     }
                     
                     if (!flag) {
-                        [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  v.itemID,v.title,v.path,@"",v.description,@"1",@"0",v.mediaImage,v.sort,v.userPermissions, v.active, v.deleted, v.download, v.filesize];
+                        [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize, time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  v.itemID,v.title,v.path,@"",v.description,@"1",@"0",v.mediaImage,v.sort,v.userPermissions, v.active, v.deleted, v.download, v.filesize, v.time];
                     } else {
-                        [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaType=?,isBookmark=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=? WHERE mediaID=? AND mediaType=1",v.title,v.path,@"",v.description,@"1",v.bookmark,v.mediaImage,v.sort,v.userPermissions, v.active, v.deleted, v.download, v.filesize,v.itemID];
+                        [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaType=?,isBookmark=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=?, time=? WHERE mediaID=? AND mediaType=1",v.title,v.path,@"",v.description,@"1",v.bookmark,v.mediaImage,v.sort,v.userPermissions, v.active, v.deleted, v.download, v.filesize, v.time,v.itemID];
                     }
                 }
             } else {
@@ -748,10 +748,10 @@
                         [HelperBookmark addVideoToDownloadList:vid forCase:caseID];
                     }
                     if (!exists) {
-                        [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  vid.itemID,vid.title,vid.path,@"",vid.description,@"1",@"0",vid.mediaImage,vid.sort,vid.userPermissions, vid.active, vid.deleted, vid.download, vid.filesize];
+                        [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize, time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  vid.itemID,vid.title,vid.path,@"",vid.description,@"1",@"0",vid.mediaImage,vid.sort,vid.userPermissions, vid.active, vid.deleted, vid.download, vid.filesize, vid.time];
                        
                     } else {
-                        [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=? WHERE mediaID=? AND mediaType=1",vid.title,vid.path,@"",vid.description,vid.mediaImage, vid.sort, vid.userPermissions, vid.active, vid.deleted, vid.download, vid.filesize,vid.itemID];
+                        [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=?, time=? WHERE mediaID=? AND mediaType=1",vid.title,vid.path,@"",vid.description,vid.mediaImage, vid.sort, vid.userPermissions, vid.active, vid.deleted, vid.download, vid.filesize, vid.time, vid.itemID];
                     }
                 }
             }

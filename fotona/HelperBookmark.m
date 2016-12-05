@@ -306,7 +306,7 @@ int bookmarkedCount;
                 alreadyBookmarked = NO;
                 FMResultSet *resultsBookmarkedAlready =  [database executeQuery:@"SELECT * FROM UserBookmark WHERE username=? AND typeID=? AND documentID=? AND bookmarkType=?" withArgumentsInArray:@[usr,bookmarType,[NSString stringWithFormat:@"%d", [vid.itemID intValue]], [NSString stringWithFormat:@"%d", source]]];
                 while([resultsBookmarkedAlready next]) {
-                    alreadyBookmarked = YES;
+                    alreadyBookmarked = NO;
                     cases = [resultsBookmarkedAlready valueForKey:@"caseIDs"];
                 }
                 

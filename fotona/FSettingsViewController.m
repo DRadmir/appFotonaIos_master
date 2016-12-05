@@ -146,6 +146,14 @@
     
     //TODO: set notification switch (if @"1" - true else false)
     
+    
+    
+//    if (notifSwitch setOn:[active isEqualToString:@"1"];) {
+//        [active isEqualToString:@"1"];
+//    } else {
+//        [active isEqualToString:@"0"];
+//    }
+    
     if ([APP_DELEGATE bookmarkCountLeft]>0 && downloadView.isHidden) {
         [btnBookmark setEnabled:YES];
         [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
@@ -186,17 +194,21 @@
 }
   
 - (IBAction)changeNotifiCheck:(id)sender{
+    
   //TODO - preverjanje če je uporabnik dovolil pošiljanje, drugače spet vprašat za dovoljenje
-    /*UIApplication *application = [UIApplication sharedApplication]; 
+    UIApplication *application = [UIApplication sharedApplication];
      [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIRemoteNotificationTypeAlert |UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound categories:nil]];
-     [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeNone)];*/
+     [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeNone)];
     if (notifSwitch.isOn) {
          [FNotificationManager setActiveNotificationa:@"1"];
+        
+        
     } else {
          [FNotificationManager setActiveNotificationa:@"0"];
     }
-   
+    
     [FHelperRequest sendDeviceData];
+    
 }
 
 - (IBAction)changeWifiCheck:(id)sender {

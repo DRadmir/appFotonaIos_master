@@ -260,8 +260,14 @@
                 <constraint firstItem="3NS-IQ-GjG" firstAttribute="leading" secondItem="6XI-iH-0LH" secondAttribute="leading" id="e2D-We-gfZ"/>
                 <constraint firstAttribute="bottom" secondItem="YSa-Ln-lnH" secondAttribute="bottom" constant="19" id="hnj-cv-FpZ"/>
             </constraints>
-            <point key="canvasLocation" x="-540" y="328"/>
+            <point key="canvasLocation" x="-970" y="367"/>
         </view>
+        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="9Qi-vh-tew">
+            <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <point key="canvasLocation" x="-234" y="193"/>
+        </tableView>
     </objects>
     <resources>
         <image name="arrow.png" width="62" height="24"/>

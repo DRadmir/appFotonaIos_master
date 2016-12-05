@@ -750,10 +750,24 @@
                 AVAssetImageGenerator *generate1 = [[AVAssetImageGenerator alloc] initWithAsset:asset1];
                 generate1.appliesPreferredTrackTransform = YES;
                 NSError *err = NULL;
-                CMTime time = CMTimeMakeWithSeconds([vid.time integerValue], 1);
-                CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
-                UIImage *one = [[UIImage alloc] initWithCGImage:oneRef];
-                UIImage *image=one;
+                
+                //on cases video thumbnail is the same of CMS
+                UIImage *image;
+                
+                if ([ConnectionHelper connectedToInternet])
+                    {
+                        NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: vid.mediaImage]];
+                        image = [UIImage imageWithData: imageData];
+                        
+                        }
+                else
+                {
+                    CMTime time = CMTimeMakeWithSeconds([vid.time integerValue], 1);
+                    CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
+                    UIImage *one = [[UIImage alloc] initWithCGImage:oneRef];
+                    image=one;
+                }
+               
                 dispatch_async(dispatch_get_main_queue(), ^{
                     //code to be executed on the main thread when background task is finished
                     [tmpImg setImage:image forState:UIControlStateNormal];
@@ -824,6 +838,7 @@
         }
     }
 }
+
 
 -(void)setPatameters
 {

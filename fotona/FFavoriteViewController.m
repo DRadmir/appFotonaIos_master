@@ -705,7 +705,6 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
                 }else{
                     videoURL=[NSURL fileURLWithPath:localPath];
                 }
-
                 
                 AVURLAsset *asset1 = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
                 AVAssetImageGenerator *generate1 = [[AVAssetImageGenerator alloc] initWithAsset:asset1];

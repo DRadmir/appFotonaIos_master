@@ -200,8 +200,21 @@
 }
 
 - (IBAction)changeNotifCheck:(id)sender{
-    [FNotificationManager setActiveNotificationa:@"1"];
+    
+    UIApplication *application = [UIApplication sharedApplication];
+    [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIRemoteNotificationTypeAlert |UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound categories:nil]];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeNone)];
+    if (notifSwitch.isOn) {
+        [FNotificationManager setActiveNotificationa:@"1"];
+    } else {
+        [FNotificationManager setActiveNotificationa:@"0"];
+    }
+    
     [FHelperRequest sendDeviceData];
+
+    
+//    [FNotificationManager setActiveNotificationa:@"1"];
+//    [FHelperRequest sendDeviceData];
 
 }
 
