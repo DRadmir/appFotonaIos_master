@@ -38,9 +38,8 @@
     
     IBOutlet UIView *disclaimerView;
     
-    
     IBOutlet UIScrollView *disclaimerScrollView;
-
+    
     IBOutlet UIButton *btnAccept;
     IBOutlet UIButton *btnDecline;
 }
@@ -58,7 +57,8 @@
 @property (nonatomic,retain) NSMutableArray *newsArray;
 @property (nonatomic,retain) NSMutableArray *eventsArray;
 
-
+@property (nonatomic, weak) IBOutlet UILabel* titleLabel;
+@property (nonatomic, weak) IBOutlet UILabel* descriptionLabel;
 
 
 @property (strong, nonatomic) IBOutlet UIView *aboutView;
@@ -72,6 +72,6 @@
 - (void)openNews:(FNews *)news;
 
 - (void)setNewsReaded:(NSString *)nID;
-- (void)fillCell;
+
 
 @end

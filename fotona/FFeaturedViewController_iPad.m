@@ -61,6 +61,9 @@
 @synthesize aboutView;
 
 
+
+
+
 #define OPENVIEW 1000
 #define CLOSEVIEW 0
 #define SETTINGSVIEW 2000;
@@ -69,6 +72,7 @@ int cellNumber =5;
 int e=0;
 
 int disclamerRotation = 1;
+int tutorialRotation = 1;
 
 FNewsView *newsViewController;
 
@@ -139,6 +143,8 @@ FNewsView *newsViewController;
                                              selector:@selector(closeOnTabNews:)
                                                  name:@"CloseOnTabNews"
                                                object:nil];
+    
+   
     
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -620,7 +626,7 @@ FNewsView *newsViewController;
 }
 
 
-#pragma mark iCarousel methods
+#pragma mark - iCarousel methods
 
 - (void)setUp
 {
@@ -753,7 +759,7 @@ FNewsView *newsViewController;
 }
 
 
-#pragma mark iCarousel taps
+#pragma mark - iCarousel taps
 
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
 {
@@ -768,7 +774,7 @@ FNewsView *newsViewController;
 }
 
 
-#pragma mark Search
+#pragma mark - Search
 
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
     NSLog(@"Text: %@",searchText);
@@ -863,7 +869,7 @@ FNewsView *newsViewController;
     [APP_DELEGATE rotatePopupSearchedNewsInView:self.view];
 }
 
-#pragma mark closeviews
+#pragma mark - closeviews
 
 -(IBAction)closeNews:(UISwipeGestureRecognizer *)recognizer {
     
@@ -962,7 +968,7 @@ FNewsView *newsViewController;
     
 }
 
-#pragma mark openingAbout
+#pragma mark - openingAbout
 
 -(void)openAbout{
     [aboutTitle setText:@"About fotona"];
@@ -989,9 +995,6 @@ FNewsView *newsViewController;
     [newsViewController.view setHidden:YES];
     [aboutView setHidden:NO];
 }
-
-
-
 
 
 - (IBAction)btnAcceptClick:(id)sender {
@@ -1061,6 +1064,7 @@ FNewsView *newsViewController;
     
 }
 
+
 #pragma mark: - Rotating cases
 
 - (void) startRotationAnimationIpad {
@@ -1086,6 +1090,7 @@ FNewsView *newsViewController;
                      }
                      completion:nil];
 }
+
 
 
 

@@ -44,7 +44,6 @@
 @synthesize btnReadMore;
 @synthesize caseToOpen;
 @synthesize parent;
-@synthesize scrollViewMain;
 
 @synthesize parametersContainer;
 @synthesize tableParameters;
@@ -104,7 +103,6 @@
 
 -(void) loadCase
 {
-    [scrollViewMain setContentOffset:CGPointMake(0, 0) animated:YES];
     
     int lineSpace =7;
     int fontSizeText = 15;

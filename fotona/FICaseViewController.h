@@ -27,8 +27,7 @@
 @property (strong, nonatomic) IBOutlet UIView *viewIntroduction;
 @property (strong, nonatomic) IBOutlet UILabel *lblIntroduction;
 @property (strong, nonatomic) IBOutlet UIButton *btnReadMore;
-@property (strong, nonatomic) IBOutlet UIScrollView *scrollViewMain;
-@property (strong, nonatomic) IBOutlet UIView *mainView;
+
 
 @property (strong, nonatomic) IBOutlet UIView *parametersContainer;
 @property (strong, nonatomic) IBOutlet UIView *tableParameters;

@@ -7,6 +7,7 @@
 //
 
 #import "DisclaimerViewController.h"
+#import "FTutorialViewController.h"
 
 @interface DisclaimerViewController ()
 {
@@ -81,15 +82,13 @@
     [[NSUserDefaults standardUserDefaults] setObject:disclaimerArray forKey:@"disclaimerShown"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    if (parentiPad == nil)
-    {
-        
-        [parentiPhone showFeatured];
-        [self removeFromParentViewController];
-    } else
-    {
-        [parentiPad showFeatured];
-    }
+
+    FTutorialViewController *tutorialVC=[[FTutorialViewController alloc] init];
+    tutorialVC.parentiPad = self.parentiPad;
+    tutorialVC.parentiPhone = self.parentiPhone;
+    [self.navigationController pushViewController:tutorialVC animated:YES];
+    [self removeFromParentViewController];
+
 }
 
 

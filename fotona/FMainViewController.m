@@ -183,7 +183,7 @@ int forgotenBottom = 0;
     NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"disclaimerShown"]];
     if(![usersarray containsObject:usr]){
-        
+        //show disclaimer
         DisclaimerViewController *disclaimer=[[DisclaimerViewController alloc] init];
         disclaimer.parentiPhone = self;
         [self.navigationController pushViewController:disclaimer animated:YES];

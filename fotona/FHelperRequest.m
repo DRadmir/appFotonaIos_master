@@ -16,7 +16,7 @@
 @implementation FHelperRequest
 
 static NSString *deviceData;
-static FUser *lastSent;
+static NSString *lastSent;
 static NSString *lastActiveState;
 
 
@@ -64,16 +64,21 @@ static NSString *lastActiveState;
 
 +(void)sendDeviceData{
     FUser *u = [APP_DELEGATE currentLogedInUser];
+    lastSent = [self getLasSentuser];
+    lastActiveState = [self getStateLasSent];
     NSString *active = [FNotificationManager getActiveNotification];
-    if (deviceData != nil && u!=nil && (lastSent == nil || ![lastSent.username isEqualToString: u.username] || (lastActiveState == nil) || !([lastActiveState isEqualToString:active]))) {
+    if (deviceData != nil && u!=nil && (lastSent == nil || ![lastSent isEqualToString: u.username] || (lastActiveState == nil) || !([lastActiveState isEqualToString:active]))) {
        
         //if user changes set notification to active
-        if (![lastSent.username isEqualToString: u.username]) {
+        if (![lastSent isEqualToString: u.username]) {
             active =@"1";
             [FNotificationManager setActiveNotificationa:active];
         }
-        lastSent = u;
+        lastSent = u.username;
+        [self saveLastSentInUser:lastSent];
         lastActiveState = active;
+        [self saveStateLastSent:lastActiveState];
+        [FNotificationManager setActiveNotificationa:active];
         NSString *requestData =[NSString stringWithFormat:@"%@,\"active\":%@,\"fotUserType\":%@,\"fotUserSubType\":\"%@\"}",deviceData,active,[u userType],[FCommon arrayToString:[[u userTypeSubcategory] mutableCopy] withSeparator:@";"]];
         
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, LINKWRITEDEVICE]];
@@ -97,8 +102,32 @@ static NSString *lastActiveState;
         
         [operation start];
     }
-   
-
 }
+
++(void) saveLastSentInUser:(NSString *)user{
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    [defaults setObject:user forKey:@"lastSentUser"];
+    [defaults synchronize];
+}
+
++(NSString *)getLasSentuser{
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    NSString *user = [defaults valueForKey:@"lastSentUser"];
+    return user;
+}
+
++(void) saveStateLastSent:(NSString *)state{
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    [defaults setObject:state forKey:@"lastSentState"];
+    [defaults synchronize];
+}
+
++(NSString *)getStateLasSent{
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    NSString *state = [defaults valueForKey:@"lastSentState"];
+    return state;
+}
+
+
 
 @end
