@@ -148,8 +148,8 @@
 {
     NSLog(@"Error: %@ %@", error, [error userInfo]);
     [MBProgressHUD hideAllHUDsForView:webView animated:YES];
-    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"LOADINGWEBPAGEERROR", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [av show];
+//    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"LOADINGWEBPAGEERROR", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//    [av show];
 }
 
 -(void)clearWebView{
