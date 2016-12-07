@@ -22,14 +22,14 @@
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yhh-BA-AWh">
                         <constraints>
-                            <constraint firstAttribute="height" constant="28" id="wNl-Ci-XLp"/>
-                            <constraint firstAttribute="width" constant="36" id="zYY-kI-bX0"/>
+                            <constraint firstAttribute="height" constant="30" id="wNl-Ci-XLp"/>
+                            <constraint firstAttribute="width" constant="30" id="zYY-kI-bX0"/>
                         </constraints>
                     </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="yhh-BA-AWh" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="CPD-m7-9Tc"/>
-                    <constraint firstItem="LkE-y7-rc8" firstAttribute="leading" secondItem="yhh-BA-AWh" secondAttribute="trailing" constant="8" id="Emz-4j-aQW"/>
+                    <constraint firstItem="LkE-y7-rc8" firstAttribute="leading" secondItem="yhh-BA-AWh" secondAttribute="trailing" constant="14" id="Emz-4j-aQW"/>
                     <constraint firstItem="yhh-BA-AWh" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="Smw-j2-bRO"/>
                     <constraint firstItem="LkE-y7-rc8" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="12" id="ZfH-zI-bBy"/>
                     <constraint firstAttribute="trailing" secondItem="LkE-y7-rc8" secondAttribute="trailing" constant="8" id="cab-wS-qOh"/>

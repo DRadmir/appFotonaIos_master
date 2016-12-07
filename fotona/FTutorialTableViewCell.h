@@ -11,5 +11,8 @@
 @interface FTutorialTableViewCell : UITableViewCell
 @property (strong, nonatomic) IBOutlet UIImageView *imgViewTutorial;
 @property (strong, nonatomic) IBOutlet UILabel *lblTutorial;
+@property (strong, nonatomic) NSIndexPath *indexPath;
+
+-(void)tutorialView;
 
 @end

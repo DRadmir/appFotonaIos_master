@@ -26,13 +26,18 @@
                     </connections>
                 </tableView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M4P-P0-AvA">
-                    <state key="normal" title="Button"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="tintColor" red="1" green="0.044164965989999999" blue="0.075740484080000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
+                    <state key="normal" title="OK">
+                        <color key="titleColor" red="1" green="0.044164965989999999" blue="0.075740484080000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
                     <connections>
                         <action selector="closeTutorial:" destination="-1" eventType="touchUpInside" id="SR7-3a-3S6"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lg1-Km-daJ">
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to use the Fotona App" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lg1-Km-daJ">
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -44,7 +49,7 @@
                 <constraint firstItem="bmb-wn-m1p" firstAttribute="top" secondItem="lg1-Km-daJ" secondAttribute="bottom" constant="8" id="M6b-eg-8fP"/>
                 <constraint firstItem="lg1-Km-daJ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="33" id="OFp-XM-vCQ"/>
                 <constraint firstItem="lg1-Km-daJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="aFs-B3-dUB"/>
-                <constraint firstAttribute="trailing" secondItem="M4P-P0-AvA" secondAttribute="trailing" constant="16" id="brN-jc-VeP"/>
+                <constraint firstAttribute="trailing" secondItem="M4P-P0-AvA" secondAttribute="trailing" constant="46" id="brN-jc-VeP"/>
                 <constraint firstAttribute="bottom" secondItem="M4P-P0-AvA" secondAttribute="bottom" constant="20" id="tUx-bc-Pwt"/>
                 <constraint firstAttribute="trailing" secondItem="bmb-wn-m1p" secondAttribute="trailing" id="y8B-qj-ldU"/>
                 <constraint firstItem="bmb-wn-m1p" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="62" id="zTB-Fj-uML"/>

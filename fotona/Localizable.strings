@@ -59,5 +59,13 @@
 "WRONGLOGIN" = "Wrong username or password!";
 "DATAMISSING" = "Some data might be missing";
 
+//tutorial
+"ADDTOFAVORITES" = "Add to favorites – By adding content to favorites, you will be able to access it more quickly from the Favorites. Intended for content that you access more frequently. ";
+"REMOVEFROMFAVORITES" = "Remove from favorites – By clicking this icon again, you will remove previously added content from the Favorites.                                       
+                      ";
+"ADDTODOWNLOAD" = "Download – By clicking this icon you will download content to your mobile device for offline access. 
+                ";
+"REMOVEFROMDOWNLOAD" = "Delete – By clicking this icon again, you will completely remove downloaded content from your mobile device. This means that you will again need to use mobile data the next time you access the content, since it won’t be stored locally on your device. ";
+
 
 

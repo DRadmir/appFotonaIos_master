@@ -19,4 +19,5 @@
 @property (nonatomic, strong) FMainViewController *parentiPhone;
 
 - (IBAction)closeTutorial:(id)sender;
+-(void)tutorialView;
 @end

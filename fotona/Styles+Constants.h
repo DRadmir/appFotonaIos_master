@@ -65,7 +65,9 @@
 
 #define WEBSERVICEPLUTON @"https://plutontest.4egenus.com/fot-dev/fotApi/api/"//pluton test new
 #define WEBSERVICEPROD @"https://fotonaapp.4egenus.com/rest/WebService.asmx/api/"//production
-#define WEBSERVICE [NSString stringWithFormat:@"%@",WEBSERVICEPLUTON]
+#define WEBSERVICEPROD2 @"https://fotonaapp2.4egenus.com/fotapi/api"//production2
+
+#define WEBSERVICE [NSString stringWithFormat:@"%@",WEBSERVICEPROD2]
 
 #define LINKDISCLAIMER @"/FotDisclaimer/Get"
 #define LINKCASECATEGORY @"/FotCaseCategories/GetAllCaseCategories"
