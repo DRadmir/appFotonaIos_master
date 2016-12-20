@@ -632,7 +632,7 @@ int bookmarkedCount;
 
 + (BOOL) checkItem:(NSString *) itemId andType:(NSString *)type{
     for(FItemBookmark *item in [APP_DELEGATE downloadList]){
-        if( [item.itemID isEqualToString:itemId] && [item.type isEqualToString:type]){
+        if( [item.itemID intValue] == [itemId intValue] && [item.type intValue] == [type intValue]){
             return false;
         }
     }
