@@ -153,7 +153,7 @@
 //    } else {
 //        [active isEqualToString:@"0"];
 //    }
-    
+   
     if ([APP_DELEGATE bookmarkCountLeft]>0 && downloadView.isHidden) {
         [btnBookmark setEnabled:YES];
         [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
@@ -162,6 +162,7 @@
         [wifiSwitch setUserInteractionEnabled:NO];
         [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height+8, downloadView.frame.size.width,downloadView.frame.size.height)];
         downloadView.hidden = NO;
+        
 
         self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%%",(1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll])*100];
         [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll] animated:YES];
@@ -372,7 +373,7 @@
 - (void) fillTableData{
     [tableData removeAllObjects];
     NSArray *temp =[APP_DELEGATE currentLogedInUser].userTypeSubcategory;
-    if ([[APP_DELEGATE currentLogedInUser].userType intValue] == 0 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 1 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3) {
+    if ([[APP_DELEGATE currentLogedInUser].userType intValue] == 0 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3) {
         temp = @[@"2",@"1",  @"3"];
     }
     
@@ -412,10 +413,7 @@
     }
     
 }
--(void) totalSizeGB
-{
 
-}
 
 -(void) refreshStatusBar{
     dispatch_async(dispatch_get_main_queue(), ^{

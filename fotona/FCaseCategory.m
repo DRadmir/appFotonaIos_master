@@ -25,6 +25,7 @@
         [self setSort:[dic valueForKey:@"sort"]];
         [self setActive:[dic valueForKey:@"active"]];
         [self setDeleted:[dic valueForKey:@"deleted"]];
+        [self setSortInt:[[dic valueForKey:@"sort"] intValue]];
     }
     return self;
 }

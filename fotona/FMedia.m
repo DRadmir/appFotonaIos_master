@@ -59,6 +59,7 @@
         }
         [self setTime:[dic valueForKey:@"imageCapturedTime"]];
         [self setMediaType:[dic valueForKey:@"galleryType"]];
+        [self setSortInt:[[dic objectForKey:@"sort"] intValue]];
     }
     return self;
 }
@@ -84,6 +85,7 @@
         [self setActive:[dic valueForKey:@"active"]];
         [self setMediaType:[dic valueForKey:@"mediaType"]];
         [self setTime:[dic valueForKey:@"time"]];
+        [self setSortInt:[[dic objectForKey:@"sort"] intValue]];
     }
     return self;
 }
