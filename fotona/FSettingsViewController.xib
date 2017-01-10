@@ -233,7 +233,7 @@
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I6T-6U-NcD">
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="05y-45-jK8"/>
-                                                <constraint firstAttribute="width" constant="60" id="It7-ET-Xec"/>
+                                                <constraint firstAttribute="width" constant="250" id="It7-ET-Xec"/>
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="37" id="coN-22-iFd"/>
                                                 <constraint firstAttribute="height" constant="37" id="tNt-lV-FxQ"/>
                                             </constraints>

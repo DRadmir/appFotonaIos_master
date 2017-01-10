@@ -56,7 +56,12 @@
         [subView removeFromSuperview];
     }
     if (cellViewFotona == nil) {
-        cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
+        if ([media.mediaType intValue] == [MEDIAVIDEO intValue]) {
+            cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:2];
+        } else {
+            cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
+        }
+        
     }
     [cellViewFotona setParentIphone:nil];
     [cellViewFotona setParentIpad:parentIpad];

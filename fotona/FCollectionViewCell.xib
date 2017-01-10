@@ -76,8 +76,7 @@
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hy7-Qx-fBM" userLabel="Event1">
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" restorationIdentifier="title" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2mU-4f-NkA">
-                                        <frame key="frameInset" minX="35" minY="7" width="280" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="title" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2mU-4f-NkA">
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                                         <color key="textColor" red="0.21191233396530151" green="0.21190600097179413" blue="0.21190959215164185" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -92,23 +91,22 @@
                                         <color key="textColor" red="0.36767482757568359" green="0.36766383051872253" blue="0.36767005920410156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ln6-fu-cr2" userLabel="Dot">
-                                        <frame key="frameInset" minX="10" minY="10" width="19" height="19"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ln6-fu-cr2" userLabel="Dot">
                                         <constraints>
                                             <constraint firstAttribute="height" constant="19" id="Icc-d0-qoo"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="gtQ-tt-C7o" firstAttribute="top" secondItem="2mU-4f-NkA" secondAttribute="bottom" constant="12" id="4xg-UM-Li7"/>
+                                    <constraint firstItem="gtQ-tt-C7o" firstAttribute="top" secondItem="2mU-4f-NkA" secondAttribute="bottom" constant="4" id="4xg-UM-Li7"/>
                                     <constraint firstItem="ln6-fu-cr2" firstAttribute="leading" secondItem="hy7-Qx-fBM" secondAttribute="leading" constant="10" id="Gca-A2-pUP"/>
                                     <constraint firstItem="UAh-Qk-obR" firstAttribute="trailing" secondItem="gtQ-tt-C7o" secondAttribute="trailing" id="I2d-wV-PvA"/>
                                     <constraint firstAttribute="trailing" secondItem="2mU-4f-NkA" secondAttribute="trailing" constant="31" id="Nrg-vF-xcR"/>
                                     <constraint firstItem="UAh-Qk-obR" firstAttribute="leading" secondItem="gtQ-tt-C7o" secondAttribute="leading" id="Oo1-hE-yyq"/>
-                                    <constraint firstItem="gtQ-tt-C7o" firstAttribute="top" secondItem="ln6-fu-cr2" secondAttribute="bottom" constant="7" id="RTu-5K-DBh"/>
+                                    <constraint firstItem="gtQ-tt-C7o" firstAttribute="top" secondItem="ln6-fu-cr2" secondAttribute="bottom" constant="3" id="RTu-5K-DBh"/>
                                     <constraint firstItem="gtQ-tt-C7o" firstAttribute="centerX" secondItem="2mU-4f-NkA" secondAttribute="centerX" constant="2" id="RwM-Tw-g6N"/>
                                     <constraint firstItem="gtQ-tt-C7o" firstAttribute="leading" secondItem="ln6-fu-cr2" secondAttribute="leading" id="XnG-dc-wFR"/>
-                                    <constraint firstItem="UAh-Qk-obR" firstAttribute="top" secondItem="2mU-4f-NkA" secondAttribute="bottom" constant="30" id="bmt-gV-myU"/>
+                                    <constraint firstItem="UAh-Qk-obR" firstAttribute="top" secondItem="2mU-4f-NkA" secondAttribute="bottom" constant="22" id="bmt-gV-myU"/>
                                     <constraint firstAttribute="bottom" secondItem="gtQ-tt-C7o" secondAttribute="bottom" constant="28" id="mtb-Z7-I88"/>
                                     <constraint firstAttribute="bottom" secondItem="UAh-Qk-obR" secondAttribute="bottom" constant="10" id="nIz-4g-Fvh"/>
                                     <constraint firstItem="2mU-4f-NkA" firstAttribute="top" secondItem="hy7-Qx-fBM" secondAttribute="top" constant="7" id="r7x-wa-wpf"/>

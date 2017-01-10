@@ -28,6 +28,7 @@
     
     IBOutlet UIView *checkView;
     IBOutlet UISwitch *notifSwitch;
+    
 }
 @property (strong, nonatomic) UIPopoverController *popover;
 
