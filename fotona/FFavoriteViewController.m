@@ -144,7 +144,6 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
             currentCase.bookmark = [results stringForColumn:@"isBookmark"];
         }
     }
-    
 }
 -(void)viewDidAppear:(BOOL)animated
 {

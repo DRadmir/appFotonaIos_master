@@ -494,7 +494,7 @@
 
 
 #pragma mark - Videos
-
+//TODO optimize - user permissions are called to offen
 +(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database{
     NSMutableArray *tmpVideo=[[NSMutableArray alloc] init];
     FMResultSet *results;

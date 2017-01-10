@@ -1068,7 +1068,7 @@ FNewsView *newsViewController;
 #pragma mark: - Rotating cases
 
 - (void) startRotationAnimationIpad {
-    animationRotationTimerIpad = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(moveTo) userInfo:nil repeats:NO];
+    animationRotationTimerIpad = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(moveTo) userInfo:nil repeats:NO];
 }
 
 - (void) stopRotationAnimationIpad {

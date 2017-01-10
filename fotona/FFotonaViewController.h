@@ -38,6 +38,7 @@
     IBOutlet UIToolbar *webViewToolbar;
     
     UIView *settingsView;
+    BOOL isExpanded;
 }
 @property (strong, nonatomic) IBOutlet UIWebView *cDescription;
 
@@ -54,6 +55,7 @@
 @property(nonatomic, retain) NSMutableDictionary *bookmarkMenu;
 
 @property (nonatomic) BOOL openVideoGal;
+
 
 -(void)externalLink:(NSString *)link;
 -(void)openContentWithTitle:(NSString *)title description:(NSString *)description;

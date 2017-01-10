@@ -150,7 +150,7 @@ UIButton *tmp;
 -(void)forgetPass:(id)sender
 {
     FRegistrationViewController *registrationView = [[FRegistrationViewController alloc] init];
-    registrationView.urlString = @"http://www.fotona.com/en/support/passreset/";
+    registrationView.urlString = @"http://www.fotona.com/en/#lost-password"; //@"http://www.fotona.com/en/support/passreset/"
     registrationView.fromSettings = false;
     [[self  navigationController] pushViewController:registrationView animated:true];
 
@@ -159,7 +159,7 @@ UIButton *tmp;
 -(void)registerNewUser:(id)sender
 {
     FRegistrationViewController *registrationView = [[FRegistrationViewController alloc] init];
-    registrationView.urlString = @"http://www.fotona.com/en/support/register/";
+    registrationView.urlString = @"http://www.fotona.com/en/#registration"; //@"http://www.fotona.com/en/support/register/";
     registrationView.fromSettings = false;
     [[self  navigationController] pushViewController:registrationView animated:true];
 }

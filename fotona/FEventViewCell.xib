@@ -44,7 +44,7 @@
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DGD-RH-qh7">
                         <constraints>
-                            <constraint firstAttribute="height" constant="10" id="rtg-Tm-oep"/>
+                            <constraint firstAttribute="height" constant="24" id="rtg-Tm-oep"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="13"/>
                         <color key="textColor" red="0.36767482757568359" green="0.36766383051872253" blue="0.36767005920410156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -61,7 +61,7 @@
                     <constraint firstItem="DGD-RH-qh7" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="13A-4W-gHl"/>
                     <constraint firstItem="50R-So-o3l" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="68Y-Sz-jru"/>
                     <constraint firstItem="H0u-kl-6hX" firstAttribute="leading" secondItem="s3t-gG-7S7" secondAttribute="trailing" constant="4" id="DV6-B1-SJD"/>
-                    <constraint firstAttribute="bottom" secondItem="DGD-RH-qh7" secondAttribute="bottom" constant="8" id="IPG-cb-1JM"/>
+                    <constraint firstAttribute="bottom" secondItem="DGD-RH-qh7" secondAttribute="bottom" constant="-1" id="IPG-cb-1JM"/>
                     <constraint firstItem="50R-So-o3l" firstAttribute="top" secondItem="H0u-kl-6hX" secondAttribute="bottom" constant="8" id="Pjl-he-xCu"/>
                     <constraint firstAttribute="trailing" secondItem="50R-So-o3l" secondAttribute="trailing" constant="8" id="QRF-Xx-bdJ"/>
                     <constraint firstItem="H0u-kl-6hX" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="b5c-9u-RtX"/>
@@ -69,7 +69,7 @@
                     <constraint firstItem="s3t-gG-7S7" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="gn8-vl-cgB"/>
                     <constraint firstItem="s3t-gG-7S7" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="oOT-Lc-vuY"/>
                     <constraint firstAttribute="trailing" secondItem="DGD-RH-qh7" secondAttribute="trailing" constant="8" id="q0G-uM-ppW"/>
-                    <constraint firstItem="DGD-RH-qh7" firstAttribute="top" secondItem="50R-So-o3l" secondAttribute="bottom" constant="8" id="t09-na-wDT"/>
+                    <constraint firstItem="DGD-RH-qh7" firstAttribute="top" secondItem="50R-So-o3l" secondAttribute="bottom" constant="1.5" id="t09-na-wDT"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

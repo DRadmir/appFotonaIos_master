@@ -251,7 +251,7 @@
 
 -(void)searchIPhone
 {
-    
+    //TODO - optimize 
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     newsSearchResIPhone=[FDB getNewsForSearchFromDB:searchTxtIPhone withDatabase:database];

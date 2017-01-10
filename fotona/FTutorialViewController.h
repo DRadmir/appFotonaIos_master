@@ -20,4 +20,5 @@
 
 - (IBAction)closeTutorial:(id)sender;
 -(void)tutorialView;
+
 @end

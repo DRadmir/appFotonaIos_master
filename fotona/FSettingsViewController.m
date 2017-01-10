@@ -187,7 +187,7 @@
 -(void)changePassword:(id)sender
 {
     registrationView = [[FRegistrationViewController alloc] init];
-    registrationView.urlString = @"http://www.fotona.com/en/support/passreset/";
+    registrationView.urlString = @"http://www.fotona.com/en/#lost-password"; //@"http://www.fotona.com/en/support/passreset/"
     registrationView.fromSettings = false;
     registrationView.view.frame = self.view.bounds;
     [self.view addSubview:registrationView.view];

@@ -95,9 +95,12 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     [searchVC setParent:self];
     popover=[[UIPopoverController alloc] initWithContentViewController:searchVC];
     
+    
+    
     //video collection view
     [contentsVideoModeCollectionView setBackgroundColor:[UIColor whiteColor]];
     [contentsVideoModeCollectionView registerClass:[FGalleryCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
+    
     
     [self.view setNeedsDisplay];
     stateHelper = 0;
@@ -195,6 +198,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     [APP_DELEGATE setFotonaController:self];
     
 }
+
 
 #pragma mark Search
 
@@ -319,7 +323,6 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     
     [self.view bringSubviewToFront:customToolbar];
     
-    
 }
 
 -(void)openContentWithTitle:(NSString *)title description:(NSString *)description media:(NSMutableArray *)menuMediaArray andMediaType:(NSString *)mediaType
@@ -333,11 +336,12 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         [contentsVideoModeCollectionView setFrame:CGRectMake(0, 89, 1024, 564)];
     }else
     {
-        [contentModeView setFrame:CGRectMake(0, 0, 768, 909)];
+        [contentModeView setFrame:CGRectMake(0, 0, 750, 909)];
         [contentModeScrollView setFrame:CGRectMake(0, 0, 768, 909)];
         [contentVideoModeView setFrame:CGRectMake(0, 0, 768, 909)];
         [contentsVideoModeCollectionView setFrame:CGRectMake(0, 89, 768, 820)];
     }
+    
     
     [contentVideoModeView setHidden:NO];
     [contentModeView setHidden:NO];
@@ -356,7 +360,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     for (UIView *v in contentVideModeScrollView.subviews) {
         [v removeFromSuperview];
     }
-    
+
     [containerView addSubview:contentVideoModeView];
     if (mediaArray.count > 0) {
         [FHelperThumbnailImg preloadImage:menuMediaArray mediaType:mediaType forTableView:nil orCollectionView:contentsVideoModeCollectionView onIndex:nil];
@@ -389,7 +393,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     [contentVideModeScrollView addSubview:contentsVideoModeCollectionView];
     [contentsVideoModeCollectionView setContentOffset:CGPointMake(0, 0) animated:YES];
     [self.view bringSubviewToFront:customToolbar];
-}
+    }
 
 
 -(void) playVideo: (FMedia *) video{
@@ -500,7 +504,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     }
     else
         return CGSizeMake(330, 144);
-}
+    }
 
 #pragma mark - PDF
 

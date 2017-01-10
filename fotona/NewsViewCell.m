@@ -34,8 +34,8 @@
     }else
     {
 
-        [self.newsTitle setBackgroundColor:[UIColor whiteColor]];
-        [self.newsDate setBackgroundColor:[UIColor whiteColor]];
+        [self.newsTitle setBackgroundColor:[UIColor clearColor]];
+        [self.newsDate setBackgroundColor:[UIColor clearColor]];
 
     [self setUserInteractionEnabled:NO];
     if ([[[self news] rest] isEqualToString:@"1"] && [ConnectionHelper connectedToInternet]) {

@@ -148,7 +148,7 @@ int forgotenBottom = 0;
 - (IBAction)pressedRegister:(id)sender
 {
     FRegistrationViewController *registrationView = [[FRegistrationViewController alloc] init];
-    registrationView.urlString = @"http://www.fotona.com/en/support/register/";
+    registrationView.urlString = @"http://www.fotona.com/en/#registration";  //@"http://www.fotona.com/en/support/register/";
     registrationView.fromSettings = false;
     [[self  navigationController] pushViewController:registrationView animated:true];
 }
@@ -156,7 +156,7 @@ int forgotenBottom = 0;
 - (IBAction)pressedForgoten:(id)sender
 {
     FRegistrationViewController *registrationView = [[FRegistrationViewController alloc] init];
-    registrationView.urlString = @"http://www.fotona.com/en/support/passreset/";
+    registrationView.urlString = @"http://www.fotona.com/en/#lost-password"; //@"http://www.fotona.com/en/support/passreset/"
     registrationView.fromSettings = false;
     [[self  navigationController] pushViewController:registrationView animated:true];
 }

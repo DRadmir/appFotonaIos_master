@@ -126,6 +126,7 @@
 {
     tableData = [FDB fillEventsWithCategory:ci andType:ti andMobile:false];//[FDB fillArrayWithCategory:ci andType:ti];
     [self.eventsTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+    [_eventsTableView setContentOffset:CGPointZero animated:YES];
 }
 
 #pragma mark - SegmenControl
@@ -133,6 +134,7 @@
 - (IBAction)typeSelected:(id)sender {
     ti = self.typeSelector.selectedSegmentIndex;
     [self reloadData];
+    
 }
 
 #pragma mark - Open Event
