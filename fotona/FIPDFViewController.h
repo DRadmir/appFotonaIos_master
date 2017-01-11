@@ -11,6 +11,16 @@
 #import "FFotonaViewController.h"
 #import "FFavoriteViewController.h"
 
+
+@interface BasicPreviewItem : NSObject<QLPreviewItem>
+{
+}
+
+@property (nonatomic, retain) NSURL * previewItemURL;
+@property (nonatomic, retain) NSString* previewItemTitle;
+
+@end
+
 @interface FIPDFViewController : FIBaseView <QLPreviewControllerDelegate, QLPreviewControllerDataSource, UIWebViewDelegate>
 
 @property FMedia *pdfMedia;

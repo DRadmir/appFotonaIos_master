@@ -22,6 +22,7 @@
 @property (nonatomic,retain) NSString *download;
 @property (nonatomic,retain) NSString *mediaType;
 @property (nonatomic,retain) NSString *time;
+@property (nonatomic) int sortInt;
 
 -(id)initWithDictionary:(NSDictionary *)dic;
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic;

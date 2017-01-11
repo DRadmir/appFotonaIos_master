@@ -14,6 +14,7 @@
 @property (nonatomic, retain) NSString *active;
 @property (nonatomic, retain) NSString *sort;
 @property (nonatomic, retain) NSString *deleted;
+@property (nonatomic) int sortInt;
 
 -(id)initWithDictionary:(NSDictionary *)dic;
 

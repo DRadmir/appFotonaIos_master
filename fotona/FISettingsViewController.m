@@ -25,12 +25,8 @@
     NSMutableArray *tableData;
 }
 @synthesize popover;
-
-
 @synthesize unbookmarAll;
 @synthesize settingsViewHeight;
-
-
 
 
 - (void)didReceiveMemoryWarning
@@ -39,27 +35,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-
--(id)init
-{
-    self = [super init];
-    if (self) {
-        // Custom initialization
-        //        [self setTitle:@"Settings"];
-        //        [self.tabBarItem setImage:[UIImage imageNamed:@"settings_grey.png"]];
-    }
-    return self;
-    
-}
 
 - (void)viewDidLoad
 {
@@ -82,13 +57,12 @@
     btnBookmark.layer.borderWidth = 1;
     btnBookmark.layer.borderColor = btnBookmark.titleLabel.textColor.CGColor;
     
+    self.categoryTable.delegate = self;
+    self.categoryTable.dataSource = self;
     
 }
 
--(void)viewDidDisappear:(BOOL)animated
-{
-    
-}
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -108,11 +82,8 @@
          [[[APP_DELEGATE currentLogedInUser] lastName] isEqualToString:@""]))
     {
         [temp appendString:[NSString stringWithFormat:@"%@ ",[[APP_DELEGATE currentLogedInUser] username]]];
-        
-        
     } else
     {
-        
         if (![[[APP_DELEGATE currentLogedInUser] firstName] isKindOfClass:[NSNull class]] &&
             [[APP_DELEGATE currentLogedInUser] firstName] != nil &&
             ![[[APP_DELEGATE currentLogedInUser] firstName] isEqualToString:@""])
@@ -151,8 +122,6 @@
     }
     [self.tabBarItem setImage:[UIImage imageNamed:@"settings_red.png"]];
     
-    
-    
     [wifiSwitch setOn: [ConnectionHelper getWifiOnlyConnection]];
     
     if ([APP_DELEGATE bookmarkCountLeft]>0 && downloadView.isHidden) {
@@ -171,9 +140,6 @@
     
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-}
 
 -(void)logout:(id)sender
 {
@@ -211,11 +177,6 @@
     }
     
     [FHelperRequest sendDeviceData];
-
-    
-//    [FNotificationManager setActiveNotificationa:@"1"];
-//    [FHelperRequest sendDeviceData];
-
 }
 
 - (IBAction)changeWifiCheck:(id)sender {
@@ -328,10 +289,7 @@
 }
 
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 50;
-}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [tableData count];
@@ -380,7 +338,7 @@
 - (void) fillTableData{
     [tableData removeAllObjects];
     NSArray *temp =[APP_DELEGATE currentLogedInUser].userTypeSubcategory;
-    if ([[APP_DELEGATE currentLogedInUser].userType intValue] == 0 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 1 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3) {
+    if ([[APP_DELEGATE currentLogedInUser].userType intValue] == 0 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3) {
         temp = @[@"2",@"1",  @"3"];
     }
     

@@ -87,6 +87,7 @@
         [self setGalleryItemIDs:[dic objectForKey:@"galleryItemIDs"]];
         [self setActive:[dic objectForKey:@"active"]];
         [self setDeleted:[dic objectForKey:@"deleted"]];
+        [self setSortInt:[[dic objectForKey:@"sort"] intValue]];
     }
     
     return self;

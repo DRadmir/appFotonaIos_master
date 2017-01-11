@@ -281,7 +281,8 @@
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"sortInt" ascending:YES];
+    [m sortUsingDescriptors:[NSArray arrayWithObject:descriptor]];
     return m;
 }
 
@@ -301,7 +302,8 @@
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"sortInt" ascending:YES];
+    [m sortUsingDescriptors:[NSArray arrayWithObject:descriptor]];
     return m;
 }
 
@@ -666,7 +668,7 @@
                     }
                     
                     if (!flag) {
-                        [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize, time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  v.itemID,v.title,v.path,@"",v.description,@"1",@"0",v.mediaImage,v.sort,v.userPermissions, v.active, v.deleted, v.download, v.filesize, v.time];
+                        [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize, time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  v.itemID,v.title,v.path,@"",v.description,@"1",@"0",v.mediaImage, v.sort,v.userPermissions, v.active, v.deleted, v.download, v.filesize, v.time];
                     } else {
                         [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaType=?,isBookmark=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=?, time=? WHERE mediaID=? AND mediaType=1",v.title,v.path,@"",v.description,@"1",v.bookmark,v.mediaImage,v.sort,v.userPermissions, v.active, v.deleted, v.download, v.filesize, v.time,v.itemID];
                     }
@@ -683,7 +685,7 @@
                         if (!flag) {
                             [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,mediaImage,sort,userPermissions,active,deleted,download, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",  p.itemID,p.title,p.path,@"",p.description,@"2",@"0",p.mediaImage,p.sort,p.userPermissions, p.active, p.deleted, p.download, p.filesize];
                         } else {
-                            [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,isBookmark=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=? WHERE mediaID=? AND mediaType=2",p.title,p.path,@"",p.description,@"0",p.mediaImage, p.sort, p.userPermissions, p.active, p.deleted, p.download, p.filesize,p.itemID];
+                            [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,isBookmark=?,mediaImage=?,sort=?, userPermissions=?,active=?,deleted=?,download=?, fileSize=? WHERE mediaID=? AND mediaType=2",p.title,p.path,@"",p.description,@"0",p.mediaImage,p.sort, p.userPermissions, p.active, p.deleted, p.download, p.filesize,p.itemID];
                         }
                     }
                 }
@@ -723,7 +725,7 @@
                         [HelperBookmark addImageToDownloadList:img forCase:caseID];
                     }
                 } else {
-                    [database executeUpdate:@"UPDATE Media set title=?,path=?,description=?,sort=?, deleted=?, fileSize=? WHERE mediaID=? AND mediaType=1",img.title,img.path,img.description, img.sort, img.deleted, img.fileSize,img.itemID];
+                    [database executeUpdate:@"UPDATE Media set title=?,path=?,description=?,sort=?, deleted=?, fileSize=? WHERE mediaID=? AND mediaType=1",img.title,img.path,img.description,img.sort, img.deleted, img.fileSize,img.itemID];
                 }
             }
         }
@@ -813,7 +815,8 @@
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
         [database close];
     }
-    
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"sortInt" ascending:YES];
+    [videosTmp sortUsingDescriptors:[NSArray arrayWithObject:descriptor]];
     return videosTmp;
 }
 

@@ -13,6 +13,20 @@
 #import "FDB.h"
 #import "MBProgressHUD.h"
 
+
+@implementation BasicPreviewItem
+
+@synthesize previewItemURL, previewItemTitle;
+
+-(void)dealloc
+{
+    self.previewItemURL = nil;
+    self.previewItemTitle = nil;
+}
+
+@end
+
+
 @interface FIPDFViewController (){
     NSString *pathOnline;
     FIExternalLinkViewController *externalView;
@@ -102,7 +116,10 @@
 
 - (id <QLPreviewItem>)previewController: (QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
 {
-    return [NSURL fileURLWithPath:pathOnline]; //path of the file to be displayed
+    BasicPreviewItem *previewItem =[BasicPreviewItem new];
+    previewItem.previewItemURL = [NSURL fileURLWithPath:pathOnline];
+    previewItem.previewItemTitle = pdfMedia.title;
+    return previewItem; //path of the file to be displayed
 }
 
 -(void)previewControllerDidDismiss:(QLPreviewController *)controller {
