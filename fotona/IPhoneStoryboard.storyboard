@@ -1138,7 +1138,7 @@
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="37" id="847-6l-Lhl"/>
                                                             <constraint firstAttribute="height" constant="37" id="A4l-qk-WZ6"/>
                                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="aCC-ha-gPN"/>
-                                                            <constraint firstAttribute="width" constant="60" id="tRG-uS-3lT"/>
+                                                            <constraint firstAttribute="width" constant="150" id="tRG-uS-3lT"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                                         <color key="textColor" red="0.28627450980000002" green="0.28627450980000002" blue="0.28627450980000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
