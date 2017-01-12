@@ -85,13 +85,13 @@
                 return casesSearchResIPhone.count;
             }else
             {
-                if (videosSearchResIPhone.count>0) {
+                if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
                     return videosSearchResIPhone.count;
                 }
             }
             break;
         case 2:
-            if (videosSearchResIPhone.count>0) {
+            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
                 return videosSearchResIPhone.count;
             }
             break;
@@ -125,13 +125,13 @@
                 return @"Cases";
             }else
             {
-                if (videosSearchResIPhone.count>0) {
+                if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
                     return @"Videos";
                 }
             }
             break;
         case 2:
-            if (videosSearchResIPhone.count>0) {
+            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
                 return @"Videos";
             }
             break;
@@ -167,7 +167,7 @@
                 [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
             }else
             {
-                if (videosSearchResIPhone.count>0) {
+                if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
                     [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
                 }else {
                     [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
@@ -175,7 +175,7 @@
             }
             break;
         case 2:
-            if (videosSearchResIPhone.count>0) {
+            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
                 [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
             } else {
                 [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
@@ -189,6 +189,8 @@
     }
     
     return cell;
+    //[cell.detailTextLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] description]];
+
 
 }
 

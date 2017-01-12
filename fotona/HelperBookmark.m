@@ -679,23 +679,33 @@ int bookmarkedCount;
 +(void)unbookmarkAll{
     NSString *currentUsr = [FCommon getUser];
     int x = 0;
-    FMDatabase *localDatabase = [FMDatabase databaseWithPath:DB_PATH];
-    [localDatabase open];
-    FMResultSet *resultsBookmarked =  [localDatabase executeQuery:@"SELECT * FROM UserBookmark where username=?" withArgumentsInArray:@[currentUsr]];
+    NSMutableArray *bookmarkedItems = [NSMutableArray new];
+    FMDatabase *localDatabaseGet = [FMDatabase databaseWithPath:DB_PATH];
+    [localDatabaseGet open];
+    FMResultSet *resultsBookmarked =  [localDatabaseGet executeQuery:@"SELECT * FROM UserBookmark where username=?" withArgumentsInArray:@[currentUsr]];
     while([resultsBookmarked next]) {
-        
-        
-        NSString *type = [resultsBookmarked stringForColumn:@"typeID"];
+        FItemBookmark *item = [[FItemBookmark alloc] init];
+        item.type = [resultsBookmarked stringForColumn:@"typeID"];
+        item.itemID = [resultsBookmarked stringForColumn:@"documentID"];
+        [bookmarkedItems addObject:item];
+    }
+    [localDatabaseGet close];
+    
+    
+    for (FItemBookmark *item in bookmarkedItems) {
+        FMDatabase *localDatabase = [FMDatabase databaseWithPath:DB_PATH];
+        [localDatabase open];
+        NSString *type = item.type;
         FMResultSet *resultItem;
         BOOL still = NO;
         if ([type isEqualToString:BOOKMARKNEWS]) {// news
-            [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,BOOKMARKNEWS];
-            resultItem = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKNEWS, nil]];
+            [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",item.itemID,currentUsr,BOOKMARKNEWS];
+            resultItem = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:item.itemID,BOOKMARKNEWS, nil]];
             while([resultItem next]) {
                 still = YES;
             }
             if (!still) {//if not bookmaked anymore
-                resultItem = [localDatabase executeQuery:@"SELECT * FROM News where newsID=?" withArgumentsInArray:[NSArray arrayWithObjects:[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKNEWS, nil]];
+                resultItem = [localDatabase executeQuery:@"SELECT * FROM News where newsID=?" withArgumentsInArray:[NSArray arrayWithObjects:item.itemID,BOOKMARKNEWS, nil]];
                 while([resultItem next]) {
                     FNews *f=[[FNews alloc] initWithDictionary:[resultItem resultDictionary]];
                     [localDatabase executeUpdate:@"UPDATE News set isBookmark=? where newsID=?",@"0", [NSString stringWithFormat:@"%ld", (long)f.newsID]];
@@ -715,26 +725,26 @@ int bookmarkedCount;
             }
         } else {
             if ([type isEqualToString:BOOKMARKEVENTS]) {//events
-                [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,BOOKMARKEVENTS];
-                resultItem = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKEVENTS, nil]];
+                [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",item.itemID,currentUsr,BOOKMARKEVENTS];
+                resultItem = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:item.itemID,BOOKMARKEVENTS, nil]];
                 while([resultItem next]) {
                     still = YES;
                 }
                 if (!still) {
-                    [localDatabase executeUpdate:@"UPDATE Events set isBookmark=? where eventID=?",@"0", [NSString stringWithFormat:@"%@", [resultsBookmarked stringForColumn:@"documentID"]]];
+                    [localDatabase executeUpdate:@"UPDATE Events set isBookmark=? where eventID=?",@"0", [NSString stringWithFormat:@"%@", item.itemID]];
                 }
                 
             } else {
                 if ([type isEqualToString:BOOKMARKVIDEO] || [type isEqualToString:BOOKMARKPDF]) {//video and pdf
-                    [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,type];
-                    FMResultSet *results =  [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",[resultsBookmarked stringForColumn:@"documentID"],type]];
+                    [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",item.itemID,currentUsr,type];
+                    FMResultSet *results =  [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",item.itemID,type]];
                     BOOL flag=NO;
                     while([results next]) {
                         flag=YES;
                     }
                     if (!flag) {
-                        [localDatabase executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=?",@"0",[resultsBookmarked stringForColumn:@"documentID"]];
-                        FMResultSet *results2 = [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ order by sort",[resultsBookmarked stringForColumn:@"documentID"]]];
+                        [localDatabase executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=?",@"0",item.itemID];
+                        FMResultSet *results2 = [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ order by sort",item.itemID]];
                         
                         while([results2 next]) {
                             NSString *downloadFilename = [FMedia createLocalPathForLink:[results2 stringForColumn:@"path"] andMediaType:type];
@@ -751,14 +761,14 @@ int bookmarkedCount;
                     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
                 } else {
                     //case
-                    [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr, BOOKMARKCASE,nil];
+                    [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",item.itemID,currentUsr, BOOKMARKCASE,nil];
                     BOOL bookmarked = NO;
                     
-                    FMResultSet *results = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:BOOKMARKCASE,[resultsBookmarked stringForColumn:@"documentID"], nil]];
+                    FMResultSet *results = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:BOOKMARKCASE,item.itemID, nil]];
                     while([results next]) {
                         bookmarked = YES;
                     }
-                    FMResultSet *selectedCases = [localDatabase executeQuery:@"SELECT * FROM Cases where caseID=?" withArgumentsInArray:@[[resultsBookmarked stringForColumn:@"documentID"]]];
+                    FMResultSet *selectedCases = [localDatabase executeQuery:@"SELECT * FROM Cases where caseID=?" withArgumentsInArray:@[item.itemID]];
                     FCase * selected;
                     while([selectedCases next]) {
                         selected =  [[FCase alloc] initWithDictionaryFromDB:[selectedCases resultDictionary]];
@@ -771,7 +781,8 @@ int bookmarkedCount;
                         }
                         else{
                             [localDatabase executeUpdate:@"DELETE FROM Cases WHERE caseID=?",selected.caseID];
-                            [localDatabase executeUpdate:@"INSERT INTO Cases (caseID,title, coverTypeID,name,image,active,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?)",selected.caseID,selected.title,selected.coverTypeID,selected.name,selected.image,selected.active,selected.authorID,@"0",selected.coverflow,selected.deleted, selected.download, selected.userPermissions];
+                            [localDatabase executeUpdate:@"INSERT INTO Cases (caseID,title, coverTypeID,name,image,active,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",selected.caseID,selected.title,selected.coverTypeID,selected.name,selected.image,selected.active,selected.authorID,@"0",selected.coverflow,selected.deleted, selected.download, selected.userPermissions];
+                                                        
                             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
                             x+=[selected getImages].count;
                             x+=[selected getVideos].count * 2;
@@ -781,16 +792,17 @@ int bookmarkedCount;
                             for (FImage *image in [selected getImages]) {
                                 [self removeBookmarkForImage:image andType:MEDIAIMAGE forBookmarkType:BSOURCECASE];
                             }
-                            [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseImagesFromServer:NO] withType:0];
-                            [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseVideosFromServer:NO] withType:1];
+                            
+                            [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseImagesFromServer:NO] withType:0 andDatabase:localDatabase];
+                            [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseVideosFromServer:NO] withType:1 andDatabase:localDatabase];
                         }
                     }
                 }
             }
         }
-        
+        [localDatabase close];
     }
-    [localDatabase close];
+    
     NSLog(@"Unbookmarked items: %d",x);
     NSLog(@"Unbookmarking complete");
     UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEDBULKBOOKMARKS", nil)] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];

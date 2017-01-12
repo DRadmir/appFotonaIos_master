@@ -59,7 +59,11 @@
         }
         [self setTime:[dic valueForKey:@"imageCapturedTime"]];
         [self setMediaType:[dic valueForKey:@"galleryType"]];
-        [self setSortInt:[[dic objectForKey:@"sort"] intValue]];
+        if (![[dic objectForKey:@"sort"] isKindOfClass:[NSNull class]]) {
+            [self setSortInt:[[dic objectForKey:@"sort"] intValue]];
+        } else {
+            [self setSortInt:0];
+        }
     }
     return self;
 }
@@ -85,7 +89,11 @@
         [self setActive:[dic valueForKey:@"active"]];
         [self setMediaType:[dic valueForKey:@"mediaType"]];
         [self setTime:[dic valueForKey:@"time"]];
-        [self setSortInt:[[dic objectForKey:@"sort"] intValue]];
+        if (![[dic objectForKey:@"sort"] isKindOfClass:[NSNull class]]) {
+            [self setSortInt:[[dic objectForKey:@"sort"] intValue]];
+        } else {
+            [self setSortInt:0];
+        }
     }
     return self;
 }

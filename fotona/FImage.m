@@ -52,7 +52,14 @@
 {
     self=[super init];
     if (self) {
-        [self setItemID:[dic valueForKey:@"itemID"]];
+        if ([dic valueForKey:@"itemID"] && ![[dic valueForKey:@"itemID"] isKindOfClass:[NSNull class]]) {
+            [self setItemID:[dic valueForKey:@"itemID"]];
+        } else {
+            if (![[dic valueForKey:@"mediaID"] isKindOfClass:[NSNull class]]) {
+                [self setItemID:[dic valueForKey:@"mediaID"]];
+            }
+        }
+        
         [self setTitle:[dic valueForKey:@"title"]];
         [self setPath:[dic valueForKey:@"path"]];
         [self setPath:[self.path stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];

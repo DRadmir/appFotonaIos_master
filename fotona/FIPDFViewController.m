@@ -41,6 +41,7 @@
 @synthesize pdfMedia;
 @synthesize ipadFotonaParent;
 @synthesize ipadFavoriteParent;
+@synthesize previousItemURL;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -50,7 +51,6 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self clearWebView];
 }
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
@@ -83,6 +83,7 @@
         downloaded = [download checkDownload:local];
     }
     if (([[NSFileManager defaultManager] fileExistsAtPath:local]) && (downloaded) && [FDB checkIfBookmarkedForDocumentID:[pdf itemID] andType:BOOKMARKPDF]) {
+        [self clearWebView];
         [self openPDFFromUrl:local];
     }else
     {
@@ -143,6 +144,7 @@
         NSURL *urlToOpen=[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
         NSURLRequest *requestObj = [NSURLRequest requestWithURL:urlToOpen];
         [pdfWebView loadRequest:requestObj];
+        previousItemURL = url;
     } else {
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
@@ -170,7 +172,12 @@
 }
 
 -(void)clearWebView{
-    [pdfWebView loadHTMLString:@"" baseURL:nil];
+    if (![previousItemURL isEqual:@""]) {
+        [pdfWebView loadHTMLString:@"" baseURL:nil];
+        previousItemURL = @"";
+
+    }
+    
 }
 
 

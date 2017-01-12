@@ -224,9 +224,9 @@
         for (NSDictionary *imgDic in self.images) {
             FImage *img;
             if (fromServer){
-                img=[[FImage alloc] initWithDictionaryFromDB:imgDic];
-            }else {
                 img=[[FImage alloc] initWithDictionaryFromServer:imgDic];
+            }else {
+                img=[[FImage alloc] initWithDictionaryFromDB:imgDic];
             }
             [tmpImgs addObject:img];
         }

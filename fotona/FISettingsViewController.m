@@ -26,7 +26,6 @@
 }
 @synthesize popover;
 @synthesize unbookmarAll;
-@synthesize settingsViewHeight;
 
 
 - (void)didReceiveMemoryWarning
@@ -140,6 +139,11 @@
     
 }
 
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+}
+
 
 -(void)logout:(id)sender
 {
@@ -235,8 +239,6 @@
         [av show];
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     }
-    
-    
 }
 
 - (void)stopDownload {
@@ -287,7 +289,6 @@
     [self stopDownload];
     [HelperBookmark unbookmarkAll];
 }
-
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -363,8 +364,6 @@
         }
         [tableData addObject:name];
     }
-    settingsViewHeight.constant += tableData.count * 50;
-    checkViewHeight.constant = tableData.count * 50;
     tableviewHeight.constant = tableData.count * 50;
     
 }

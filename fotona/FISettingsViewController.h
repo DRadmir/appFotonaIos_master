@@ -22,7 +22,6 @@
     
     
     IBOutlet NSLayoutConstraint *tableviewHeight;
-    IBOutlet NSLayoutConstraint *checkViewHeight;
     IBOutlet UIButton *btnBookmark;
     IBOutlet UIView *downloadView;
     
@@ -34,7 +33,6 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *categoryTable;
 
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *settingsViewHeight;
 
 @property (strong, nonatomic) IBOutlet UIProgressView *downloadProgress;
 @property (strong, nonatomic) IBOutlet UILabel *progressPercentige;

@@ -28,6 +28,8 @@
 @property (strong, nonatomic) FFotonaViewController *ipadFotonaParent;
 @property (strong, nonatomic) FFavoriteViewController *ipadFavoriteParent;
 
+@property (nonatomic, retain) NSString * previousItemURL;
+
 -(void) openPdf:(FMedia *) pdf;
 
 @end

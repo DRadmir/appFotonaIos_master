@@ -868,11 +868,10 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     }
 }
 //adding images and videos without downloading them
--(void)addMediaWhithout:(NSMutableArray *)m withType:(int)type{
+-(void)addMediaWhithout:(NSMutableArray *)m withType:(int)type andDatabase:(FMDatabase *)database{
     if (m.count>0) {
         if (type==0) {
-            FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-            [database open];
+            
             for (FImage *img in m) {
                 NSArray *pathComp=[img.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
@@ -891,7 +890,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
                 //                [vid downloadFile:vid.path inFolder:@"/.Cases"];
             }
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-            [database close];
+            
         }
         
     }

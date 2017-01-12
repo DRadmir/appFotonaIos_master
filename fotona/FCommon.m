@@ -203,7 +203,7 @@
 +(NSArray *)stringToArray:(NSString *)string withSeparator:(NSString *)separator{
     NSArray *array = [[NSArray alloc] init];
     NSString *stringToSplit = [NSString stringWithFormat:@"%@",string];
-    if (![stringToSplit isEqualToString:@""]) {
+    if (![stringToSplit isEqualToString:@"<null>"] && ![stringToSplit isEqualToString:@""] && ![stringToSplit isKindOfClass:[NSNull class]]) {
         array = [stringToSplit componentsSeparatedByString:separator];
     }
     return array;
