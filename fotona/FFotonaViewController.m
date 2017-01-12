@@ -500,7 +500,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if([FCommon isOrientationLandscape]){
-        return CGSizeMake(440, 192);
+        return CGSizeMake(500, 219);
     }
     else
         return CGSizeMake(330, 144);

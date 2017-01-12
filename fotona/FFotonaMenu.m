@@ -87,7 +87,11 @@
         [self setGalleryItemIDs:[dic objectForKey:@"galleryItemIDs"]];
         [self setActive:[dic objectForKey:@"active"]];
         [self setDeleted:[dic objectForKey:@"deleted"]];
-        [self setSortInt:[[dic objectForKey:@"sort"] intValue]];
+        if (![[dic objectForKey:@"sort"] isKindOfClass:[NSNull class]]) {
+             [self setSortInt:[[dic objectForKey:@"sort"] intValue]];
+        } else {
+            [self setSortInt:0];
+        }
     }
     
     return self;

@@ -25,7 +25,11 @@
         [self setSort:[dic valueForKey:@"sort"]];
         [self setActive:[dic valueForKey:@"active"]];
         [self setDeleted:[dic valueForKey:@"deleted"]];
-        [self setSortInt:[[dic valueForKey:@"sort"] intValue]];
+        if (![[dic objectForKey:@"sort"] isKindOfClass:[NSNull class]]) {
+            [self setSortInt:[[dic objectForKey:@"sort"] intValue]];
+        } else {
+            [self setSortInt:0];
+        }
     }
     return self;
 }

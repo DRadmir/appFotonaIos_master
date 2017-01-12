@@ -8,6 +8,7 @@
 
 #import "FMainViewController_iPad.h"
 #import "UpdateDelegate.h"
+#import "FMDatabase.h"
 
 
 
@@ -26,5 +27,5 @@
 
 +(FUpdateContent *)shared;
 -(void)updateContent:(UIViewController *)viewForHud;
--(void)addMediaWhithout:(NSMutableArray *)m withType:(int)type;
+-(void)addMediaWhithout:(NSMutableArray *)m withType:(int)type andDatabase:(FMDatabase *)database;
 @end

@@ -246,6 +246,9 @@
     btnReadMore.layer.borderWidth = 1;
     btnReadMore.layer.borderColor = btnReadMore.tintColor.CGColor;
     
+//    [btnReadMore setNeedsLayout];
+//    [btnReadMore layoutIfNeeded];
+    
     
     lblIntroduction.attributedText=allAdditionalInfo;
     [lblIntroduction sizeToFit];

@@ -139,13 +139,13 @@
                 return @"Cases";
             }else
             {
-                if (videosSearchRes.count>0) {
+                if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                     return @"Videos";
                 }
             }
             break;
         case 2:
-            if (newsSearchRes.count>0 && casesSearchRes.count>0 && videosSearchRes.count>0) {
+            if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                 return @"Videos";
             }
 
@@ -182,7 +182,7 @@
                 [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
             }else
             {
-                if (videosSearchRes.count>0) {
+                if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                     [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
                 }else {
                     [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
@@ -190,7 +190,7 @@
             }
             break;
         case 2:
-            if (newsSearchRes.count>0 && casesSearchRes.count>0 && videosSearchRes.count>0) {
+            if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                 [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
             } else {
                 [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
@@ -234,7 +234,7 @@
                 [self openCase:indexPath];
             }else
             {
-                if (videosSearchRes.count>0) {
+                if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                     [self openMedia:videosSearchRes[indexPath.row]];
                 }else {
                     [self openMedia:pdfsSearchRes[indexPath.row]];
@@ -242,7 +242,7 @@
             }
             break;
         case 2:
-            if (videosSearchRes.count>0) {
+            if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                 [self openMedia:videosSearchRes[indexPath.row]];
             } else {
                 [self openMedia:pdfsSearchRes[indexPath.row]];
