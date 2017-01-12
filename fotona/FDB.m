@@ -135,11 +135,11 @@
 
 
 
-+(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database
++(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *)userP
 {
     NSMutableArray *tmp=[[NSMutableArray alloc] init];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%') AND (%@ OR alloweInCoverFlow=1)",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt, [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME]];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%') AND (%@ OR alloweInCoverFlow=1) limit 10",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt, userP];
     
     if (![ConnectionHelper connectedToInternet]) {
         query = [NSString stringWithFormat:@"%@ AND isBookmark=1",query];
@@ -408,7 +408,9 @@
 {
     NSMutableArray *news=[[NSMutableArray alloc] init];
     
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM News where active=%@ and (title like '%%%@%%'or description like '%%%@%%'or text like '%%%@%%' ) ORDER BY newsID DESC",@"1",searchTxt,searchTxt,searchTxt]];
+    
+    
+    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM News where active=%@ and (title like '%%%@%%'or description like '%%%@%%'or text like '%%%@%%' ) ORDER BY newsID DESC limit 10",@"1",searchTxt,searchTxt,searchTxt]];
     while([results next]) {
         FNews *f=[[FNews alloc] initWithDictionary:[results resultDictionary]];
         [news addObject:f];
@@ -497,13 +499,13 @@
 
 #pragma mark - Videos
 //TODO optimize - user permissions are called to offen
-+(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database{
++(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP{
     NSMutableArray *tmpVideo=[[NSMutableArray alloc] init];
     FMResultSet *results;
     if ([ConnectionHelper connectedToInternet]) {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 and m.active=1 and (m.title like '%%%@%%') AND %@",searchTxt, [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME]]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 and m.active=1 and (m.title like '%%%@%%') AND %@ limit 10",searchTxt, userP]];
     } else {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@",searchTxt, [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME]]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@limit 10",searchTxt, userP]];
     }
     while([results next]) {
         FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];
@@ -584,13 +586,13 @@
     return menu;
 }
 
-+(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database{
++(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP{
     NSMutableArray *tmpPDF=[[NSMutableArray alloc] init];
     FMResultSet *results;
     if ([ConnectionHelper connectedToInternet]) {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 and m.active=1 and (m.title like '%%%@%%') AND %@",searchTxt, [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME]]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 and m.active=1 and (m.title like '%%%@%%') AND %@ limit 10",searchTxt, userP]];
     } else {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@",searchTxt, [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME]]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@ limit 10",searchTxt, userP]];
     }
         while([results next]) {
         FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];

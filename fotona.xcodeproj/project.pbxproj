@@ -633,13 +633,13 @@
 		2B7801B1E3B5D5AF08045FD8 /* libPods-fotona.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fotona.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		31FA2060B74BA98D9AF8E373 /* Pods-fotona.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotona.distribution.xcconfig"; path = "Pods/Target Support Files/Pods-fotona/Pods-fotona.distribution.xcconfig"; sourceTree = "<group>"; };
 		3B1F8EFA1E254A81002C3880 /* FFotonaVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFotonaVideoView.m; sourceTree = "<group>"; };
-		3B1F8EFC1E254AB3002C3880 /* FFotonaVideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFotonaVideoView.h; sourceTree = "<group>"; };
 		3B20B6231DF5C54000EF71EE /* FTutorialTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTutorialTableViewCell.h; sourceTree = "<group>"; };
 		3B20B6241DF5C54000EF71EE /* FTutorialTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTutorialTableViewCell.m; sourceTree = "<group>"; };
 		3B20B6251DF5C54000EF71EE /* FTutorialTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FTutorialTableViewCell.xib; sourceTree = "<group>"; };
 		3B20B62B1DF5D01500EF71EE /* FTutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTutorialViewController.h; sourceTree = "<group>"; };
 		3B20B62C1DF5D01500EF71EE /* FTutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTutorialViewController.m; sourceTree = "<group>"; };
 		3B20B62D1DF5D01500EF71EE /* FTutorialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FTutorialViewController.xib; sourceTree = "<group>"; };
+		3B9A2A9D1E26375700DF86A0 /* FFotonaVideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFotonaVideoView.h; sourceTree = "<group>"; };
 		43B6332B00B2A4D1E9217AD7 /* Pods-fotonaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotonaTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-fotonaTests/Pods-fotonaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7EFE5850B5D11C103CD42AA5 /* Pods-fotonaTests.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotonaTests.distribution.xcconfig"; path = "Pods/Target Support Files/Pods-fotonaTests/Pods-fotonaTests.distribution.xcconfig"; sourceTree = "<group>"; };
 		7F0BEAD65D0DCF118D0F97E0 /* Pods-fotona.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotona.release.xcconfig"; path = "Pods/Target Support Files/Pods-fotona/Pods-fotona.release.xcconfig"; sourceTree = "<group>"; };
@@ -991,7 +991,7 @@
 				1B21D8F41DB0C07900648E60 /* FCaseGalleryView.m */,
 				1B01D2F71DB4AE2700CF7391 /* FFotonaGalleryView.h */,
 				1B01D2F81DB4AE2700CF7391 /* FFotonaGalleryView.m */,
-				3B1F8EFC1E254AB3002C3880 /* FFotonaVideoView.h */,
+				3B9A2A9D1E26375700DF86A0 /* FFotonaVideoView.h */,
 				3B1F8EFA1E254A81002C3880 /* FFotonaVideoView.m */,
 			);
 			name = GalleryViews;

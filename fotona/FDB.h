@@ -21,7 +21,7 @@
 
 
 +(NSMutableArray *)getCasesForCarouselFromDB;
-+(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
++(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP;
 +(FCase *)getCaseForFotona:(NSString *)caseID;
 +(FCase *)getCaseWithID:(NSString *)caseID;
 +(NSMutableArray *)getCasesWithCategoryID:(NSString *)catID;
@@ -47,7 +47,7 @@
 +(void)setNewsRead:(FNews *) news;
 
 
-+(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
++(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP;
 +(NSMutableArray *)getVideoswithCategory:(NSString *)videoCategory;
 
 
@@ -62,7 +62,7 @@
 +(void)removeFromBookmarkForMediaID:(NSString *)mediaID withMediaType:(NSString *)mediaType;
 
 +(NSMutableArray *)getFotonaMenu:(NSString *)catID;
-+(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
++(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP;
 +(void)removeFotonaMenuWithID:(NSString *)fotonaID;
 
 +(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID;

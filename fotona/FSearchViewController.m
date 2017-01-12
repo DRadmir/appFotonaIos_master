@@ -37,11 +37,14 @@
 @synthesize popupView;
 @synthesize popupTitle;
 @synthesize popupText;
+@synthesize characterLimit;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        
+        
         // Custom initialization
     }
     return self;
@@ -56,24 +59,31 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    if(searchTxt.length >= 3)
+        characterLimit = TRUE;
+    else
+        characterLimit = FALSE;
     int count = 0;
-    if ([newsSearchRes count]>0)
-    {
-        count++;
+    if (characterLimit){
+        if ([newsSearchRes count]>0)
+        {
+            count++;
+        }
+        if ([casesSearchRes count]>0) {
+            count++;
+        }
+        if ([videosSearchRes count]>0)
+        {
+            count++;
+        }
+        if ([pdfsSearchRes count]>0)
+        {
+            count++;
+        }
     }
-    if ([casesSearchRes count]>0) {
-        count++;
-    }
-    if ([videosSearchRes count]>0)
-    {
-        count++;
-    }
-    if ([pdfsSearchRes count]>0)
-    {
-        count++;
-    }
-    return count;
+        return count;
 }
+
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -258,14 +268,17 @@
 
 -(void)search
 {
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    newsSearchRes=[FDB getNewsForSearchFromDB:searchTxt withDatabase:database];
-    casesSearchRes=[FDB getCasesForSearchFromDB:searchTxt withDatabase:database];
-    videosSearchRes=[FDB getVideosForSearchFromDB:searchTxt withDatabase:database];
-    pdfsSearchRes = [FDB getPDFForSearchFromDB:searchTxt withDatabase:database];
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
+    if(characterLimit){
+        FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+        [database open];
+        NSString *userP = [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME];
+        newsSearchRes=[FDB getNewsForSearchFromDB:searchTxt withDatabase:database];
+        casesSearchRes=[FDB getCasesForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
+        videosSearchRes=[FDB getVideosForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
+        pdfsSearchRes = [FDB getPDFForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
+        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+        [database close];
+    }
 }
 
 -(IBAction)closePopup:(id)sender

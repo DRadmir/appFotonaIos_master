@@ -254,10 +254,11 @@
     //TODO - optimize 
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
+    NSString *userP = [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME];
     newsSearchResIPhone=[FDB getNewsForSearchFromDB:searchTxtIPhone withDatabase:database];
-    casesSearchResIPhone=[FDB getCasesForSearchFromDB:searchTxtIPhone withDatabase:database];
-    videosSearchResIPhone=[FDB getVideosForSearchFromDB:searchTxtIPhone withDatabase:database];
-    pdfsSearcResIPhone=[FDB getPDFForSearchFromDB:searchTxtIPhone withDatabase:database];
+    casesSearchResIPhone=[FDB getCasesForSearchFromDB:searchTxtIPhone withDatabase:database userPermissions:userP];
+    videosSearchResIPhone=[FDB getVideosForSearchFromDB:searchTxtIPhone withDatabase:database userPermissions:userP];
+    pdfsSearcResIPhone=[FDB getPDFForSearchFromDB:searchTxtIPhone withDatabase:database userPermissions:userP];
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
 }

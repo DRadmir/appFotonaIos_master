@@ -23,6 +23,7 @@
 @property (nonatomic, retain) UIViewController *parent;
 @property (nonatomic, retain) NSString *searchTxt;
 @property (nonatomic, retain) IBOutlet UITableView *tableSearch;
+@property (nonatomic) BOOL characterLimit;
 
 
 @property (nonatomic, retain) NSMutableArray *newsSearchRes;
