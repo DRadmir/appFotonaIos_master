@@ -22,6 +22,8 @@
 {
     NSArray *videoArray;
     NSArray *imagesArry;
+    
+    FCase *oldCase;
 
     
 }
@@ -29,6 +31,7 @@
 
 @implementation FICaseViewController
 
+@synthesize scrollViewMain;
 @synthesize lblAuthor;
 @synthesize lblDate;
 @synthesize btnBookmark;
@@ -59,12 +62,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    oldCase = [[FCase alloc] init];
     // Do any additional setup after loading the view.
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
     if (bookmarked){//[currentCase.bookmark boolValue]) {
         [btnBookmark setHidden:YES];
@@ -74,8 +78,13 @@
         [btnRemoveBookmark setHidden:YES];
     }
     
-    [self loadCase];
-    [self createGallery];
+    if ([caseToOpen.caseID intValue] != [oldCase.caseID intValue] ) {
+        [scrollViewMain setContentOffset:CGPointZero animated:YES];
+        [self loadCase];
+        [self createGallery];
+        oldCase = caseToOpen;
+    }
+   
     
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.caseOpened = caseToOpen;
@@ -246,14 +255,9 @@
     btnReadMore.layer.borderWidth = 1;
     btnReadMore.layer.borderColor = btnReadMore.tintColor.CGColor;
     
-//    [btnReadMore setNeedsLayout];
-//    [btnReadMore layoutIfNeeded];
-    
-    
     lblIntroduction.attributedText=allAdditionalInfo;
     [lblIntroduction sizeToFit];
-    
-    
+
 }
 
 

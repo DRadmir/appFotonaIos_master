@@ -496,19 +496,12 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     }
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    if(self.shouldAutorotate){
-        
-    }
-    
-}
 
 //collection cell size
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if([FCommon isOrientationLandscape]){
-        return CGSizeMake(500, 219);
+        return CGSizeMake(440, 192);
     }
     else
         return CGSizeMake(330, 144);
@@ -615,22 +608,15 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     
     if (toInterfaceOrientation==UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation==UIInterfaceOrientationLandscapeRight) {
         [settingsView setFrame:CGRectMake(0,0, self.view.frame.size.height, 654)];
-//         //setFrame:CGSizeMake(440, 192)];
-//        for(UIView *v in containerView.subviews){
-//            CGRect newFrame = v.frame;
-//            if([FCommon isOrientationLandscape]){
-//                newFrame.size = CGSizeMake(440, 192);
-//            }
-//            else
-//                newFrame.size = CGSizeMake(330, 144);
-//            v.frame = newFrame;
-//        }
     }else
     {
         [settingsView setFrame:CGRectMake(0,0, self.view.frame.size.height, 910)];
     }
     [settingsController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    
+    CGPoint offset = contentsVideoModeCollectionView.contentOffset;
+   
+    [contentsVideoModeCollectionView reloadData];
+     [contentsVideoModeCollectionView setContentOffset:offset animated:NO];
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation

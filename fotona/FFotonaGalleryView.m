@@ -79,6 +79,7 @@
         [lblDesc setAlpha:1];
 
     }
+    [imgThumbnail setImage:[UIImage imageNamed:@"no_thunbail"]];
   
 
 }

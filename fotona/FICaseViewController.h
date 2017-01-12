@@ -16,6 +16,7 @@
 
 @interface FICaseViewController : UIViewController <UIActionSheetDelegate>
 
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollViewMain;
 @property (strong, nonatomic) IBOutlet UILabel *lblAuthor;
 @property (strong, nonatomic) IBOutlet UILabel *lblDate;
 @property (strong, nonatomic) IBOutlet UIButton *btnBookmark;
