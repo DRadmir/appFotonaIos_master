@@ -156,7 +156,20 @@
         return true;
     } else //just one category
     {
-        NSArray *arySubPermissions = [[ary objectAtIndex:ut] componentsSeparatedByString:@","];
+               NSMutableArray *arySubPermissions = [NSMutableArray new];
+        if ((ut == 0 ) || (ut == 3 )){
+            //rights for all users
+            NSArray *arySubPermissions1 = [[ary objectAtIndex:1] componentsSeparatedByString:@","];
+            NSArray *arySubPermissions2 = [[ary objectAtIndex:2] componentsSeparatedByString:@","];
+            NSArray *arySubPermissions4 = [[ary objectAtIndex:4] componentsSeparatedByString:@","];
+
+            [arySubPermissions addObjectsFromArray:arySubPermissions1];
+            [arySubPermissions addObjectsFromArray:arySubPermissions2];
+            [arySubPermissions addObjectsFromArray:arySubPermissions4];
+        } else {
+            arySubPermissions = [[[ary objectAtIndex:ut] componentsSeparatedByString:@","] mutableCopy];
+        }
+            
         if ([arySubPermissions containsObject: category]) {
             return true;
         }

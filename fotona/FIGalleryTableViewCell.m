@@ -18,6 +18,8 @@
 @synthesize enabled;
 @synthesize cellViewCase;
 @synthesize cellViewFotona;
+@synthesize cellViewVideo;
+@synthesize cellMedia;
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -49,15 +51,29 @@
 }
 
 -(void)setContentForMedia:(FMedia *)media forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath{
+    cellMedia = media;
     enabled = true;;
-    if (cellViewFotona == nil) {
-        cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
+    if ([media.mediaType intValue] == [MEDIAVIDEO intValue]) {
+        if (cellViewVideo == nil) {
+            cellViewVideo = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:2];
+        }
+        [cellViewVideo setParentIphone:parentIphone];
+        [cellViewVideo setParentIpad:nil];
+        [cellViewVideo setIndex:index];
+        [[self contentView] addSubview: cellViewVideo];
+        [cellViewVideo setFrame:[[self contentView] bounds]];
+        [cellViewVideo setContentForMedia:media andMediaType:[media mediaType]];
+    } else {
+        if (cellViewFotona == nil) {
+            cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
+        }
         [cellViewFotona setParentIphone:parentIphone];
         [cellViewFotona setParentIpad:nil];
-         [cellViewFotona setIndex:index];
+        [cellViewFotona setIndex:index];
         [[self contentView] addSubview: cellViewFotona];
+        [cellViewFotona setFrame:[[self contentView] bounds]];
+        [cellViewFotona setContentForMedia:media andMediaType:[media mediaType]];
     }
-    [cellViewFotona setContentForMedia:media andMediaType:[media mediaType]];
     if ([[media bookmark] isEqualToString:@"0"] && ![ConnectionHelper connectedToInternet]) {
         enabled = false;
     }
@@ -65,7 +81,12 @@
 }
 
 -(void)refreshMediaThumbnail:(UIImage *)img{
-    [cellViewFotona reloadVideoThumbnail:img];
+    if ([cellMedia.mediaType intValue] == [MEDIAVIDEO intValue]) {
+        [cellViewVideo reloadVideoThumbnail:img];
+    } else {
+        [cellViewFotona reloadVideoThumbnail:img];
+    }
+
 }
 
 @end

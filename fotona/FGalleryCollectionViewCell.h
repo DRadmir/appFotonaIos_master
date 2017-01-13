@@ -11,6 +11,7 @@
 #import "FFavoriteViewController.h"
 #import "FCaseGalleryView.h"
 #import "FFotonaGalleryView.h"
+#import "FFotonaVideoView.h"
 #import "FMedia.h"
 
 @interface FGalleryCollectionViewCell : UICollectionViewCell
@@ -22,6 +23,8 @@
 @property (nonatomic) BOOL enabled;
 @property (strong, nonatomic) FCaseGalleryView *cellViewCase;
 @property (strong, nonatomic) FFotonaGalleryView *cellViewFotona;
+@property (strong, nonatomic) FFotonaVideoView *cellViewVideo;
+@property (strong, nonatomic) FMedia *cellMedia;
 
 -(void)setContentForCase:(FCase *)fcase;
 
@@ -29,6 +32,6 @@
 
 -(void)setContentForMedia:(FMedia *) video forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath;
 
--(void)refreshMediaThumbnail:(UIImage *)img;
+-(void)refreshCollectionMediaThumbnail:(UIImage *)img;
 
 @end

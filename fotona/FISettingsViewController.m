@@ -372,7 +372,11 @@
 
 -(void) refreshStatusBar{
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%% of %.2f GB",(1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll])*100, [APP_DELEGATE bookmarkSizeAll]/1073741824];
+        float res = 0;
+        if ([APP_DELEGATE bookmarkSizeLeft] > 0 && [APP_DELEGATE bookmarkSizeAll] > 0) {
+            res = [APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll];
+        }
+        self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%% of %.2f GB",(1-res)*100, [APP_DELEGATE bookmarkSizeAll]/1073741824];
         [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll] animated:YES];
         if ([APP_DELEGATE bookmarkCountLeft] == 0) {
             [APP_DELEGATE setBookmarkCountAll:0];

@@ -310,7 +310,7 @@
             </connections>
             <point key="canvasLocation" x="-29" y="82"/>
         </view>
-        <view contentMode="scaleToFill" id="Bt3-B0-rL8" userLabel="Fotona Video View" customClass="FFotonaGalleryView">
+        <view contentMode="scaleToFill" id="Bt3-B0-rL8" userLabel="Fotona Video View" customClass="FFotonaVideoView">
             <rect key="frame" x="0.0" y="0.0" width="440" height="192"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -318,11 +318,25 @@
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W3i-q4-0Gu">
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no_thunbail.png" translatesAutoresizingMaskIntoConstraints="NO" id="ptX-fs-vPx" userLabel="backgroundImg"/>
-                                <view alpha="0.69999999999999996" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GCC-IB-CYC">
-                                    <frame key="frameInset" width="440" height="25"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no_thunbail.png" translatesAutoresizingMaskIntoConstraints="NO" id="ptX-fs-vPx" userLabel="backgroundImg"/>
+                                <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GCC-IB-CYC">
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Labeldfasfasdfasdfasdfasdfasdfasdfasdfasdsfaasdfasfdasdfsadfasdfasdfdsa" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PSa-0E-6XC">
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="30" id="UVt-2b-Wcf"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="PSa-0E-6XC" secondAttribute="trailing" id="05w-h1-AyI"/>
+                                        <constraint firstItem="PSa-0E-6XC" firstAttribute="leading" secondItem="GCC-IB-CYC" secondAttribute="leading" id="2KZ-z7-5nO"/>
+                                        <constraint firstItem="PSa-0E-6XC" firstAttribute="top" secondItem="GCC-IB-CYC" secondAttribute="top" id="Kin-Wi-USm"/>
+                                        <constraint firstAttribute="height" constant="27" id="yB1-uF-i33"/>
+                                    </constraints>
                                 </view>
                                 <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U1W-xb-nZj">
                                     <subviews>
@@ -337,37 +351,11 @@
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstItem="DLY-bf-CS5" firstAttribute="centerY" secondItem="U1W-xb-nZj" secondAttribute="centerY" constant="1.5" id="Mze-bN-fG2"/>
-                                        <constraint firstItem="DLY-bf-CS5" firstAttribute="top" secondItem="U1W-xb-nZj" secondAttribute="top" constant="6" id="baE-q8-M2C"/>
-                                        <constraint firstItem="DLY-bf-CS5" firstAttribute="leading" secondItem="U1W-xb-nZj" secondAttribute="leading" constant="19" id="cdx-2M-t0P"/>
-                                        <constraint firstItem="DLY-bf-CS5" firstAttribute="centerX" secondItem="U1W-xb-nZj" secondAttribute="centerX" constant="-51" id="yN2-iR-bTm"/>
+                                        <constraint firstItem="DLY-bf-CS5" firstAttribute="centerY" secondItem="U1W-xb-nZj" secondAttribute="centerY" constant="-2.5" id="Mze-bN-fG2"/>
+                                        <constraint firstItem="DLY-bf-CS5" firstAttribute="top" secondItem="U1W-xb-nZj" secondAttribute="top" constant="2" id="baE-q8-M2C"/>
+                                        <constraint firstItem="DLY-bf-CS5" firstAttribute="leading" secondItem="U1W-xb-nZj" secondAttribute="leading" constant="10" id="cdx-2M-t0P"/>
                                     </constraints>
                                 </view>
-                            </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            <constraints>
-                                <constraint firstItem="ptX-fs-vPx" firstAttribute="top" secondItem="W3i-q4-0Gu" secondAttribute="top" id="44f-dv-fCG"/>
-                                <constraint firstItem="ptX-fs-vPx" firstAttribute="leading" secondItem="W3i-q4-0Gu" secondAttribute="leading" constant="-25" id="8mQ-P3-akg"/>
-                                <constraint firstAttribute="bottom" secondItem="U1W-xb-nZj" secondAttribute="bottom" id="HCD-tB-IHU"/>
-                                <constraint firstItem="U1W-xb-nZj" firstAttribute="leading" secondItem="W3i-q4-0Gu" secondAttribute="leading" id="PTx-wS-bo9"/>
-                                <constraint firstAttribute="trailing" secondItem="ptX-fs-vPx" secondAttribute="trailing" constant="25" id="aYQ-ci-QFZ"/>
-                                <constraint firstAttribute="trailing" secondItem="U1W-xb-nZj" secondAttribute="trailing" id="qHW-vL-Lk4"/>
-                                <constraint firstAttribute="width" secondItem="W3i-q4-0Gu" secondAttribute="height" multiplier="55:48" constant="220" id="ruA-Xa-3wk"/>
-                                <constraint firstAttribute="bottom" secondItem="ptX-fs-vPx" secondAttribute="bottom" id="zcb-nL-7Nu"/>
-                            </constraints>
-                        </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZYY-TM-gOf">
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8dr-0b-DHY" userLabel="BtnDownloadAdd">
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="23" id="WlS-Fy-2cj"/>
-                                        <constraint firstAttribute="width" constant="23" id="oQg-oc-wTM"/>
-                                    </constraints>
-                                    <state key="normal" backgroundImage="download_add"/>
-                                    <connections>
-                                        <action selector="downloadAdd:" destination="Bt3-B0-rL8" eventType="touchUpInside" id="vlA-kG-xzX"/>
-                                    </connections>
-                                </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aeJ-ur-BJ1" userLabel="BtnDownloadRemove">
                                     <constraints>
                                         <constraint firstAttribute="width" constant="23" id="78k-Rh-Mj8"/>
@@ -375,17 +363,17 @@
                                     </constraints>
                                     <state key="normal" backgroundImage="download_remove"/>
                                     <connections>
-                                        <action selector="downloadRemove:" destination="Bt3-B0-rL8" eventType="touchUpInside" id="3Me-Ep-nQu"/>
+                                        <action selector="downloadRemove:" destination="Bt3-B0-rL8" eventType="touchUpInside" id="eIu-Vd-hXU"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NrF-3J-yes" userLabel="BtnFavoriteAdd">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8dr-0b-DHY" userLabel="BtnDownloadAdd">
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="23" id="gs7-Vk-KZa"/>
-                                        <constraint firstAttribute="width" constant="23" id="oJX-1t-Qcr"/>
+                                        <constraint firstAttribute="height" constant="23" id="WlS-Fy-2cj"/>
+                                        <constraint firstAttribute="width" constant="23" id="oQg-oc-wTM"/>
                                     </constraints>
-                                    <state key="normal" backgroundImage="favorites_add"/>
+                                    <state key="normal" backgroundImage="download_add"/>
                                     <connections>
-                                        <action selector="favoriteAdd:" destination="Bt3-B0-rL8" eventType="touchUpInside" id="HHO-v4-xhf"/>
+                                        <action selector="downloadAdd:" destination="Bt3-B0-rL8" eventType="touchUpInside" id="rtQ-Aj-fcu"/>
                                     </connections>
                                 </button>
                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tA4-wN-fjA" userLabel="BtnFavoriteRemove">
@@ -395,44 +383,50 @@
                                     </constraints>
                                     <state key="normal" backgroundImage="favorites_remove"/>
                                     <connections>
-                                        <action selector="favoriteRemove:" destination="Bt3-B0-rL8" eventType="touchUpInside" id="YFA-wr-csc"/>
+                                        <action selector="favoriteRemove:" destination="Bt3-B0-rL8" eventType="touchUpInside" id="woK-eY-Scp"/>
                                     </connections>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Labeldfasfasdfasdfasdfasdfasdfasdfasdfasdsfaasdfasfdasdfsadfasdfasdfdsa" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PSa-0E-6XC">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NrF-3J-yes" userLabel="BtnFavoriteAdd">
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="30" id="UVt-2b-Wcf"/>
+                                        <constraint firstAttribute="height" constant="23" id="gs7-Vk-KZa"/>
+                                        <constraint firstAttribute="width" constant="23" id="oJX-1t-Qcr"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
+                                    <state key="normal" backgroundImage="favorites_add"/>
+                                    <connections>
+                                        <action selector="favoriteAdd:" destination="Bt3-B0-rL8" eventType="touchUpInside" id="PBZ-hH-1FM"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="bottom" secondItem="8dr-0b-DHY" secondAttribute="bottom" constant="9" id="0A6-jr-sOW"/>
-                                <constraint firstAttribute="trailing" secondItem="8dr-0b-DHY" secondAttribute="trailing" constant="8" id="5XH-6A-z9G"/>
-                                <constraint firstItem="PSa-0E-6XC" firstAttribute="top" secondItem="ZYY-TM-gOf" secondAttribute="top" constant="-5" id="5dw-zr-tb4"/>
-                                <constraint firstItem="PSa-0E-6XC" firstAttribute="leading" secondItem="ZYY-TM-gOf" secondAttribute="leading" constant="-140" id="8JZ-nz-lDk"/>
-                                <constraint firstAttribute="bottom" secondItem="aeJ-ur-BJ1" secondAttribute="bottom" constant="9" id="9Nc-P6-jL0"/>
-                                <constraint firstItem="aeJ-ur-BJ1" firstAttribute="leading" secondItem="tA4-wN-fjA" secondAttribute="trailing" constant="16" id="Egl-fe-D5z"/>
-                                <constraint firstAttribute="bottom" secondItem="NrF-3J-yes" secondAttribute="bottom" constant="9" id="Ohv-Vw-das"/>
-                                <constraint firstAttribute="bottom" secondItem="tA4-wN-fjA" secondAttribute="bottom" constant="9" id="XcX-gs-R6u"/>
-                                <constraint firstItem="aeJ-ur-BJ1" firstAttribute="leading" secondItem="NrF-3J-yes" secondAttribute="trailing" constant="16" id="kUm-tn-t1c"/>
-                                <constraint firstAttribute="trailing" secondItem="aeJ-ur-BJ1" secondAttribute="trailing" constant="8" id="u8F-k4-Zuf"/>
-                                <constraint firstAttribute="trailing" secondItem="PSa-0E-6XC" secondAttribute="trailing" constant="50" id="uok-u4-9Bn"/>
+                                <constraint firstItem="NrF-3J-yes" firstAttribute="centerY" secondItem="tA4-wN-fjA" secondAttribute="centerY" id="0vs-ks-s33"/>
+                                <constraint firstItem="ptX-fs-vPx" firstAttribute="top" secondItem="W3i-q4-0Gu" secondAttribute="top" id="2q5-h2-jp4"/>
+                                <constraint firstItem="GCC-IB-CYC" firstAttribute="top" secondItem="W3i-q4-0Gu" secondAttribute="top" id="8ku-qc-Mpg"/>
+                                <constraint firstAttribute="trailing" secondItem="aeJ-ur-BJ1" secondAttribute="trailing" constant="8" id="D1N-gH-mIo"/>
+                                <constraint firstAttribute="trailing" secondItem="ptX-fs-vPx" secondAttribute="trailing" id="H8s-mh-thz"/>
+                                <constraint firstAttribute="bottom" secondItem="U1W-xb-nZj" secondAttribute="bottom" id="HCD-tB-IHU"/>
+                                <constraint firstAttribute="bottom" secondItem="8dr-0b-DHY" secondAttribute="bottom" constant="9" id="NQZ-dV-215"/>
+                                <constraint firstAttribute="trailing" secondItem="GCC-IB-CYC" secondAttribute="trailing" id="Ou8-Oa-lTh"/>
+                                <constraint firstItem="U1W-xb-nZj" firstAttribute="leading" secondItem="W3i-q4-0Gu" secondAttribute="leading" id="PTx-wS-bo9"/>
+                                <constraint firstAttribute="bottom" secondItem="tA4-wN-fjA" secondAttribute="bottom" constant="9" id="UoV-uE-Wn2"/>
+                                <constraint firstItem="ptX-fs-vPx" firstAttribute="leading" secondItem="W3i-q4-0Gu" secondAttribute="leading" id="cGU-hM-5dY"/>
+                                <constraint firstAttribute="bottom" secondItem="aeJ-ur-BJ1" secondAttribute="bottom" constant="9" id="fDx-ib-VLa"/>
+                                <constraint firstItem="GCC-IB-CYC" firstAttribute="leading" secondItem="W3i-q4-0Gu" secondAttribute="leading" id="giT-Bl-v18"/>
+                                <constraint firstAttribute="bottom" secondItem="NrF-3J-yes" secondAttribute="bottom" constant="9" id="pMG-iX-tqA"/>
+                                <constraint firstAttribute="trailing" secondItem="U1W-xb-nZj" secondAttribute="trailing" id="qHW-vL-Lk4"/>
+                                <constraint firstItem="aeJ-ur-BJ1" firstAttribute="leading" secondItem="tA4-wN-fjA" secondAttribute="trailing" constant="16" id="qt9-cI-XSb"/>
+                                <constraint firstAttribute="trailing" secondItem="8dr-0b-DHY" secondAttribute="trailing" constant="8" id="vdq-3p-5De"/>
+                                <constraint firstItem="NrF-3J-yes" firstAttribute="centerX" secondItem="tA4-wN-fjA" secondAttribute="centerX" id="w9e-Ay-Mlm"/>
+                                <constraint firstAttribute="bottom" secondItem="ptX-fs-vPx" secondAttribute="bottom" id="zcb-nL-7Nu"/>
                             </constraints>
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="W3i-q4-0Gu" firstAttribute="leading" secondItem="FIK-l2-f0I" secondAttribute="leading" id="2Hc-DO-6Xf"/>
-                        <constraint firstItem="ZYY-TM-gOf" firstAttribute="top" secondItem="FIK-l2-f0I" secondAttribute="top" id="2iB-2w-0o9"/>
-                        <constraint firstItem="ZYY-TM-gOf" firstAttribute="leading" secondItem="W3i-q4-0Gu" secondAttribute="trailing" constant="-220" id="Dvp-lR-H0z"/>
-                        <constraint firstAttribute="bottom" secondItem="ZYY-TM-gOf" secondAttribute="bottom" id="N27-fe-FHS"/>
                         <constraint firstItem="W3i-q4-0Gu" firstAttribute="top" secondItem="FIK-l2-f0I" secondAttribute="top" id="QrB-nF-aoP"/>
                         <constraint firstAttribute="bottom" secondItem="W3i-q4-0Gu" secondAttribute="bottom" id="VGy-l4-NQx"/>
-                        <constraint firstItem="W3i-q4-0Gu" firstAttribute="width" secondItem="FIK-l2-f0I" secondAttribute="width" multiplier="1:2" constant="220" id="dJv-Td-zyo"/>
-                        <constraint firstAttribute="trailing" secondItem="ZYY-TM-gOf" secondAttribute="trailing" id="spZ-4e-zla"/>
+                        <constraint firstAttribute="trailing" secondItem="W3i-q4-0Gu" secondAttribute="trailing" id="pc3-K2-MmQ"/>
                     </constraints>
                 </view>
             </subviews>
@@ -445,14 +439,14 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="btnDownloadAdd" destination="8dr-0b-DHY" id="MzX-Kf-8cu"/>
-                <outlet property="btnDownloadRemove" destination="aeJ-ur-BJ1" id="eDJ-XU-3E3"/>
-                <outlet property="btnFavoriteAdd" destination="NrF-3J-yes" id="kOE-dp-xIK"/>
-                <outlet property="btnFavoriteRemove" destination="tA4-wN-fjA" id="MN8-ft-in7"/>
-                <outlet property="containerView" destination="FIK-l2-f0I" id="QTN-iq-uoq"/>
-                <outlet property="imgThumbnail" destination="ptX-fs-vPx" id="EWF-FH-svP"/>
-                <outlet property="lblDesc" destination="DLY-bf-CS5" id="Moz-Ny-47E"/>
-                <outlet property="lblTitle" destination="PSa-0E-6XC" id="he5-Qe-tzb"/>
+                <outlet property="btnDownloadAdd" destination="8dr-0b-DHY" id="gUb-4R-x1J"/>
+                <outlet property="btnDownloadRemove" destination="aeJ-ur-BJ1" id="Kg7-vq-Cmx"/>
+                <outlet property="btnFavoriteAdd" destination="NrF-3J-yes" id="sxN-0H-lzY"/>
+                <outlet property="btnFavoriteRemove" destination="tA4-wN-fjA" id="glp-xd-BlR"/>
+                <outlet property="containerView" destination="W3i-q4-0Gu" id="xUH-J6-Zpw"/>
+                <outlet property="imgThumbnail" destination="ptX-fs-vPx" id="ych-qO-tEP"/>
+                <outlet property="lblDesc" destination="DLY-bf-CS5" id="ofC-Yq-YZ1"/>
+                <outlet property="lblTitle" destination="PSa-0E-6XC" id="GW5-hY-yn4"/>
             </connections>
             <point key="canvasLocation" x="-29" y="364"/>
         </view>

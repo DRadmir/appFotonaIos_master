@@ -169,7 +169,7 @@ int bookmarkedCount;
     NSMutableArray *list = [NSMutableArray new];
     FMDatabase *casesDatabase = [FMDatabase databaseWithPath:DB_PATH];
     [casesDatabase open];
-    FMResultSet *selectedCases = [casesDatabase executeQuery:@"SELECT * FROM Cases where active=1 AND download=1" withArgumentsInArray:@[[[NSNumber numberWithInt:category] stringValue]]];
+    FMResultSet *selectedCases = [casesDatabase executeQuery:@"SELECT * FROM Cases where active=1 AND download=1" withArgumentsInArray:@[]];
     while([selectedCases next]) {
         FCase * selected =  [[FCase alloc] initWithDictionaryFromDB:[selectedCases resultDictionary]];
         if ([FCommon userPermission:[selected userPermissions]] && [FCommon checkItemPermissions:[selected userPermissions] ForCategory:[NSString stringWithFormat:@"%d",category]]) {

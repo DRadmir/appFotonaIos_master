@@ -1477,6 +1477,11 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
         [settingsView setFrame:CGRectMake(0,0, self.view.frame.size.height, 910)];
     }
     [settingsController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    CGPoint offset = contentsVideoModeCollectionView.contentOffset;
+    
+    [contentsVideoModeCollectionView reloadData];
+    [contentsVideoModeCollectionView setContentOffset:offset animated:NO];
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation

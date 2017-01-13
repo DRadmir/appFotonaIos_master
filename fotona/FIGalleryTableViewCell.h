@@ -11,6 +11,7 @@
 #import "FIFavoriteViewController.h"
 #import "FCaseGalleryView.h"
 #import "FFotonaGalleryView.h"
+#import "FFotonaVideoView.h"
 #import "FMedia.h"
 
 @interface FIGalleryTableViewCell : UITableViewCell
@@ -22,7 +23,8 @@
 @property (nonatomic) BOOL enabled;
 @property (strong, nonatomic) FCaseGalleryView *cellViewCase;
 @property (strong, nonatomic) FFotonaGalleryView *cellViewFotona;
-
+@property (strong, nonatomic) FFotonaVideoView *cellViewVideo;
+@property (strong, nonatomic) FMedia *cellMedia;
 
 -(void)setContentForCase:(FCase *)fcase;
 

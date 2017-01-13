@@ -8,6 +8,7 @@
 
 #import "FHelperThumbnailImg.h"
 #import "FIGalleryTableViewCell.h"
+#import "FGalleryCollectionViewCell.h"
 
 @implementation FHelperThumbnailImg
 
@@ -164,10 +165,10 @@ static UIImage *defaultVideoImage;
             }
         } else {
             if (collectionView != nil) {
-                FIGalleryTableViewCell *cell = (FIGalleryTableViewCell *)[collectionView cellForItemAtIndexPath:tableIndexPath];
+                FGalleryCollectionViewCell *cell = (FGalleryCollectionViewCell *)[collectionView cellForItemAtIndexPath:tableIndexPath];
                 if (cell)
                 {
-                    [cell refreshMediaThumbnail:image];
+                    [cell refreshCollectionMediaThumbnail:image];
                 }
                 
             }

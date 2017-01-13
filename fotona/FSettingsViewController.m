@@ -61,7 +61,7 @@
 {
     [super viewDidLoad];
     NSLog(@"%@",[[APP_DELEGATE currentLogedInUser] username]);
- 
+    
     //feedback
     [feedbackBtn addTarget:APP_DELEGATE action:@selector(sendFeedback:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -81,14 +81,10 @@
     btnBookmark.layer.borderColor = btnBookmark.titleLabel.textColor.CGColor;
 }
 
--(void)viewDidDisappear:(BOOL)animated
-{
-    
-}
 
 -(void)viewWillAppear:(BOOL)animated
 {
-     [super viewWillAppear:animated];
+    [super viewWillAppear:animated];
     if (tableData == nil) {
         tableData = [NSMutableArray array];
     }
@@ -124,7 +120,7 @@
         [self fillTableData];
         [self.categoryTable reloadData];
     }
-
+    
     if (downloadView.isHidden) {
         [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height-74, downloadView.frame.size.width,downloadView.frame.size.height)];
     } else {
@@ -148,32 +144,29 @@
     
     
     
-//    if (notifSwitch setOn:[active isEqualToString:@"1"];) {
-//        [active isEqualToString:@"1"];
-//    } else {
-//        [active isEqualToString:@"0"];
-//    }
-   
+    //    if (notifSwitch setOn:[active isEqualToString:@"1"];) {
+    //        [active isEqualToString:@"1"];
+    //    } else {
+    //        [active isEqualToString:@"0"];
+    //    }
+    
     if ([APP_DELEGATE bookmarkCountLeft]>0 && downloadView.isHidden) {
         [btnBookmark setEnabled:YES];
         [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
-         btnBookmark.layer.borderColor = [[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1] CGColor];
+        btnBookmark.layer.borderColor = [[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1] CGColor];
         [self.categoryTable setUserInteractionEnabled:NO];
         [wifiSwitch setUserInteractionEnabled:NO];
         [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height+8, downloadView.frame.size.width,downloadView.frame.size.height)];
         downloadView.hidden = NO;
         
-
+        
         self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%%",(1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll])*100];
         [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll] animated:YES];
     }
     
-
+    
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-}
 
 -(void)logout:(id)sender
 {
@@ -193,19 +186,19 @@
     registrationView.view.frame = self.view.bounds;
     [self.view addSubview:registrationView.view];
 }
-  
+
 - (IBAction)changeNotifiCheck:(id)sender{
     
-  //TODO - preverjanje če je uporabnik dovolil pošiljanje, drugače spet vprašat za dovoljenje
+    //TODO - preverjanje če je uporabnik dovolil pošiljanje, drugače spet vprašat za dovoljenje
     UIApplication *application = [UIApplication sharedApplication];
-     [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIRemoteNotificationTypeAlert |UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound categories:nil]];
-     [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeNone)];
+    [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIRemoteNotificationTypeAlert |UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound categories:nil]];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeNone)];
     if (notifSwitch.isOn) {
-         [FNotificationManager setActiveNotificationa:@"1"];
+        [FNotificationManager setActiveNotificationa:@"1"];
         
         
     } else {
-         [FNotificationManager setActiveNotificationa:@"0"];
+        [FNotificationManager setActiveNotificationa:@"0"];
     }
     
     [FHelperRequest sendDeviceData];
@@ -229,11 +222,11 @@
             [av show];
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             
-//            if([wifiSwitch.isOn]){
-//            UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
-//            [av showInView:self.view];}
+            //            if([wifiSwitch.isOn]){
+            //            UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
+            //            [av showInView:self.view];}
         } else {
-                        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
+            MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
             [self.view addSubview:hud];
             hud.labelText = @"Preparing to download";
             [hud show:YES];
@@ -417,45 +410,50 @@
 
 -(void) refreshStatusBar{
     dispatch_async(dispatch_get_main_queue(), ^{
-    self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%% of %.2f GB",(1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll])*100, [APP_DELEGATE bookmarkSizeAll]/1073741824];
-    [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll] animated:YES];
-    if ([APP_DELEGATE bookmarkCountLeft] == 0) {
-        [APP_DELEGATE setBookmarkCountAll:0];
-        [APP_DELEGATE setBookmarkSizeAll:0];
-        [APP_DELEGATE setBookmarkSizeLeft:0];
-        [[APP_DELEGATE imagesToDownload]removeAllObjects];
-        [[APP_DELEGATE videosToDownload]removeAllObjects];
-        [[APP_DELEGATE pdfToDownload]removeAllObjects];
-        [[APP_DELEGATE authorsImageToDownload]removeAllObjects];
-        [APP_DELEGATE setBookmarkAll:NO];
-        [[APP_DELEGATE bookmarkingVideos] removeAllObjects];
-        [HelperBookmark cancelBookmark];
-        [btnBookmark setTitle:@"Download" forState:UIControlStateNormal];
-        [btnBookmark setEnabled:NO];
-        btnBookmark.layer.borderColor = [[UIColor grayColor] CGColor];
-        [self.categoryTable setUserInteractionEnabled:YES];
-        
-        [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height-74, downloadView.frame.size.width,downloadView.frame.size.height)];
-        downloadView.hidden = YES;
-        for (NSIndexPath *index in [self.categoryTable indexPathsForVisibleRows]) {
-            [self.categoryTable cellForRowAtIndexPath:index].accessoryType = UITableViewCellAccessoryNone;
-            [self.categoryTable deselectRowAtIndexPath:index animated:YES];
+        float res = 0;
+        if ([APP_DELEGATE bookmarkSizeLeft] > 0 && [APP_DELEGATE bookmarkSizeAll] > 0) {
+            res = [APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll];
         }
-        self.progressPercentige.text = [NSString stringWithFormat:@"0%%"];
-        [wifiSwitch setUserInteractionEnabled:YES];
+        self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%% of %.2f GB",(1-res)*100, [APP_DELEGATE bookmarkSizeAll]/1073741824];
         
-    } else {
-        if (downloadView.isHidden) {
-            [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
-            [btnBookmark setEnabled:YES];
-            [self.categoryTable setUserInteractionEnabled:NO];
-            [wifiSwitch setUserInteractionEnabled:NO];
-            [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,downloadView.frame.origin.y, downloadView.frame.size.width,downloadView.frame.size.height)];
-            downloadView.hidden = NO;
-             btnBookmark.layer.borderColor = [[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1] CGColor];
+        [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll] animated:YES];
+        if ([APP_DELEGATE bookmarkCountLeft] == 0) {
+            [APP_DELEGATE setBookmarkCountAll:0];
+            [APP_DELEGATE setBookmarkSizeAll:0];
+            [APP_DELEGATE setBookmarkSizeLeft:0];
+            [[APP_DELEGATE imagesToDownload]removeAllObjects];
+            [[APP_DELEGATE videosToDownload]removeAllObjects];
+            [[APP_DELEGATE pdfToDownload]removeAllObjects];
+            [[APP_DELEGATE authorsImageToDownload]removeAllObjects];
+            [APP_DELEGATE setBookmarkAll:NO];
+            [[APP_DELEGATE bookmarkingVideos] removeAllObjects];
+            [HelperBookmark cancelBookmark];
+            [btnBookmark setTitle:@"Download" forState:UIControlStateNormal];
+            [btnBookmark setEnabled:NO];
+            btnBookmark.layer.borderColor = [[UIColor grayColor] CGColor];
+            [self.categoryTable setUserInteractionEnabled:YES];
+            
+            [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height-74, downloadView.frame.size.width,downloadView.frame.size.height)];
+            downloadView.hidden = YES;
+            for (NSIndexPath *index in [self.categoryTable indexPathsForVisibleRows]) {
+                [self.categoryTable cellForRowAtIndexPath:index].accessoryType = UITableViewCellAccessoryNone;
+                [self.categoryTable deselectRowAtIndexPath:index animated:YES];
+            }
+            self.progressPercentige.text = [NSString stringWithFormat:@"0%%"];
+            [wifiSwitch setUserInteractionEnabled:YES];
+            
+        } else {
+            if (downloadView.isHidden) {
+                [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
+                [btnBookmark setEnabled:YES];
+                [self.categoryTable setUserInteractionEnabled:NO];
+                [wifiSwitch setUserInteractionEnabled:NO];
+                [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,downloadView.frame.origin.y, downloadView.frame.size.width,downloadView.frame.size.height)];
+                downloadView.hidden = NO;
+                btnBookmark.layer.borderColor = [[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1] CGColor];
+            }
+            
         }
-        
-    }
     });
     
 }
