@@ -138,6 +138,13 @@ static UIImage *defaultVideoImage;
             [self setImage:imageToLoad onIndex:indexPath forTableView:tableView orCollectionView:collectionView andPosition:i];
         
         });
+        /*počasn internet*/
+        NSString *videoKey = [self getpreloadGalleryMoviesImagesKeyWithMediaId:[[mediaArray objectAtIndex:i] itemID] mediaType:mediaType];
+        if ([preloadGalleryMoviesImages objectForKey:videoKey] != self.defaultVideoImage) {
+            UIImage * imageToLoad = [preloadGalleryMoviesImages objectForKey:videoKey];
+             [self setImage:imageToLoad onIndex:indexPath forTableView:tableView orCollectionView:collectionView andPosition:i];
+        }
+        /*počasn internet*/
     }
     
     NSString *today=[FCommon currentTimeInLjubljana];

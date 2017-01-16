@@ -916,9 +916,6 @@ int bookmarkedCount;
     [database close];
     [self refreshViewWithItem:image.itemID forItemType:itemType];
     
-    
-    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [av show];
 }
 
 +(void)removeBookmarkedCase:(FCase *)caseToRemove

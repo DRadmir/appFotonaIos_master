@@ -475,15 +475,8 @@
     
     [caseScroll removeGestureRecognizer:swipeRecognizerB];
     
-    BOOL bookmarked = NO;
+    BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[currentCase caseID] andType:BOOKMARKCASE];
     [caseScroll setContentOffset:CGPointMake(0, 0) animated:YES];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    
-    FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=0 and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:usr, currentCase.caseID, nil]];
-    while([resultsBookmarked next]) {
-        bookmarked = YES;
-    }
     if ([FDB checkIfFavoritesItem:[[currentCase caseID] intValue] ofType:BOOKMARKCASE]) {
         [removeFavorite setHidden:NO];
         [addToFavorite setHidden:YES];
@@ -492,11 +485,6 @@
         [addToFavorite setHidden:NO];
     }
 
-    
-    
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
     if (![currentCase isEqual:prevCase]) {
         NSLog(@"%@",currentCase.coverTypeID);
         [tableParameters setHidden:YES];
@@ -1037,11 +1025,10 @@
     [addToFavorite setHidden:NO];
 }
 
-
-
 - (IBAction)removeFromBookmarks:(id)sender {
     [HelperBookmark removeBookmarkedCase:currentCase];
 }
+
 - (IBAction)addToBookmarks:(id)sender {
     if ([ConnectionHelper getWifiOnlyConnection]) {
         [self bookmarkCase];
