@@ -23,6 +23,7 @@
 @synthesize cellViewVideo;
 @synthesize cellMedia;
 
+
 - (void)awakeFromNib {
     [super awakeFromNib];
  
@@ -44,15 +45,17 @@
     [cellViewCase setContentForCase:fcase];
 }
 
--(void)setContentForFavorite:(FItemFavorite *)fitem forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath{
+-(void)setContentForFavorite:(FItemFavorite *)fitem forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath andConnected:(BOOL)connected{
     if ([[fitem typeID] intValue] == BOOKMARKVIDEOINT || [[fitem typeID] intValue] == BOOKMARKPDFINT) {
         FMedia * media =[FDB getMediaWithId:[fitem itemID] andType:[fitem typeID]];
-        [self setContentForMedia:media forColectionView:collectionView onIndex:indexPath];
-        [FHelperThumbnailImg getThumbnailForMedia:media onTableView:nil orCollectionView:collectionView withIndex:indexPath];
+        [self setContentForMedia:media forColectionView:collectionView onIndex:indexPath andConnected:connected];
+        if (media.thumbnail == nil ){
+            [FHelperThumbnailImg getThumbnailForMedia:media onTableView:nil orCollectionView:collectionView withIndex:indexPath];
+        }
     }
 }
 
--(void)setContentForMedia:(FMedia *)media forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath{
+-(void)setContentForMedia:(FMedia *)media forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath andConnected:(BOOL)connected{
     cellMedia = media;
     enabled = true;;
     for (UIView *subView in [self.contentView subviews]) {
@@ -68,7 +71,7 @@
             [cellViewVideo setIndex:index];
             [[self contentView] addSubview: cellViewVideo];
             [cellViewVideo setFrame:[[self contentView] bounds]];
-            [cellViewVideo setContentForMedia:media andMediaType:[media mediaType]];
+            [cellViewVideo setContentForMedia:media andMediaType:[media mediaType] andConnection:connected];
         } else {
             if (cellViewFotona == nil) {
                 cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
@@ -78,15 +81,18 @@
             [cellViewFotona setIndex:index];
             [[self contentView] addSubview: cellViewFotona];
             [cellViewFotona setFrame:[[self contentView] bounds]];
-            [cellViewFotona setContentForMedia:media andMediaType:[media mediaType]];
+            [cellViewFotona setContentForMedia:media andMediaType:[media mediaType] andConnection:connected];
         }
+
    
-   
-    if ([[media bookmark] isEqualToString:@"0"] && ![ConnectionHelper connectedToInternet]) {
+    if ([[media bookmark] isEqualToString:@"0"] && !connected) {
         enabled = false;
     }
-    [FHelperThumbnailImg getThumbnailForMedia:media onTableView:nil orCollectionView:collectionView withIndex:indexPath];
     
+
+    if (media.thumbnail == nil ){
+        [FHelperThumbnailImg getThumbnailForMedia:media onTableView:nil orCollectionView:collectionView withIndex:indexPath];
+    }    
     
 }
 

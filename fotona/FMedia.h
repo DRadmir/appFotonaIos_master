@@ -23,6 +23,7 @@
 @property (nonatomic,retain) NSString *mediaType;
 @property (nonatomic,retain) NSString *time;
 @property (nonatomic) int sortInt;
+@property (nonatomic, retain) UIImage *thumbnail;
 
 -(id)initWithDictionary:(NSDictionary *)dic;
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic;

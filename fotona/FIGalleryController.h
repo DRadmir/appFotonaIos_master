@@ -16,8 +16,8 @@
 
 @property (strong, nonatomic) UIViewController *parent;
 @property (strong, nonatomic) UIScrollView *scrollViewGallery;
-@property (strong, nonatomic) NSArray *imagesArray;
-@property (strong, nonatomic) NSArray *videosArray;
+@property (strong, nonatomic) NSMutableArray *imagesArray;
+@property (strong, nonatomic) NSMutableArray *videosArray;
 
 @property (strong, nonatomic) FCase *caseWithGallery;
 

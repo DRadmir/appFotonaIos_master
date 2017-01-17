@@ -249,8 +249,13 @@
             [tmpVideos addObject:v];
         }
     }
+    [self setVideo:[tmpVideos mutableCopy]];
+
     return tmpVideos;
 }
+
+
+
 
 #pragma mark - Author
 

@@ -392,16 +392,15 @@ FNewsView *newsViewController;
     [tempCell setTag:NEWS_CELL_VIEW_START_TAG];
     tempCell.newsTitle.text = [[newsArray objectAtIndex:index] title];
     tempCell.newsDate.text = [HelperDate formatedDate: [[newsArray objectAtIndex:index] nDate]];
-    if (index>=cellNumber) {
+    if (index>=cellNumber && [ConnectionHelper connectedToInternet]) {
         CGPoint offset = collectionView.contentOffset;
         offset.y-=30;
         [collectionView setContentOffset:offset animated:NO];
         int l = 4;
-        cellNumber+=l;
-        if (cellNumber>newsArray.count) {
-            l =newsArray.count+l-cellNumber;
-            cellNumber = newsArray.count;
+        if (cellNumber + l > newsArray.count) {
+            l = newsArray.count - cellNumber;
         }
+        cellNumber+=l;
         dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
         dispatch_async(queue, ^{
             newsArray = [FNews getImages:newsArray fromStart:index forNumber:l];

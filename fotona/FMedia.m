@@ -27,6 +27,7 @@
 @synthesize time;
 @synthesize bookmark;
 @synthesize active;
+@synthesize thumbnail;
 
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic
 {
@@ -64,6 +65,7 @@
         } else {
             [self setSortInt:0];
         }
+        [self setThumbnail:nil];
     }
     return self;
 }
@@ -94,6 +96,7 @@
         } else {
             [self setSortInt:0];
         }
+        [self setThumbnail:nil];
     }
     return self;
 }

@@ -37,7 +37,7 @@
 - (IBAction)favoriteAdd:(id)sender;
 - (IBAction)favoriteRemove:(id)sender;
 
--(void)setContentForMedia:(FMedia *)media andMediaType:(NSString *)mediaType;
+-(void)setContentForMedia:(FMedia *)media andMediaType:(NSString *)mediaType andConnection:(BOOL)connected;
 -(void)reloadVideoThumbnail:(UIImage *)img;
 
 @end

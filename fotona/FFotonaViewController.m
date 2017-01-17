@@ -43,6 +43,7 @@
     BOOL openFromSearch;
     FMedia *mediaFromSearch;
     BOOL enabled;
+    BOOL connectedToInternet;
 }
 
 @end
@@ -156,6 +157,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         [self.viewDeckController setLeftSize:768-320];
     }
     [contentsVideoModeCollectionView reloadData];
+    connectedToInternet = [ConnectionHelper connectedToInternet];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -476,7 +478,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     FGalleryCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
-    [cell setContentForMedia:mediaArray[indexPath.row] forColectionView:collectionView onIndex:indexPath];
+    [cell setContentForMedia:mediaArray[indexPath.row] forColectionView:collectionView onIndex:indexPath andConnected:connectedToInternet];
     return cell;
 }
 
@@ -510,16 +512,21 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 #pragma mark - PDF
 
 -(void) openPDF:(FMedia *)pdf{
-    if (pdfViewController == nil) {
-        pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
+    if([ConnectionHelper connectedToInternet]){
+        if (pdfViewController == nil) {
+            pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
+        }
+        pdfViewController.ipadFotonaParent = self;
+        pdfViewController.ipadFavoriteParent = nil;
+        pdfViewController.pdfMedia = pdf;
+        [popupCloseBtn setHidden:NO];
+        [menuBtn setHidden:YES];
+        lastOpenedController = pdfViewController;
+        [containerView addSubview:pdfViewController.view];
+    } else {
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [av show];
     }
-    pdfViewController.ipadFotonaParent = self;
-    pdfViewController.ipadFavoriteParent = nil;
-    pdfViewController.pdfMedia = pdf;
-    [popupCloseBtn setHidden:NO];
-    [menuBtn setHidden:YES];
-    lastOpenedController = pdfViewController;
-    [containerView addSubview:pdfViewController.view];
 }
 
 #pragma mark - Refresh

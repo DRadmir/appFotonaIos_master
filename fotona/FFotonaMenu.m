@@ -137,12 +137,9 @@
                     [self.pdfArray addObject:media];
                 }
             }
-            
         }
     }
 }
-
-
 
 -(NSMutableArray *)getMedia
 {

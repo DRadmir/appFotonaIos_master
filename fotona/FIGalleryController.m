@@ -31,8 +31,21 @@
     
     int x = 0;
     int imgSize = 200;
-    imagesArray = images;
-    videosArray = videos;
+    imagesArray = [[NSMutableArray alloc] init];
+    
+    for (FImage *image in images) {
+        if ([image.deleted intValue] == 0) {
+            [imagesArray addObject:image];
+        }
+    }
+
+    videosArray =  [[NSMutableArray alloc] init];
+    for (FMedia *video in videos) {
+        if ([video.deleted intValue] == 0) {
+            [videosArray addObject:video];
+        }
+    }
+    
     
     for (int i=0;i<[videos count];i++) {
         FMedia *vid=[videos objectAtIndex:i];

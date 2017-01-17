@@ -28,9 +28,9 @@
 
 -(void)setContentForCase:(FCase *)fcase;
 
--(void)setContentForFavorite:(FItemFavorite *)fitem forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath;
+-(void)setContentForFavorite:(FItemFavorite *)fitem forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath andConnected:(BOOL) connected;
 
--(void)setContentForMedia:(FMedia *) video forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath;
+-(void)setContentForMedia:(FMedia *) video forTableView:(UITableView *)tableView onIndex:(NSIndexPath *)indexPath andConnected:(BOOL) connected;
 
 -(void)refreshMediaThumbnail:(UIImage *)img;
 

@@ -28,9 +28,9 @@
 
 -(void)setContentForCase:(FCase *)fcase;
 
--(void)setContentForFavorite:(FItemFavorite *)fitem forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath;
+-(void)setContentForFavorite:(FItemFavorite *)fitem forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath andConnected:(BOOL)connected;
 
--(void)setContentForMedia:(FMedia *) video forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath;
+-(void)setContentForMedia:(FMedia *) video forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath andConnected:(BOOL)connected;
 
 -(void)refreshCollectionMediaThumbnail:(UIImage *)img;
 

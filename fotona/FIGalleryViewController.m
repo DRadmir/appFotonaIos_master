@@ -24,6 +24,7 @@
     NSUInteger numberOfImages;
     NSString *lastGalleryItems;
     FIPDFViewController *pdfViewController;
+    BOOL connectedToInternet;
 }
 
 @property (nonatomic, strong)UIImage *defaultVideoImage;
@@ -61,6 +62,7 @@
     
     NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
     [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+     connectedToInternet = [ConnectionHelper connectedToInternet];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -138,7 +140,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
-    [cell setContentForMedia:mediaArray[indexPath.row] forTableView:tableView onIndex:indexPath];
+    [cell setContentForMedia:mediaArray[indexPath.row] forTableView:tableView onIndex:indexPath andConnected:connectedToInternet];
     cell.userInteractionEnabled = cell.enabled;
     return cell;
 }
@@ -179,11 +181,16 @@
 #pragma mark - Open PDF
 
 -(void) openPdf:(FMedia *) pdf{
-    if (pdfViewController == nil) {
-        pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
+    if([ConnectionHelper connectedToInternet]){
+        if (pdfViewController == nil) {
+            pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
+        }
+        pdfViewController.pdfMedia = pdf;
+        [[self navigationController] pushViewController:pdfViewController animated:YES];
+    } else {
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [av show];
     }
-    pdfViewController.pdfMedia = pdf;
-    [[self navigationController] pushViewController:pdfViewController animated:YES];
 }
 
 #pragma mark - Refresh

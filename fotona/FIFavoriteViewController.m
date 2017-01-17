@@ -31,6 +31,7 @@
     FIContentViewController *disclaimerView;
 
     UIViewController *lastOpened;
+    BOOL  connectedToInternet;
 }
 
 @end
@@ -51,6 +52,7 @@
     [super viewWillAppear:animated];
     
     favorites = [FDB getAllFavoritesForUser];
+     connectedToInternet = [ConnectionHelper connectedToInternet];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -99,7 +101,7 @@
         [cell setContentForCase:caseToShow];
     } else {
         if ([[item typeID] intValue] == BOOKMARKVIDEOINT || [[item typeID] intValue] == BOOKMARKPDFINT) {
-            [cell setContentForFavorite:item forTableView:tableView onIndex:indexPath];
+            [cell setContentForFavorite:item forTableView:tableView onIndex:indexPath andConnected:connectedToInternet];
             
         }
     }
@@ -236,12 +238,17 @@
 }
     
 -(void) openPdf:(FMedia *) pdf{
-    if (pdfViewController == nil) {
-        pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
+    if([ConnectionHelper connectedToInternet]){
+        if (pdfViewController == nil) {
+            pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
+        }
+        pdfViewController.pdfMedia = pdf;
+        [[self navigationController] pushViewController:pdfViewController animated:YES];
+        lastOpened = pdfViewController;
+    } else {
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [av show];
     }
-    pdfViewController.pdfMedia = pdf;
-    [[self navigationController] pushViewController:pdfViewController animated:YES];
-    lastOpened = pdfViewController;
 }
 
 #pragma mark - Rest

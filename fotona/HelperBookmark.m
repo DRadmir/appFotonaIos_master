@@ -35,7 +35,7 @@ int bookmarkedCount;
     bookmarkedCount = 0;
     for (NSIndexPath *obj in categorys) {
         NSArray *temp =[APP_DELEGATE currentLogedInUser].userTypeSubcategory;
-        if ([[APP_DELEGATE currentLogedInUser].userType intValue] == 0 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 1 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3) {
+        if ([[APP_DELEGATE currentLogedInUser].userType intValue] == 0 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3) {
             temp =  @[@"2", @"1",  @"3"];;
         }
         int category =[[temp objectAtIndex:obj.row] intValue];
@@ -174,7 +174,7 @@ int bookmarkedCount;
         FCase * selected =  [[FCase alloc] initWithDictionaryFromDB:[selectedCases resultDictionary]];
         if ([FCommon userPermission:[selected userPermissions]] && [FCommon checkItemPermissions:[selected userPermissions] ForCategory:[NSString stringWithFormat:@"%d",category]]) {
             [list addObject:selected];
-        }
+        } 
     }
     [casesDatabase close];
     
@@ -267,6 +267,11 @@ int bookmarkedCount;
         FFotonaMenu* f=[[FFotonaMenu alloc] initWithDictionary:[selectedFotona resultDictionary]];
         if ([FCommon checkItemPermissions:[f userPermissions] ForCategory:[NSString stringWithFormat:@"%d",category]]) {
             [list addObject:f];
+        }else {
+            NSLog(@"%@", f.title);
+            if ([FCommon checkItemPermissions:[f userPermissions] ForCategory:[NSString stringWithFormat:@"%d",category]]) {
+                [list addObject:f];
+            }
         }
     }
     [fotonaDatabase close];

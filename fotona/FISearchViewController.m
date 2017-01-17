@@ -224,7 +224,7 @@
                 [self openCase:indexPath];
             }else
             {
-                if (videosSearchResIPhone.count>0) {
+                if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)){
                     [self openMedia:videosSearchResIPhone[indexPath.row]];
                 }else {
                     [self openMedia:pdfsSearcResIPhone[indexPath.row]];
@@ -232,7 +232,7 @@
             }
             break;
         case 2:
-            if (videosSearchResIPhone.count>0) {
+             if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)){
                 [self openMedia:videosSearchResIPhone[indexPath.row]];
             } else {
                 [self openMedia:pdfsSearcResIPhone[indexPath.row]];

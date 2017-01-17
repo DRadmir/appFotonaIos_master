@@ -38,6 +38,7 @@
     UIPanGestureRecognizer *swipeRecognizerB;
     NSMutableArray *imagesList;
     FIPDFViewController *pdfViewController;
+    BOOL connectedToInternet;
 }
 
 @property (nonatomic, strong)UIImage *defaultVideoImage;
@@ -144,6 +145,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
             currentCase.bookmark = [results stringForColumn:@"isBookmark"];
         }
     }
+    connectedToInternet = [ConnectionHelper connectedToInternet];
 }
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -234,7 +236,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         return cell;
     } else {
         if ([[item typeID] intValue] == BOOKMARKVIDEOINT || [[item typeID] intValue] == BOOKMARKPDFINT) {
-            [cell setContentForFavorite:item forColectionView:collectionView onIndex:indexPath];
+            [cell setContentForFavorite:item forColectionView:collectionView onIndex:indexPath andConnected:connectedToInternet];
             return cell;
         }
     }
@@ -295,21 +297,26 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 
 
 -(void) openPDF:(FMedia *)pdf{
-    
-    if (pdfViewController == nil) {
-        pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
+    if([ConnectionHelper connectedToInternet]){
+        if (pdfViewController == nil) {
+            pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
+        }
+        [pdfViewController.view setTag:OPENVIEW];
+        if ([FCommon isOrientationLandscape])
+            [pdfViewController.view setFrame:CGRectMake(0,65, 1024, 650)];
+        else
+            [pdfViewController.view setFrame:CGRectMake(0,65, 768, 909)];
+        pdfViewController.ipadFotonaParent = nil;
+        pdfViewController.ipadFavoriteParent = self;
+        pdfViewController.pdfMedia = pdf;
+        [popupCloseBtn setHidden:NO];
+        lastOpenedFavoriteVC = pdfViewController;
+        [self.view  addSubview:pdfViewController.view];
+    } else {
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [av show];
     }
-    [pdfViewController.view setTag:OPENVIEW];
-    if ([FCommon isOrientationLandscape])
-        [pdfViewController.view setFrame:CGRectMake(0,65, 1024, 650)];
-    else
-        [pdfViewController.view setFrame:CGRectMake(0,65, 768, 909)];
-    pdfViewController.ipadFotonaParent = nil;
-    pdfViewController.ipadFavoriteParent = self;
-    pdfViewController.pdfMedia = pdf;
-    [popupCloseBtn setHidden:NO];
-    lastOpenedFavoriteVC = pdfViewController;
-    [self.view  addSubview:pdfViewController.view];
+    
 }
 
 #pragma mark - Settings
@@ -680,12 +687,19 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     
     int x=0;
     if (![currentCase isEqual:prevCase]) {
-        NSMutableArray *vidArr= [[NSMutableArray alloc] init];
+        NSMutableArray *caseVideos= [[NSMutableArray alloc] init];
         if ([[currentCase bookmark] boolValue] || [[currentCase coverflow] boolValue]) {
-            vidArr=[currentCase getVideos];
+            caseVideos=[currentCase getVideos];
         } else{
-            vidArr = [currentCase video];
+            caseVideos = [currentCase video];
         }
+        NSMutableArray *vidArr = [[NSMutableArray alloc] init];
+        for (FMedia *video in caseVideos) {
+            if ([video.deleted intValue] == 0) {
+                [vidArr addObject:video];
+            }
+        }
+
         for (int i=0;i<[vidArr count];i++) {
             FMedia *vid=[vidArr objectAtIndex:i];
             UIButton *tmpImg=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -729,12 +743,20 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         }
         
         int xS=210*(int)[vidArr count];
-        NSMutableArray *imgs = [[NSMutableArray alloc] init];
+        NSMutableArray *caseImages = [[NSMutableArray alloc] init];
         if ([[currentCase bookmark] boolValue] || [[currentCase coverflow] boolValue]) {
-            imgs=[currentCase getImages];
+            caseImages=[currentCase getImages];
         } else{
-            imgs = [currentCase images];
+            caseImages = [currentCase images];
         }
+        
+        NSMutableArray *imgs = [[NSMutableArray alloc] init];
+        for (FImage *image in caseImages) {
+            if ([image.deleted intValue] == 0) {
+                [imgs addObject:image];
+            }
+        }
+
         
         
         for (int i=0;i<imgs.count;i++){
@@ -1084,8 +1106,9 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
             //code to be executed in the background
             UIImage *image;
             //            image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
-            NSString *pathTmp = [NSString stringWithFormat:@"%@%@",docDir,img.localPath];
+            NSString *pathTmp = [FMedia createLocalPathForLink:img.path andMediaType:MEDIAIMAGE];
             if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
+
                 image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
                 
             }else{

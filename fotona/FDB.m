@@ -624,10 +624,10 @@
     while([resultsBookmarked next]) {
         bookmarked = YES;
     }
+    [database close];
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     return bookmarked;
 }
-
 
 #pragma mark - Media
 
@@ -811,7 +811,7 @@
                 FMedia *video = [[FMedia alloc] initWithDictionary:[results resultDictionary]];
                 if ([FCommon userPermission:[video userPermissions]]) {
                     [videosTmp addObject:video];
-                }
+                } 
             }
         }
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];

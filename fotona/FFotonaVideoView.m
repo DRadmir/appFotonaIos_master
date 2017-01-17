@@ -32,7 +32,7 @@
 @synthesize enabled;
 #pragma mark - Layout
 
--(void)setContentForMedia:(FMedia *)media andMediaType:(NSString *)mediaType{
+-(void)setContentForMedia:(FMedia *)media andMediaType:(NSString *)mediaType andConnection:(BOOL)connected{
     cellMedia = media;
     type = mediaType;
     btnDownloadAdd.enabled = YES;
@@ -66,7 +66,7 @@
     }
     
     //if not accessible change alpha
-    if (([[media bookmark] isEqualToString:@"0"] || [media bookmark] == nil) && ![ConnectionHelper connectedToInternet]) {
+    if (([[media bookmark] isEqualToString:@"0"] || [media bookmark] == nil) && !connected) {
         enabled = false;
         [lblTitle setAlpha:DISABLEDCOLORALPHA];
         [imgThumbnail setAlpha:DISABLEDCOLORALPHA];
@@ -79,9 +79,9 @@
         [lblDesc setAlpha:1];
         
     }
-    [imgThumbnail setImage:[UIImage imageNamed:@"no_thunbail"]];
-    
-    
+    if(media.thumbnail != nil){
+        [imgThumbnail setImage:media.thumbnail];
+    }
 }
 
 -(void)reloadVideoThumbnail:(UIImage *)img{

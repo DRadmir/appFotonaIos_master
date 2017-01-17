@@ -709,11 +709,18 @@
     
     int x=0;
     if (![currentCase isEqual:prevCase]) {
-        NSMutableArray *vidArr= [[NSMutableArray alloc] init];
+        
+        NSMutableArray *caseVideos= [[NSMutableArray alloc] init];
         if ([[currentCase bookmark] boolValue] || [[currentCase coverflow] boolValue]) {
-            vidArr=[currentCase getVideos];
+            caseVideos=[currentCase getVideos];
         } else{
-            vidArr = [currentCase video];
+            caseVideos = [currentCase video];
+        }
+        NSMutableArray *vidArr = [[NSMutableArray alloc] init];
+        for (FMedia *video in caseVideos) {
+            if ([video.deleted intValue] == 0) {
+                [vidArr addObject:video];
+            }
         }
         for (int i=0;i<[vidArr count];i++) {
             FMedia *vid=[vidArr objectAtIndex:i];
@@ -772,13 +779,19 @@
         }
         
         int xS=210*(int)[vidArr count];
-        NSMutableArray *imgs = [[NSMutableArray alloc] init];
+        NSMutableArray *caseImages = [[NSMutableArray alloc] init];
         if ([[currentCase bookmark] boolValue] || [[currentCase coverflow] boolValue]) {
-            imgs=[currentCase getImages];
+            caseImages=[currentCase getImages];
         } else{
-            imgs = [currentCase images];
+            caseImages = [currentCase images];
         }
         
+        NSMutableArray *imgs = [[NSMutableArray alloc] init];
+        for (FImage *image in caseImages) {
+            if ([image.deleted intValue] == 0) {
+                [imgs addObject:image];
+            }
+        }
         
         for (int i=0;i<imgs.count;i++){
             FImage *img=[imgs objectAtIndex:i];
@@ -1497,12 +1510,20 @@
 {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        NSMutableArray *imgs = [[NSMutableArray alloc] init];
+        NSMutableArray *caseImages = [[NSMutableArray alloc] init];
         if ([[currentCase bookmark] boolValue] || [[currentCase coverflow] boolValue]) {
-            imgs=[currentCase getImages];
+            caseImages=[currentCase getImages];
         } else{
-            imgs = [currentCase images];
+            caseImages = [currentCase images];
         }
+        
+        NSMutableArray *imgs = [[NSMutableArray alloc] init];
+        for (FImage *image in caseImages) {
+            if ([image.deleted intValue] == 0) {
+                [imgs addObject:image];
+            }
+        }
+
         FImage *img =imgs[index]; //[currentCase getImages][index];
         
         dispatch_queue_t queue = dispatch_queue_create("Image queue", NULL);
@@ -1510,8 +1531,8 @@
             //code to be executed in the background
             UIImage *image;
             //            image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
-            NSString *pathTmp = [NSString stringWithFormat:@"%@%@",docDir,img.localPath];
-            if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp] || [img.localPath isEqualToString:@""]) {
+            NSString *pathTmp = [FMedia createLocalPathForLink:img.path andMediaType:MEDIAIMAGE];
+            if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
                 image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
                 
             }else{
