@@ -38,7 +38,12 @@
         NSString *pathUpdated = [[dic valueForKey:@"path"] stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
         [self setPath:[pathUpdated stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
         [self setLocalPath:@""];
-        [self setDescription:[dic valueForKey:@"description"]];
+        if (![[dic objectForKey:@"description"] isKindOfClass:[NSNull class]]) {
+            [self setDescription:[dic valueForKey:@"description"]];
+        } else {
+            [self setDescription:@""];
+        }
+        //[self setDescription:[dic valueForKey:@"description"]];
         [self setMediaImage:[dic valueForKey:@"mediaImage"]];
         [self setSort:[dic valueForKey:@"sort"]];
         [self setFilesize:[dic valueForKey:@"fileSize"]];
@@ -80,7 +85,12 @@
         [self setPath:[dic valueForKey:@"path"]];
         [self setPath:[self.path stringByReplacingOccurrencesOfString:@"http:" withString:@"https:"]];
         [self setLocalPath:[dic valueForKey:@"localPath"]];
-        [self setDescription:[dic valueForKey:@"description"]];
+        if (![[dic objectForKey:@"description"] isKindOfClass:[NSNull class]]) {
+           [self setDescription:[dic valueForKey:@"description"]];
+        } else {
+            [self setDescription:@""];
+        }
+        //[self setDescription:[dic valueForKey:@"description"]];
         [self setBookmark:[dic valueForKey:@"isBookmark"]];
         [self setMediaImage:[dic valueForKey:@"mediaImage"]];
         [self setSort:[dic valueForKey:@"sort"]];
