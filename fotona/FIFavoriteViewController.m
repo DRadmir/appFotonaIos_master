@@ -52,7 +52,6 @@
     [super viewWillAppear:animated];
     
     favorites = [FDB getAllFavoritesForUser];
-     connectedToInternet = [ConnectionHelper connectedToInternet];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -85,6 +84,7 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    connectedToInternet = [ConnectionHelper connectedToInternet];
     return favorites.count;
 }
 
@@ -105,7 +105,6 @@
             
         }
     }
-    cell.userInteractionEnabled = cell.enabled;
     return cell;
 }
 
@@ -238,7 +237,7 @@
 }
     
 -(void) openPdf:(FMedia *) pdf{
-    if([ConnectionHelper connectedToInternet]){
+    if([ConnectionHelper connectedToInternet] || [pdf.bookmark intValue] == 1){
         if (pdfViewController == nil) {
             pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
         }

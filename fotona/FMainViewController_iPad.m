@@ -90,9 +90,15 @@ UIButton *tmp;
     {
         [APP_DELEGATE setCurrentOrientation:0];
     }
-//    
-//    [username setText:@"radovanovic"];
-//    [password setText:@"n3cuqaKU"];
+    if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"] isEqualToString:@"guest"]) {
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
+            [username setText:[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginPassword"]) {
+            [password setText:[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginPassword"]];
+        }
+    }
+
     
 }
 
@@ -101,7 +107,7 @@ UIButton *tmp;
     login =[[FLogin alloc] init];
     [login setDefaultParent:self andiPhone:nil];
     
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginEnabled"]) {
         
         NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
         if (![usrName isEqualToString:@""])

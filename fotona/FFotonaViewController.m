@@ -157,7 +157,6 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
         [self.viewDeckController setLeftSize:768-320];
     }
     [contentsVideoModeCollectionView reloadData];
-    connectedToInternet = [ConnectionHelper connectedToInternet];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -472,6 +471,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
+    connectedToInternet = [ConnectionHelper connectedToInternet];
     return mediaArray.count;
 }
 
@@ -512,7 +512,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 #pragma mark - PDF
 
 -(void) openPDF:(FMedia *)pdf{
-    if([ConnectionHelper connectedToInternet]){
+    if([ConnectionHelper connectedToInternet] || [pdf.bookmark intValue] == 1){
         if (pdfViewController == nil) {
             pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
         }

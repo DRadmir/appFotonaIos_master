@@ -43,6 +43,7 @@
     [cellViewCase setParentIphone:nil];
     [cellViewCase setParentIpad:parentIpad];
     [cellViewCase setContentForCase:fcase];
+    enabled = cellViewCase.enabled;
 }
 
 -(void)setContentForFavorite:(FItemFavorite *)fitem forColectionView:(UICollectionView *)collectionView onIndex:(NSIndexPath *)indexPath andConnected:(BOOL)connected{
@@ -72,6 +73,7 @@
             [[self contentView] addSubview: cellViewVideo];
             [cellViewVideo setFrame:[[self contentView] bounds]];
             [cellViewVideo setContentForMedia:media andMediaType:[media mediaType] andConnection:connected];
+            enabled = cellViewVideo.enabled;
         } else {
             if (cellViewFotona == nil) {
                 cellViewFotona = [[[NSBundle mainBundle] loadNibNamed:@"FGalleryView" owner:self options:nil] objectAtIndex:1];
@@ -82,13 +84,8 @@
             [[self contentView] addSubview: cellViewFotona];
             [cellViewFotona setFrame:[[self contentView] bounds]];
             [cellViewFotona setContentForMedia:media andMediaType:[media mediaType] andConnection:connected];
+            enabled = cellViewFotona.enabled;
         }
-
-   
-    if ([[media bookmark] isEqualToString:@"0"] && !connected) {
-        enabled = false;
-    }
-    
 
     if (media.thumbnail == nil ){
         [FHelperThumbnailImg getThumbnailForMedia:media onTableView:nil orCollectionView:collectionView withIndex:indexPath];

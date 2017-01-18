@@ -65,12 +65,24 @@ int forgotenBottom = 0;
 //    [textFieldPass setText:@"n3cuqaKU"];
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"] isEqualToString:@"guest"]) {
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
+            [textFieldUser setText:[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginPassword"]) {
+            [textFieldPass setText:[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginPassword"]];
+        }
+    }
+    
+}
+
 -(void)viewDidAppear:(BOOL)animated
 {
     login =[[FLogin alloc] init];
     [login setDefaultParent:nil andiPhone:self];
     
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginEnabled"]) {
         [login autoLogin];
     }else
     {

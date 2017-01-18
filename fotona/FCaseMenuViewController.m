@@ -58,9 +58,9 @@ NSString *count = @"";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    menuTable.contentInset = UIEdgeInsetsMake(-75, 0, -75, 0);
-    
+
+   // menuTable.contentInset = UIEdgeInsetsMake(-75, 0, -75, 0);
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
     if (!allItems) {
         [back setHidden:YES];
@@ -131,6 +131,13 @@ NSString *count = @"";
     return 1;
 }
 
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 24;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return CGFLOAT_MIN;
+}
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 

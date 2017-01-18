@@ -264,7 +264,6 @@
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     
     //Disabeling cell for unbookmarked cases without connection
-    cell.userInteractionEnabled = enabled;
     
     return cell;
 }
@@ -277,12 +276,13 @@
     
     if (type > 0)
     {
+        for (UIView *subView in cell.subviews) {
+            [subView removeFromSuperview];
+        }
         CGRect screenRect = [[UIScreen mainScreen] bounds];
         CGFloat screenWidth = screenRect.size.width;
         
-        UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
-        [img setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@white",previousIcon]]];
-        [cell addSubview:img];
+      
         
         UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(40, 10, screenWidth-100, 20)];
         [name setText:[(FCase *)[allItems objectAtIndex:indexPath.row] name]];
@@ -304,6 +304,12 @@
         [caseLbl setTextColor:[UIColor grayColor]];
         [caseLbl setNumberOfLines:2];
         [cell addSubview:caseLbl];
+        
+        UIImageView *img = [FCommon imageCutWithRect:CGRectMake(5, 5, 30, 30)];
+        
+        UIImage *temp = [FDB getAuthorImage:[[allItems objectAtIndex:indexPath.row] authorID]];
+        [img setImage:temp];
+        [cell addSubview:img];
     }else
     {
         if (!previousCategory) {
@@ -342,6 +348,9 @@
 }
 
 - (void) setUnhilightedCellStyle: (UITableViewCell *) cell withIndex:(NSIndexPath *) indexPath{
+    for (UIView *subView in cell.subviews) {
+        [subView removeFromSuperview];
+    }
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     

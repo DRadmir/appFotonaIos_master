@@ -181,6 +181,8 @@ BOOL showFeatured = YES;
 {
     NSString *usrName=@"";
     NSString *password=@"";
+   
+
     if(parentiPad != nil)
     {
         usrName = parentiPad.username.text;
@@ -224,7 +226,6 @@ BOOL showFeatured = YES;
             [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"autoLogin"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             [FUser deleteUserInDB:usr];
-            [FUser checkIfUserExistsInDB:usr];
             
             if ([usrName isEqualToString:@""]) {
                 
@@ -239,7 +240,7 @@ BOOL showFeatured = YES;
             [SFHFKeychainUtils storeUsername:usr.username andPassword:password forServiceName:@"fotona" updateExisting:YES error:nil];
             [[NSUserDefaults standardUserDefaults] setValue:usr.username forKey:@"autoLogin"];
             [[NSUserDefaults standardUserDefaults] synchronize];
-            [usr setPassword:[NSString stringWithFormat:@"%lu",(unsigned long)password.hash]];
+            [usr setPassword:password];
             [FUser addUserInDB:usr];
             [APP_DELEGATE setCurrentLogedInUser:usr];
             [FHelperRequest sendDeviceData];
@@ -260,6 +261,10 @@ BOOL showFeatured = YES;
             [[NSUserDefaults standardUserDefaults] setObject:today forKey:@"lastOnlineLogin"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             [[NSUserDefaults standardUserDefaults] setValue:usr.username forKey:@"autoLogin"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            [[NSUserDefaults standardUserDefaults] setValue:usr.password forKey:@"autoLoginPassword"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            [[NSUserDefaults standardUserDefaults] setValue:@"1" forKey:@"autoLoginEnabled"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             [self showUserFolder:[NSString stringWithFormat:@".%@",usr.username]];
             [self updateStart];

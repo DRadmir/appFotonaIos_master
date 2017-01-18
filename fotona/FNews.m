@@ -291,7 +291,7 @@
                         }
                     }
                     [sf setImages:temp];
-                    [sf setRest:@"1"];
+                    [sf setRest:@"0"];
                 } else{
                     img = [UIImage imageNamed:@"featured_news"];
                     [[sf images] addObject: img];
@@ -311,7 +311,7 @@
                     
                 }
                 [sf setImages:temp];
-                [sf setRest:@"1"];
+                [sf setRest:@"0"];
             }
             [newsArray replaceObjectAtIndex:startIndex+c withObject:sf];
         }

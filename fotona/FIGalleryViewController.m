@@ -62,7 +62,6 @@
     
     NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
     [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
-     connectedToInternet = [ConnectionHelper connectedToInternet];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -117,6 +116,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+  
     lastGalleryItems = galleryItems;
     
     if ([galleryItems isEqualToString:@"-1"]) {
@@ -141,12 +141,12 @@
 {
     FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
     [cell setContentForMedia:mediaArray[indexPath.row] forTableView:tableView onIndex:indexPath andConnected:connectedToInternet];
-    cell.userInteractionEnabled = cell.enabled;
     return cell;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    connectedToInternet = [ConnectionHelper connectedToInternet];
     return mediaArray.count;
 }
 
@@ -180,8 +180,8 @@
 
 #pragma mark - Open PDF
 
--(void) openPdf:(FMedia *) pdf{
-    if([ConnectionHelper connectedToInternet]){
+-(void) openPdf:(FMedia *) pdf {
+    if([ConnectionHelper connectedToInternet] || [pdf.bookmark intValue] == 1){
         if (pdfViewController == nil) {
             pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
         }

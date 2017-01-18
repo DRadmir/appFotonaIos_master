@@ -145,7 +145,6 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
             currentCase.bookmark = [results stringForColumn:@"isBookmark"];
         }
     }
-    connectedToInternet = [ConnectionHelper connectedToInternet];
 }
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -259,6 +258,9 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
             default:
                 break;
         }
+    }else {
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [av show];
     }
 }
 
@@ -273,6 +275,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
+        connectedToInternet = [ConnectionHelper connectedToInternet];
     return [mediaArray count];
 }
 
@@ -297,7 +300,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 
 
 -(void) openPDF:(FMedia *)pdf{
-    if([ConnectionHelper connectedToInternet]){
+    if([ConnectionHelper connectedToInternet] || [pdf.bookmark intValue] == 1){
         if (pdfViewController == nil) {
             pdfViewController = [[UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"pdfViewController"];
         }

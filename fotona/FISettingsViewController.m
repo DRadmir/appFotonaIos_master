@@ -147,7 +147,7 @@
 
 -(void)logout:(id)sender
 {
-    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"autoLogin"];
+    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"autoLoginEnabled"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [APP_DELEGATE setCurrentLogedInUser:nil];
    // [self.navigationController popToRootViewControllerAnimated:NO];
