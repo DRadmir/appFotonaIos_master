@@ -59,7 +59,7 @@
 @synthesize aboutScrollView;
 @synthesize aboutTitle;
 @synthesize aboutView;
-
+//@synthesize openEvent;
 
 
 
@@ -563,6 +563,51 @@ FNewsView *newsViewController;
     [newsViewController.view addGestureRecognizer:swipeRecognizer];
     
 }
+
+//-(void)openEvent:(FEvent *) event {
+//    openEvent = event;
+//    [newsViewController.view removeFromSuperview];
+//    for (FNews *n in newsArray) {
+//        if (n.newsID==event.eventID) {
+//            event=n;
+//            break;
+//        }
+//    }
+//    if (event.isReaded == NO) {
+//        event.isReaded = YES;
+//    }
+//    [popupCloseBtn setHidden:NO];
+//    newsViewController.newsArray = newsArray;
+//    newsViewController.news = event;
+//    [mainScroll setHidden:YES];
+//    [aboutView setHidden:YES];
+//    
+//    [self.view addSubview:newsViewController.view];
+//    if (![event isReaded]){
+//        NSString *t = [NSString stringWithFormat:@"%ld",(long)[event eventID]];
+//        [self setNewsReaded:t];
+//        event.isReaded = YES;
+//    }
+//    [APP_DELEGATE setEventTemp:nil];
+//    
+//    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+//    [database open];
+//    
+//    NSString *usr = [FCommon getUser];
+//    NSString * eventIDtemp=[NSString stringWithFormat:@"%ld",(long)[event eventID]];
+//    [database executeUpdate:@"INSERT INTO NewsRead (newsID, userName) VALUES (?,?)",eventIDtemp,usr];
+//    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+//    [database close];
+//    
+//    eventViewController.view.tag = OPENVIEW;
+//    mainScroll.tag=CLOSEVIEW;
+//    aboutView.tag = CLOSEVIEW;
+//    
+//    UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc]
+//                                                 initWithTarget:self action:@selector(closeNews:)];
+//    [eventViewController.view addGestureRecognizer:swipeRecognizer];
+//    
+//}
 
 
 -(IBAction)closePopupNewsView:(id)sender

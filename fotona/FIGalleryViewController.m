@@ -116,7 +116,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  
+
     lastGalleryItems = galleryItems;
     
     if ([galleryItems isEqualToString:@"-1"]) {
@@ -126,7 +126,7 @@
     {
         mediaArray = [FDB getMediaForGallery:galleryItems withMediType:galleryType];
     }
-    FMedia *media=[mediaArray objectAtIndex:[indexPath row]];
+    FMedia *media=[mediaArray objectAtIndex:[indexPath section]];
     if ([[media mediaType] intValue] == [MEDIAVIDEO intValue]) {
         [self openVideo:media];
     } else {
@@ -140,19 +140,34 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
-    [cell setContentForMedia:mediaArray[indexPath.row] forTableView:tableView onIndex:indexPath andConnected:connectedToInternet];
+    [cell setContentForMedia:mediaArray[indexPath.section] forTableView:tableView onIndex:indexPath andConnected:connectedToInternet];
     return cell;
-}
+    
+    }
+
+//-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    cell.contentView.backgroundColor = [UIColor colorWithRed:225/255.0 green:225/255.0 blue:225/255.0 alpha:1.0];
+//    UIView  *whiteRoundedView = [[UIView alloc]initWithFrame:CGRectMake(5, 10, self.view.frame.size.width-10, cell.contentView.frame.size.height)];
+//    CGFloat colors[]={1.0,1.0,1.0,1.0};//cell color white
+//    whiteRoundedView.layer.backgroundColor = CGColorCreate(CGColorSpaceCreateDeviceRGB(), colors);
+//    whiteRoundedView.layer.masksToBounds = false;
+//    whiteRoundedView.layer.cornerRadius = 0.0;
+//    whiteRoundedView.layer.shadowOffset = CGSizeMake(-1, 1);
+//    whiteRoundedView.layer.shadowOpacity = 0.0;
+//    [cell.contentView addSubview:whiteRoundedView];
+//    [cell.contentView sendSubviewToBack:whiteRoundedView];
+//}
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     connectedToInternet = [ConnectionHelper connectedToInternet];
-    return mediaArray.count;
+    return 1;
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return mediaArray.count;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -164,6 +179,7 @@
 {
     return 182;
 }
+
 
 #pragma mark - Getting Images
 
@@ -200,7 +216,7 @@
         for (int i = 0; i<[mediaArray count]; i++){
             FMedia *item = mediaArray[i];
             if ([[item itemID] intValue]== [itemID intValue]) {
-                NSIndexPath *index = [NSIndexPath  indexPathForItem:i inSection:0];
+                NSIndexPath *index = [NSIndexPath  indexPathForItem:0 inSection:i];
                 [videoGalleryTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:index, nil] withRowAnimation:UITableViewRowAnimationNone];
                 break;
             }

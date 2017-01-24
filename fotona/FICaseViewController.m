@@ -9,7 +9,7 @@
 #import "FICaseViewController.h"
 #import "FAuthor.h"
 #import "FDB.h"
-
+#import "FCasebookViewController.h"
 #import "FAppDelegate.h"
 #import "FIGalleryController.h"
 #import "FImage.h"
@@ -70,7 +70,7 @@
 {
     [super viewWillAppear:animated];
     BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
-    if (bookmarked){//[currentCase.bookmark boolValue]) {
+    if (bookmarked || [caseToOpen.coverflow intValue] == 1){//[currentCase.bookmark boolValue]) {
         [btnBookmark setHidden:YES];
         [btnRemoveBookmark setHidden:NO];
     } else {
@@ -85,7 +85,6 @@
         oldCase = caseToOpen;
     }
    
-    
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.caseOpened = caseToOpen;
     if(flow.lastIndex == 3)
@@ -472,7 +471,7 @@
 
 - (void) refreshBookmarkBtn  {
     BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
-    if (bookmarked){
+    if (bookmarked || [caseToOpen.coverflow intValue] == 1){
         [btnBookmark setHidden:YES];
         [btnRemoveBookmark setHidden:NO];
     } else {

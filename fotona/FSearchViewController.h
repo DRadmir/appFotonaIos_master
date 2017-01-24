@@ -30,6 +30,7 @@
 @property (nonatomic, retain) NSMutableArray *casesSearchRes;
 @property (nonatomic, retain) NSMutableArray *videosSearchRes;
 @property (nonatomic, retain) NSMutableArray *pdfsSearchRes;
+@property (nonatomic, retain) NSMutableArray *eventsSearchRes;
 
 -(void)search;
 

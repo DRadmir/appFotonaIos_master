@@ -164,11 +164,11 @@
         [openedView.view removeFromSuperview];
         [openedView removeFromParentViewController];
         openedView = nil;
-        if (flow.caseMenu != nil)
-        {
-            [[[flow caseMenu] navigationController] popToRootViewControllerAnimated:false];
-            [flow.caseMenuArray removeAllObjects];
-        }
+    }
+    if (flow.caseMenu != nil)
+    {
+        [[[flow caseMenu] navigationController] popToRootViewControllerAnimated:false];
+        [flow.caseMenuArray removeAllObjects];
     }
     
     lastCase = nil;

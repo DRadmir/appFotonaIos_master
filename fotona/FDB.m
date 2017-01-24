@@ -311,6 +311,21 @@
 
 #pragma mark - Events
 
++(NSMutableArray *)getEventsForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database
+{
+    NSMutableArray *tmp=[[NSMutableArray alloc] init];
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Events where (title like '%%%@%%' or text like '%%%@%%') limit 25",searchTxt,searchTxt];
+    
+    FMResultSet *results= [database executeQuery:query];
+    
+    while([results next]) {
+        FEvent *f=[[FEvent alloc] initWithDictionary:[results resultDictionary]];
+        [tmp addObject:f];
+    }
+    return tmp;
+}
+
 
 +(NSArray *)getEventsFromDB
 {

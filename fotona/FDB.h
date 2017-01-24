@@ -34,6 +34,7 @@
 +(NSMutableArray *)getCaseCategoryWithPrev:(NSString *)prev;
 
 
++(NSMutableArray *)getEventsForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
 +(NSArray *)getEventsFromDB;
 +(NSMutableArray *)getEventsForCategory:(NSString *)category;
 +(NSMutableArray  *) fillEventsWithCategory:(NSInteger) ci andType:(NSInteger) ti andMobile:(BOOL) mobile;

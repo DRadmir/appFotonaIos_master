@@ -73,6 +73,20 @@
 }
 
 #pragma mark - TableView
+//-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    cell.contentView.backgroundColor = [UIColor colorWithRed:225/255.0 green:225/255.0 blue:225/255.0 alpha:1.0];
+//    UIView  *whiteRoundedView = [[UIView alloc]initWithFrame:CGRectMake(5, 30, self.view.frame.size.width-10, cell.contentView.frame.size.height)];
+//    CGFloat colors[]={1.0,1.0,1.0,1.0};//cell color white
+//    whiteRoundedView.layer.backgroundColor = CGColorCreate(CGColorSpaceCreateDeviceRGB(), colors);
+//    whiteRoundedView.layer.masksToBounds = false;
+//    whiteRoundedView.layer.cornerRadius = 0.0;
+//    whiteRoundedView.layer.shadowOffset = CGSizeMake(-1, 1);
+//    whiteRoundedView.layer.shadowOpacity = 0.0;
+//    [cell.contentView addSubview:whiteRoundedView];
+//    [cell.contentView sendSubviewToBack:whiteRoundedView];
+//}
+
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -80,16 +94,16 @@
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return favorites.count;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     connectedToInternet = [ConnectionHelper connectedToInternet];
-    return favorites.count;
+    return 1;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    FItemFavorite *item = favorites[indexPath.row];
+    FItemFavorite *item = favorites[indexPath.section];
     FIGalleryTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FITableGalleryCells" owner:self options:nil] objectAtIndex:0];
     [cell setItem:item];
     [cell setIndex:indexPath];
@@ -109,7 +123,7 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    FItemFavorite *item = favorites[indexPath.row];
+    FItemFavorite *item = favorites[indexPath.section];
     switch ([[item typeID] intValue]) {
         case BOOKMARKCASEINT:
             [self openCaseWithID:[item itemID]];
@@ -134,7 +148,9 @@
 
 -(void)deleteRowAtIndex:(NSIndexPath *) index{
     favorites = [FDB getAllFavoritesForUser];
-    [favoriteTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject: index] withRowAnimation:UITableViewRowAnimationFade];
+    CGPoint contentOffset = self.favoriteTableView.contentOffset;
+    [self.favoriteTableView reloadData];
+    [self.favoriteTableView setContentOffset:contentOffset];
 }
 
 #pragma mark - Case
@@ -229,7 +245,7 @@
     for (int i = 0; i<[favorites count]; i++){
         FItemFavorite *item = favorites[i];
         if ([[item itemID] intValue]== [itemID intValue] && [[item typeID] intValue] == [itemType intValue]  ) {
-            NSIndexPath *index = [NSIndexPath  indexPathForItem:i inSection:0];
+            NSIndexPath *index = [NSIndexPath  indexPathForItem:0 inSection:i];
             [favoriteTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:index, nil] withRowAnimation:UITableViewRowAnimationNone];
             break;
         }

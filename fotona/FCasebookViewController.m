@@ -152,7 +152,7 @@
             }
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
             [database close];
-            if (bookmarked && [currentCase.coverflow intValue] == 1){//[currentCase.bookmark boolValue]) {
+            if (bookmarked && [currentCase.bookmark boolValue] == 1){//[currentCase.bookmark boolValue]) {
                 [addBookmarks setHidden:YES];
                 [removeBookmarks setHidden:NO];
             } else {
@@ -528,7 +528,7 @@
         } else {
             [addBookmarks setHidden:YES];
         }
-        [removeBookmarks setHidden:NO];
+        [removeBookmarks setHidden:YES];
     }
 }
 

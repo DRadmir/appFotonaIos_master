@@ -21,6 +21,7 @@
 #import "FMedia.h"
 #import "FDB.h"
 #import "FHelperRequest.h"
+#import "FEventViewController.h"
 
 @interface FSearchViewController ()
 
@@ -38,6 +39,7 @@
 @synthesize popupTitle;
 @synthesize popupText;
 @synthesize characterLimit;
+@synthesize eventsSearchRes;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -80,8 +82,13 @@
         {
             count++;
         }
+        if ([eventsSearchRes count]>0)
+        {
+            count++;
+        }
+        
     }
-        return count;
+    return count;
 }
 
 
@@ -99,6 +106,10 @@
                 {
                     if (videosSearchRes.count>0) {
                         return videosSearchRes.count;
+                    }else{
+                        if (eventsSearchRes.count>0) {
+                            return eventsSearchRes.count;
+                        }
                     }
                 }
             }
@@ -108,26 +119,36 @@
                 return casesSearchRes.count;
             }else
             {
-                if (videosSearchRes.count>0) {
+                if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                     return videosSearchRes.count;
+                }else{
+                    if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
+                        return eventsSearchRes.count;
                 }
             }
             break;
         case 2:
-            if (videosSearchRes.count>0) {
+            if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                 return videosSearchRes.count;
+            }else{
+                if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
+                    return eventsSearchRes.count;
             }
             break;
+        case 3:
+            if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)) {
+                return eventsSearchRes.count;
+            }
         default:
             return pdfsSearchRes.count;
     }
     return pdfsSearchRes.count;
     
+    
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    
     switch (section) {
         case 0:
             if (newsSearchRes.count>0) {
@@ -140,6 +161,10 @@
                 {
                     if (videosSearchRes.count>0) {
                         return @"Videos";
+                    }else{
+                        if (eventsSearchRes.count>0) {
+                            return @"Events";
+                        }
                     }
                 }
             }
@@ -151,19 +176,30 @@
             {
                 if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                     return @"Videos";
+                }else{
+                    if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
+                        return @"Events";
                 }
             }
             break;
         case 2:
             if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                 return @"Videos";
+            }else{
+                if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
+                    return @"Events";
             }
-
             break;
+        case 3:
+            if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)) {
+                return @"Events";
+            }
         default:
             return @"PDFs";
     }
     return @"PDFs";
+    
+    
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -178,16 +214,15 @@
             {
                 if (casesSearchRes.count>0) {
                     [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
-                    [cell.detailTextLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] description]];
                 }else
                 {
                     if (videosSearchRes.count>0) {
                         [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
                         [cell.detailTextLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] description]];
-                    }else {
-                        [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
-                        [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
-                        
+                    }else{
+                        if (eventsSearchRes.count>0) {
+                            [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
+                        }
                     }
                 }
             }
@@ -199,24 +234,31 @@
             {
                 if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                     [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
-                }else {
-                    [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                    [cell.detailTextLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] description]];
+                }else{
+                    if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
+                        [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
                 }
             }
             break;
         case 2:
             if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                 [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
-            } else {
-                [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                [cell.detailTextLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] description]];
+            }else{
+                if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
+                    [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
             }
             break;
         case 3:
-            [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
-            break;
+            if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)) {
+                [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
+            }
         default:
-            [cell.textLabel setText:@"TITLE IPAD"];
+            [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+            [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
     }
+    
     
     return cell;
 }
@@ -238,8 +280,12 @@
                 {
                     if (videosSearchRes.count>0) {
                         [self openMedia:videosSearchRes[indexPath.row]];
-                    }else {
-                        [self openMedia:pdfsSearchRes[indexPath.row]];
+                    }else{
+                        if (eventsSearchRes.count>0) {
+                            [self openEvents:indexPath];
+                        }else {
+                            [self openMedia:pdfsSearchRes[indexPath.row]];
+                        }
                     }
                 }
             }
@@ -251,26 +297,39 @@
             {
                 if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                     [self openMedia:videosSearchRes[indexPath.row]];
-                }else {
-                    [self openMedia:pdfsSearchRes[indexPath.row]];
+                }else{
+                    if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)){
+                        [self openEvents:indexPath];
+                    }else {
+                        [self openMedia:pdfsSearchRes[indexPath.row]];
+                    }
                 }
             }
             break;
         case 2:
             if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                 [self openMedia:videosSearchRes[indexPath.row]];
-            } else {
-                [self openMedia:pdfsSearchRes[indexPath.row]];
+            }else{
+                if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)){
+                    [self openEvents:indexPath];
+                }else {
+                    [self openMedia:pdfsSearchRes[indexPath.row]];
+                }
             }
             break;
         case 3:
-            [self openMedia:pdfsSearchRes[indexPath.row]];
+            if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)) {
+                [self openEvents:indexPath];
+            }else {
+                [self openMedia:pdfsSearchRes[indexPath.row]];
+            }
             break;
+            
         default:
-            break;
+            [self openMedia:pdfsSearchRes[indexPath.row]];
     }
+    
 }
-
 -(void)search
 {
     if(characterLimit){
@@ -281,6 +340,7 @@
         casesSearchRes=[FDB getCasesForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
         videosSearchRes=[FDB getVideosForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
         pdfsSearchRes = [FDB getPDFForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
+        eventsSearchRes = [FDB getEventsForSearchFromDB:searchTxt withDatabase:database];
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
         [database close];
     }
@@ -332,6 +392,25 @@
 }
 
 #pragma mark OpenElements
+//-(void) openEvent:(NSIndexPath*) index
+//{
+//    FEvent *tmpN=[eventsSearchRes objectAtIndex:index.row];
+//    [popupTitle setText:tmpN.title];
+//    NSString *htmlString=tmpN.text;
+//    NSAttributedString * attrStr = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+//    [popupText setText:attrStr.string];
+//    [APP_DELEGATE setEventTemp:tmpN];
+//    [[(FFeaturedViewController_iPad *)parent popover] dismissPopoverAnimated:YES];
+//    if ([[APP_DELEGATE tabBar] selectedIndex]==0) {
+//        [(FFeaturedViewController_iPad *)parent  openEvent:tmpN];
+//    }
+//    else{
+//        [[APP_DELEGATE tabBar] setSelectedIndex:0];
+//        [(FFeaturedViewController_iPad *)[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:0]  openNews:tmpN];
+//
+//    }
+//}
+
 
 -(void) openNews:(NSIndexPath*) index
 {
@@ -373,11 +452,11 @@
             
         } else{
             if([ConnectionHelper connectedToInternet]){
-             
-                 NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[item caseID] onView:[(FCasebookViewController *)[tempC topViewController] view]];
+                
+                NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[item caseID] onView:[(FCasebookViewController *)[tempC topViewController] view]];
                 AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
                 [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                   FCase *caseObj=[FCase parseCaseFromServer:[operation responseData]];                    updateCounter++;
+                    FCase *caseObj=[FCase parseCaseFromServer:[operation responseData]];                    updateCounter++;
                     success++;
                     [self removeHud];
                     
@@ -415,5 +494,14 @@
         [parent.tabBarController setSelectedIndex:2];
     }
 }
+-(void) openEvents:(NSIndexPath *) index
+{
+    [[(FFotonaViewController *)parent popover] dismissPopoverAnimated:YES];
+    [APP_DELEGATE setEventTemp:[self.eventsSearchRes objectAtIndex:index.row]];
+    [[APP_DELEGATE tabBar] setSelectedIndex:1];
+    FEventViewController * tempEventVC = [[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:1];
+    [tempEventVC  openPopupOutside];
+}
+
 
 @end
