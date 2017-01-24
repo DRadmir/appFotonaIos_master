@@ -25,6 +25,7 @@
 @synthesize videosSearchResIPhone;
 @synthesize pdfsSearcResIPhone;
 @synthesize parentIPhone;
+@synthesize characterLimit;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -42,6 +43,10 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    if(searchTxtIPhone.length >= 2)
+        characterLimit = TRUE;
+    else
+        characterLimit = FALSE;
     int count = 0;
     if ([newsSearchResIPhone count]>0)
     {
@@ -148,16 +153,20 @@
         case 0:
             if (newsSearchResIPhone.count>0) {
                 [cell.textLabel setText:[[newsSearchResIPhone objectAtIndex:indexPath.row] title]];
+                [cell.detailTextLabel setText:[[newsSearchResIPhone objectAtIndex:indexPath.row] description]];
             }else
             {
                 if (casesSearchResIPhone.count>0) {
                     [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
+                    [cell.detailTextLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] description]];
                 }else
                 {
                     if (videosSearchResIPhone.count>0) {
                         [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
+                        [cell.detailTextLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] description]];
                     }else {
                         [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
+                        [cell.detailTextLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] description]];
                     }
                 }
             }

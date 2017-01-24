@@ -365,7 +365,7 @@
     
 }
 
--(BOOL)checkDownload:(NSString *)filePath{
+-(BOOL)checkDownload:(NSString *)filePath{//remove from list if already exist
     NSString * temp;
     for (Download *download in self.downloadManager.downloads) {
         temp = [[download url] absoluteString];

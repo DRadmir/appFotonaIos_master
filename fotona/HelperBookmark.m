@@ -658,7 +658,7 @@ int bookmarkedCount;
     [defaults setBool:false forKey:@"bookmarkAll"];
 }
 
-+ (void) countBookmarks:(float)add withSize:(int) size {
++ (void) countBookmarks:(float)add withSize:(int) size {//adding download size
     [APP_DELEGATE setBookmarkCountAll:[APP_DELEGATE bookmarkCountAll]+add];
     [APP_DELEGATE setBookmarkCountLeft:[APP_DELEGATE bookmarkCountLeft]+add];
     [APP_DELEGATE setBookmarkSizeAll:[APP_DELEGATE bookmarkSizeAll]+size];

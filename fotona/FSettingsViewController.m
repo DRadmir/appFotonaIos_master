@@ -181,7 +181,7 @@
 -(void)changePassword:(id)sender
 {
     registrationView = [[FRegistrationViewController alloc] init];
-    registrationView.urlString = @"http://www.fotona.com/en/#lost-password"; //@"http://www.fotona.com/en/support/passreset/"
+    registrationView.urlString = @"http://www.fotona.com/en/support/profile/"; //@"http://www.fotona.com/en/support/passreset/"
     registrationView.fromSettings = false;
     registrationView.view.frame = self.view.bounds;
     [self.view addSubview:registrationView.view];
@@ -406,7 +406,20 @@
     }
     
 }
-
+//-(id)transformedValue:(float)value{
+//    double convertedValue = [value doubleValue];
+//    int multiplyFactor = 0;
+//    
+//    NSArray *tokens = @[@"b",@"KB",@"MB",@"GB",@"TB"];
+//    
+//    while (convertedValue > 1024) {
+//        convertedValue /= 1024;
+//        multiplyFactor++;
+//    }
+//    
+//    
+//    return[NSString stringWithFormat:@"%4.2f %@", convertedValue, tokens[multiplyFactor]];
+//}
 
 -(void) refreshStatusBar{
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -414,7 +427,7 @@
         if ([APP_DELEGATE bookmarkSizeLeft] > 0 && [APP_DELEGATE bookmarkSizeAll] > 0) {
             res = [APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll];
         }
-        self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%% of %.2f GB",(1-res)*100, [APP_DELEGATE bookmarkSizeAll]/1073741824];
+        self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%% of %.2f GB",(1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll])*100, [APP_DELEGATE bookmarkSizeAll]/1073741824];
         
         [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll] animated:YES];
         if ([APP_DELEGATE bookmarkCountLeft] == 0) {

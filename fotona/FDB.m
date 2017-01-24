@@ -139,7 +139,7 @@
 {
     NSMutableArray *tmp=[[NSMutableArray alloc] init];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%') AND (%@ OR alloweInCoverFlow=1) limit 10",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt, userP];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%') AND (%@ OR alloweInCoverFlow=1) limit 25",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt, userP];
     
     if (![ConnectionHelper connectedToInternet]) {
         query = [NSString stringWithFormat:@"%@ AND isBookmark=1",query];
@@ -410,7 +410,7 @@
     
     
     
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM News where active=%@ and (title like '%%%@%%'or description like '%%%@%%'or text like '%%%@%%' ) ORDER BY newsID DESC limit 10",@"1",searchTxt,searchTxt,searchTxt]];
+    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM News where active=%@ and (title like '%%%@%%'or description like '%%%@%%'or text like '%%%@%%' ) ORDER BY newsID DESC limit 25",@"1",searchTxt,searchTxt,searchTxt]];
     while([results next]) {
         FNews *f=[[FNews alloc] initWithDictionary:[results resultDictionary]];
         [news addObject:f];
@@ -503,9 +503,9 @@
     NSMutableArray *tmpVideo=[[NSMutableArray alloc] init];
     FMResultSet *results;
     if ([ConnectionHelper connectedToInternet]) {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 and m.active=1 and (m.title like '%%%@%%') AND %@ limit 10",searchTxt, userP]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 and m.active=1 and (m.title like '%%%@%%') AND %@ limit 25",searchTxt, userP]];
     } else {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@limit 10",searchTxt, userP]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@limit 25",searchTxt, userP]];
     }
     while([results next]) {
         FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];
@@ -590,9 +590,9 @@
     NSMutableArray *tmpPDF=[[NSMutableArray alloc] init];
     FMResultSet *results;
     if ([ConnectionHelper connectedToInternet]) {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 and m.active=1 and (m.title like '%%%@%%') AND %@ limit 10",searchTxt, userP]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 and m.active=1 and (m.title like '%%%@%%') AND %@ limit 25",searchTxt, userP]];
     } else {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@ limit 10",searchTxt, userP]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@ limit 25",searchTxt, userP]];
     }
         while([results next]) {
         FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];

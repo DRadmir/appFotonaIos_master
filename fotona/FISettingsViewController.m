@@ -164,7 +164,7 @@
 {
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil];
     FIExternalLinkViewController *externalView = [sb instantiateViewControllerWithIdentifier:@"webViewController"];
-    externalView.urlString = @"http://www.fotona.com/en/#lost-password"; //@"http://www.fotona.com/en/support/passreset/"
+    externalView.urlString = @"http://www.fotona.com/en/support/profile/"; //@"http://www.fotona.com/en/support/passreset/"
     externalView.changePass = true;
     [self.navigationController pushViewController:externalView animated:true];
 }

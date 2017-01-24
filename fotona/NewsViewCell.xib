@@ -49,7 +49,7 @@
                                 <frame key="frameInset" minY="36" width="345" height="196"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="featured_news.png" translatesAutoresizingMaskIntoConstraints="NO" id="sDv-iI-Ukd"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sDv-iI-Ukd"/>
                         </subviews>
                         <constraints>
                             <constraint firstItem="cO2-nn-Wsh" firstAttribute="top" secondItem="sDv-iI-Ukd" secondAttribute="top" constant="-36" id="3zc-49-gBS"/>

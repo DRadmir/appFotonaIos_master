@@ -59,7 +59,7 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if(searchTxt.length >= 3)
+    if(searchTxt.length >= 2)
         characterLimit = TRUE;
     else
         characterLimit = FALSE;
@@ -173,16 +173,21 @@
         case 0:
             if (newsSearchRes.count>0) {
                 [cell.textLabel setText:[[newsSearchRes objectAtIndex:indexPath.row] title]];
+                [cell.detailTextLabel setText:[[newsSearchRes objectAtIndex:indexPath.row] description]];
             }else
             {
                 if (casesSearchRes.count>0) {
                     [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
+                    [cell.detailTextLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] description]];
                 }else
                 {
                     if (videosSearchRes.count>0) {
                         [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
+                        [cell.detailTextLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] description]];
                     }else {
                         [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                        [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
+                        
                     }
                 }
             }

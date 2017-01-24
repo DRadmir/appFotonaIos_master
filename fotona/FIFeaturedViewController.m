@@ -438,7 +438,7 @@
 #pragma mark: - Rotating cases
 
 - (void) startRotationAnimationIphone {
-    animationRotationTimerIphone = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(moveTo) userInfo:nil repeats:NO];
+    animationRotationTimerIphone = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(moveTo) userInfo:nil repeats:NO];
 }
 
 - (void) stopRotationAnimationIphone {

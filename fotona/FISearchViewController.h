@@ -21,6 +21,7 @@
 @property (nonatomic, retain) NSString *searchTxtIPhone;
 @property (nonatomic, retain) IBOutlet UITableView *tableSearchIPhone;
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBarIPhone;
+@property (nonatomic) BOOL characterLimit;
 
 
 @property (nonatomic, retain) NSMutableArray *newsSearchResIPhone;

@@ -7,6 +7,7 @@
 //
 
 #import "FItemBookmark.h"
+#import "FAppDelegate.h"
 
 @implementation FItemBookmark
 @synthesize itemID;
@@ -46,6 +47,8 @@
     NSArray *list = [APP_DELEGATE downloadList];
     for (FItemBookmark *item in list) {
         if ([[item link] isEqualToString:itemLink]) {
+            [APP_DELEGATE setBookmarkSizeAll:[APP_DELEGATE bookmarkSizeAll]-[item fileSize]];
+            [APP_DELEGATE setBookmarkSizeLeft:[APP_DELEGATE bookmarkSizeLeft]-[item fileSize]];
             [[APP_DELEGATE downloadList] removeObject:item];
             break;
         }

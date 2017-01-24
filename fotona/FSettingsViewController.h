@@ -53,6 +53,8 @@
 - (IBAction)unbookmarkAll:(id)sender;
 
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
+-(id)transformedValue:(id)value;
 -(void) refreshStatusBar;
+
 
 @end
