@@ -1136,7 +1136,4 @@ FNewsView *newsViewController;
 }
 
 
-
-
-
 @end

@@ -107,15 +107,15 @@
             }
             break;
         case 2:
-            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
+            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0)) {
                 return videosSearchResIPhone.count;
             }else{
-                if (eventsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0))
+                if (eventsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+casesSearchResIPhone.count)>1))
                     return eventsSearcResIPhone.count;
             }
             break;
         case 3:
-            if (eventsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
+            if (eventsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+casesSearchResIPhone.count)>1)) {
                 return eventsSearcResIPhone.count;
             }
         default:
@@ -161,15 +161,15 @@
             }
             break;
         case 2:
-            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
+            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0)) {
                 return @"Videos";
             }else{
-                if (eventsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0))
+                if (eventsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+casesSearchResIPhone.count)>1))
                     return @"Events";
             }
             break;
         case 3:
-            if (eventsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
+            if (eventsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+casesSearchResIPhone.count)>1)) {
                 return @"Events";
             }
         default:
@@ -226,13 +226,12 @@
             }
             break;
         case 2:
-            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
+            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0)) {
                 [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
                 [cell.detailTextLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] description]];
             }else{
-                if (eventsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)){
+                if (eventsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+casesSearchResIPhone.count)>1)){
                     [cell.textLabel setText:[[eventsSearcResIPhone objectAtIndex:indexPath.row] title]];
-                    [cell.detailTextLabel setText:[[eventsSearcResIPhone objectAtIndex:indexPath.row] description]];
                 }else {
                     [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
                     [cell.detailTextLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] description]];
@@ -240,9 +239,8 @@
             }
             break;
         case 3:
-            if (eventsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
+            if (eventsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+casesSearchResIPhone.count)>1)) {
                 [cell.textLabel setText:[[eventsSearcResIPhone objectAtIndex:indexPath.row] title]];
-                [cell.detailTextLabel setText:[[eventsSearcResIPhone objectAtIndex:indexPath.row] description]];
             }else {
                 [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
                 [cell.detailTextLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] description]];
@@ -306,10 +304,10 @@
             }
             break;
         case 2:
-            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
+            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0)) {
                 [self openMedia:videosSearchResIPhone[indexPath.row]];
             }else{
-                if (eventsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)){
+                if (eventsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+casesSearchResIPhone.count)>1)){
                     [self openEvent:indexPath];
                 }else {
                     [self openMedia:pdfsSearcResIPhone[indexPath.row]];
@@ -317,7 +315,7 @@
             }
             break;
         case 3:
-            if (eventsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
+            if (eventsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+casesSearchResIPhone.count)>1)) {
                 [self openEvent:indexPath];
             }else {
                 [self openMedia:pdfsSearcResIPhone[indexPath.row]];

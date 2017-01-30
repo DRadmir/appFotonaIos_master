@@ -152,7 +152,7 @@
             }
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
             [database close];
-            if (bookmarked || [currentCase.bookmark boolValue] == 1){//[currentCase.bookmark boolValue]) {
+            if (bookmarked || [currentCase.coverflow intValue] == 1){//[currentCase.bookmark boolValue]) {
                 [addBookmarks setHidden:YES];
                 [removeBookmarks setHidden:NO];
             } else {
@@ -519,7 +519,7 @@
     [exCaseView setHidden:NO];
     
     
-    if (bookmarked || [currentCase.bookmark boolValue] == 1){//[[currentCase bookmark] boolValue]) {
+    if (bookmarked || [currentCase.coverflow intValue] == 1){//[[currentCase bookmark] boolValue]) {
         [addBookmarks setHidden:YES];
         [removeBookmarks setHidden:NO];
     } else{
@@ -1054,7 +1054,7 @@
 
 - (void) refreshBookmarkBtn  {
     if ([addBookmarks isHidden]) {
-        if ([ConnectionHelper connectedToInternet] || [currentCase.bookmark boolValue] == 1) {
+        if ([ConnectionHelper connectedToInternet] || [currentCase.coverflow intValue] == 1) {
             [addBookmarks setHidden:NO];
         } else {
             [addBookmarks setHidden:YES];
@@ -1083,7 +1083,7 @@
 
 -(void) bookmarkCase{
     
-    if([ConnectionHelper connectedToInternet] || [currentCase.bookmark boolValue] == 1){
+    if([ConnectionHelper connectedToInternet] || [currentCase.coverflow intValue] == 1){
         //[addBookmarks setHidden:YES];
         //[removeBookmarks setHidden:NO];
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];

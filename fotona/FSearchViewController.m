@@ -128,17 +128,18 @@
             }
             break;
         case 2:
-            if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
+            if (videosSearchRes.count>0 && (newsSearchRes.count>0 && casesSearchRes.count>0)) {
                 return videosSearchRes.count;
             }else{
-                if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
+                if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1))
                     return eventsSearchRes.count;
             }
             break;
         case 3:
-            if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)) {
+            if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1)) {
                 return eventsSearchRes.count;
             }
+            break;
         default:
             return pdfsSearchRes.count;
     }
@@ -183,15 +184,15 @@
             }
             break;
         case 2:
-            if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
+            if (videosSearchRes.count>0 && (newsSearchRes.count>0 && casesSearchRes.count>0)) {
                 return @"Videos";
             }else{
-                if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
+                if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1))
                     return @"Events";
             }
             break;
         case 3:
-            if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)) {
+            if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1)) {
                 return @"Events";
             }
         default:
@@ -222,6 +223,11 @@
                     }else{
                         if (eventsSearchRes.count>0) {
                             [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
+                        }else{
+                            if (pdfsSearchRes.count>0) {
+                                [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                                [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
+                            }
                         }
                     }
                 }
@@ -238,22 +244,43 @@
                 }else{
                     if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
                         [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
+                    else{
+                        if (pdfsSearchRes.count>0) {
+                            [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                            [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
+                        }
+                    }
+
                 }
             }
             break;
         case 2:
-            if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
+            if (videosSearchRes.count>0 && (newsSearchRes.count>0 && casesSearchRes.count>0)) {
                 [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
                 [cell.detailTextLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] description]];
             }else{
-                if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
+                if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1))
                     [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
+                else{
+                    if (pdfsSearchRes.count>0) {
+                        [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                        [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
+                    }
+                }
+
             }
             break;
         case 3:
-            if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)) {
+            if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1)) {
                 [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
+                
+            }else{
+                if (pdfsSearchRes.count>0) {
+                    [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                    [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
+                }
             }
+            break;
         default:
             [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
             [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
@@ -307,10 +334,10 @@
             }
             break;
         case 2:
-            if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
+            if (videosSearchRes.count>0 && (newsSearchRes.count>0 && casesSearchRes.count>0)) {
                 [self openMedia:videosSearchRes[indexPath.row]];
             }else{
-                if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)){
+                if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1)){
                     [self openEvents:indexPath];
                 }else {
                     [self openMedia:pdfsSearchRes[indexPath.row]];
@@ -318,7 +345,7 @@
             }
             break;
         case 3:
-            if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)) {
+            if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1)) {
                 [self openEvents:indexPath];
             }else {
                 [self openMedia:pdfsSearchRes[indexPath.row]];
