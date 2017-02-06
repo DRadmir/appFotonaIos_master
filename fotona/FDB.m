@@ -315,7 +315,7 @@
 {
     NSMutableArray *tmp=[[NSMutableArray alloc] init];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Events where (title like '%%%@%%' or text like '%%%@%%') ",searchTxt,searchTxt];//limit 25
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Events where (title like '%%%@%%' or text like '%%%@%%') limit 30 ",searchTxt,searchTxt];//limit 25
     
     FMResultSet *results= [database executeQuery:query];
     

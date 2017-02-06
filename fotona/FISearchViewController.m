@@ -12,7 +12,9 @@
 #import "FIFlowController.h"
 #import "FMDatabase.h"
 
-@interface FISearchViewController ()
+@interface FISearchViewController (){
+    NSMutableArray *orderIPhone;
+}
 
 @end
 
@@ -27,6 +29,12 @@
 @synthesize parentIPhone;
 @synthesize characterLimit;
 @synthesize eventsSearcResIPhone;
+
+#define newsOrderIPhone 1
+#define eventsOrderIPhone 2
+#define videoOrderIPhone 3
+#define pdfOrderIPhone 4
+#define caseOrderIPhone 5
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -44,6 +52,7 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    orderIPhone = [NSMutableArray new];
     if(searchTxtIPhone.length >= 2)
         characterLimit = TRUE;
     else
@@ -51,20 +60,25 @@
     int count = 0;
     if ([newsSearchResIPhone count]>0)
     {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", newsOrderIPhone]];
         count++;
     }
     if ([eventsSearcResIPhone count]>0) {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", eventsOrderIPhone]];
         count++;
     }
     if ([videosSearchResIPhone count]>0)
     {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", videoOrderIPhone]];
         count++;
     }
     if ([pdfsSearcResIPhone count]>0)
     {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", pdfOrderIPhone]];
         count++;
     }
     if ([casesSearchResIPhone count]>0) {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", caseOrderIPhone]];
         count++;
     }
     return count;
@@ -72,190 +86,81 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    
-    switch (section) {
-        case 0:
-            if (newsSearchResIPhone.count>0) {
-                return newsSearchResIPhone.count;
-            }else
-            {
-                if (eventsSearcResIPhone.count>0) {
-                    return eventsSearcResIPhone.count;
-                }else
-                {
-                    if (videosSearchResIPhone.count>0) {
-                        return videosSearchResIPhone.count;
-                    }else{
-                        if (pdfsSearcResIPhone.count>0) {
-                            return pdfsSearcResIPhone.count;
-                        }
-                    }
-                }
-            }
+    switch ([orderIPhone[section] intValue]) {
+        case newsOrderIPhone:
+            return newsSearchResIPhone.count;
             break;
-        case 1:
-            if (newsSearchResIPhone.count>0 && eventsSearcResIPhone.count>0) {
-                return eventsSearcResIPhone.count;
-            }else
-            {
-                if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || eventsSearcResIPhone.count>0)) {
-                    return videosSearchResIPhone.count;
-                }else{
-                    if (pdfsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || eventsSearcResIPhone.count>0))
-                        return pdfsSearcResIPhone.count;
-                }
-            }
+        case eventsOrderIPhone:
+            return eventsSearcResIPhone.count;
             break;
-        case 2:
-            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0)) {
-                return videosSearchResIPhone.count;
-            }else{
-                if (pdfsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+eventsSearcResIPhone.count)>1))
-                    return pdfsSearcResIPhone.count;
-            }
+        case videoOrderIPhone:
+            return videosSearchResIPhone.count;
             break;
-        case 3:
-            if (pdfsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+eventsSearcResIPhone.count)>1)) {
-                return pdfsSearcResIPhone.count;
-            }
-        default:
+        case pdfOrderIPhone:
+            return pdfsSearcResIPhone.count;
+            break;
+        case caseOrderIPhone:
             return casesSearchResIPhone.count;
+            break;
+        default:
+            return 0;
+            break;
     }
-    return casesSearchResIPhone.count;
-    
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
-            if (newsSearchResIPhone.count>0) {
-                return @"News";
-            }else
-            {
-                if (eventsSearcResIPhone.count>0) {
-                    return @"Events";
-                }else
-                {
-                    if (videosSearchResIPhone.count>0) {
-                        return @"Videos";
-                    }else{
-                        if (pdfsSearcResIPhone.count>0) {
-                            return @"PDFs";
-                        }
-                    }
-                }
-            }
+    switch ([orderIPhone[section] intValue]) {
+        case newsOrderIPhone:
+            return @"News";
             break;
-        case 1:
-            if (newsSearchResIPhone.count>0 && eventsSearcResIPhone.count>0) {
-                return @"Events";
-            }else
-            {
-                if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || casesSearchResIPhone.count>0)) {
-                    return @"Videos";
-                }else{
-                    if (pdfsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || eventsSearcResIPhone.count>0))
-                        return @"PDFs";
-                }
-            }
+        case eventsOrderIPhone:
+            return @"Events";
             break;
-        case 2:
-            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0)) {
-                return @"Videos";
-            }else{
-                if (pdfsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+eventsSearcResIPhone.count)>1))
-                    return @"PDFs";
-            }
+        case videoOrderIPhone:
+            return @"Videos";
             break;
-        case 3:
-            if (pdfsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+eventsSearcResIPhone.count)>1)) {
-                return @"PDFs";
-            }
-        default:
+        case pdfOrderIPhone:
+            return @"PDFs";
+            break;
+        case caseOrderIPhone:
             return @"Cases";
+            break;
+        default:
+            return @"Something wrong";
+            break;
     }
-    return @"Cases";
-    
+
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
-    switch (indexPath.section) {
-        case 0:
-            if (newsSearchResIPhone.count>0) {
-                [cell.textLabel setText:[[newsSearchResIPhone objectAtIndex:indexPath.row] title]];
-                [cell.detailTextLabel setText:[[newsSearchResIPhone objectAtIndex:indexPath.row] description]];
-            }else
-            {
-                if (eventsSearcResIPhone.count>0) {//casesSearchResIPhone
-                    [cell.textLabel setText:[[eventsSearcResIPhone objectAtIndex:indexPath.row] title]];
-                }else
-                {
-                    if (videosSearchResIPhone.count>0) {
-                        [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
-                        [cell.detailTextLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] description]];
-                    }else{
-                        if (pdfsSearcResIPhone.count>0) {
-                            [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
-                            [cell.detailTextLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] description]];
-                        }else {
-                            [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
-                            
-                        }
-                    }
-                }
-            }
+    switch ([orderIPhone[indexPath.section] intValue]) {
+        case newsOrderIPhone:
+            [cell.textLabel setText:[[newsSearchResIPhone objectAtIndex:indexPath.row] title]];
+            [cell.detailTextLabel setText:[[newsSearchResIPhone objectAtIndex:indexPath.row] description]];
             break;
-        case 1:
-            if (newsSearchResIPhone.count>0 && eventsSearcResIPhone.count>0) {
-                [cell.textLabel setText:[[eventsSearcResIPhone objectAtIndex:indexPath.row] title]];
-            }else
-            {
-                if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || eventsSearcResIPhone.count>0)) {
-                    [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
-                    [cell.detailTextLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] description]];
-                }else{
-                    if (pdfsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || eventsSearcResIPhone.count>0)){
-                        [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
-                        [cell.detailTextLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] description]];
-                    }else {
-                        [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
-                    }
-                }
-            }
+        case eventsOrderIPhone:
+            [cell.textLabel setText:[[eventsSearcResIPhone objectAtIndex:indexPath.row] title]];
             break;
-        case 2:
-            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 && eventsSearcResIPhone.count>0)) {
-                [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
-                [cell.detailTextLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] description]];
-            }else{
-                if (pdfsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+eventsSearcResIPhone.count)>1)){
-                    [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
-                    [cell.detailTextLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] description]];
-                }else {
-                    [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
-                }
-            }
+        case videoOrderIPhone:
+            [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
+            [cell.detailTextLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] description]];
             break;
-        case 3:
-            if (pdfsSearcResIPhone.count>0 && ((videosSearchResIPhone.count+newsSearchResIPhone.count+eventsSearcResIPhone.count)>1)){
-                [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
-                [cell.detailTextLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] description]];
-            }else {
-                [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
-            }
+        case pdfOrderIPhone:
+            [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
+            [cell.detailTextLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] description]];
             break;
-            
-        default:
+        case caseOrderIPhone:
             [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
+            break;
+        default:
+            [cell.textLabel setText:@"Something wrong"];
+            break;
     }
-    
+
     return cell;
-    //[cell.detailTextLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] description]];
-    
-    
 }
 
 
@@ -265,68 +170,29 @@
     FIFlowController *flow = [FIFlowController sharedInstance];
     [flow.lastOpenedView toggleSearchBar];
     [self.view endEditing:true];
-    switch (indexPath.section) {
-        case 0:
-            if (newsSearchResIPhone.count>0) {
-                [self openNews:indexPath];
-            }else
-            {
-                if (eventsSearcResIPhone.count>0) {
-                    [self openEvent:indexPath];
-                }else
-                {
-                    if (videosSearchResIPhone.count>0) {
-                        [self openMedia:videosSearchResIPhone[indexPath.row]];
-                    }else{
-                        if (pdfsSearcResIPhone.count>0) {
-                            [self openMedia:pdfsSearcResIPhone[indexPath.row]];
-                        }else {
-                            [self openCase:indexPath];
-                        }
-                    }
-                }
-            }
+    switch ([orderIPhone[indexPath.section] intValue]) {
+        case newsOrderIPhone:
+           [self openNews:indexPath];
             break;
-        case 1:
-            if (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0) {
-                [self openEvent:indexPath];
-            }else
-            {
-                if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 || eventsSearcResIPhone.count>0)) {
-                    [self openMedia:videosSearchResIPhone[indexPath.row]];
-                }else{
-                    if (pdfsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || eventsSearcResIPhone.count>0)){
-                        [self openMedia:pdfsSearcResIPhone[indexPath.row]];
-                    }else {
-                        [self openCase:indexPath];
-                    }
-                }
-            }
+        case eventsOrderIPhone:
+            [self openEvent:indexPath];
             break;
-        case 2:
-            if (videosSearchResIPhone.count>0 && (newsSearchResIPhone.count>0 && eventsSearcResIPhone.count>0)) {
-                [self openMedia:videosSearchResIPhone[indexPath.row]];
-            }else{
-                if (pdfsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || eventsSearcResIPhone.count>0)){
-                    [self openMedia:pdfsSearcResIPhone[indexPath.row]];
-                }else {
-                    [self openCase:indexPath];
-                }
-            }
+        case videoOrderIPhone:
+            [self openMedia:videosSearchResIPhone[indexPath.row]];
             break;
-        case 3:
-            if (pdfsSearcResIPhone.count>0 && (videosSearchResIPhone.count>0 || newsSearchResIPhone.count>0 || eventsSearcResIPhone.count>0)){
-                [self openMedia:pdfsSearcResIPhone[indexPath.row]];
-            }else {
-                [self openCase:indexPath];
-            }
+        case pdfOrderIPhone:
+            [self openMedia:pdfsSearcResIPhone[indexPath.row]];
             break;
-            
-        default:
+        case caseOrderIPhone:
             [self openCase:indexPath];
+            break;
+        default:
+        {
+            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Something wrong" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [av show];
+        }
+            break;
     }
-    
-    
 }
 
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{

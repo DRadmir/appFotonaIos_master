@@ -64,7 +64,7 @@
             break;
     }
     
-    if([FDB checkIfBookmarkedForDocumentID:[item itemID] andType:[item typeID]]){
+    if(([FDB checkIfBookmarkedForDocumentID:[item itemID] andType:[item typeID]]) || ([fcase.coverflow intValue] == 1)){
         btnDownloadRemove.hidden = NO;
         btnDownloadAdd.hidden = YES;
     } else {
@@ -142,10 +142,12 @@
 
 - (IBAction)downloadRemove:(id)sender {
     [HelperBookmark removeBookmarkedCase:caseToShow];
-    btnDownloadRemove.hidden = true;
-    if ([ConnectionHelper connectedToInternet]) {
+    
+    if ([ConnectionHelper connectedToInternet] && ([caseToShow.coverflow intValue] == 0)) {
+        btnDownloadRemove.hidden = YES;
         [btnDownloadAdd setHidden:NO];
     } else {
+        btnDownloadRemove.hidden = NO;
         [btnDownloadAdd setHidden:YES];
     }
 }

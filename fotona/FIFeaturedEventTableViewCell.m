@@ -125,7 +125,7 @@ BOOL wrap;
 - (void)setUp
 {
     //set up data
-    wrap = YES;
+    wrap = NO;
     
     self.items = [FDB fillEventsWithCategory:category andType:0 andMobile:true];
 }
@@ -187,7 +187,7 @@ BOOL wrap;
     //views outside of the `if (view == nil) {...}` check otherwise
     //you'll get weird issues with carousel item content appearing
     //in the wrong place in the carousel
-    label.text = (index == 0)? @"[": @"]";
+    
     
     return view;
 }
@@ -229,6 +229,8 @@ BOOL wrap;
         }
     }
 }
+
+
 
 
 #pragma mark iCarousel taps

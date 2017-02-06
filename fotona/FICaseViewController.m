@@ -121,6 +121,15 @@
     [lblDate setText:[APP_DELEGATE timestampToDateString:[caseToOpen date]]];
     [lblTitle setText:caseToOpen.title];
     
+    if ([FDB checkIfFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE]) {
+        [btnRemoveFavorite setHidden:NO];
+        [btnAddFavorite setHidden:YES];
+    } else {
+        [btnRemoveFavorite setHidden:YES];
+        [btnAddFavorite setHidden:NO];
+    }
+
+    
     NSString * title = @"";
     NSMutableAttributedString *allAdditionalInfo=[[NSMutableAttributedString alloc] init];
     NSString *check=[[caseToOpen introduction] stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@""];
