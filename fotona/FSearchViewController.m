@@ -71,7 +71,7 @@
         {
             count++;
         }
-        if ([casesSearchRes count]>0) {
+        if ([eventsSearchRes count]>0) {
             count++;
         }
         if ([videosSearchRes count]>0)
@@ -82,7 +82,7 @@
         {
             count++;
         }
-        if ([eventsSearchRes count]>0)
+        if ([casesSearchRes count]>0)
         {
             count++;
         }
@@ -100,30 +100,30 @@
                 return newsSearchRes.count;
             }else
             {
-                if (casesSearchRes.count>0) {
-                    return casesSearchRes.count;
+                if (eventsSearchRes.count>0) {
+                    return eventsSearchRes.count;
                 }else
                 {
                     if (videosSearchRes.count>0) {
                         return videosSearchRes.count;
                     }else{
-                        if (eventsSearchRes.count>0) {
-                            return eventsSearchRes.count;
+                        if (pdfsSearchRes.count>0) {
+                            return pdfsSearchRes.count;
                         }
                     }
                 }
             }
             break;
         case 1:
-            if (newsSearchRes.count>0 && casesSearchRes.count>0) {
-                return casesSearchRes.count;
+            if (newsSearchRes.count>0 && eventsSearchRes.count>0) {
+                return eventsSearchRes.count;
             }else
             {
-                if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
+                if (videosSearchRes.count>0 && (newsSearchRes.count>0 || eventsSearchRes.count>0)) {
                     return videosSearchRes.count;
                 }else{
-                    if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
-                        return eventsSearchRes.count;
+                    if (pdfsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || eventsSearchRes.count>0))
+                        return pdfsSearchRes.count;
                 }
             }
             break;
@@ -131,21 +131,19 @@
             if (videosSearchRes.count>0 && (newsSearchRes.count>0 && casesSearchRes.count>0)) {
                 return videosSearchRes.count;
             }else{
-                if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1))
-                    return eventsSearchRes.count;
+                if (pdfsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+eventsSearchRes.count)>1))
+                    return pdfsSearchRes.count;
             }
             break;
         case 3:
-            if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1)) {
-                return eventsSearchRes.count;
+            if (pdfsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+eventsSearchRes.count)>1)) {
+                return pdfsSearchRes.count;
             }
-            break;
         default:
-            return pdfsSearchRes.count;
+            return casesSearchRes.count;
     }
-    return pdfsSearchRes.count;
-    
-    
+    return casesSearchRes.count;
+
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -156,30 +154,30 @@
                 return @"News";
             }else
             {
-                if (casesSearchRes.count>0) {
-                    return @"Cases";
+                if (eventsSearchRes.count>0) {
+                    return @"Events";
                 }else
                 {
                     if (videosSearchRes.count>0) {
                         return @"Videos";
                     }else{
-                        if (eventsSearchRes.count>0) {
-                            return @"Events";
+                        if (pdfsSearchRes.count>0) {
+                            return @"PDFs";
                         }
                     }
                 }
             }
             break;
         case 1:
-            if (newsSearchRes.count>0 && casesSearchRes.count>0) {
-                return @"Cases";
+            if (newsSearchRes.count>0 && eventsSearchRes.count>0) {
+                return @"Events";
             }else
             {
                 if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
                     return @"Videos";
                 }else{
-                    if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
-                        return @"Events";
+                    if (pdfsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || eventsSearchRes.count>0))
+                        return @"PDFs";
                 }
             }
             break;
@@ -187,20 +185,19 @@
             if (videosSearchRes.count>0 && (newsSearchRes.count>0 && casesSearchRes.count>0)) {
                 return @"Videos";
             }else{
-                if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1))
-                    return @"Events";
+                if (pdfsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+eventsSearchRes.count)>1))
+                    return @"PDFs";
             }
             break;
         case 3:
-            if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1)) {
-                return @"Events";
+            if (pdfsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+eventsSearchRes.count)>1)) {
+                return @"PDFs";
             }
         default:
-            return @"PDFs";
+            return @"Cases";
     }
-    return @"PDFs";
-    
-    
+    return @"Cases";
+
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -213,81 +210,71 @@
                 [cell.detailTextLabel setText:[[newsSearchRes objectAtIndex:indexPath.row] description]];
             }else
             {
-                if (casesSearchRes.count>0) {
-                    [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
+                if (eventsSearchRes.count>0) {
+                    [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
                 }else
                 {
                     if (videosSearchRes.count>0) {
                         [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
                         [cell.detailTextLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] description]];
                     }else{
-                        if (eventsSearchRes.count>0) {
-                            [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
-                        }else{
-                            if (pdfsSearchRes.count>0) {
-                                [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
-                                [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
-                            }
+                        if (pdfsSearchRes.count>0) {
+                            [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                            [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
+                        }else {
+                            [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
+                            
                         }
                     }
                 }
             }
             break;
         case 1:
-            if (newsSearchRes.count>0 && casesSearchRes.count>0) {
-                [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
+            if (newsSearchRes.count>0 && eventsSearchRes.count>0) {
+                [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
             }else
             {
-                if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
+                if (videosSearchRes.count>0 && (newsSearchRes.count>0 || eventsSearchRes.count>0)) {
                     [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
                     [cell.detailTextLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] description]];
                 }else{
-                    if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0))
-                        [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
-                    else{
-                        if (pdfsSearchRes.count>0) {
-                            [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
-                            [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
-                        }
+                    if (pdfsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || eventsSearchRes.count>0)){
+                        [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                        [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
+                    }else {
+                        [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
                     }
-
                 }
             }
             break;
         case 2:
-            if (videosSearchRes.count>0 && (newsSearchRes.count>0 && casesSearchRes.count>0)) {
+            if (videosSearchRes.count>0 && (newsSearchRes.count>0 && eventsSearchRes.count>0)) {
                 [cell.textLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] title]];
                 [cell.detailTextLabel setText:[[videosSearchRes objectAtIndex:indexPath.row] description]];
             }else{
-                if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1))
-                    [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
-                else{
-                    if (pdfsSearchRes.count>0) {
-                        [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
-                        [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
-                    }
+                if (pdfsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+eventsSearchRes.count)>1)){
+                    [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                    [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
+                }else {
+                    [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
                 }
-
             }
             break;
         case 3:
-            if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1)) {
-                [cell.textLabel setText:[[eventsSearchRes objectAtIndex:indexPath.row] title]];
-                
-            }else{
-                if (pdfsSearchRes.count>0) {
-                    [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
-                    [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
-                }
+            if (pdfsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+eventsSearchRes.count)>1)){
+                [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
+                [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
+            }else {
+                [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
             }
             break;
+            
         default:
-            [cell.textLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] title]];
-            [cell.detailTextLabel setText:[[pdfsSearchRes objectAtIndex:indexPath.row] description]];
+            [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
     }
     
-    
     return cell;
+
 }
 
 
@@ -295,23 +282,23 @@
 {
     [parent.view endEditing:YES];
     
-    switch (indexPath.section) {
+        switch (indexPath.section) {
         case 0:
             if (newsSearchRes.count>0) {
                 [self openNews:indexPath];
             }else
             {
-                if (casesSearchRes.count>0) {
-                    [self openCase:indexPath];
+                if (eventsSearchRes.count>0) {
+                    [self openEvents:indexPath];
                 }else
                 {
                     if (videosSearchRes.count>0) {
                         [self openMedia:videosSearchRes[indexPath.row]];
                     }else{
-                        if (eventsSearchRes.count>0) {
-                            [self openEvents:indexPath];
-                        }else {
+                        if (pdfsSearchRes.count>0) {
                             [self openMedia:pdfsSearchRes[indexPath.row]];
+                        }else {
+                            [self openCase:indexPath];
                         }
                     }
                 }
@@ -319,41 +306,41 @@
             break;
         case 1:
             if (newsSearchRes.count>0 && casesSearchRes.count>0) {
-                [self openCase:indexPath];
+                [self openEvents:indexPath];
             }else
             {
-                if (videosSearchRes.count>0 && (newsSearchRes.count>0 || casesSearchRes.count>0)) {
+                if (videosSearchRes.count>0 && (newsSearchRes.count>0 || eventsSearchRes.count>0)) {
                     [self openMedia:videosSearchRes[indexPath.row]];
                 }else{
-                    if (eventsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || casesSearchRes.count>0)){
-                        [self openEvents:indexPath];
-                    }else {
+                    if (pdfsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || eventsSearchRes.count>0)){
                         [self openMedia:pdfsSearchRes[indexPath.row]];
+                    }else {
+                        [self openCase:indexPath];
                     }
                 }
             }
             break;
         case 2:
-            if (videosSearchRes.count>0 && (newsSearchRes.count>0 && casesSearchRes.count>0)) {
+            if (videosSearchRes.count>0 && (newsSearchRes.count>0 && eventsSearchRes.count>0)) {
                 [self openMedia:videosSearchRes[indexPath.row]];
             }else{
-                if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1)){
-                    [self openEvents:indexPath];
-                }else {
+                if (pdfsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || eventsSearchRes.count>0)){
                     [self openMedia:pdfsSearchRes[indexPath.row]];
+                }else {
+                    [self openCase:indexPath];
                 }
             }
             break;
         case 3:
-            if (eventsSearchRes.count>0 && ((videosSearchRes.count+newsSearchRes.count+casesSearchRes.count)>1)) {
-                [self openEvents:indexPath];
-            }else {
+            if (pdfsSearchRes.count>0 && (videosSearchRes.count>0 || newsSearchRes.count>0 || eventsSearchRes.count>0)){
                 [self openMedia:pdfsSearchRes[indexPath.row]];
+            }else {
+                [self openCase:indexPath];
             }
             break;
             
         default:
-            [self openMedia:pdfsSearchRes[indexPath.row]];
+            [self openCase:indexPath];
     }
     
 }
@@ -364,10 +351,10 @@
         [database open];
         NSString *userP = [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME];
         newsSearchRes=[FDB getNewsForSearchFromDB:searchTxt withDatabase:database];
-        casesSearchRes=[FDB getCasesForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
+        eventsSearchRes = [FDB getEventsForSearchFromDB:searchTxt withDatabase:database];
         videosSearchRes=[FDB getVideosForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
         pdfsSearchRes = [FDB getPDFForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
-        eventsSearchRes = [FDB getEventsForSearchFromDB:searchTxt withDatabase:database];
+        casesSearchRes=[FDB getCasesForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
         [database close];
     }

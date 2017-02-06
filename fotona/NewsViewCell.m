@@ -58,6 +58,7 @@
             {
 //                NSData *data1 = UIImagePNGRepresentation([[self.news images] objectAtIndex:0]);
 //                NSData *data2 = UIImagePNGRepresentation([UIImage imageNamed:@"featured_news.png"]);
+                
                 if ([news.rest intValue] == 1) {
                     [self.newsImage setHidden:YES];
                     
