@@ -178,18 +178,17 @@
 }
 
 +(NSString *)getUserPermissionsForDBWithColumnName:(NSString *)columnName{
-    
     NSMutableArray *sql = [[NSMutableArray alloc] initWithObjects:@"%",@"%",@"%",@"%",@"%", nil];
     FUser *user = [APP_DELEGATE currentLogedInUser];
     if (user.userTypeSubcategory == nil || user.userTypeSubcategory.count == 0) {
         sql[[user.userType intValue]] = [[NSString alloc] initWithFormat:@"%@%@", user.userType,@"%"];
     }else {
         if (user.userTypeSubcategory.count == 1) {
-            sql[[user.userType intValue]] = [[NSString alloc] initWithFormat:@"%@%@", user.userTypeSubcategory[0],@"%"];
+            sql[[user.userType intValue]] = [FCommon handlePermissionLocationTypes:user index:0];
         }else {
             NSMutableArray *compoundStatement = [[NSMutableArray alloc] initWithCapacity:user.userTypeSubcategory.count];
             for (int i = 0; i <user.userTypeSubcategory.count; i++){
-                sql[[user.userType intValue]] = [[NSString alloc] initWithFormat:@"%@%@", user.userTypeSubcategory[i],@"%"];
+                sql[[user.userType intValue]] = [FCommon handlePermissionLocationTypes:user index:i];
                 compoundStatement[i] = [[NSString alloc] initWithFormat:@"'%@'", [self arrayToString:sql withSeparator:@";"]];
             }
             NSString *delimiter =  [[NSString alloc] initWithFormat:@" OR %@ LIKE ", columnName];
@@ -198,6 +197,15 @@
     }
     
     return [[NSString alloc] initWithFormat:@"%@ LIKE '%@'", columnName, [self arrayToString:sql withSeparator:@";"]];
+}
+
++(NSString *)handlePermissionLocationTypes:(FUser *)user index:(int)index{
+    if([user.userTypeSubcategory[index] intValue] == 1)
+        return [[NSString alloc] initWithFormat:@"%@%@", user.userTypeSubcategory[index], @"%"];
+    else if([user.userTypeSubcategory[index] intValue] == 3)
+        return [[NSString alloc] initWithFormat:@"%@%@", @"%", user.userTypeSubcategory[index]];
+    else
+        return [[NSString alloc] initWithFormat:@"%@%@%@", @"%", user.userTypeSubcategory[index], @"%"];
 }
 
 #pragma mark - String/Array

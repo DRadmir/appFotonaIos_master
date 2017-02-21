@@ -21,7 +21,7 @@
 
 
 +(NSMutableArray *)getCasesForCarouselFromDB;
-+(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP;
++(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
 +(FCase *)getCaseForFotona:(NSString *)caseID;
 +(FCase *)getCaseWithID:(NSString *)caseID;
 +(NSMutableArray *)getCasesWithCategoryID:(NSString *)catID;

@@ -295,7 +295,7 @@
     int columnWidth = 150;
     
     int y=0;
-    if (caseToOpen.parameters && caseToOpen.parameters  != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
+    if (caseToOpen.parameters && caseToOpen.parameters  != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3  && [FCommon userPermission:caseToOpen.userPermissions]) {
         NSArray*allData=[NSJSONSerialization JSONObjectWithData:[caseToOpen.parameters dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
         
         

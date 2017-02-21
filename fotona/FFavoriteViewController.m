@@ -828,7 +828,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     int allDataObjectAtIndex0Count=0;
     
     int y=0;
-    if (currentCase.parameters && currentCase.parameters != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
+    if (currentCase.parameters && currentCase.parameters != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3 && [FCommon userPermission:currentCase.userPermissions]) {
         NSArray*allData=[NSJSONSerialization JSONObjectWithData:[currentCase.parameters dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
         
         

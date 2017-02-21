@@ -43,7 +43,7 @@ int bookmarkedCount;
         [self selectNews:category];
         //bookmark events
         [self selectEvents:category];
-        //bokmark cases
+        //bookmark cases
         [self selectCases:category];
         //bookmark fotona
         [self selectFotona:category];
@@ -172,9 +172,11 @@ int bookmarkedCount;
     FMResultSet *selectedCases = [casesDatabase executeQuery:@"SELECT * FROM Cases where active=1 AND download=1" withArgumentsInArray:@[]];
     while([selectedCases next]) {
         FCase * selected =  [[FCase alloc] initWithDictionaryFromDB:[selectedCases resultDictionary]];
-        if ([FCommon userPermission:[selected userPermissions]] && [FCommon checkItemPermissions:[selected userPermissions] ForCategory:[NSString stringWithFormat:@"%d",category]]) {
+        if ([FCommon isGuest] && ([FCommon userPermission:[selected userPermissions]] || [[selected coverflow] boolValue])) {
             [list addObject:selected];
-        } 
+        }else if(![FCommon isGuest]){
+            [list addObject:selected];
+        }
     }
     [casesDatabase close];
     

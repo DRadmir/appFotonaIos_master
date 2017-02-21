@@ -228,7 +228,7 @@
         eventsSearchRes = [FDB getEventsForSearchFromDB:searchTxt withDatabase:database];
         videosSearchRes=[FDB getVideosForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
         pdfsSearchRes = [FDB getPDFForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
-        casesSearchRes=[FDB getCasesForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
+        casesSearchRes=[FDB getCasesForSearchFromDB:searchTxt withDatabase:database];
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
         [database close];
     }

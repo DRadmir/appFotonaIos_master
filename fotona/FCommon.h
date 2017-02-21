@@ -26,6 +26,7 @@
 +(BOOL)userPermission:(NSString*)permissions;
 +(BOOL)checkItemPermissions:(NSString *) permissions ForCategory:(NSString *)category;
 +(NSString *)getUserPermissionsForDBWithColumnName:(NSString *)columnName;
++(NSString *)handlePermissionLocationTypes:(FUser *)user index:(int)index;
 
 
 +(NSString *)arrayToString:(NSMutableArray *) array withSeparator:(NSString *) separator;

@@ -651,7 +651,9 @@ NSString *notificationUrl = @"";
     }
     [self addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    if ([FCommon userPermission:[f userPermissions]]) {
+    if ([FCommon isGuest] && ([FCommon userPermission:[f userPermissions]] || [[f coverflow] boolValue])) {
+        return f;
+    }else if(![FCommon isGuest]){
         return f;
     }
     return nil;

@@ -135,11 +135,11 @@
 
 
 
-+(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *)userP
++(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database
 {
     NSMutableArray *tmp=[[NSMutableArray alloc] init];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%') AND (%@ OR alloweInCoverFlow=1) limit 25",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt, userP];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and (title like '%%%@%%' or name like '%%%@%%' or introduction like '%%%@%%' or procedure like '%%%@%%' or results like '%%%@%%' or 'references' like '%%%@%%') limit 25",searchTxt,searchTxt,searchTxt,searchTxt,searchTxt,searchTxt];
     
     if (![ConnectionHelper connectedToInternet]) {
         query = [NSString stringWithFormat:@"%@ AND isBookmark=1",query];
@@ -148,7 +148,11 @@
 
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        [tmp addObject:f];
+        if ([FCommon isGuest] && ([FCommon userPermission:[f userPermissions]] || [[f coverflow] boolValue])) {
+            [tmp addObject:f];
+        }else if(![FCommon isGuest]){
+            [tmp addObject:f];
+        }
     }
     return tmp;
 }
@@ -166,7 +170,9 @@
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    if ([FCommon userPermission:[f userPermissions]]) {
+    if ([FCommon isGuest] && ([FCommon userPermission:[f userPermissions]] || [[f coverflow] boolValue])) {
+        return f;
+    }else if(![FCommon isGuest]){
         return f;
     }
     return nil;
@@ -182,10 +188,7 @@
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
-    if ([FCommon userPermission:[f userPermissions]] || [[f coverflow] isEqualToString:@"1"]) {
-        return f;
-    }
-    return nil;
+    return f;
 }
 
 
@@ -196,7 +199,9 @@
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT c.* FROM Cases as c,CasesInCategories as cic where cic.categorieID=%@ and cic.caseID=c.caseID and c.active=1",catID]];
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]] || [[f coverflow] isEqualToString:@"1"]) {
+        if ([FCommon isGuest] && ([FCommon userPermission:[f userPermissions]] || [[f coverflow] boolValue])) {
+            [cases addObject:f];
+        }else if(![FCommon isGuest]){
             [cases addObject:f];
         }
     }
@@ -212,9 +217,7 @@
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and authorID=%@",authorID]];
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]] || [[f coverflow] isEqualToString:@"1"]) {
-            [cases addObject:f];
-        }
+        [cases addObject:f];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];

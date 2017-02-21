@@ -49,6 +49,7 @@ id<GAITracker> tracker;
     if (tracker == nil){
         tracker = [[GAI sharedInstance] defaultTracker];
     }
+    [tracker setAllowIDFACollection:YES];
     [tracker set:kGAIScreenName value:text];
     [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
     

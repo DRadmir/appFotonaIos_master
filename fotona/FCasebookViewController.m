@@ -843,6 +843,7 @@
 
 -(void)setPatameters
 {
+
     if (![currentCase isEqual:prevCase]) {
         for (UIView *v in parametersScrollView.subviews) {
             if ([v isKindOfClass:[UILabel class]]) {
@@ -859,7 +860,7 @@
     int allDataObjectAtIndex0Count=0;
     
     int y=0;
-    if (currentCase.parameters && currentCase.parameters != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
+    if (currentCase.parameters && currentCase.parameters != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3 && [FCommon userPermission:currentCase.userPermissions]) {
         NSArray*allData=[NSJSONSerialization JSONObjectWithData:[currentCase.parameters dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
         
         
@@ -1358,10 +1359,12 @@
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT c.* FROM Cases as c,CasesInCategories as cic where cic.categorieID=%@ and cic.caseID=c.caseID",catID]];
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]]) {
+        if ([FCommon isGuest] && ([FCommon userPermission:[f userPermissions]] || [[currentCase coverflow] boolValue])) {
+            [cases addObject:f];
+        }else if(![FCommon isGuest]){
             [cases addObject:f];
         }
-            }
+    }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     
@@ -1396,9 +1399,12 @@
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where authorID=%@",authorID]];
     while([results next]) {
         FCase *f=[[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
-        if ([FCommon userPermission:[f userPermissions]]) {
+        if ([FCommon isGuest] && ([FCommon userPermission:[f userPermissions]] || [[currentCase coverflow] boolValue])) {
             [cases addObject:f];
-        }    }
+        }else if(![FCommon isGuest]){
+            [cases addObject:f];
+        }
+    }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     
