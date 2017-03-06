@@ -163,6 +163,7 @@
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.mediaToOpen = media;
+    flow.mediaTypeToOpen = [media mediaType];
     flow.galToOpen = [NSString stringWithFormat:@"%@",[media itemID]];
     flow.fromSearch = true;
     if (flow.fotonaMenu != nil)

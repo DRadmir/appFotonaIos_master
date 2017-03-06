@@ -523,7 +523,8 @@
     if ([ConnectionHelper connectedToInternet]) {
         results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 and m.active=1 and (m.title like '%%%@%%') AND %@ limit 25",searchTxt, userP]];
     } else {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@limit 25",searchTxt, userP]];
+        //Used to be in this sql query to check AND isBookmarked=1
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND m.active=1 and (m.title like '%%%@%%') AND %@limit 25",searchTxt, userP]];
     }
     while([results next]) {
         FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];
@@ -604,13 +605,28 @@
     return menu;
 }
 
+//todo test if functional
++(NSMutableArray *)getFotonaForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP{
+    NSMutableArray *tmpFotona=[[NSMutableArray alloc] init];
+    FMResultSet *results;
+    results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenu fm where fm.fotonaCategoryType != 1 and fm.active=1 and (fm.title like '%%%@%%' OR fm.description like '%%%@%%') AND %@ limit 25",searchTxt, searchTxt, userP]];
+    while([results next]) {
+        FFotonaMenu *f=[[FFotonaMenu alloc] initWithDictionary:[results resultDictionary]];
+        [tmpFotona addObject:f];
+        
+    }
+    
+    return tmpFotona;
+}
+
 +(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP{
     NSMutableArray *tmpPDF=[[NSMutableArray alloc] init];
     FMResultSet *results;
     if ([ConnectionHelper connectedToInternet]) {
         results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 and m.active=1 and (m.title like '%%%@%%') AND %@ limit 25",searchTxt, userP]];
     } else {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND isBookmark=1 AND m.active=1 and (m.title like '%%%@%%') AND %@ limit 25",searchTxt, userP]];
+        //used to check AND isBookmark=1 in this query
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND m.active=1 and (m.title like '%%%@%%') AND %@ limit 25",searchTxt, userP]];
     }
         while([results next]) {
         FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];

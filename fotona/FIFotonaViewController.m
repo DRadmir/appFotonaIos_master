@@ -78,7 +78,11 @@
     }
     
     if (flow.fromSearch) {
-        [self openGalleryFromSearch:flow.galToOpen andReplace:false andType:[[flow mediaToOpen] mediaType]];
+        if(flow.mediaTypeToOpen != nil){
+            [self openGalleryFromSearch:flow.galToOpen andReplace:false andType:[flow mediaTypeToOpen]];
+        }else{
+            [self openGalleryFromSearch:flow.galToOpen andReplace:false andType:[[flow mediaToOpen] mediaType]];
+        }
     }
 }
 

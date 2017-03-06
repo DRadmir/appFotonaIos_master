@@ -68,7 +68,9 @@
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
     if (flow.fromSearch) {
-        if ([flow.mediaToOpen.mediaType  intValue] == [MEDIAVIDEO intValue]) {
+        if(flow.fromSearchFotona){
+            flow.fromSearchFotona = false;
+        }else if ([flow.mediaToOpen.mediaType  intValue] == [MEDIAVIDEO intValue]) {
             [self openVideo:flow.mediaToOpen];
         } else {
             [self openPdf:flow.mediaToOpen];

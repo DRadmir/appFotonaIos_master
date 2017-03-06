@@ -38,7 +38,9 @@
 @synthesize showMenu;
 
 @synthesize fromSearch;
+@synthesize fromSearchFotona;
 @synthesize mediaToOpen;
+@synthesize mediaTypeToOpen;
 @synthesize galToOpen;
 
 @synthesize fotonaHelperState;
@@ -74,8 +76,10 @@
         showMenu = false;
         lastOpenedView = nil;
         fromSearch = false;
+        fromSearchFotona = false;
         galToOpen = nil;
         mediaToOpen = nil;
+        mediaTypeToOpen = nil;
         fotonaHelperState = 0;
         fotonaMenuArray = [NSMutableArray new];
         caseMenuArray = [NSMutableArray new];

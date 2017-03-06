@@ -47,6 +47,7 @@
 +(NSMutableArray *)getNewsForCategory:(NSString *)category;
 +(void)setNewsRead:(FNews *) news;
 
++(NSMutableArray *)getFotonaForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP;
 
 +(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP;
 +(NSMutableArray *)getVideoswithCategory:(NSString *)videoCategory;

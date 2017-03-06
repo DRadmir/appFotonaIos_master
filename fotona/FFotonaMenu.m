@@ -10,6 +10,7 @@
 #import "FMedia.h"
 #import "FMDatabase.h"
 #import "FDB.h"
+#import "FIFlowController.h"
 
 @implementation FFotonaMenu
 @synthesize categoryID;
@@ -141,12 +142,36 @@
     }
 }
 
--(NSMutableArray *)getMedia
++(void)openFotonaMenu:(FFotonaMenu *)fotona{
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.mediaTypeToOpen = fotona.getMediaType;
+    flow.galToOpen = [NSString stringWithFormat:@"%@",[fotona galleryItemIDs]];
+    flow.fromSearch = true;
+    flow.fromSearchFotona = true;
+    if (flow.fotonaMenu != nil)
+    {
+        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
+    }
+    if (flow.lastIndex != 2) {
+        flow.lastIndex = 2;
+        [flow.tabControler setSelectedIndex:2];
+    }else{
+        [flow.fotonaTab openGalleryFromSearch:fotona.galleryItemIDs andReplace:NO andType:fotona.getMediaType];
+    }
+}
+
+-(NSString *)getMediaType
 {
     NSString *type = MEDIAVIDEO;
     if ([[self fotonaCategoryType] intValue] ==[CATEGORYPDF intValue]) {
         type = MEDIAPDF;
     }
+    return type;
+}
+
+-(NSMutableArray *)getMedia
+{
+    NSString *type = self.getMediaType;
     return [FDB getMediaForGallery:[self galleryItemIDs] withMediType:type];
 }
 

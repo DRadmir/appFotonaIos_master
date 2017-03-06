@@ -56,7 +56,9 @@
 @property (nonatomic) BOOL showMenu;
 
 @property (nonatomic) BOOL fromSearch;
+@property (nonatomic) BOOL fromSearchFotona;
 @property(strong, nonatomic) FMedia* mediaToOpen;
+@property (strong, nonatomic) NSString *mediaTypeToOpen;
 @property (strong, nonatomic) NSString *galToOpen;
 
 @property(nonatomic) int fotonaHelperState;

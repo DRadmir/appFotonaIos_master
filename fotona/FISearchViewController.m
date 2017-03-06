@@ -26,6 +26,7 @@
 @synthesize casesSearchResIPhone;
 @synthesize videosSearchResIPhone;
 @synthesize pdfsSearcResIPhone;
+@synthesize fotonaSearcResIPhone;
 @synthesize parentIPhone;
 @synthesize characterLimit;
 @synthesize eventsSearcResIPhone;
@@ -35,6 +36,7 @@
 #define videoOrderIPhone 3
 #define pdfOrderIPhone 4
 #define caseOrderIPhone 5
+#define fotonaOrderIPhone 6
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -81,6 +83,10 @@
         [orderIPhone addObject:[NSString stringWithFormat:@"%d", caseOrderIPhone]];
         count++;
     }
+    if ([fotonaSearcResIPhone count]>0) {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", fotonaOrderIPhone]];
+        count++;
+    }
     return count;
 }
 
@@ -101,6 +107,9 @@
             break;
         case caseOrderIPhone:
             return casesSearchResIPhone.count;
+            break;
+        case fotonaOrderIPhone:
+            return fotonaSearcResIPhone.count;
             break;
         default:
             return 0;
@@ -125,6 +134,9 @@
             break;
         case caseOrderIPhone:
             return @"Cases";
+            break;
+        case fotonaOrderIPhone:
+            return @"Fotona";
             break;
         default:
             return @"Something wrong";
@@ -154,6 +166,9 @@
             break;
         case caseOrderIPhone:
             [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
+            break;
+        case fotonaOrderIPhone:
+            [cell.textLabel setText:[[fotonaSearcResIPhone objectAtIndex:indexPath.row] title]];
             break;
         default:
             [cell.textLabel setText:@"Something wrong"];
@@ -186,6 +201,9 @@
         case caseOrderIPhone:
             [self openCase:indexPath];
             break;
+        case fotonaOrderIPhone:
+            [self openFotona:fotonaSearcResIPhone[indexPath.row]];
+            break;
         default:
         {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Something wrong" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -211,6 +229,7 @@
     videosSearchResIPhone=[FDB getVideosForSearchFromDB:searchTxtIPhone withDatabase:database userPermissions:userP];
     pdfsSearcResIPhone=[FDB getPDFForSearchFromDB:searchTxtIPhone withDatabase:database userPermissions:userP];
     casesSearchResIPhone=[FDB getCasesForSearchFromDB:searchTxtIPhone withDatabase:database];
+    fotonaSearcResIPhone=[FDB getFotonaForSearchFromDB:searchTxtIPhone withDatabase:database userPermissions:userP];
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
 }
@@ -249,6 +268,12 @@
     [flow.tabControler setSelectedIndex:0];
 }
 
+#pragma mark - Open Fotona
+
+-(void) openFotona:(FFotonaMenu*) fotona
+{
+    [FFotonaMenu openFotonaMenu:fotona];
+}
 
 #pragma mark - Open Case
 -(void) openCase:(NSIndexPath*) index

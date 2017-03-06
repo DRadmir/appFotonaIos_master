@@ -36,6 +36,7 @@
 @synthesize casesSearchRes;
 @synthesize videosSearchRes;
 @synthesize pdfsSearchRes;
+@synthesize fotonaSearchRes;
 @synthesize parent;
 @synthesize popupView;
 @synthesize popupTitle;
@@ -48,6 +49,7 @@
 #define videoOrder 3
 #define pdfOrder 4
 #define caseOrder 5
+#define fotonaOrder 6
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -100,6 +102,11 @@
             count++;
              [order addObject:[NSString stringWithFormat:@"%d", caseOrder]];
         }
+        if ([fotonaSearchRes count]>0)
+        {
+            count++;
+            [order addObject:[NSString stringWithFormat:@"%d", fotonaOrder]];
+        }
         
     }
     return count;
@@ -125,6 +132,9 @@
         case caseOrder:
             return casesSearchRes.count;
             break;
+        case fotonaOrder:
+            return fotonaSearchRes.count;
+            break;
         default:
             return 0;
             break;
@@ -148,6 +158,9 @@
             break;
         case caseOrder:
             return @"Cases";
+            break;
+        case fotonaOrder:
+            return @"Fotona";
             break;
         default:
             return @"Something wrong";
@@ -177,6 +190,9 @@
             break;
         case caseOrder:
             [cell.textLabel setText:[[casesSearchRes objectAtIndex:indexPath.row] title]];
+            break;
+        case fotonaOrder:
+            [cell.textLabel setText:[[fotonaSearchRes objectAtIndex:indexPath.row] title]];
             break;
         default:
             [cell.textLabel setText:@"Something wrong"];
@@ -208,6 +224,9 @@
         case caseOrder:
             [self openCase:indexPath];
             break;
+        case fotonaOrder:
+            [self openFotona:fotonaSearchRes[indexPath.row]];
+            break;
         default:
         {
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Something wrong" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -229,6 +248,7 @@
         videosSearchRes=[FDB getVideosForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
         pdfsSearchRes = [FDB getPDFForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
         casesSearchRes=[FDB getCasesForSearchFromDB:searchTxt withDatabase:database];
+        fotonaSearchRes=[FDB getFotonaForSearchFromDB:searchTxt withDatabase:database userPermissions:userP];
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
         [database close];
     }
@@ -319,6 +339,13 @@
     }
 }
 
+-(void) openFotona:(FFotonaMenu*) fotona
+{
+    [[(FFotonaViewController *)parent popover] dismissPopoverAnimated:YES];
+    UINavigationController *tempC = [[[parent.tabBarController viewControllers] objectAtIndex:2] centerController];
+    [(FFotonaViewController *)[tempC topViewController] setOpenGal:YES fotMenu: fotona];
+    [parent.tabBarController setSelectedIndex:2];
+}
 
 -(void) openCase:(NSIndexPath*) index
 {

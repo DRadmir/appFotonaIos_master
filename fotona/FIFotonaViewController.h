@@ -18,7 +18,7 @@
 @property(nonatomic) NSMutableDictionary *bookmarkMenu;
 
 
-
+-(void) openGallery:(NSString *) galleryItems andReplace:(BOOL) replace andType:(NSString *)mediaType;
 -(void) openGalleryFromSearch:(NSString *) galleryItems andReplace:(BOOL) replace andType:(NSString *)mediaType;
 -(void) openCategory: (FFotonaMenu *) fotonaCategory;
 -(void) clearViews;

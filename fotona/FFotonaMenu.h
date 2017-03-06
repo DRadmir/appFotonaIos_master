@@ -33,4 +33,6 @@
 -(id)initWithDictionaryFromServer:(NSDictionary *)dic;
 -(void)updateVideos;
 -(NSMutableArray *)getMedia;
+-(NSString *)getMediaType;
++(void)openFotonaMenu:(FFotonaMenu *) fotona;
 @end

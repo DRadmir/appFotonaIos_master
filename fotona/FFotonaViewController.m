@@ -41,7 +41,9 @@
     FIPDFViewController *pdfViewController;
     UIViewController *lastOpenedController;
     BOOL openFromSearch;
+    BOOL openFromSearchFotona;
     FMedia *mediaFromSearch;
+    FFotonaMenu *fotonaMenuFromSearch;
     BOOL enabled;
     BOOL connectedToInternet;
 }
@@ -193,7 +195,12 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     
     if (openFromSearch) {
         openFromSearch = NO;
-        [self openMediaFromSearch:mediaFromSearch];
+        if(openFromSearchFotona){
+            openFromSearchFotona = NO;
+            [self openFotonaMenuFromSearch:fotonaMenuFromSearch];
+        }else{
+            [self openMediaFromSearch:mediaFromSearch];
+        }
     }
     
     [APP_DELEGATE setFotonaController:self];
@@ -233,11 +240,30 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     }];
 }
 
+-(void) openFotonaMenuFromSearch:(FFotonaMenu *)fotona{
+    [self closeMenu];
+    [fotonaImg setHidden:YES];
+    NSString *description = @"";
+    if(![fotona.description isEqual:[NSNull null]]){
+        description = fotona.description;
+    }
+    [self openContentWithTitle:fotona.title description:description media:fotona.getMedia andMediaType:fotona.getMediaType];
+}
+
 -(void) openMediaFromSearch:(FMedia *)media {
     [self closeMenu];
     [fotonaImg setHidden:YES];
     [self openContentWithTitle:@"From search" description:@"" media: [NSMutableArray arrayWithObjects:media, nil] andMediaType:[media mediaType]];
     [self openMedia:media];
+}
+
+-(void) setOpenGal:(BOOL)og fotMenu:(FFotonaMenu *) fotona
+{
+    openFromSearch = YES;
+    self.openVideoGal = og;
+    fotonaMenuFromSearch = fotona;
+    openFromSearchFotona = YES;
+    //TODO add more params
 }
 
 -(void) setOpenGal:(BOOL)og forMedia:(FMedia *)media

@@ -70,6 +70,8 @@
 
 - (void) refreshCellForMedia:(NSString *)mediaID andMediaType:(NSString *)mediaType;
 
+-(void) setOpenGal: (BOOL) og fotMenu:(FFotonaMenu *) fotona;
 -(void) setOpenGal: (BOOL) og forMedia:(FMedia *)media;
 -(void) openMediaFromSearch:(FMedia *)media;
+-(void) openFotonaMenuFromSearch:(FFotonaMenu *)fotona;
 @end
