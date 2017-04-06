@@ -521,10 +521,10 @@
     NSMutableArray *tmpVideo=[[NSMutableArray alloc] init];
     FMResultSet *results;
     if ([ConnectionHelper connectedToInternet]) {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 and m.active=1 and (m.title like '%%%@%%') AND %@ limit 25",searchTxt, userP]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 and m.active=1 and (m.title like '%%%@%%' OR m.description like '%%%@%%' ) AND %@ limit 25",searchTxt, searchTxt, userP]];
     } else {
         //Used to be in this sql query to check AND isBookmarked=1
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND m.active=1 and (m.title like '%%%@%%') AND %@limit 25",searchTxt, userP]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=1 AND m.active=1 and (m.title like '%%%@%%' OR m.description like '%%%@%%' ) AND %@ limit 25",searchTxt, searchTxt, userP]];
     }
     while([results next]) {
         FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];
@@ -623,10 +623,10 @@
     NSMutableArray *tmpPDF=[[NSMutableArray alloc] init];
     FMResultSet *results;
     if ([ConnectionHelper connectedToInternet]) {
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 and m.active=1 and (m.title like '%%%@%%') AND %@ limit 25",searchTxt, userP]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 and m.active=1 and (m.title like '%%%@%%' OR m.description like '%%%@%%') AND %@ limit 25",searchTxt, searchTxt, userP]];
     } else {
         //used to check AND isBookmark=1 in this query
-        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND m.active=1 and (m.title like '%%%@%%') AND %@ limit 25",searchTxt, userP]];
+        results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media m where m.mediaType=2 AND m.active=1 and (m.title like '%%%@%%' OR m.description like '%%%@%%') AND %@ limit 25",searchTxt, searchTxt, userP]];
     }
         while([results next]) {
         FMedia *f=[[FMedia alloc] initWithDictionary:[results resultDictionary]];
