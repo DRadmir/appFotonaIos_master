@@ -15,11 +15,15 @@
 
 
 @implementation FNotificationManager
-
+//        if (notificationType == 1) {
+//            [[NSUserDefaults standardUserDefaults] setBool: true forKey:@"openFotonaTab"];
+//        } else {
+//            [[NSUserDefaults standardUserDefaults] setBool: true forKey:@"openCaseTab"];
+//        }
 +(void) openNotification:(NSString *)url ofType:(int)type{
     switch (type) {
         case NOTIFICATIONMEDIA:
-            [self openMedia:url];
+            [self openMediaTest:url];
             break;
         case NOTIFICATIONCASE:
             [self openCase:url];
@@ -67,14 +71,22 @@
             
             if([FCommon isIpad]){
                 UINavigationController *tempC = [[[topController.tabBarController viewControllers] objectAtIndex:3] centerController];
-                [(FCasebookViewController *)[tempC topViewController] setCurrentCase:caseObj];
-                [(FCasebookViewController *)[tempC topViewController] setFlagCarousel:YES];
-                if ([topController isKindOfClass:[FCasebookViewController class]]) {
-                    [(FCasebookViewController*)topController openCase];
-                }else{
-                    [topController.tabBarController setSelectedIndex:3];
+                if (tempC == nil) {
+                    [FCommon setCase:caseObj];
+                    [[NSUserDefaults standardUserDefaults] setBool: true forKey:@"openCaseTab"];
+                } else {
+                    [(FCasebookViewController *)[tempC topViewController] setCurrentCase:caseObj];
+                    [(FCasebookViewController *)[tempC topViewController] setFlagCarousel:YES];
+                    if ([topController isKindOfClass:[FCasebookViewController class]]) {
+                        [(FCasebookViewController*)topController openCase];
+                    }else{
+                        [topController.tabBarController setSelectedIndex:3];
+                    }
                 }
+                
+                
             } else {
+                [[NSUserDefaults standardUserDefaults] setBool: true forKey:@"openCaseTab"];
                 [FCase openCase:caseObj];
 
             }
@@ -91,7 +103,7 @@
 }
 
 
-+(void) openMedia:(NSString*) url
++(void) openMediaTest:(NSString*) url
 {
     
     if([ConnectionHelper connectedToInternet]){
@@ -113,18 +125,28 @@
             FMedia *media=[[FMedia alloc] initWithDictionaryFromServer:c];
             
             [hud removeFromSuperview];
+            
             if ([FCommon isIpad]) {
+
+                
                 UINavigationController *tempC = [[[topController.tabBarController viewControllers] objectAtIndex:2] centerController];
+                if (tempC == nil) {
+                    [FCommon setMedia:media];
+                    [[NSUserDefaults standardUserDefaults] setBool: true forKey:@"openFotonaTab"];
+                } else {
                 [(FFotonaViewController *)[tempC topViewController] setOpenGal:YES forMedia:media];
                 if (tempC.tabBarController.selectedIndex == 2) {
-                    [(FFotonaViewController *)[tempC topViewController] openMediaFromSearch:media];
+                   
+                   [(FFotonaViewController *)[tempC topViewController] openMediaFromSearch:media];
                 } else {
-                    [tempC.tabBarController setSelectedIndex:2];
+                    
+                   [topController.tabBarController setSelectedIndex:2];
+                }
                 }
             } else {
+                [[NSUserDefaults standardUserDefaults] setBool: true forKey:@"openFotonaTab"];
                 [FMedia openMedia:media];
             }
-           
         }
                                          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                              NSLog(@"Cases failed %@",error.localizedDescription);

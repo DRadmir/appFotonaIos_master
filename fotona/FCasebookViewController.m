@@ -79,6 +79,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    
+    
     beforeOrient=[APP_DELEGATE currentOrientation];
     //feedback
     [feedbackBtn addTarget:APP_DELEGATE action:@selector(sendFeedback:) forControlEvents:UIControlEventTouchUpInside];
@@ -129,12 +131,13 @@
     {
         [exCaseView setFrame:CGRectMake(0,65, 768, 909)];
     }
-    
+
     
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+
     [super viewWillAppear:animated];
     [self.tabBarItem setImage:[UIImage imageNamed:@"casebook_red.png"]];
     [[[APP_DELEGATE tabBar] tabBar] setUserInteractionEnabled:YES];
@@ -166,6 +169,7 @@
             
         }
     }
+
     
 }
 -(void)viewDidAppear:(BOOL)animated
@@ -178,8 +182,13 @@
         newFrame.origin.x -= 162;
         
     }
-    
+
     fotonaImg.frame = newFrame;
+    if ([FCommon getCase] != nil) {
+        flagCarousel = YES;
+        currentCase = [FCommon getCase];
+        [FCommon setCase:nil];
+    }
     if(flagCarousel){ //when clicked on Carousel ---------------------------------------------------------------------------
         [self.viewDeckController closeLeftView];
         [[APP_DELEGATE main_ipad].caseMenu resetViewAnime:YES];
@@ -198,8 +207,10 @@
         
     }else
     {
+        [self.viewDeckController closeLeftView];
+       
         if (currentCase && beforeOrient!=[APP_DELEGATE currentOrientation]) {
-            [self openCase];
+                  [self openCase];
         }
         if(!openGal){
             [self.viewDeckController openLeftView];

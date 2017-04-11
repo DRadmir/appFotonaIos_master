@@ -31,4 +31,10 @@
 
 +(NSString *)arrayToString:(NSMutableArray *) array withSeparator:(NSString *) separator;
 +(NSArray *)stringToArray:(NSString *) string withSeparator:(NSString *)separator;
+
++(void)setCase:(FCase *)c;
++(FCase *)getCase;
+
++(void)setMedia:(FMedia *)m;
++(FMedia *)getMedia;
 @end

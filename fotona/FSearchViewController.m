@@ -409,6 +409,14 @@
         [parent.tabBarController setSelectedIndex:2];
     }
 }
+
++(void) openMediaFromDelegate:(FMedia*) media  withParent:(FFotonaViewController *)parentVC
+{
+    [parentVC setOpenGal:YES forMedia:media];
+    [parentVC openMediaFromSearch:media];
+}
+
+
 -(void) openEvents:(NSIndexPath *) index
 {
     [[(FFotonaViewController *)parent popover] dismissPopoverAnimated:YES];

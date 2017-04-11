@@ -84,6 +84,8 @@ int forgotenBottom = 0;
     
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginEnabled"]) {
         [login autoLogin];
+        
+        
     }else
     {
         [self showLoginForm];

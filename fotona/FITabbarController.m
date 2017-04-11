@@ -33,6 +33,20 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if([[NSUserDefaults standardUserDefaults] boolForKey:@"openFotonaTab"]){
+        self.selectedIndex = 2;
+        [[NSUserDefaults standardUserDefaults] setBool: false forKey:@"openFotonaTab"];
+    }
+    if([[NSUserDefaults standardUserDefaults] boolForKey:@"openCaseTab"]){
+        self.selectedIndex = 3;
+        [[NSUserDefaults standardUserDefaults] setBool: false forKey:@"openCaseTab"];
+    }
+    
+}
+
 
 
 -(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item{

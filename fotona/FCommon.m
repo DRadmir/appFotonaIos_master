@@ -12,8 +12,14 @@
 #import "FGoogleAnalytics.h"
 #import "FDownloadManager.h"
 #import "FDB.h"
+#import "FCase.h"
+
+static FCase *notificationCase;
+static FMedia *notificationMedia;
 
 @implementation FCommon
+
+
 
 #pragma mark - Device
 +(BOOL)isIpad
@@ -230,6 +236,20 @@
     return array;
 }
 
++(void)setCase:(FCase *)c{
+    notificationCase = c;
+}
 
++(FCase *)getCase{
+    return notificationCase;
+}
+
++(void)setMedia:(FMedia *)m{
+    notificationMedia = m;
+}
+
++(FMedia *)getMedia{
+    return notificationMedia;
+}
 
 @end

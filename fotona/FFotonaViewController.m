@@ -149,6 +149,12 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if ([FCommon getMedia] != nil) {
+        [self setOpenGal:YES forMedia:[FCommon getMedia]];
+        [FCommon setMedia:nil];
+    }
+    
     [[[APP_DELEGATE tabBar] tabBar] setUserInteractionEnabled:YES];
     UIInterfaceOrientation orientation=[[UIApplication sharedApplication] statusBarOrientation];
     if (orientation!=UIInterfaceOrientationPortrait) {

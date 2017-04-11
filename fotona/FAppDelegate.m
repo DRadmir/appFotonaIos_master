@@ -33,6 +33,7 @@
 
 
 
+
 @implementation FAppDelegate
 
 int notificationType = 0;
@@ -81,6 +82,8 @@ NSString *notificationUrl = @"";
 
 
 
+
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.DEVELOP = true;
@@ -90,8 +93,8 @@ NSString *notificationUrl = @"";
     // Override point for customization after application launch.
     //    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"pushType"];
     //    [[NSUserDefaults standardUserDefaults] synchronize];
-   
     
+
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"newUpdate"]) {
         NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
         [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
@@ -116,6 +119,7 @@ NSString *notificationUrl = @"";
     tabBar=[[FTabBarController alloc] init];
     
     [self setIndexToSelect:0];
+    
     if (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad)
     {
         main_ipad=[[FMainViewController_iPad alloc] init];
@@ -139,6 +143,7 @@ NSString *notificationUrl = @"";
             [[UINavigationBar appearance] setTranslucent:NO];
         }
     }
+
     
     
     settingsController = [[FSettingsViewController alloc] initWithNibName:@"FSettingsViewController" bundle:nil];
@@ -160,6 +165,7 @@ NSString *notificationUrl = @"";
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
     }
     
+    
     [self setDownloadList:[[NSMutableArray alloc] init]];
     [self setLoginShown:NO];
     
@@ -170,8 +176,29 @@ NSString *notificationUrl = @"";
     
     [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIRemoteNotificationTypeAlert |UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound categories:nil]];
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeNone)];
-
+    
     application.applicationIconBadgeNumber=0;
+    
+    
+    NSDictionary * notificationPayLoad = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+  
+//     On notification clicked open received content.
+//    double delayInSeconds = 2.0;
+//    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+//    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+//    )
+//
+
+
+    if(notificationPayLoad) {
+            [self application:application didReceiveRemoteNotification:notificationPayLoad];
+        
+    }
+
+//    });
+
+    
+
     
     return YES;
 }
@@ -218,7 +245,6 @@ NSString *notificationUrl = @"";
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     application.applicationIconBadgeNumber=0;
-    
     
     
 }
@@ -471,21 +497,26 @@ NSString *notificationUrl = @"";
     
     notificationUrl = [userInfo objectForKey:@"url"];
     notificationType = [[userInfo objectForKey:@"notificationType"] intValue];
+
     
     [[FUpdateContent shared] updateContent:[self.window rootViewController]];
     
-    if (application.applicationState == UIApplicationStateActive ) {
+    if (application.applicationState == UIApplicationStateActive) {
         NSLog(@"app is active");
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"New notification!" message:@"" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"View", nil];
         [av setTag:100];
         [av show];
     }else
     {
+
         [FNotificationManager openNotification:notificationUrl ofType:notificationType];
+        
     }
-    
+
+
 #endif
 }
+
 
 -(void)alertNotice:(NSString *)title withMSG:(NSString *)msg cancleButtonTitle:(NSString *)cancleTitle otherButtonTitle:(NSString *)otherTitle{
     UIAlertView *alert;

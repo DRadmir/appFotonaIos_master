@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FMedia.h"
+#import "FFotonaViewController.h"
 
 @interface FSearchViewController : UIViewController <UITableViewDelegate,UITableViewDataSource>
 {

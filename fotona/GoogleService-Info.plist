@@ -9,7 +9,7 @@
 	<key>BUNDLE_ID</key>
 	<string>com.4egenus.fotona</string>
 	<key>PROJECT_ID</key>
-	<string>firebase-fotona</string>
+	<string>fotonaapp</string>
 	<key>IS_ADS_ENABLED</key>
 	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -21,6 +21,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<false/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1016198973976:ios:17f67e497dfac3b6</string>
+	<string>1:820932783591:ios:17f67e497dfac3b6</string>
 </dict>
 </plist>
