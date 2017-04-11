@@ -29,4 +29,8 @@
     return hexComponent / 255.0;
 }
 
++(UIColor *)lightBackgroundColor{
+    return [UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0];
+}
+
 @end

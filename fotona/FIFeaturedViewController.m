@@ -8,7 +8,6 @@
 
 #import "FIFeaturedViewController.h"
 #import "FICarousel.h"
-#import "FAppDelegate.h"
 #import "FDB.h"
 #import "FIFeaturedEventTableViewCell.h"
 #import "FIFeaturedNewsTableViewCell.h"
@@ -17,7 +16,9 @@
 #import "FINewsContainerViewController.h"
 #import "UIWindow+Fotona.h"
 #import "FINewsViewController.h"
-
+#import "FGoogleAnalytics.h"
+#import "NewsViewCell.h"
+#import "HelperDate.h"
 
 #define ABOUT_CELL_VIEW_START_TAG 600
 #define EVENT_CELL_VIEW_START_TAG 500
@@ -32,6 +33,7 @@
     
     int newsCount;
     int extraNews;
+    int enabledNewsCount;
     
     int newsSelected;
     
@@ -39,6 +41,9 @@
     
     BOOL aboutClick;
     NSIndexPath *eventCellIndex;
+    
+    long selectedCowerflowIndexIphone;
+    NSTimer *animationRotationTimerIphone;
 }
 @end
 
@@ -56,8 +61,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     carouselHeight.constant = [[UIScreen mainScreen] bounds].size.width / 2.279;
-
-    newsCount = 12;
+    
+    newsCount = 5;
+    enabledNewsCount = 5;
     extraNews = 4;
     newsSelected = 0;
     
@@ -69,15 +75,19 @@
     
     [self.tableViewFeatured setNeedsLayout];
     [self.tableViewFeatured layoutIfNeeded];
+    
+    newsArray = [FDB getNewsSortedDateFromDB];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [self setUp];
     carousel.type = iCarouselTypeLinear;
     [carousel reloadData];
     eventsArray = [FDB getEventsFromDB];
-    newsArray = [FDB getNewsSortedDateFromDB];
+    
     eventsBool =  (eventsArray != nil);
     newsBool = (newsArray != nil);
     guestBool = ([[[APP_DELEGATE currentLogedInUser] userType] intValue] == 0 || [[[APP_DELEGATE currentLogedInUser] userType] intValue] == 3);
@@ -86,6 +96,17 @@
     }
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.showMenu = true;
+    
+    }
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [FGoogleAnalytics writeGAForItem:nil andType:GAFEATUREDTABINT];
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [self stopRotationAnimationIphone];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -130,25 +151,23 @@
         [self performSegueWithIdentifier:@"showNews" sender:self];
     } else
     {
-    
-    
-    if (newsBool) {
-        NSInteger count = 0;
-        if (eventsBool) {
-            count++;
+        if (newsBool) {
+            NSInteger count = 0;
+            if (eventsBool) {
+                count++;
+            }
+            if (guestBool) {
+                count++;
+            }
+            
+            if (indexPath.section == count) {
+                newsSelected = indexPath.row;
+                FIFeaturedNewsTableViewCell *cell = [self.tableViewFeatured cellForRowAtIndexPath:indexPath];
+                cell.signNewNewsCell.hidden = true;
+                [APP_DELEGATE setNewsArray:newsArray];
+                [self performSegueWithIdentifier:@"showNews" sender:self];
+            }
         }
-        if (guestBool) {
-            count++;
-        }
-
-        if (indexPath.section == count) {
-            newsSelected = indexPath.row;
-            FIFeaturedNewsTableViewCell *cell = [self.tableViewFeatured cellForRowAtIndexPath:indexPath];
-            cell.signNewNewsCell.hidden = true;
-            [APP_DELEGATE setNewsArray:newsArray];
-            [self performSegueWithIdentifier:@"showNews" sender:self];
-        }
-    }
     }
 }
 
@@ -156,10 +175,10 @@
 {
     if (section == 0 && guestBool) {
         
-         return 1;
+        return 1;
     } else if ((guestBool && eventsBool && section == 1) || (section == 0 && eventsBool))
     {
-         return 1;
+        return 1;
     }
     return newsArray.count;
 }
@@ -174,10 +193,11 @@
     return CGFLOAT_MIN;
 }
 
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0 && guestBool) {
-       
+        
         FIFeaturedNewsTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:2];
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         [cell setTag:ABOUT_CELL_VIEW_START_TAG];
@@ -191,48 +211,36 @@
     }
     
     FIFeaturedNewsTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:0];
+
     if (indexPath.row == 0) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:1];
     }
-    if (indexPath.row > newsCount - 1) {
+    if (indexPath.row > newsCount - 1 && [ConnectionHelper connectedToInternet]) {
         
-        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:hud];
-        hud.labelText = @"Loading...";
-        //        [[MBProgressHUD showHUDAddedTo:self.view animated:YES]  setLabelText:@"Loading"];
-        [hud show:YES];
         CGPoint offset = self.tableViewFeatured.contentOffset;
         offset.y-=10;
-        self.tableViewFeatured.scrollEnabled =NO;
         [self.tableViewFeatured setContentOffset:offset animated:NO];
         int l = 4;
         if (newsCount + l > newsArray.count) {
             l = newsArray.count - newsCount;
         }
         newsCount+=l;
-        dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
-        dispatch_async(queue, ^{
-            newsArray = [FNews getImages:newsArray fromStart:indexPath.row forNumber:l];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.tableViewFeatured.scrollEnabled  = YES;
-                [self.tableViewFeatured reloadData];
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            });
-        });
-        
     }
+    
+    
     cell.news = newsArray[indexPath.row];
     [cell fillCell];
+    
     if (indexPath.row>= 8)
     {
         cell.signNewNewsCell.hidden = true;
+        
     }
     
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [cell setTag:NEWS_CELL_VIEW_START_TAG];
     return cell;
 }
-
 
 #pragma mark - iCarousel methods
 
@@ -241,7 +249,7 @@
     //set up data
     wrap = YES;
     
-    self.items = [FDB getCasesForCarouselFromDB];//self.getCasesForCarouselFromDB;
+    self.items = [FDB getCasesForCarouselFromDB];
     //random mixing carousel
     for (int x = 0; x < [items count]; x++) {
         int randInt = (arc4random() % ([items count] - x)) + x;
@@ -258,26 +266,22 @@
 
 - (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {
-    
-
     FICarousel * card = [[FICarousel alloc] initWithNibName:@"FICarousel" bundle:nil];
     card.caseCard = [items objectAtIndex:index];
     card.view.frame = CGRectMake(card.view.frame.origin.x, card.view.frame.origin.y,[[UIScreen mainScreen] bounds].size.width, carouselHeight.constant);
     
     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 2), ^{
         //code to be executed in the background
-        NSLog(@"author id %@",[(FCase *)items[index] authorID]);
-        //NSData *imgData=[FDB getAuthorImage:[(FCase *)items[index] authorID]];//[self getAuthorImage:[(FCase *)items[index] authorID]];
         dispatch_async(dispatch_get_main_queue(), ^{
-
             card.carouselDoctorImage.layer.cornerRadius = card.carouselDoctorImage.frame.size.height /2;
             card.carouselDoctorImage.layer.masksToBounds = YES;
             card.carouselDoctorImage.layer.borderWidth = 0;
             [card.carouselDoctorImage setContentMode:UIViewContentModeScaleAspectFill];
-            card.carouselDoctorImage.image = [FDB getAuthorImage:[(FCase *)items[index] authorID]];//[UIImage imageWithData:imgData];
+            card.carouselDoctorImage.image = [FDB getAuthorImage:[(FCase *)items[index] authorID]];
         });
     });
     view = card.view;
+    [self resetRotationAnimationIphone];
     return view;
 }
 
@@ -290,14 +294,13 @@
 - (UIView *)carousel:(iCarousel *)carousel placeholderViewAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {
     UILabel *label = nil;
-    
     //create new view if no view is available for recycling
     if (view == nil)
     {
         //don't do anything specific to the index within
         //this `if (view == nil) {...}` statement because the view will be
         //recycled and used with other index values later
-                view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, carouselHeight.constant)];
+        view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, carouselHeight.constant)];
         ((UIImageView *)view).image = [UIImage imageNamed:[NSString stringWithFormat:@"card%lu.png",index%3+1]];
         view.contentMode = UIViewContentModeCenter;
         
@@ -378,7 +381,7 @@
     
 }
 
-#pragma mark - Custom 
+#pragma mark - Custom
 
 -(void) createEventCell
 {
@@ -406,7 +409,7 @@
             }
         }
         
-
+        
     }
 }
 
@@ -422,6 +425,7 @@
             {
                 FINewsViewController *nview = (FINewsViewController *)object;
                 [nview reloadView];
+                
             }
         }
         
@@ -429,8 +433,32 @@
     {
         [self performSegueWithIdentifier:@"showNews" sender:self];
     }
-    
-    
+}
+
+#pragma mark: - Rotating cases
+
+- (void) startRotationAnimationIphone {
+    animationRotationTimerIphone = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(moveTo) userInfo:nil repeats:NO];
+}
+
+- (void) stopRotationAnimationIphone {
+    [animationRotationTimerIphone invalidate];
+    animationRotationTimerIphone = nil;
+}
+
+- (void) resetRotationAnimationIphone {
+    [self stopRotationAnimationIphone];
+    [self startRotationAnimationIphone];
+}
+
+- (void) moveTo
+{
+    [UIView animateWithDuration:5.0 delay:0 options:UIViewAnimationOptionTransitionNone
+                     animations:^{
+                         selectedCowerflowIndexIphone = [carousel currentItemIndex] + 1;
+                         [carousel scrollToItemAtIndex:selectedCowerflowIndexIphone animated:true];
+                     }
+                     completion:nil];
 }
 
 @end

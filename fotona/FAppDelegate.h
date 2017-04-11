@@ -16,12 +16,11 @@
 #import "FTabBarController.h"
 #import "FSettingsViewController.h"
 #import "FMainViewController.h"
+#import <Google/Analytics.h>
+#import "FFavoriteViewController.h"
 
 #define APP_DELEGATE (FAppDelegate *)[[UIApplication sharedApplication] delegate]
 #define langID  @"1"
-//#define webService @"https://plutontest.4egenus.com/fotona/rest/WebService.asmx/"//pluton test
-#define webService2 @"https://www.fotona.com/inc/verzija2/ajax/" // link to news in events
-#define webService @"https://fotonaapp.4egenus.com/rest/WebService.asmx/"//production
 
 #define globalAccessToken @"eyUpQ6JOcYaa86DNIDvv8ooxQHtuI6Cz0agTpOfjeZk3N7Ak0YkoaeJfXEGvZZcnQwnqPqktutfDGJjNz0J2j1qk8Bcgm6PUuuBY"
 #define DB_PATH [NSString stringWithFormat:@"%@/Documents/.db/fotona.db",NSHomeDirectory()]
@@ -36,6 +35,7 @@
 @property (nonatomic,retain) FMainViewController *main;
 @property (nonatomic,retain) FSettingsViewController *settingsController;
 @property (nonatomic,retain) FFotonaViewController *fotonaController;
+@property (nonatomic,retain) FFavoriteViewController *favoriteController;
 @property (nonatomic,retain) FCasebookViewController *casebookController;
 @property (nonatomic,retain) FUser *currentLogedInUser;
 @property (nonatomic,retain) NSString *userFolderPath;
@@ -66,7 +66,6 @@
 @property (assign) BOOL openCase;
 @property (assign) BOOL bookmarkAll;
 @property (assign) BOOL loginShown;
-@property (nonatomic,retain) NSMutableArray *userBookmarked;
 @property (nonatomic, retain) NSMutableArray *downloadList;
 @property (nonatomic, retain) NSMutableArray *bookmarkingVideos;
 
@@ -74,24 +73,20 @@
 @property (assign) BOOL closedNews;
 @property (assign) BOOL closedEvents;
 
-@property (assign) BOOL wifiOnlyConnection;
+
 
 @property (nonatomic,retain) NSMutableDictionary *videoImages;
 
 @property (assign) float bookmarkCountAll;
 @property (assign) float bookmarkCountLeft;
+@property (assign) float bookmarkSizeAll;
+@property (assign) float bookmarkSizeLeft;
 
 @property (assign) NSString* logText;
 @property (assign) BOOL logingEnabled;
 
 -(void)rotatePopupSearchedNewsInView:(UIView *)view;
 
--(void)showPushNotificationFromViewController:(UIViewController *)vc;
-
-- (BOOL)connectedToInternet;
-- (BOOL)connectedToWifi;
-- (BOOL)connectedToBoth;
-- (BOOL) checkGuest;
 
 - (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 

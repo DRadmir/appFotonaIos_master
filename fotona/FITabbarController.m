@@ -10,7 +10,6 @@
 #import "UIColor+Hex.h"
 #import "FIFlowController.h"
 #import "UIWindow+Fotona.h"
-#import "FCommon.h"
 
 @interface FITabbarController ()<UITabBarControllerDelegate>
 
@@ -21,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setDelegate:self];
-    [[self tabBar] setTintColor:[UIColor colorFromHex:@"ED1C24"]];
+    [[self tabBar] setTintColor:[UIColor colorFromHex:FOTONARED]];
     [[self tabBar] setTranslucent:NO];
     
     FIFlowController *flow = [FIFlowController sharedInstance];
@@ -32,6 +31,20 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if([[NSUserDefaults standardUserDefaults] boolForKey:@"openFotonaTab"]){
+        self.selectedIndex = 2;
+        [[NSUserDefaults standardUserDefaults] setBool: false forKey:@"openFotonaTab"];
+    }
+    if([[NSUserDefaults standardUserDefaults] boolForKey:@"openCaseTab"]){
+        self.selectedIndex = 3;
+        [[NSUserDefaults standardUserDefaults] setBool: false forKey:@"openCaseTab"];
+    }
+    
 }
 
 
@@ -50,7 +63,7 @@
                 [[flow caseTab] clearViews];
                 break;
             case 4:
-                [[flow bookmarkTab] clearViews];
+                [[flow favoriteTab] clearViews];
                 break;
                 
             default:

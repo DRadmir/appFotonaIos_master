@@ -7,8 +7,6 @@
 //
 
 #import "FFolderViewController.h"
-#import "FAppDelegate.h"
-//#import "FShowroomViewController.h"
 #import "FEventViewController.h"
 
 
@@ -65,11 +63,6 @@
             NSLog(@"ima novi %@",str);
         }
     }
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-//    [[self.navigationController navigationBar] setHidden:NO];
 }
 
 #pragma mark TableView
@@ -186,6 +179,8 @@
     
     return cell;
 }
+
+
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -324,6 +319,7 @@
     }
     [table reloadData];
 }
+
 
 
 @end

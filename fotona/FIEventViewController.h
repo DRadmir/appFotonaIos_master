@@ -19,5 +19,5 @@
 -(void) reloadData;
 
 - (IBAction)typeSelected:(id)sender;
-
+-(void) openEvent;
 @end

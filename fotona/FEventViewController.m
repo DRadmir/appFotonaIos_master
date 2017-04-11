@@ -1,10 +1,7 @@
 
 
 #import "FEventViewController.h"
-#import "GEMainMenuCell.h"
-#import "FFolderViewController.h"
 #import "AFNetworking.h"
-#import "FAppDelegate.h"
 #import "FDocument.h"
 #import "FMDatabase.h"
 #import "FSearchViewController.h"
@@ -16,6 +13,7 @@
 #import "HelperDate.h"
 #import "HelperString.h"
 #import "FDB.h"
+#import "FGoogleAnalytics.h"
 
 @interface FEventViewController ()
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *scrollViewHeight;
@@ -63,7 +61,7 @@
     self = [super init];
     if (self) {
         // Custom initialization
-        [self setTitle:@"Events"];
+        [self setTitle:NSLocalizedString(@"EVENTSTABTITLE", nil)];
         [self.tabBarItem setImage:[UIImage imageNamed:@"events.png"]];
     }
     return self;
@@ -72,10 +70,10 @@
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
     ci = 0;
     [APP_DELEGATE setClosedEvents:NO];
     beforeOrient=[APP_DELEGATE currentOrientation];
-    [super viewDidLoad];
     //feedback
     [feedbackBtn addTarget:APP_DELEGATE action:@selector(sendFeedback:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -108,6 +106,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     [self.tabBarItem setImage:[UIImage imageNamed:@"events_red.png"]];
     [[[APP_DELEGATE tabBar] tabBar] setUserInteractionEnabled:YES];
     eventsTable = [APP_DELEGATE eventArray];
@@ -125,6 +124,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     beforeOrient=[APP_DELEGATE currentOrientation];
+    [FGoogleAnalytics writeGAForItem:nil andType:GAEVENTTABINT];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -193,6 +193,8 @@
 //creating events
 - (UITableViewCell *)tableView:(UITableView *)tableView2 cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    
    // FEventViewCell *cell =  [FEventViewCell fillCell:indexPath fromArray:tableData andCategory: ci andOwner:self ];
     FEventViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FEventViewCell" owner:self options:nil] objectAtIndex:0];
     NSString * img =@"";
@@ -229,7 +231,7 @@
     }
     [self addImageScroll:[tableData objectAtIndex:indexPath.row]];
     [popupImg setImage:[UIImage imageNamed:img]];
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [popEvent setFrame:CGRectMake(0,65, 1024, 654)];
     }else
     {
@@ -281,7 +283,7 @@
    
     [self addImageScroll:openEvent];
     
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [popEvent setFrame:CGRectMake(0,65, 1024, 654)];
     }else
     {
@@ -298,13 +300,14 @@
 }
 
 
+
 -(void)openSettings:(id)sender
 {
     [settingsBtn setEnabled:NO];
    
     [popupCloseBtn setHidden:NO];
     
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         settingsView=[[UIView alloc] initWithFrame:CGRectMake(0,65, self.view.frame.size.width, 654)];
         [settingsController.view setFrame:CGRectMake(0,0, self.view.frame.size.width, 654)];
     }else
@@ -664,6 +667,7 @@ numberOfcommentsForPhotoAtIndex:(NSInteger)index
     
     [settingsBtn setEnabled:YES];
 }
+
 
 
 @end

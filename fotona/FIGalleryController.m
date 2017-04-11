@@ -7,10 +7,9 @@
 //
 
 #import "FIGalleryController.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FImage.h"
 #import <AVFoundation/AVFoundation.h>
-#import "FAppDelegate.h"
 #import "FNews.h"
 #import "FEvent.h"
 
@@ -20,22 +19,36 @@
 @synthesize scrollViewGallery;
 @synthesize imagesArray;
 @synthesize videosArray;
-@synthesize moviePlayer;
 @synthesize type;
+@synthesize caseWithGallery;
 
--(void)createGalleryWithImages:(NSArray *)images andVideos:(NSArray *)videos forScrollView:(UIScrollView *)scrollView andScrollHeight:(NSLayoutConstraint *)height
+-(void)createGalleryWithImages:(NSArray *)images andVideos:(NSArray *)videos forScrollView:(UIScrollView *)scrollView andScrollHeight:(NSLayoutConstraint *)height  fromCase:(FCase *)caseContainingGallery
 {
+    caseWithGallery = caseContainingGallery;
     for (UIImageView *view in scrollView.subviews) {
         [view removeFromSuperview];
     }
     
     int x = 0;
     int imgSize = 200;
-    imagesArray = images;
-    videosArray = videos;
+    imagesArray = [[NSMutableArray alloc] init];
+    
+    for (FImage *image in images) {
+        if ([image.deleted intValue] == 0) {
+            [imagesArray addObject:image];
+        }
+    }
+
+    videosArray =  [[NSMutableArray alloc] init];
+    for (FMedia *video in videos) {
+        if ([video.deleted intValue] == 0) {
+            [videosArray addObject:video];
+        }
+    }
+    
     
     for (int i=0;i<[videos count];i++) {
-        FVideo *vid=[videos objectAtIndex:i];
+        FMedia *vid=[videos objectAtIndex:i];
         UIButton *tmpImg=[UIButton buttonWithType:UIButtonTypeCustom];
         [tmpImg setFrame:CGRectMake(x, 0, imgSize-30, imgSize-30)];
         [tmpImg.imageView setContentMode:UIViewContentModeScaleAspectFill];
@@ -46,10 +59,11 @@
         dispatch_async(queue, ^{
             //code to be executed in the background
             NSURL *videoURL;
-            if (![[NSFileManager defaultManager] fileExistsAtPath:vid.localPath]) {
+            NSString *localPath = [FMedia createLocalPathForLink:vid.path andMediaType:MEDIAVIDEO];
+            if (![[NSFileManager defaultManager] fileExistsAtPath:localPath]) {
                 videoURL= [NSURL URLWithString:vid.path] ;
             }else{
-                videoURL=[NSURL fileURLWithPath:vid.localPath];
+                videoURL=[NSURL fileURLWithPath:localPath];
             }
             
             AVURLAsset *asset1 = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
@@ -88,12 +102,12 @@
         dispatch_async(queue, ^{
             //code to be executed in the background
             UIImage *image;
-            NSString *pathTmp = [NSString stringWithFormat:@"%@%@",docDir,img.localPath];
-            if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp] || [img.localPath isEqualToString:@""]) {
+            NSString *pathTmp = [FMedia createLocalPathForLink:img.path andMediaType:MEDIAIMAGE];
+            if (pathTmp == nil || ![[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
                 image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
-                
             }else{
-                image = [UIImage imageWithData:[NSData dataWithContentsOfFile:[NSURL URLWithString:pathTmp]]];
+                
+                image =[UIImage imageWithContentsOfFile:pathTmp];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 //code to be executed on the main thread when background task is finished
@@ -148,7 +162,7 @@
     UIImage *img;
     for (int i=0;i<imgs.count;i++){
         if ([newsGallery.rest isEqualToString:@"1"] && [newsGallery.bookmark isEqualToString:@"0"]) {
-            if  ([APP_DELEGATE connectedToInternet] &&  ![[imgs objectAtIndex:i] isEqualToString:@""]) {
+            if  ([ConnectionHelper connectedToInternet] &&  ![[imgs objectAtIndex:i] isEqualToString:@""]) {
                 NSString *url_Img_FULL = [imgs objectAtIndex:i];
                 img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
                 [imgs replaceObjectAtIndex:i withObject:img];
@@ -245,24 +259,10 @@
 
 -(IBAction)openVideo:(id)sender
 {
-    FVideo *vid=[videosArray objectAtIndex:[sender tag]];
-    if (![vid.localPath isEqualToString:@""]) {
-        NSString* strurl =vid.localPath;
-        NSURL *videoURL=[NSURL fileURLWithPath:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [parent presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
-    }else
-    {
-        NSString* strurl =vid.path;
-        NSURL *videoURL=[NSURL URLWithString:strurl];
-        moviePlayer=[[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [parent presentMoviePlayerViewControllerAnimated:moviePlayer];
-        [moviePlayer.moviePlayer play];
-    }
-    
+    FMedia *vid=[videosArray objectAtIndex:[sender tag]];
+    BOOL coverflow = [[caseWithGallery coverflow] isEqualToString:@"1"] ? YES : NO;
+    [FCommon playVideo:vid onViewController:parent isFromCoverflow:coverflow];
 }
-
 
 -(IBAction)openGallery:(id)sender
 {
@@ -297,8 +297,8 @@
             //code to be executed in the background
             UIImage *image;
             if (type == 1) {
-                NSString *pathTmp = [NSString stringWithFormat:@"%@%@",docDir,img.localPath];
-                if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp] || [img.localPath isEqualToString:@""]) {
+                NSString *pathTmp = [FMedia createLocalPathForLink:img.path andMediaType:MEDIAIMAGE];
+                if (![[NSFileManager defaultManager] fileExistsAtPath:pathTmp]) {
                     image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
                     
                 }else{

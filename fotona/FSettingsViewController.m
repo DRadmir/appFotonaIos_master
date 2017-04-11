@@ -7,16 +7,17 @@
 //
 
 #import "FSettingsViewController.h"
-#import "FAppDelegate.h"
 #import "FUser.h"
 #import "FSearchViewController.h"
 #import "UIView+Border.h"
 #import "HelperBookmark.h"
 #import "FMDatabase.h"
 #import "MBProgressHUD.h"
-#import "FCommon.h"
 #import "FUpdateContent.h"
 #import "FRegistrationViewController.h"
+#import "FMediaManager.h"
+#import "FHelperRequest.h"
+#import "FNotificationManager.h"
 
 @interface FSettingsViewController ()
 
@@ -28,10 +29,8 @@
     FRegistrationViewController *registrationView;
 }
 @synthesize popover;
-
-
 @synthesize unbookmarAll;
-
+@synthesize active;
 
 - (void)didReceiveMemoryWarning
 {
@@ -53,9 +52,6 @@
 {
     self = [super init];
     if (self) {
-        // Custom initialization
-        //        [self setTitle:@"Settings"];
-        //        [self.tabBarItem setImage:[UIImage imageNamed:@"settings_grey.png"]];
     }
     return self;
     
@@ -65,9 +61,6 @@
 {
     [super viewDidLoad];
     NSLog(@"%@",[[APP_DELEGATE currentLogedInUser] username]);
-    
-    // Do any additional setup after loading the view from its nib.
-    
     
     //feedback
     [feedbackBtn addTarget:APP_DELEGATE action:@selector(sendFeedback:) forControlEvents:UIControlEventTouchUpInside];
@@ -86,17 +79,12 @@
     btnBookmark.layer.cornerRadius = 3;
     btnBookmark.layer.borderWidth = 1;
     btnBookmark.layer.borderColor = btnBookmark.titleLabel.textColor.CGColor;
-    
-    
 }
 
--(void)viewDidDisappear:(BOOL)animated
-{
-    
-}
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (tableData == nil) {
         tableData = [NSMutableArray array];
     }
@@ -109,8 +97,6 @@
          [[[APP_DELEGATE currentLogedInUser] lastName] isEqualToString:@""]))
     {
         [temp appendString:[NSString stringWithFormat:@"%@ ",[[APP_DELEGATE currentLogedInUser] username]]];
-
-        
     } else
     {
         
@@ -126,7 +112,6 @@
             ![[[APP_DELEGATE currentLogedInUser] lastName] isEqualToString:@""])
         {
             [temp appendString:[NSString stringWithFormat:@"%@ ",[[APP_DELEGATE currentLogedInUser] lastName]]];
-            
         }
         
     }
@@ -135,14 +120,13 @@
         [self fillTableData];
         [self.categoryTable reloadData];
     }
-
+    
     if (downloadView.isHidden) {
         [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height-74, downloadView.frame.size.width,downloadView.frame.size.height)];
     } else {
         [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height+8, downloadView.frame.size.width,downloadView.frame.size.height)];
     }
     
-    //    [self.view setNeedsDisplay];
     [[[APP_DELEGATE tabBar] tabBar] setUserInteractionEnabled:YES];
     if ([[[APP_DELEGATE currentLogedInUser] userType] intValue]==0) {
         [changePassBtn setHidden:YES];
@@ -154,60 +138,75 @@
     self.contentWidth.constant = self.view.frame.size.width;
     
     
+    [wifiSwitch setOn: [ConnectionHelper getWifiOnlyConnection]];
     
-    [wifiSwitch setOn: [APP_DELEGATE wifiOnlyConnection]];
+    //TODO: set notification switch (if @"1" - true else false)
+    
+    
+    
+    //    if (notifSwitch setOn:[active isEqualToString:@"1"];) {
+    //        [active isEqualToString:@"1"];
+    //    } else {
+    //        [active isEqualToString:@"0"];
+    //    }
     
     if ([APP_DELEGATE bookmarkCountLeft]>0 && downloadView.isHidden) {
         [btnBookmark setEnabled:YES];
         [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
-         btnBookmark.layer.borderColor = [[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1] CGColor];
+        btnBookmark.layer.borderColor = [[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1] CGColor];
         [self.categoryTable setUserInteractionEnabled:NO];
         [wifiSwitch setUserInteractionEnabled:NO];
         [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height+8, downloadView.frame.size.width,downloadView.frame.size.height)];
         downloadView.hidden = NO;
-
-        self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%%",(1-[APP_DELEGATE bookmarkCountLeft]/[APP_DELEGATE bookmarkCountAll])*100];
-        [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkCountLeft]/[APP_DELEGATE bookmarkCountAll] animated:YES];
+        
+        
+        self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%%",(1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll])*100];
+        [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll] animated:YES];
     }
     
-
+    
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-}
 
 -(void)logout:(id)sender
 {
-    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"autoLogin"];
+    [[NSUserDefaults standardUserDefaults] setValue:nil forKey:@"autoLoginEnabled"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [APP_DELEGATE setCurrentLogedInUser:nil];
     [[[APP_DELEGATE tabBar] navigationController] popToRootViewControllerAnimated:NO];
     [self stopDownload];
     btnBookmark.layer.borderColor = btnBookmark.titleLabel.textColor.CGColor;
-    
-   
 }
 
 -(void)changePassword:(id)sender
 {
-   // NSURL *url=[NSURL URLWithString:@"http://www.fotona.com/en/support/passreset/"];
-    //[[UIApplication sharedApplication] openURL:url];
     registrationView = [[FRegistrationViewController alloc] init];
-    registrationView.urlString = @"http://www.fotona.com/en/support/passreset/";
+    registrationView.urlString = @"http://www.fotona.com/en/support/profile/"; //@"http://www.fotona.com/en/support/passreset/"
     registrationView.fromSettings = false;
     registrationView.view.frame = self.view.bounds;
     [self.view addSubview:registrationView.view];
-    
-//    CATransition* transition = [CATransition animation];
-//    transition.type = kCATransitionPush;
-//    transition.subtype = kCATransitionFromRight;
-//    [self.view.layer addAnimation:transition forKey:@"push-transition"];
 }
-  
+
+- (IBAction)changeNotifiCheck:(id)sender{
+    
+    //TODO - preverjanje če je uporabnik dovolil pošiljanje, drugače spet vprašat za dovoljenje
+    UIApplication *application = [UIApplication sharedApplication];
+    [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIRemoteNotificationTypeAlert |UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound categories:nil]];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeNewsstandContentAvailability| UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeNone)];
+    if (notifSwitch.isOn) {
+        [FNotificationManager setActiveNotificationa:@"1"];
+        
+        
+    } else {
+        [FNotificationManager setActiveNotificationa:@"0"];
+    }
+    
+    [FHelperRequest sendDeviceData];
+    
+}
 
 - (IBAction)changeWifiCheck:(id)sender {
-    [APP_DELEGATE setWifiOnlyConnection:wifiSwitch.isOn];
+    [ConnectionHelper setWifiOnlyConnection:wifiSwitch.isOn];
     if (wifiSwitch.isOn) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
     } else {
@@ -217,28 +216,23 @@
 }
 
 - (IBAction)bookmarkSelected:(id)sender {
-    if ([btnBookmark.titleLabel.text isEqualToString:@"Bookmark"]) {
-        if (!wifiSwitch.isOn) {
-            UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
-            [av showInView:self.view];
-        } else {
+    if ([btnBookmark.titleLabel.text isEqualToString:@"Download"]) {
+        if (![ConnectionHelper connectedToInternet]) {
+            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTIONBOOKMARK", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [av show];
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             
-        
+            //            if([wifiSwitch.isOn]){
+            //            UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
+            //            [av showInView:self.view];}
+        } else {
             MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
             [self.view addSubview:hud];
             hud.labelText = @"Preparing to download";
             [hud show:YES];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0),^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-
-                });
                 [self bookmark];
-               
             });
-
-//           [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
-//            [self bookmark];
         }
         
         
@@ -249,24 +243,19 @@
 }
 
 -(void) bookmark{
-    if ([APP_DELEGATE connectedToInternet]) {
-        
-                       dispatch_async(dispatch_get_main_queue(), ^{
-                           [APP_DELEGATE setBookmarkAll:YES];
-                           [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
-                           [self.categoryTable setUserInteractionEnabled:NO];
-                           [wifiSwitch setUserInteractionEnabled:NO];
-
-                    [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height+8, downloadView.frame.size.width,downloadView.frame.size.height)];
-                    downloadView.hidden = NO;
-        [HelperBookmark bookmarkAll:self.categoryTable.indexPathsForSelectedRows];
-                             btnBookmark.layer.borderColor = btnBookmark.titleLabel.textColor.CGColor;
+    if ([ConnectionHelper connectedToInternet]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [APP_DELEGATE setBookmarkAll:YES];
+            [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
+            [self.categoryTable setUserInteractionEnabled:NO];
+            [wifiSwitch setUserInteractionEnabled:NO];
+            
+            [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height+8, downloadView.frame.size.width,downloadView.frame.size.height)];
+            downloadView.hidden = NO;
+            [HelperBookmark bookmarkAll:self.categoryTable.indexPathsForSelectedRows];
+            btnBookmark.layer.borderColor = btnBookmark.titleLabel.textColor.CGColor;
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                  
-
-             });
-      
-        
+        });
     } else {
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTIONBOOKMARK", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
@@ -279,7 +268,7 @@
 - (void)stopDownload {
     [APP_DELEGATE setBookmarkAll:NO];
     [HelperBookmark cancelBookmark];
-    [btnBookmark setTitle:@"Bookmark" forState:UIControlStateNormal];
+    [btnBookmark setTitle:@"Download" forState:UIControlStateNormal];
     [btnBookmark setEnabled:NO];
     
     [self.categoryTable setUserInteractionEnabled:YES];
@@ -294,29 +283,27 @@
     [[APP_DELEGATE bookmarkingVideos] removeAllObjects];
     [APP_DELEGATE setBookmarkCountLeft:0];
     [APP_DELEGATE setBookmarkCountAll:0];
+    [APP_DELEGATE setBookmarkSizeAll:0];
+    [APP_DELEGATE setBookmarkSizeLeft:0];
     for (NSIndexPath *index in [self.categoryTable indexPathsForVisibleRows]) {
         [self.categoryTable cellForRowAtIndexPath:index].accessoryType = UITableViewCellAccessoryNone;
         [self.categoryTable deselectRowAtIndexPath:index animated:YES];
     }
     self.progressPercentige.text = [NSString stringWithFormat:@"0%%"];
     btnBookmark.layer.borderColor = [[UIColor grayColor] CGColor];
-    [[APP_DELEGATE fotonaController] refreshVideoCells];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     switch(buttonIndex) {
-        case 1: [self unbookmark ];
-            
+        case 1:
+            [self unbookmark ];
             break;
     }
 }
 
 
 - (IBAction)unbookmarkAll:(id)sender {
-    //    UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKUNBOOKMARK", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"NO",@"YES",nil];
-    //    [av showInView:self.view];
-    
     UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"CHECKUNBOOKMARK", nil)] delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK",nil];
     [av show];
     
@@ -324,156 +311,7 @@
 
 - (void)unbookmark{
     [self stopDownload];
-    NSString *currentUsr =[APP_DELEGATE currentLogedInUser].username;
-    if (currentUsr == nil) {
-        currentUsr =@"guest";
-    }
-    int x = 0;
-    FMDatabase *localDatabase = [FMDatabase databaseWithPath:DB_PATH];
-    [localDatabase open];
-    FMResultSet *resultsBookmarked =  [localDatabase executeQuery:@"SELECT * FROM UserBookmark where username=?" withArgumentsInArray:@[currentUsr]];
-    while([resultsBookmarked next]) {
-        NSLog(@"%d",x);
-        x++;
-        NSString *type = [resultsBookmarked stringForColumn:@"typeID"];
-        FMResultSet *resultItem;
-        BOOL still = NO;
-        if ([type isEqualToString:BOOKMARKNEWS]) {// news
-            [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,BOOKMARKNEWS];
-            resultItem = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKNEWS, nil]];
-            while([resultItem next]) {
-                still = YES;
-            }
-            if (!still) {//if not bookmaked anymore
-                resultItem = [localDatabase executeQuery:@"SELECT * FROM News where newsID=?" withArgumentsInArray:[NSArray arrayWithObjects:[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKNEWS, nil]];
-                while([resultItem next]) {
-                    FNews *f=[[FNews alloc] initWithDictionary:[resultItem resultDictionary]];
-                    [localDatabase executeUpdate:@"UPDATE News set isBookmark=? where newsID=?",@"0", [NSString stringWithFormat:@"%ld", (long)f.newsID]];
-                    if ([f.rest isEqualToString:@"1"]) {
-                        NSString *downloadFilename = [NSString stringWithFormat:@"%@%@",docDir,f.localImage];
-                        NSFileManager *fileManager = [NSFileManager defaultManager];
-                        NSError *error;
-                        [fileManager removeItemAtPath:downloadFilename error:&error];
-                        
-                        for (int i =0; i<[f.localImages count]; i++) {
-                            downloadFilename = [NSString stringWithFormat:@"%@%@",docDir,[f.localImages objectAtIndex:i]];
-                            [fileManager removeItemAtPath:downloadFilename error:&error];
-                            x++;
-                        }
-                        
-                    }
-                }
-            }
-        } else {
-            if ([type isEqualToString:BOOKMARKEVENTS]) {//events
-                [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,BOOKMARKEVENTS];
-                resultItem = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=? and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKEVENTS, nil]];
-                while([resultItem next]) {
-                    still = YES;
-                }
-                if (!still) {
-                    [localDatabase executeUpdate:@"UPDATE Events set isBookmark=? where eventID=?",@"0", [NSString stringWithFormat:@"%@", [resultsBookmarked stringForColumn:@"documentID"]]];
-                }
-                
-            } else {
-                if ([type isEqualToString:BOOKMARKVIDEO]) {//video
-                    [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,BOOKMARKVIDEO];
-                        [[APP_DELEGATE fotonaController] refreshCellUnbookmark:[[resultsBookmarked stringForColumn:@"documentID"] intValue]];
-                    FMResultSet *results =  [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKVIDEO]];
-                    BOOL flag=NO;
-                    while([results next]) {
-                        flag=YES;
-                    }
-                    if (!flag) {
-                        [localDatabase executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=?",@"0",[resultsBookmarked stringForColumn:@"documentID"]];
-                        FMResultSet *results2 = [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@ order by sort",[resultsBookmarked stringForColumn:@"documentID"]]];
-                        
-                        while([results2 next]) {
-                            //  NSString *folder=@".Cases";
-                            NSString *downloadFilename = [results2 stringForColumn:@"localPath"];//[[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[results2 stringForColumn:@"localPath"]];
-                            
-                            NSFileManager *fileManager = [NSFileManager defaultManager];
-                            NSError *error;
-                            [fileManager removeItemAtPath:downloadFilename error:&error];
-                            
-                            //                            downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[results2 stringForColumn:@"videoImage"]];
-                            NSArray *pathComp=[[results2 stringForColumn:@"videoImage"] pathComponents];
-                            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[results2 stringForColumn:@"videoImage"] lastPathComponent]];
-                            [fileManager removeItemAtPath:pathTmp error:&error];
-                            x++;
-                        }
-                        
-                        
-                    }
-                    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-                } else {
-                    if ([type isEqualToString:BOOKMARKPDF]) {//pdf
-                        [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,BOOKMARKPDF];
-                        FMResultSet *results =  [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",[resultsBookmarked stringForColumn:@"documentID"],BOOKMARKPDF]];
-                        BOOL flag=NO;
-                        NSString *pdfSrc =@"pdfSrc";
-                        while([results next]) {
-                            flag=YES;
-                            pdfSrc = [results stringForColumn:@"pdfSrc"];
-                        }
-                        if (!flag) {
-                            [localDatabase executeUpdate:@"UPDATE FotonaMenu set isBookmark=? where categoryID=?",@"0",[resultsBookmarked stringForColumn:@"documentID"]];
-                            results= [localDatabase executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenu where active=1 and categoryID=%@",[resultsBookmarked stringForColumn:@"documentID"]]];
-                            while([results next]) {
-                                pdfSrc = [results stringForColumn:@"pdfSrc"];
-                            }
-                            NSString *folder=@".PDF";
-                            NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[pdfSrc lastPathComponent]];
-                            NSFileManager *fileManager = [NSFileManager defaultManager];
-                            NSError *error;
-                            [fileManager removeItemAtPath:downloadFilename error:&error];
-                            
-                            
-                        }
-                        [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-                    } else {//case
-                        [localDatabase executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=0",[resultsBookmarked stringForColumn:@"documentID"],currentUsr,nil];
-                        BOOL bookmarked = NO;
-                        
-                        FMResultSet *results = [localDatabase executeQuery:@"SELECT * FROM UserBookmark where typeID=0 and documentID=?" withArgumentsInArray:[NSArray arrayWithObjects:[resultsBookmarked stringForColumn:@"documentID"], nil]];
-                        while([results next]) {
-                            bookmarked = YES;
-                        }
-                        FMResultSet *selectedCases = [localDatabase executeQuery:@"SELECT * FROM Cases where caseID=?" withArgumentsInArray:@[[resultsBookmarked stringForColumn:@"documentID"]]];
-                        FCase * selected;
-                        while([selectedCases next]) {
-                            selected =  [[FCase alloc] initWithDictionary:[selectedCases resultDictionary]];
-                        }
-                        
-                        if (!bookmarked) {
-                            if ([[selected coverflow] boolValue]) {
-                                [localDatabase executeUpdate:@"UPDATE Cases set isBookmark=? where caseID=?",@"0",selected.caseID];
-                                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-                            }
-                            else{
-                                [localDatabase executeUpdate:@"DELETE FROM Cases WHERE caseID=?",selected.caseID];
-                                [localDatabase executeUpdate:@"INSERT INTO Cases (caseID,title, coverTypeID,name,image,active,authorID,isBookmark,alloweInCoverFlow,galleryID,videoGalleryID) VALUES (?,?,?,?,?,?,?,?,?,?,?)",selected.caseID,selected.title,selected.coverTypeID,selected.name,selected.image,selected.active,selected.authorID,@"0",selected.coverflow, selected.galleryID,selected.videoGalleryID];
-                                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-                                x+=[selected getImages].count-1;
-                                x+=[selected getVideos].count-1;
-                                [[[FCasebookViewController alloc]init]  deleteMediaForCaseGalleryID:selected.galleryID withArray:[selected getImages] andType:0];
-                                [[[FCasebookViewController alloc]init] deleteMediaForCaseGalleryID:selected.videoGalleryID withArray:[selected getVideos] andType:1];
-                                [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseImages] withType:0];
-                                [[[FUpdateContent alloc]init] addMediaWhithout:[selected parseVideos] withType:1];
-                            }
-                            
-                        }
-                    }
-                }
-            }
-        }
-    }
-    [localDatabase close];
-
-    NSLog(@"Unbookmarking complete");
-    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEDBULKBOOKMARKS", nil)] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [av show];
-}
+    [HelperBookmark unbookmarkAll];}
 
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -528,7 +366,7 @@
 - (void) fillTableData{
     [tableData removeAllObjects];
     NSArray *temp =[APP_DELEGATE currentLogedInUser].userTypeSubcategory;
-    if ([[APP_DELEGATE currentLogedInUser].userType intValue] == 0 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 1 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3) {
+    if ([[APP_DELEGATE currentLogedInUser].userType intValue] == 0 || [[APP_DELEGATE currentLogedInUser].userType intValue] == 3) {
         temp = @[@"2",@"1",  @"3"];
     }
     
@@ -568,46 +406,67 @@
     }
     
 }
+//-(id)transformedValue:(float)value{
+//    double convertedValue = [value doubleValue];
+//    int multiplyFactor = 0;
+//    
+//    NSArray *tokens = @[@"b",@"KB",@"MB",@"GB",@"TB"];
+//    
+//    while (convertedValue > 1024) {
+//        convertedValue /= 1024;
+//        multiplyFactor++;
+//    }
+//    
+//    
+//    return[NSString stringWithFormat:@"%4.2f %@", convertedValue, tokens[multiplyFactor]];
+//}
 
 -(void) refreshStatusBar{
     dispatch_async(dispatch_get_main_queue(), ^{
-    self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%%",(1-[APP_DELEGATE bookmarkCountLeft]/[APP_DELEGATE bookmarkCountAll])*100];
-    [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkCountLeft]/[APP_DELEGATE bookmarkCountAll] animated:YES];
-    if ([APP_DELEGATE bookmarkCountLeft] == 0) {
-        [APP_DELEGATE setBookmarkCountAll:0];
-        [[APP_DELEGATE imagesToDownload]removeAllObjects];
-        [[APP_DELEGATE videosToDownload]removeAllObjects];
-        [[APP_DELEGATE pdfToDownload]removeAllObjects];
-        [[APP_DELEGATE authorsImageToDownload]removeAllObjects];
-        [APP_DELEGATE setBookmarkAll:NO];
-        [[APP_DELEGATE bookmarkingVideos] removeAllObjects];
-        [HelperBookmark cancelBookmark];
-        [btnBookmark setTitle:@"Bookmark" forState:UIControlStateNormal];
-        [btnBookmark setEnabled:NO];
-        btnBookmark.layer.borderColor = [[UIColor grayColor] CGColor];
-        [self.categoryTable setUserInteractionEnabled:YES];
-        
-        [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height-74, downloadView.frame.size.width,downloadView.frame.size.height)];
-        downloadView.hidden = YES;
-        for (NSIndexPath *index in [self.categoryTable indexPathsForVisibleRows]) {
-            [self.categoryTable cellForRowAtIndexPath:index].accessoryType = UITableViewCellAccessoryNone;
-            [self.categoryTable deselectRowAtIndexPath:index animated:YES];
+        float res = 0;
+        if ([APP_DELEGATE bookmarkSizeLeft] > 0 && [APP_DELEGATE bookmarkSizeAll] > 0) {
+            res = [APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll];
         }
-        self.progressPercentige.text = [NSString stringWithFormat:@"0%%"];
-        [wifiSwitch setUserInteractionEnabled:YES];
+        self.progressPercentige.text = [NSString stringWithFormat:@"%.0f%% of %.2f GB",(1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll])*100, [APP_DELEGATE bookmarkSizeAll]/1073741824];
         
-    } else {
-        if (downloadView.isHidden) {
-            [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
-            [btnBookmark setEnabled:YES];
-            [self.categoryTable setUserInteractionEnabled:NO];
-            [wifiSwitch setUserInteractionEnabled:NO];
-            [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,downloadView.frame.origin.y, downloadView.frame.size.width,downloadView.frame.size.height)];
-            downloadView.hidden = NO;
-             btnBookmark.layer.borderColor = [[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1] CGColor];
+        [self.downloadProgress setProgress:1-[APP_DELEGATE bookmarkSizeLeft]/[APP_DELEGATE bookmarkSizeAll] animated:YES];
+        if ([APP_DELEGATE bookmarkCountLeft] == 0) {
+            [APP_DELEGATE setBookmarkCountAll:0];
+            [APP_DELEGATE setBookmarkSizeAll:0];
+            [APP_DELEGATE setBookmarkSizeLeft:0];
+            [[APP_DELEGATE imagesToDownload]removeAllObjects];
+            [[APP_DELEGATE videosToDownload]removeAllObjects];
+            [[APP_DELEGATE pdfToDownload]removeAllObjects];
+            [[APP_DELEGATE authorsImageToDownload]removeAllObjects];
+            [APP_DELEGATE setBookmarkAll:NO];
+            [[APP_DELEGATE bookmarkingVideos] removeAllObjects];
+            [HelperBookmark cancelBookmark];
+            [btnBookmark setTitle:@"Download" forState:UIControlStateNormal];
+            [btnBookmark setEnabled:NO];
+            btnBookmark.layer.borderColor = [[UIColor grayColor] CGColor];
+            [self.categoryTable setUserInteractionEnabled:YES];
+            
+            [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,checkView.frame.origin.y+checkView.frame.size.height-74, downloadView.frame.size.width,downloadView.frame.size.height)];
+            downloadView.hidden = YES;
+            for (NSIndexPath *index in [self.categoryTable indexPathsForVisibleRows]) {
+                [self.categoryTable cellForRowAtIndexPath:index].accessoryType = UITableViewCellAccessoryNone;
+                [self.categoryTable deselectRowAtIndexPath:index animated:YES];
+            }
+            self.progressPercentige.text = [NSString stringWithFormat:@"0%%"];
+            [wifiSwitch setUserInteractionEnabled:YES];
+            
+        } else {
+            if (downloadView.isHidden) {
+                [btnBookmark setTitle:@"Stop" forState:UIControlStateNormal];
+                [btnBookmark setEnabled:YES];
+                [self.categoryTable setUserInteractionEnabled:NO];
+                [wifiSwitch setUserInteractionEnabled:NO];
+                [downloadView setFrame:CGRectMake(downloadView.frame.origin.x,downloadView.frame.origin.y, downloadView.frame.size.width,downloadView.frame.size.height)];
+                downloadView.hidden = NO;
+                btnBookmark.layer.borderColor = [[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1] CGColor];
+            }
+            
         }
-        
-    }
     });
     
 }
@@ -618,12 +477,9 @@
         if  ([buttonTitle isEqualToString:@"OK"]) {
             [self bookmark];
         }
-        //    if ([buttonTitle isEqualToString:@"Cancel"]) {
-        //        NSLog(@"Other 1 pressed");
-        //    }
         if ([buttonTitle isEqualToString:NSLocalizedString(@"CHECKWIFIONLYBTN", nil)]) {
             [wifiSwitch setOn:YES animated:YES];
-            [APP_DELEGATE setWifiOnlyConnection:wifiSwitch.isOn];
+            [ConnectionHelper setWifiOnlyConnection:wifiSwitch.isOn];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
             [self bookmark];
         }

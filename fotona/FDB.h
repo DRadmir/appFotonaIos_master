@@ -6,55 +6,73 @@
 //  Copyright © 2015 4egenus. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "FNews.h"
 #import "FCase.h"
 #import "FFotonaMenu.h"
 #import "FAuthor.h"
-#import "FVideo.h"
+#import "FMedia.h"
+#import "FMDatabase.h"
 
 @interface FDB : NSObject
 
-+(NSMutableArray *)getCasesForCarouselFromDB;
-
-+(FAuthor *)getAuthorWithID:(NSString *)authID;
 +(UIImage *)getAuthorImage:(NSString *)authID;
++(FAuthor *)getAuthorWithID:(NSString *)authID;
 +(NSMutableArray *)getAuthors;
 
+
++(NSMutableArray *)getCasesForCarouselFromDB;
++(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
 +(FCase *)getCaseForFotona:(NSString *)caseID;
-+(NSMutableArray *)getCasebookMenu;
-+(NSMutableArray *)getCaseCategoryWithPrev:(NSString *)prev;
++(FCase *)getCaseWithID:(NSString *)caseID;
 +(NSMutableArray *)getCasesWithCategoryID:(NSString *)catID;
 +(NSMutableArray *)getCasesWithAuthorID:(NSString *)authorID;
-+(FCase *)getCaseWithID:(NSString *)caseID;
 +(NSMutableArray *)getAlphabeticalCasesForBookmark:(NSString *)category;
-+(void) removeBookmarkedCase:(FCase *) caseToRemove;
 
-+(NSMutableArray *)getNewsSortedDateFromDB;
-+(void)setNewsRead:(FNews *) news;
-+(NSMutableArray *)getNewsForCategory:(NSString *)category;
++(void)removeCaseWithID:(NSString *)fotonaID;
 
++(NSMutableArray *)getCasebookMenu;
++(NSMutableArray *)getCaseCategoryWithPrev:(NSString *)prev;
+
+
++(NSMutableArray *)getEventsForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
 +(NSArray *)getEventsFromDB;
 +(NSMutableArray *)getEventsForCategory:(NSString *)category;
-
 +(NSMutableArray  *) fillEventsWithCategory:(NSInteger) ci andType:(NSInteger) ti andMobile:(BOOL) mobile;
-+(NSMutableArray *)getNewsForSearchFromDB:(NSString *) searchTxt;
-+(NSMutableArray *)getCasesForSearchFromDB:(NSString *) searchTxt;
 
-+(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt;
-+(NSMutableArray *)getVideosWithGallery:(NSString *)videoGalleryID;
+
++(NSMutableArray *)getNewsForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database;
+
+
++(NSMutableArray *)getNewsSortedDateFromDB;
++(NSMutableArray *)getNewsForCategory:(NSString *)category;
++(void)setNewsRead:(FNews *) news;
+
++(NSMutableArray *)getFotonaForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP;
+
++(NSMutableArray *)getVideosForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP;
 +(NSMutableArray *)getVideoswithCategory:(NSString *)videoCategory;
-+(void) removeBookmarkedVideo:(FVideo *)videoToRemove;
 
-+(NSMutableArray *)getFotonaMenu:(NSString *)catID;
-+(NSMutableArray *)getPDFForCategory:(NSString *)category;
-
-+(BOOL)checkFotonaForUserSearch:(NSString *)fc;
-+(BOOL)checkFotonaForUser:(FFotonaMenu *)f;
-+(BOOL)checkFotonaForUser:(FFotonaMenu *)f andCategory:(NSString *)category;
 
 +(BOOL)checkIfBookmarkedForDocumentID:(NSString *)documentID andType:(NSString *)type;
 
-+(void)removeFromBookmarkForDocumentID:(NSString *)documentID;
 
++(void)addMedia:(NSMutableArray *)m withType:(int)type andDownload:(BOOL) toDownload;
++(void)updateMedia:(NSMutableArray *)mediaArray andType:(NSString *) type  andDownload:(BOOL)download forCase:(NSString *) caseID;
++(FMedia *)getMediaWithId:(NSString *) videoId andType: (NSString *)mediaType;
++(NSMutableArray *)getMediaForGallery:(NSString *)galleryItems withMediType: (NSString *)mediaType;
++(void) removeBookmarkedMedia:(FMedia *)media;
++(void)removeFromBookmarkForMediaID:(NSString *)mediaID withMediaType:(NSString *)mediaType;
+
++(NSMutableArray *)getFotonaMenu:(NSString *)catID;
++(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP;
++(void)removeFotonaMenuWithID:(NSString *)fotonaID;
+
++(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID;
++(void) removeFromFavoritesItem:(int) documentID ofType:(NSString *) typeID;
++(BOOL) checkIfFavoritesItem:(int) documentID ofType:(NSString *) typeID;
++(NSMutableArray *) getAllFavoritesForUser;
+
++(NSMutableArray *)getDocuments;
+
++ (void) copyDatabaseIfNeeded;
 @end

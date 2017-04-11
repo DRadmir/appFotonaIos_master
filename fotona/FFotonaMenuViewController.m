@@ -7,7 +7,6 @@
 //
 
 #import "FFotonaMenuViewController.h"
-#import "FAppDelegate.h"
 #import "FMDatabase.h"
 #import "FCase.h"
 #import "FFotonaMenu.h"
@@ -17,9 +16,9 @@
 #import "FDownloadManager.h"
 #import "HelperBookmark.h"
 #import "FItemBookmark.h"
-#import "FCommon.h"
 #import "FDB.h"
 #import "UIColor+Hex.h"
+#import "FGoogleAnalytics.h"
 
 @interface FFotonaMenuViewController (){
     
@@ -36,8 +35,7 @@
 @synthesize selectedIcon;
 @synthesize parent;
 @synthesize lastSelectedCategory;
-
-
+BOOL enabled;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -64,7 +62,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+     [super viewWillAppear:animated];
     iconsInMenu=[NSArray arrayWithObjects:@"about_fotona",@"aesthetics_and_surgery_products",@"dental_products",@"gynecology_products",@"distributor_news",@"la&ha_publications",@"ifw_2015",@"disclaimer", nil];
     for (UIView *v in self.navigationController.navigationBar.subviews) {
         if ([v isKindOfClass:[UILabel class]]) {
@@ -88,12 +86,6 @@
         menuItems=[allItems lastObject];
     }
     [table reloadData];
-    
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-    
 }
 
 #pragma mark TabelView
@@ -111,7 +103,7 @@
     
     int icon = [[[menuItems objectAtIndex:indexPath.row] iconName] intValue];
     if (icon < iconsInMenu.count) {
-        iconaName = [iconsInMenu objectAtIndex:icon-1];
+        iconaName = [iconsInMenu objectAtIndex:icon];
     } else{
         if (selectedIcon) {
             iconaName=selectedIcon;
@@ -128,138 +120,38 @@
             }
         }
     }
+    
+    
+    cell.backgroundColor = [UIColor clearColor];
+    
     [cell.imageView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@_red",iconaName]]];
     [cell.textLabel setText:[[menuItems objectAtIndex:indexPath.row] title]];
     [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
     
     UIView *bck=[[UIView alloc] initWithFrame:cell.frame];
     
-    [bck setBackgroundColor:[UIColor colorFromHex:@"ED1C24"]];
+    [bck setBackgroundColor:[UIColor colorFromHex:FOTONARED]];
     [cell setSelectedBackgroundView:bck];
     cell.textLabel.highlightedTextColor = [UIColor whiteColor];
     cell.imageView.highlightedImage =[UIImage imageNamed:[NSString stringWithFormat:@"%@",iconaName]];
     
-    
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-    
     [cell setBackgroundColor:[UIColor clearColor]];
+    
+    //if webpage and no internet
+    if ([[[menuItems objectAtIndex:indexPath.row] fotonaCategoryType] intValue] == [FOTONACATEGORYWEBPAGE intValue] && ![ConnectionHelper connectedToInternet]) {
+        [cell setUserInteractionEnabled:NO];
+        [[cell textLabel] setTextColor:[[UIColor blackColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
+        cell.imageView.alpha = DISABLEDCOLORALPHA;
+    } else {
+        [cell setUserInteractionEnabled:YES];
+        [[cell textLabel] setTextColor:[[UIColor blackColor] colorWithAlphaComponent:1]];
+        cell.imageView.alpha = 1;
+    }
     
     return cell;
 }
 
-- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[[menuItems objectAtIndex:indexPath.row] fotonaCategoryType] isEqualToString:@"6"]) {
-        if (![[[menuItems objectAtIndex:indexPath.row] bookmark] boolValue]) {
-            UITableViewRowAction *bookmarkAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"Add to Bookmarks"  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath){
-                index = indexPath.row;
-                if ([APP_DELEGATE wifiOnlyConnection]) {
-                    [tableView reloadData];
-                    [self bookmarkPdf];
-                } else {
-                    UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
-                    [av showInView:self.view];
-                }
-                
-                
-            }];
-             bookmarkAction.backgroundColor = [UIColor colorFromHex:@"ED1C24"];
-            return @[bookmarkAction];
-            
-        } else{
-            UITableViewRowAction *unbookmarkAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"Remove from Bookmarks"  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath){
-                [[menuItems objectAtIndex:indexPath.row] setBookmark:@"0"];
-                FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-                [database open];
-                NSString *usr =[APP_DELEGATE currentLogedInUser].username;// [[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-                if (usr == nil) {
-                    usr =@"guest";
-                }
-                [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",[[menuItems objectAtIndex:indexPath.row] categoryID],usr,BOOKMARKPDF];
-                FMResultSet *resultsBookmarked =  [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@",[[menuItems objectAtIndex:indexPath.row] categoryID],BOOKMARKPDF]];
-                BOOL flag=NO;
-                while([resultsBookmarked next]) {
-                    flag=YES;
-                }
-                if (!flag) {
-                    NSString * pdfSrc=@"";
-                    [database executeUpdate:@"UPDATE FotonaMenu set isBookmark=? where categoryID=?",@"0",[[menuItems objectAtIndex:indexPath.row] categoryID]];
-                    
-                    FMResultSet *results= [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM FotonaMenu where active=1 and categoryID=%@",[[menuItems objectAtIndex:indexPath.row] categoryID]]];
-                    while([results next]) {
-                        pdfSrc = [results stringForColumn:@"pdfSrc"];
-                    }
-                    NSString *folder=@".PDF";
-                    NSString *downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[pdfSrc lastPathComponent]];
-                    NSFileManager *fileManager = [NSFileManager defaultManager];
-                    NSError *error;
-                    [fileManager removeItemAtPath:downloadFilename error:&error];
-                }
-                [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-                [database close];
-                
-                [tableView reloadData];
-                UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"REMOVEBOOKMARKS", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [av show];
-                
-            }];
-             unbookmarkAction.backgroundColor = [UIColor colorFromHex:@"ED1C24"];
-            return @[unbookmarkAction];
-        }
-    }
-    return nil;
-}
-
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex > -1) {
-        NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
-        if  ([buttonTitle isEqualToString:@"OK"]) {
-            [self bookmarkPdf];
-        }
-        if ([buttonTitle isEqualToString:NSLocalizedString(@"CHECKWIFIONLYBTN", nil)]) {
-            [APP_DELEGATE setWifiOnlyConnection:TRUE];
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
-            [self bookmarkPdf];
-            
-        }
-    }
-    
-
-}
--(void) bookmarkPdf{
-    if([APP_DELEGATE connectedToInternet]){
-        [self.bookmarkPDF addObject:[menuItems objectAtIndex:index]];
-        [self.parent.bookmarkMenu setObject:self forKey:[[menuItems objectAtIndex:index] pdfSrc]];
-        [HelperBookmark bookmarkPDF:[menuItems objectAtIndex:index]];
-        [APP_DELEGATE setBookmarkAll:YES];
-        [[FDownloadManager shared] prepareForDownloadingFiles];
-    } else {
-        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTIONBOOKMARK", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [av show];
-    }
-}
-
-- (void) refreshPDF:(NSString *)link{
-    for (int i=0; i<[self.bookmarkPDF count]; i++) {
-        if ([[[self.bookmarkPDF objectAtIndex:i] pdfSrc] isEqualToString:link]) {
-            [[self.bookmarkPDF objectAtIndex:i] setBookmark:@"1"];
-            [self.bookmarkPDF removeObjectAtIndex:i];
-            [table reloadData];
-        }
-    }
-}
-
-
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[[menuItems objectAtIndex:indexPath.row] fotonaCategoryType] isEqualToString:@"6"]) {
-        return YES;
-    }
-    return NO;
-}
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-}
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 0;
@@ -298,16 +190,15 @@
             {
                 [subMenu setSelectedIcon: @"fotonam"];
             }
-
         }
         
         [self.navigationController pushViewController:subMenu animated:YES];
     }else
     {
-        if ([[clicked fotonaCategoryType] isEqualToString:@"4"]) {
-            //video+content
-            NSArray *videos = [clicked getVideos];
-            if (videos.count >0) {
+        if ([[clicked fotonaCategoryType] intValue] == 4 || [[clicked fotonaCategoryType] intValue] == 6) {
+            //video + pdf gallery
+            NSArray *media = [clicked getMedia];
+            if (media.count >0) {
                 [self.viewDeckController closeLeftViewAnimated:YES];
                 [parent closeMenu];
                 for (UIView *v in parent.containerView.subviews) {
@@ -316,58 +207,49 @@
                 
                 [[parent fotonaImg] setHidden:YES];
                 [parent setItem:clicked];
-                [parent openContentWithTitle:[clicked title] description:[clicked text] videoGallery:[clicked videoGalleryID] videos:[clicked getVideos]];
+                [parent openContentWithTitle:[clicked title] description:[clicked text] media:[clicked getMedia] andMediaType:MEDIAVIDEO];
             } else
             {
-                
                 UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"EMPTYCATEGORY", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [av show];
             }
-            
-            
         } else
         {
-
-        [self.viewDeckController closeLeftViewAnimated:YES];
-        [parent closeMenu];
-        for (UIView *v in parent.containerView.subviews) {
-            [v removeFromSuperview];
-        }
-        
-        [[parent fotonaImg] setHidden:YES];
-        //logic open screen
-        if ([[clicked fotonaCategoryType] isEqualToString:@"2"]) {
-            //external link
-            [parent setItem:nil];
-            [parent externalLink:[clicked externalLink]];
-        }
-        if ([[clicked fotonaCategoryType] isEqualToString:@"3"]) {
-            //case
-            [parent setItem:nil];
-            FCase *item = [FDB getCaseForFotona:[clicked caseID]];       //[self getCase:[clicked caseID]];
-            [(FCasebookViewController *)[(IIViewDeckController *)[[self.tabBarController viewControllers] objectAtIndex:1] centerController] setCurrentCase:item];
-            [(FCasebookViewController *)[(IIViewDeckController *)[[self.tabBarController viewControllers] objectAtIndex:1] centerController] setFlagCarousel:YES];
-            [self.tabBarController setSelectedIndex:3];
-        }
             
+            [self.viewDeckController closeLeftViewAnimated:YES];
+            [parent closeMenu];
+            for (UIView *v in parent.containerView.subviews) {
+                [v removeFromSuperview];
+            }
             
-        if ([[clicked fotonaCategoryType] isEqualToString:@"5"]) {
-            //content
-            [parent setItem:nil];
-            [parent openContentWithTitle:[clicked title] description:[clicked text]];
+            [[parent fotonaImg] setHidden:YES];
+            //logic open screen
+            if ([[clicked fotonaCategoryType] intValue] == 2) {
+                //external link
+                [FGoogleAnalytics writeGAForItem:[clicked title] andType:GAFOTONAWEBPAGEINT];
+                [parent setItem:nil];
+                [parent externalLink:[clicked externalLink]];
+            }
+            if ([[clicked fotonaCategoryType] intValue] == 3) {
+                //case
+                [parent setItem:nil];
+                FCase *item = [FDB getCaseForFotona:[clicked caseID]];       //[self getCase:[clicked caseID]];
+                [(FCasebookViewController *)[(IIViewDeckController *)[[self.tabBarController viewControllers] objectAtIndex:1] centerController] setCurrentCase:item];
+                [(FCasebookViewController *)[(IIViewDeckController *)[[self.tabBarController viewControllers] objectAtIndex:1] centerController] setFlagCarousel:YES];
+                [self.tabBarController setSelectedIndex:3];
+            }
+            
+            if ([[clicked fotonaCategoryType] intValue] == 5) {
+                //content
+                [parent setItem:nil];
+                [parent openContentWithTitle:[clicked title] description:[clicked text]];
+            }
+            if ([[clicked fotonaCategoryType] intValue] == 7) {
+                //preloaded
+                [parent setItem:nil];
+                [parent openPreloaded];
+            }
         }
-        if ([[clicked fotonaCategoryType] isEqualToString:@"6"]) {
-            //pdf
-            [parent setItem:nil];
-            [parent downloadFile:[NSString stringWithFormat:@"%@",[clicked pdfSrc]] inFolder:@".PDF" type:6 withCategoryID:[clicked categoryID]];
-        }
-        if ([[clicked fotonaCategoryType] isEqualToString:@"7"]) {
-            //preloaded
-            [parent setItem:nil];
-            [parent openPreloaded];
-        }
-        }
-        
     }
 }
 
@@ -376,20 +258,14 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-
 - (void) resetViewAnime:(BOOL) anime{
     [self.navigationController popToRootViewControllerAnimated:anime];
 }
-
-
-
-
 
 @end

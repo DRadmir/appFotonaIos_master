@@ -9,7 +9,6 @@
 #import "FICarousel.h"
 #import "UIView+Border.h"
 #import "HelperDate.h"
-#import "FAppDelegate.h"
 
 @interface FICarousel ()
 

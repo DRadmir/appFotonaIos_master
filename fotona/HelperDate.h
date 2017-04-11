@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 4egenus. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 
 @interface HelperDate : NSObject
 

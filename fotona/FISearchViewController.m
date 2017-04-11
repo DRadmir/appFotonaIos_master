@@ -7,12 +7,14 @@
 //
 
 #import "FISearchViewController.h"
-#import "FAppDelegate.h"
 #import "FDB.h"
 #import "MBProgressHUD.h"
 #import "FIFlowController.h"
+#import "FMDatabase.h"
 
-@interface FISearchViewController ()
+@interface FISearchViewController (){
+    NSMutableArray *orderIPhone;
+}
 
 @end
 
@@ -23,7 +25,18 @@
 @synthesize newsSearchResIPhone;
 @synthesize casesSearchResIPhone;
 @synthesize videosSearchResIPhone;
+@synthesize pdfsSearcResIPhone;
+@synthesize fotonaSearcResIPhone;
 @synthesize parentIPhone;
+@synthesize characterLimit;
+@synthesize eventsSearcResIPhone;
+
+#define newsOrderIPhone 1
+#define eventsOrderIPhone 2
+#define videoOrderIPhone 3
+#define pdfOrderIPhone 4
+#define caseOrderIPhone 5
+#define fotonaOrderIPhone 6
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -41,16 +54,37 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    orderIPhone = [NSMutableArray new];
+    if(searchTxtIPhone.length >= 2)
+        characterLimit = TRUE;
+    else
+        characterLimit = FALSE;
     int count = 0;
     if ([newsSearchResIPhone count]>0)
     {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", newsOrderIPhone]];
         count++;
     }
-    if ([casesSearchResIPhone count]>0) {
+    if ([eventsSearcResIPhone count]>0) {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", eventsOrderIPhone]];
         count++;
     }
     if ([videosSearchResIPhone count]>0)
     {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", videoOrderIPhone]];
+        count++;
+    }
+    if ([pdfsSearcResIPhone count]>0)
+    {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", pdfOrderIPhone]];
+        count++;
+    }
+    if ([casesSearchResIPhone count]>0) {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", caseOrderIPhone]];
+        count++;
+    }
+    if ([fotonaSearcResIPhone count]>0) {
+        [orderIPhone addObject:[NSString stringWithFormat:@"%d", fotonaOrderIPhone]];
         count++;
     }
     return count;
@@ -58,97 +92,89 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section==0) {
-        if (newsSearchResIPhone.count>0) {
+    switch ([orderIPhone[section] intValue]) {
+        case newsOrderIPhone:
             return newsSearchResIPhone.count;
-        }else
-        {
-            if (casesSearchResIPhone.count>0) {
-                return casesSearchResIPhone.count;
-            }else
-            {
-                return videosSearchResIPhone.count;
-            }
-        }
-    }else
-    {
-        if (section==1) {
-            if (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0) {
-                return casesSearchResIPhone.count;
-            }else
-            {
-                return videosSearchResIPhone.count;
-            }
-        }else
-        {
+            break;
+        case eventsOrderIPhone:
+            return eventsSearcResIPhone.count;
+            break;
+        case videoOrderIPhone:
             return videosSearchResIPhone.count;
-        }
-        
+            break;
+        case pdfOrderIPhone:
+            return pdfsSearcResIPhone.count;
+            break;
+        case caseOrderIPhone:
+            return casesSearchResIPhone.count;
+            break;
+        case fotonaOrderIPhone:
+            return fotonaSearcResIPhone.count;
+            break;
+        default:
+            return 0;
+            break;
     }
-    
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section==0) {
-        if (newsSearchResIPhone.count>0) {
+    switch ([orderIPhone[section] intValue]) {
+        case newsOrderIPhone:
             return @"News";
-        }else
-        {
-            if (casesSearchResIPhone.count>0) {
-                return @"Cases";
-            }else
-            {
-                return @"Videos";
-            }
-        }
-    }else
-    {
-        if (section==1) {
-            if (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0) {
-                return @"Cases";
-            }else
-            {
-                return @"Videos";
-            }
-        }else
-        {
+            break;
+        case eventsOrderIPhone:
+            return @"Events";
+            break;
+        case videoOrderIPhone:
             return @"Videos";
-        }
-        
+            break;
+        case pdfOrderIPhone:
+            return @"PDFs";
+            break;
+        case caseOrderIPhone:
+            return @"Cases";
+            break;
+        case fotonaOrderIPhone:
+            return @"Fotona";
+            break;
+        default:
+            return @"Something wrong";
+            break;
     }
+
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
-    if (indexPath.section==0) {
-        if (newsSearchResIPhone.count>0) {
+    switch ([orderIPhone[indexPath.section] intValue]) {
+        case newsOrderIPhone:
             [cell.textLabel setText:[[newsSearchResIPhone objectAtIndex:indexPath.row] title]];
-        }else
-        {
-            if (casesSearchResIPhone.count>0) {
-                [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
-            }else
-            {
-                [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
-            }
-        }
-    }else
-    {
-        if (indexPath.section==1) {
-            if (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0) {
-                [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
-            }else
-            {
-                [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
-            }
-        }else
-        {
+            [cell.detailTextLabel setText:[[newsSearchResIPhone objectAtIndex:indexPath.row] description]];
+            break;
+        case eventsOrderIPhone:
+            [cell.textLabel setText:[[eventsSearcResIPhone objectAtIndex:indexPath.row] title]];
+            break;
+        case videoOrderIPhone:
             [cell.textLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] title]];
-        }
-        
+            [cell.detailTextLabel setText:[[videosSearchResIPhone objectAtIndex:indexPath.row] description]];
+            break;
+        case pdfOrderIPhone:
+            [cell.textLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] title]];
+            [cell.detailTextLabel setText:[[pdfsSearcResIPhone objectAtIndex:indexPath.row] description]];
+            break;
+        case caseOrderIPhone:
+            [cell.textLabel setText:[[casesSearchResIPhone objectAtIndex:indexPath.row] title]];
+            break;
+        case fotonaOrderIPhone:
+            [cell.textLabel setText:[[fotonaSearcResIPhone objectAtIndex:indexPath.row] title]];
+            break;
+        default:
+            [cell.textLabel setText:@"Something wrong"];
+            break;
     }
+
     return cell;
 }
 
@@ -159,31 +185,31 @@
     FIFlowController *flow = [FIFlowController sharedInstance];
     [flow.lastOpenedView toggleSearchBar];
     [self.view endEditing:true];
-    if (indexPath.section==0) {
-        if (newsSearchResIPhone.count>0) {
-            [self openNews:indexPath];
-        }else
+    switch ([orderIPhone[indexPath.section] intValue]) {
+        case newsOrderIPhone:
+           [self openNews:indexPath];
+            break;
+        case eventsOrderIPhone:
+            [self openEvent:indexPath];
+            break;
+        case videoOrderIPhone:
+            [self openMedia:videosSearchResIPhone[indexPath.row]];
+            break;
+        case pdfOrderIPhone:
+            [self openMedia:pdfsSearcResIPhone[indexPath.row]];
+            break;
+        case caseOrderIPhone:
+            [self openCase:indexPath];
+            break;
+        case fotonaOrderIPhone:
+            [self openFotona:fotonaSearcResIPhone[indexPath.row]];
+            break;
+        default:
         {
-            if (casesSearchResIPhone.count>0) {
-                [self openCase:indexPath];
-            }else
-            {
-                [self openVideo:indexPath];
-            }
+            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Something wrong" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [av show];
         }
-    }else
-    {
-        if (indexPath.section==1) {
-            if (newsSearchResIPhone.count>0 && casesSearchResIPhone.count>0) {
-                [self openCase:indexPath];
-            }else
-            {
-                [self openVideo:indexPath];
-            }
-        }else
-        {
-            [self openVideo:indexPath];
-        }
+            break;
     }
 }
 
@@ -194,9 +220,18 @@
 
 -(void)searchIPhone
 {
-    newsSearchResIPhone=[FDB getNewsForSearchFromDB:searchTxtIPhone];
-    casesSearchResIPhone=[FDB getCasesForSearchFromDB:searchTxtIPhone];
-    videosSearchResIPhone=[FDB getVideosForSearchFromDB:searchTxtIPhone];
+    //TODO - optimize
+    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+    [database open];
+    NSString *userP = [FCommon getUserPermissionsForDBWithColumnName:USERPERMISSIONCOLUMNNAME];
+    newsSearchResIPhone=[FDB getNewsForSearchFromDB:searchTxtIPhone withDatabase:database];
+    eventsSearcResIPhone=[FDB getEventsForSearchFromDB:searchTxtIPhone withDatabase:database];
+    videosSearchResIPhone=[FDB getVideosForSearchFromDB:searchTxtIPhone withDatabase:database userPermissions:userP];
+    pdfsSearcResIPhone=[FDB getPDFForSearchFromDB:searchTxtIPhone withDatabase:database userPermissions:userP];
+    casesSearchResIPhone=[FDB getCasesForSearchFromDB:searchTxtIPhone withDatabase:database];
+    fotonaSearcResIPhone=[FDB getFotonaForSearchFromDB:searchTxtIPhone withDatabase:database userPermissions:userP];
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
 }
 
 -(IBAction)closePopup:(id)sender
@@ -222,7 +257,7 @@
     successIPhone=0;
 }
 
-#pragma mark OpenElements
+#pragma mark - Open News
 
 -(void) openNews:(NSIndexPath*) index
 {
@@ -233,41 +268,34 @@
     [flow.tabControler setSelectedIndex:0];
 }
 
+#pragma mark - Open Fotona
 
+-(void) openFotona:(FFotonaMenu*) fotona
+{
+    [FFotonaMenu openFotonaMenu:fotona];
+}
+
+#pragma mark - Open Case
 -(void) openCase:(NSIndexPath*) index
 {
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    flow.caseFlow = casesSearchResIPhone[index.row];
-    if (flow.caseMenu != nil)
-    {
-        [[[flow caseMenu] navigationController] popToRootViewControllerAnimated:false];
-    }
-    if (flow.lastIndex != 3) {
-        flow.lastIndex = 3;
-        [flow.tabControler setSelectedIndex:3];
-    } else {
-        flow.caseTab.caseToOpen = flow.caseFlow;
-        [flow.caseTab openCase];
-    }
+    [FCase openCase:casesSearchResIPhone[index.row]];
 }
 
--(void) openVideo:(NSIndexPath*) index
+#pragma mark - Open Video
+-(void) openMedia:(FMedia *)media
+{
+    [FMedia openMedia:media];
+}
+
+#pragma mark - Open Event
+-(void) openEvent:(NSIndexPath *) index
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
-    flow.vidToOpen = videosSearchResIPhone[index.row];
-    flow.videoGal = flow.vidToOpen.videoGalleryID;
-    flow.fromSearch = true;
-    if (flow.fotonaMenu != nil)
-    {
-        [[[flow fotonaMenu] navigationController] popToRootViewControllerAnimated:false];
-    }
-    if (flow.lastIndex != 2) {
-        flow.lastIndex = 2;
-        [flow.tabControler setSelectedIndex:2];
-    } else {
-        [flow.fotonaTab openGalleryFromSearch:flow.videoGal andReplace:true];
-    }
- 
-}
+    
+    [APP_DELEGATE setEventTemp:eventsSearcResIPhone[index.row]];
+    flow.lastIndex = 1;
+    [flow.eventTab openEvent];
+    [flow.tabControler setSelectedIndex:1];
 
+}
 @end

@@ -22,7 +22,6 @@
 #import "EBPhotoCommentProtocol.h"
 #import "EBCommentCell.h"
 #import <QuartzCore/QuartzCore.h>
-#import "FAppDelegate.h"
 
 static NSString *ContentOffsetKeyPath = @"contentOffset";
 static NSString *CurrentPhotoIndexKeyPath = @"currentPhotoIndex";

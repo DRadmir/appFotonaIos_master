@@ -6,7 +6,6 @@
 //  Copyright © 2015 4egenus. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "FMainViewController_iPad.h"
 #import "FMainViewController.h"
 #import <MessageUI/MFMailComposeViewController.h>

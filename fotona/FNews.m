@@ -7,7 +7,6 @@
 //
 
 #import "FNews.h"
-#import "FAppDelegate.h"
 #import "FMDatabase.h"
 #import "FDownloadManager.h"
 #import "HelperBookmark.h"
@@ -63,7 +62,6 @@
         [self setIsReadedDB:[NSString stringWithFormat:@"%hhd",[[dic valueForKey:@"isReaded"] boolValue]]];
         [self setNDate:[dic valueForKey:@"date"]];
         NSString *temp = @"";
-        NSMutableArray * download = [NSMutableArray new];
         NSString *url_Img_FULL = [dic valueForKey:@"headerImage"];
         NSArray *pathComp=[url_Img_FULL pathComponents];
         NSString *pathTmp = [[NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[url_Img_FULL lastPathComponent]];
@@ -134,10 +132,7 @@
         [self setActive:[[dic valueForKey:@"active"] boolValue]];
         [self setNDate:[dic valueForKey:@"date"]];
         
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         
         FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
         [database open];
@@ -153,7 +148,7 @@
         
         [self setLocalImage:[dic valueForKey:@"headerImage"]];
         temp = [dic valueForKey:@"images"];
-        NSMutableArray *tempB = [temp componentsSeparatedByString:@","];
+        NSMutableArray *tempB = [[temp componentsSeparatedByString:@","] mutableCopy];
         [self setLocalImages:tempB];
         
         
@@ -168,7 +163,7 @@
         [self setCategories:tempA];
         [self setRest:[dic valueForKey:@"rest"]];
         [self setBookmark:[dic valueForKey:@"isBookmark"]];
-        if ([self.rest isEqualToString:@"0"] || [HelperBookmark bookmarked:self.newsID withType:BOOKMARKNEWS]) {
+        if ([self.rest isEqualToString:@"0"] || [HelperBookmark bookmarked:(int)self.newsID withType:BOOKMARKNEWS]) {
             
             UIImage *img = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@%@",docDir,self.localImage]];
             [self setHeaderImage:img];
@@ -185,7 +180,7 @@
             if ([tempA count]<1) {
                 UIImage *img =[UIImage imageNamed:@"featured_news"];
                 [tempA addObject:img];
-            }
+                }
             [self setImages:tempA];
         } else {
             [self setImages:nil];
@@ -255,13 +250,13 @@
 
         for (int c=0; c<number; c++) {
             UIImage *img;
-            if ([HelperBookmark bookmarked:[[newsArray objectAtIndex:startIndex+c] newsID] withType:BOOKMARKNEWS]) {
+            if ([HelperBookmark bookmarked:(int)[[newsArray objectAtIndex:startIndex+c] newsID] withType:BOOKMARKNEWS]) {
                 NSString * header =[[newsArray objectAtIndex:startIndex+c] localImage];
                 img = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@%@",docDir,header]];
             } else {
                 NSString * header =[[newsArray objectAtIndex:startIndex+c] headerImageLink];
-                if (header == nil || [header isEqualToString:@""] || (![APP_DELEGATE connectedToInternet])) {
-                    img = [UIImage imageNamed:@"related_news"];
+                if (header == nil || [header isEqualToString:@""] || (![ConnectionHelper connectedToInternet])) {
+                    img = [UIImage imageNamed:@"related_news"]; 
                 } else {
                     NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",  header];
                     img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];
@@ -272,37 +267,41 @@
             [[newsArray objectAtIndex:startIndex+c] setHeaderImage:img];
             NSMutableArray *temp = [[NSMutableArray alloc]init];
             FNews *sf = [newsArray objectAtIndex:startIndex+c];
-            if ([[sf rest] isEqualToString:@"1"] && ![HelperBookmark bookmarked:sf.newsID withType:BOOKMARKNEWS]) {
+            if ([[sf rest] isEqualToString:@"1"] && ![HelperBookmark bookmarked:(int)sf.newsID withType:BOOKMARKNEWS]) {
                 if ([sf imagesLinks].count>0) {
                     
                     for (int i=0; i<[sf imagesLinks].count; i++){
                         NSString * featured =[[sf imagesLinks] objectAtIndex:i];
-                        if (featured == nil || [featured isEqualToString:@""] || (![APP_DELEGATE connectedToInternet])) {
+                        if (featured == nil || [featured isEqualToString:@""] || (![ConnectionHelper connectedToInternet])) {
+                            
                             img = [UIImage imageNamed:@"featured_news"];
                             [temp addObject: img];
                             break;
                         } else {
-                            img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:featured]]];
+                            img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:featured]]];//fetching image from link
                             if (img != nil){
                                 [temp addObject: img];
-                            } else {
+                                
+                            }
+                            else {
                                 img = [UIImage imageNamed:@"featured_news"];
-                                [temp addObject: img];
+                                [temp addObject: img];                                
                                 break;
                             }
                         }
                     }
                     [sf setImages:temp];
+                    [sf setRest:@"0"];
                 } else{
                     img = [UIImage imageNamed:@"featured_news"];
                     [[sf images] addObject: img];
                 }
-                if([APP_DELEGATE connectedToInternet] && [sf images].count>0)
+                if([ConnectionHelper connectedToInternet] && [sf images].count>0)
                     [sf setRest:@"0"];
             } else {
                 for (int i=0; i<[sf localImages].count; i++){
                     NSString * header =[[sf localImages] objectAtIndex:i];
-                    img = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@%@",docDir,header]];
+                    img = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@%@",docDir,header]];//fetching image from link
                     if (img != nil){
                         [temp addObject: img];
                     } else {
@@ -312,12 +311,10 @@
                     
                 }
                 [sf setImages:temp];
+                [sf setRest:@"0"];
             }
             [newsArray replaceObjectAtIndex:startIndex+c withObject:sf];
         }
-      
-    
-
     return newsArray;
 }
 

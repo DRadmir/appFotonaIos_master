@@ -24,9 +24,9 @@
 @synthesize fotonaSettings;
 @synthesize eventTab;
 @synthesize newsTab;
+@synthesize favoriteTab;
 @synthesize lastIndex;
 @synthesize mainControler;
-@synthesize bookmarkMenuArray;
 
 @synthesize caseFlow;
 @synthesize caseOpened;
@@ -38,9 +38,10 @@
 @synthesize showMenu;
 
 @synthesize fromSearch;
-@synthesize videoSearch;
-@synthesize videoGal;
-@synthesize vidToOpen;
+@synthesize fromSearchFotona;
+@synthesize mediaToOpen;
+@synthesize mediaTypeToOpen;
+@synthesize galToOpen;
 
 @synthesize fotonaHelperState;
 
@@ -57,6 +58,7 @@
 - (id)init {
     self = [super init];
     if (self) {
+        favoriteTab = nil;
         fotonaTab = nil;
         fotonaMenu = nil;
         caseTab = nil;
@@ -71,16 +73,16 @@
         caseView = nil;
         tabControler = nil;
         videoView = nil;
-        showMenu = nil;
+        showMenu = false;
         lastOpenedView = nil;
-        fromSearch = nil;
-        videoSearch = nil;
-        videoGal = nil;
-        vidToOpen = nil;
+        fromSearch = false;
+        fromSearchFotona = false;
+        galToOpen = nil;
+        mediaToOpen = nil;
+        mediaTypeToOpen = nil;
         fotonaHelperState = 0;
         fotonaMenuArray = [NSMutableArray new];
         caseMenuArray = [NSMutableArray new];
-        bookmarkMenuArray = [NSMutableArray new];
     }
     return self;
 }

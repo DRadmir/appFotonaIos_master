@@ -7,7 +7,6 @@
 //
 
 #import "FTabBarController.h"
-#import "FAppDelegate.h"
 
 @interface FTabBarController (){
     int last;
@@ -16,6 +15,7 @@
 @end
 
 @implementation FTabBarController
+
 
 
 - (id) init
@@ -41,7 +41,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     last = -1;
+    
     // Do any additional setup after loading the view.
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if([[NSUserDefaults standardUserDefaults] boolForKey:@"openFotonaTab"]){
+        self.selectedIndex = 2;
+        [[NSUserDefaults standardUserDefaults] setBool: false forKey:@"openFotonaTab"];
+    }
+    if([[NSUserDefaults standardUserDefaults] boolForKey:@"openCaseTab"]){
+        self.selectedIndex = 3;
+        [[NSUserDefaults standardUserDefaults] setBool: false forKey:@"openCaseTab"];
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning {

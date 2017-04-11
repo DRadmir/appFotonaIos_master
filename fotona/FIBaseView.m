@@ -10,20 +10,31 @@
 #import "FISearchViewController.h"
 #import "FIFlowController.h"
 
-@interface FIBaseView ()
 
+@interface FIBaseView (){
+    
+}
 @end
 
 @implementation FIBaseView
 
 @synthesize searchBar;
 
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    FIFlowController *flow = [FIFlowController sharedInstance];
+    flow.lastOpenedView = self;
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     UIBarButtonItem *btnSettings = [[UIBarButtonItem alloc] initWithTitle:@""
-                                                              style:UIBarButtonItemStylePlain
-                                                             target:self
-                                                             action:@selector(showSettingsFedback:)];
+                                                                    style:UIBarButtonItemStylePlain
+                                                                   target:self
+                                                                   action:@selector(showSettingsFedback:)];
     [btnSettings setImage:[UIImage imageNamed:@"settingsMenu"]];
     UIBarButtonItem *btnSearch = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(search:)];
     
@@ -32,7 +43,7 @@
     searchBar = [[FISearchViewController alloc]  init];//  initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     searchBar.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     searchBar.view.hidden = true;
-   // searchBar.delegate = self;
+    // searchBar.delegate = self;
     [self.view addSubview:searchBar.view];
     
 }
@@ -65,18 +76,15 @@
             self.searchBar.view.hidden = false;
             self.searchBar.searchBarIPhone.text = @"";
             [self.searchBar becomeFirstResponder];
-        
+            
         }
                          completion:nil];
     } else
     {
-        
-            self.searchBar.view.hidden = true;
-            self.searchBar.searchBarIPhone.text = @"";
-            [self.searchBar resignFirstResponder];
-        
+        self.searchBar.view.hidden = true;
+        self.searchBar.searchBarIPhone.text = @"";
+        [self.searchBar resignFirstResponder];
     }
 }
-
 
 @end

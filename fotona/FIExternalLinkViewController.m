@@ -8,7 +8,6 @@
 
 #import "FIExternalLinkViewController.h"
 #import "MBProgressHUD.h"
-#import "FAppDelegate.h"
 
 @interface FIExternalLinkViewController ()
 
@@ -19,6 +18,7 @@
 @synthesize urlString;
 @synthesize previousUrl;
 @synthesize externalWebView;
+@synthesize enabled;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -36,6 +36,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     [externalWebView setDelegate:self];
     if (![previousUrl isEqualToString: urlString]) {
         [self reloadView];
@@ -49,7 +50,7 @@
 
 -(void)reloadView
 {
-    if([APP_DELEGATE connectedToInternet]){
+    if([ConnectionHelper connectedToInternet]){
         NSURL *url=[NSURL URLWithString:[urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
         NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
         [externalWebView loadRequest:requestObj];
@@ -79,7 +80,8 @@
     [MBProgressHUD hideAllHUDsForView:webView animated:YES];
     UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"LOADINGWEBPAGEERROR", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [av show];
-}
+    
+    }
 
 #pragma mark - Close Menu
 

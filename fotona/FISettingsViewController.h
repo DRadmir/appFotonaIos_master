@@ -18,11 +18,10 @@
     //only wifi view
     IBOutlet UIView *wifiView;
     IBOutlet UISwitch *wifiSwitch;
-    
+    IBOutlet UISwitch *notifSwitch;
     
     
     IBOutlet NSLayoutConstraint *tableviewHeight;
-    IBOutlet NSLayoutConstraint *checkViewHeight;
     IBOutlet UIButton *btnBookmark;
     IBOutlet UIView *downloadView;
     
@@ -34,7 +33,6 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *categoryTable;
 
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *settingsViewHeight;
 
 @property (strong, nonatomic) IBOutlet UIProgressView *downloadProgress;
 @property (strong, nonatomic) IBOutlet UILabel *progressPercentige;
@@ -44,10 +42,12 @@
 -(IBAction)changePassword:(id)sender;
 
 - (IBAction)changeWifiCheck:(id)sender;
+- (IBAction)changeNotifCheck:(id)sender;
 
 - (IBAction)bookmarkSelected:(id)sender;
 - (IBAction)unbookmarkAll:(id)sender;
 
 -(void) refreshStatusBar;
+
 
 @end

@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Dejan Krstevski. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 
 @interface FCaseCategory : NSObject
 @property (nonatomic, retain) NSString *categoryID;
@@ -14,6 +13,8 @@
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *active;
 @property (nonatomic, retain) NSString *sort;
+@property (nonatomic, retain) NSString *deleted;
+@property (nonatomic) int sortInt;
 
 -(id)initWithDictionary:(NSDictionary *)dic;
 

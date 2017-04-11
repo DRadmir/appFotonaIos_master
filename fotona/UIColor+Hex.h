@@ -12,5 +12,5 @@
 @interface UIColor (Hex)
 
 +(UIColor *) colorFromHex: (NSString *) hexStrig;
-
++(UIColor *)lightBackgroundColor;
 @end

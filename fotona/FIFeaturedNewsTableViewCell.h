@@ -10,6 +10,7 @@
 #import "FNews.h"
 #import "FIFeaturedViewController.h"
 
+
 @interface FIFeaturedNewsTableViewCell : UITableViewCell
 
 @property (strong, nonatomic) IBOutlet UIImageView *imgViewNewsCell;
@@ -25,6 +26,11 @@
 @property (strong, nonatomic) FNews* news;
 @property (nonatomic) BOOL related;
 @property (strong, nonatomic) FIFeaturedViewController *parent;
+@property (nonatomic) BOOL enabled;
+
+@property (strong, nonatomic) NSIndexPath *index;
+@property (strong, nonatomic) UITableView *tableView;
+
 
 - (void) fillCell;
 

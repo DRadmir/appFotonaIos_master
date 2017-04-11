@@ -8,17 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "FCase.h"
-#import <MediaPlayer/MediaPlayer.h>
 #import "FDLabelView.h"
 #import <QuickLook/QuickLook.h>
 #import "IIViewDeckController.h"
 #import "FSearchViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "Bubble.h"
 #import "EBPhotoPagesController.h"
+#import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 
 
-@interface FCasebookViewController : UIViewController <UITableViewDelegate,UITableViewDataSource,QLPreviewControllerDelegate,QLPreviewControllerDataSource,UINavigationControllerDelegate,UISearchBarDelegate,UIAlertViewDelegate,EBPhotoPagesDelegate,EBPhotoPagesDataSource, BubbleDelegate, UIActionSheetDelegate>
+
+@interface FCasebookViewController : UIViewController <UITableViewDelegate,UITableViewDataSource,QLPreviewControllerDelegate,QLPreviewControllerDataSource,UINavigationControllerDelegate,UISearchBarDelegate,UIAlertViewDelegate,EBPhotoPagesDelegate,EBPhotoPagesDataSource, UIActionSheetDelegate >
 {
     IBOutlet UIButton *feedbackBtn;
     IBOutlet UIButton *menuBtn;
@@ -67,6 +68,10 @@
     IBOutlet UIButton *addBookmarks;
     IBOutlet UIButton *removeBookmarks;
     
+    IBOutlet UIButton *addToFavorite;
+    IBOutlet UIButton *removeFavorite;
+
+    
     IBOutlet UIScrollView *caseScroll;
     
     IBOutlet UIView *contentModeView;
@@ -74,8 +79,6 @@
     IBOutlet FDLabelView *cDescriptionLbl;
     IBOutlet UIScrollView *contentModeScrollView;
     
-    
-    UIImage *imageToSave;
     NSString *imageName;
     UIImagePickerController *imagePicker;
     int caseTittleFlag;
@@ -92,7 +95,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *settingsBtn;
 @property (weak, nonatomic) IBOutlet UIButton *popupCloseBtn;
 
-@property (nonatomic,retain) MPMoviePlayerViewController *moviePlayer;
 
 
 @property (nonatomic, retain) FCase *currentCase;
@@ -125,11 +127,12 @@
 - (IBAction)removeFromBookmarks:(id)sender;
 - (IBAction)openSettings:(id)sender;
 - (IBAction)closeSettings:(id)sender;
+- (IBAction)addToFavorite:(id)sender;
+- (IBAction)removeFavorite:(id)sender;
+
 
 - (IBAction)showDisclaimer:(id)sender;
 -(void) openDisclaimer;
 - (void) refreshBookmarkBtn;
-
--(void)deleteMediaForCaseGalleryID:(NSString *)gID withArray:(NSMutableArray *)array andType:(int)t;
 
 @end

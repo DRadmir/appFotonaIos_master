@@ -13,7 +13,6 @@
     IBOutlet UILabel *logedAs;
     IBOutlet UIButton *feedbackBtn;
     IBOutlet UIButton *changePassBtn;
-    UIImage *imageToSave;
     NSString *imageName;
     IBOutlet UIButton *logoutBtn;
 
@@ -28,6 +27,8 @@
     IBOutlet UIView *downloadView;
     
     IBOutlet UIView *checkView;
+    IBOutlet UISwitch *notifSwitch;
+    
 }
 @property (strong, nonatomic) UIPopoverController *popover;
 
@@ -36,7 +37,7 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *categoryTable;
 
-
+@property (nonatomic, retain) NSString *active;
 
 @property (strong, nonatomic) IBOutlet UIProgressView *downloadProgress;
 @property (strong, nonatomic) IBOutlet UILabel *progressPercentige;
@@ -46,10 +47,14 @@
 -(IBAction)changePassword:(id)sender;
 
 - (IBAction)changeWifiCheck:(id)sender;
+- (IBAction)changeNotifiCheck:(id)sender;
 
 - (IBAction)bookmarkSelected:(id)sender;
 - (IBAction)unbookmarkAll:(id)sender;
 
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
+-(id)transformedValue:(id)value;
 -(void) refreshStatusBar;
+
+
 @end

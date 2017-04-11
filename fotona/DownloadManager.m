@@ -24,7 +24,6 @@
 
 #import "DownloadManager.h"
 #import "Download.h"
-#import "FAppDelegate.h"
 #import "HelperBookmark.h"
 
 @interface DownloadManager () <DownloadDelegate>
@@ -42,7 +41,7 @@
     if (self)
     {
         _downloads = [[NSMutableArray alloc] init];
-        _maxConcurrentDownloads = 12;
+        _maxConcurrentDownloads = 8;//Number of downloads - from 12
     }
     
     return self;
@@ -108,9 +107,7 @@
 - (void)downloadDidFail:(Download *)download
 {
     [self.downloads removeObject:download];
-//    if ([[APP_DELEGATE downloadList] count]>0) {
-//        [HelperBookmark checkAllFiles:[[download url] absoluteString]];
-//    }
+
 
     if ([self.delegate respondsToSelector:@selector(downloadManager:downloadDidFail:)])
         [self.delegate downloadManager:self downloadDidFail:download];
@@ -138,7 +135,7 @@
     {
         [self.delegate didFinishLoadingAllForManager:self];
     }
-        }
+}
 
 - (void)tryDownloading
 {

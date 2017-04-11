@@ -14,4 +14,7 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import "FAppDelegate.h"
+    #import "FCommon.h"
+    #import "ConnectionHelper.h"
 #endif

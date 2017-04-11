@@ -13,9 +13,9 @@
 #import "FEvent.h"
 #import "FIEventSingleViewController.h"
 #import "FIEventMenuTableViewController.h"
-#import "FAppDelegate.h"
 #import "FIFlowController.h"
 #import "FIEventContainerViewController.h"
+#import "FGoogleAnalytics.h"
 
 @interface FIEventViewController ()
 {
@@ -59,6 +59,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     if ([APP_DELEGATE eventTemp] != eventToOpen && [APP_DELEGATE eventTemp] != nil) {
         eventToOpen = [APP_DELEGATE eventTemp];
         [self openEvent];
@@ -67,6 +68,7 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [FGoogleAnalytics writeGAForItem:nil andType:GAEVENTTABINT];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -75,7 +77,6 @@
 }
 
 #pragma mark - TableView
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [tableData count];
@@ -124,6 +125,7 @@
 {
     tableData = [FDB fillEventsWithCategory:ci andType:ti andMobile:false];//[FDB fillArrayWithCategory:ci andType:ti];
     [self.eventsTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+    [_eventsTableView setContentOffset:CGPointZero animated:YES];
 }
 
 #pragma mark - SegmenControl
@@ -131,6 +133,7 @@
 - (IBAction)typeSelected:(id)sender {
     ti = self.typeSelector.selectedSegmentIndex;
     [self reloadData];
+    
 }
 
 #pragma mark - Open Event

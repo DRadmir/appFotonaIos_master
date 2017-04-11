@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Dejan Krstevski. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 @interface FUser : NSObject
 @property (nonatomic, retain) NSString *userID;
 @property (nonatomic, retain) NSString *username;
@@ -21,5 +19,6 @@
 
 +(FUser *)getUser:(NSString *)_username;
 +(void)addUserInDB:(FUser *)usr;
-
++(void)deleteUserInDB:(FUser *)usr;
++(BOOL)checkIfUserExistsInDB:(FUser *)usr;
 @end

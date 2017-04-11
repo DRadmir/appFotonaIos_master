@@ -9,8 +9,7 @@
 #import "FICaseViewController.h"
 #import "FAuthor.h"
 #import "FDB.h"
-#import "Bubble.h"
-#import "BubbleControler.h"
+#import "FCasebookViewController.h"
 #import "FAppDelegate.h"
 #import "FIGalleryController.h"
 #import "FImage.h"
@@ -23,23 +22,24 @@
 {
     NSArray *videoArray;
     NSArray *imagesArry;
-    BubbleControler *bubbleC;
-    Bubble *b1;
-    Bubble *b2;
-    int state;
+    
+    FCase *oldCase;
+
     
 }
 @end
 
 @implementation FICaseViewController
 
+@synthesize scrollViewMain;
 @synthesize lblAuthor;
 @synthesize lblDate;
 @synthesize btnBookmark;
 @synthesize btnRemoveBookmark;
+@synthesize btnAddFavorite;
+@synthesize btnRemoveFavorite;
 @synthesize imgAuthor;
 @synthesize lblTitle;
-@synthesize viewParametrs;
 @synthesize scrollViewImages;
 @synthesize scrollViewImagesHeight;
 @synthesize viewIntroduction;
@@ -47,7 +47,6 @@
 @synthesize btnReadMore;
 @synthesize caseToOpen;
 @synthesize parent;
-@synthesize scrollViewMain;
 
 @synthesize parametersContainer;
 @synthesize tableParameters;
@@ -57,20 +56,21 @@
 @synthesize parametersHeight;
 @synthesize headerHeight;
 @synthesize canBookmark;
-@synthesize parentBookmarks;
+@synthesize favoriteParent;
 
 @synthesize gallery;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    state = 0;
+    oldCase = [[FCase alloc] init];
     // Do any additional setup after loading the view.
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
-    if (bookmarked){//[currentCase.bookmark boolValue]) {
+    if (bookmarked || [caseToOpen.coverflow intValue] == 1){//[currentCase.bookmark boolValue]) {
         [btnBookmark setHidden:YES];
         [btnRemoveBookmark setHidden:NO];
     } else {
@@ -78,9 +78,13 @@
         [btnRemoveBookmark setHidden:YES];
     }
     
-    [self loadCase];
-    [self createGallery];
-    
+    if ([caseToOpen.caseID intValue] != [oldCase.caseID intValue] ) {
+        [scrollViewMain setContentOffset:CGPointZero animated:YES];
+        [self loadCase];
+        [self createGallery];
+        oldCase = caseToOpen;
+    }
+   
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.caseOpened = caseToOpen;
     if(flow.lastIndex == 3)
@@ -92,21 +96,12 @@
     if (usr == nil) {
         usr =@"guest";
     }
-    NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-    if(![usersarray containsObject:usr]){
-        [bubbleC removeFromSuperview];
-        bubbleC = nil;
-        [scrollViewMain setScrollEnabled:NO];
-        
-        [self showBubbles];
-    }
-
 }
 
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-     [self setPatameters];
+    [self setPatameters];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -116,27 +111,24 @@
 
 -(void) loadCase
 {
-    [scrollViewMain setContentOffset:CGPointMake(0, 0) animated:YES];
-   
+    
     int lineSpace =7;
     int fontSizeText = 15;
     FAuthor* author = [FDB getAuthorWithID:[caseToOpen authorID]];
     
     [lblAuthor setText:[author name]];
-    imgAuthor.layer.cornerRadius = imgAuthor.frame.size.height /2;
-    imgAuthor.layer.masksToBounds = YES;
-    imgAuthor.layer.borderWidth = 0;
-    dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
-    dispatch_async(queue, ^{
-        //code to be executed in the background
-        NSData *imgData=[FDB getAuthorImage:[caseToOpen authorID]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //code to be executed on the main thread when background task is finished
-            [imgAuthor setImage:[FDB getAuthorImage:[caseToOpen authorID]]];//[UIImage imageWithData:imgData]];
-        });
-    });
+
     [lblDate setText:[APP_DELEGATE timestampToDateString:[caseToOpen date]]];
     [lblTitle setText:caseToOpen.title];
+    
+    if ([FDB checkIfFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE]) {
+        [btnRemoveFavorite setHidden:NO];
+        [btnAddFavorite setHidden:YES];
+    } else {
+        [btnRemoveFavorite setHidden:YES];
+        [btnAddFavorite setHidden:NO];
+    }
+
     
     NSString * title = @"";
     NSMutableAttributedString *allAdditionalInfo=[[NSMutableAttributedString alloc] init];
@@ -175,7 +167,7 @@
     check=[check stringByReplacingOccurrencesOfString:@"<br />" withString:@""];
     check=[check stringByReplacingOccurrencesOfString:@"<br type=\"_moz\" />" withString:@""];
     if ([caseToOpen procedure] && ![check isEqualToString:@""]) {
-    
+        
         
         title =[title stringByAppendingString:@"<br/><p>Procedure</p><br/>"];
         NSMutableAttributedString * titleAttrStr = [[NSMutableAttributedString alloc] initWithData:[title dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
@@ -220,14 +212,14 @@
                         range:NSMakeRange(0, attrStr.length)];
         [allAdditionalInfo appendAttributedString:attrStr];
         title = @"<br/><br/>";
-
+        
     }
     
     check=[[caseToOpen references] stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@""];
     check=[check stringByReplacingOccurrencesOfString:@"<br />" withString:@""];
     check=[check stringByReplacingOccurrencesOfString:@"<br type=\"_moz\" />" withString:@""];
     if ([caseToOpen references] && ![check isEqualToString:@""]) {
-       
+        
         title =[title stringByAppendingString:@"<br/><p>References</p><br/>"];
         NSMutableAttributedString * titleAttrStr = [[NSMutableAttributedString alloc] initWithData:[title dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
         [titleAttrStr addAttribute:NSFontAttributeName value: [UIFont fontWithName:@"HelveticaNeue" size:17] range: NSMakeRange(0, titleAttrStr.length)];
@@ -247,7 +239,7 @@
                         range:NSMakeRange(0, attrStr.length)];
         [allAdditionalInfo appendAttributedString:attrStr];
         title = @"<br/><br/>";
- 
+        
     }
     
     //DISCLAMER
@@ -270,18 +262,22 @@
     btnReadMore.layer.cornerRadius = 3;
     btnReadMore.layer.borderWidth = 1;
     btnReadMore.layer.borderColor = btnReadMore.tintColor.CGColor;
-
-
+    
     lblIntroduction.attributedText=allAdditionalInfo;
     [lblIntroduction sizeToFit];
 
-    
 }
 
 
 
 -(void)setPatameters
 {
+    imgAuthor.layer.cornerRadius = imgAuthor.frame.size.height /2;
+    imgAuthor.layer.masksToBounds = YES;
+    imgAuthor.layer.borderWidth = 0;
+    [imgAuthor setContentMode:UIViewContentModeScaleAspectFill];
+    [imgAuthor setImage:[FDB getAuthorImage:[caseToOpen authorID]]];
+    
     for (UIView *v in parametersScrollView.subviews) {
         if ([v isKindOfClass:[UILabel class]]) {
             [v removeFromSuperview];
@@ -292,19 +288,19 @@
         }
         
     }
-
-
+    
+    
     int allDataCount=0;
     int allDataObjectAtIndex0Count=0;
     int columnWidth = 150;
     
     int y=0;
-    if (caseToOpen.parametars && caseToOpen.parametars != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3) {
-        NSArray*allData=[NSJSONSerialization JSONObjectWithData:[caseToOpen.parametars dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+    if (caseToOpen.parameters && caseToOpen.parameters  != (id)[NSNull null] && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=0 && [[[APP_DELEGATE currentLogedInUser] userType] intValue]!=3  && [FCommon userPermission:caseToOpen.userPermissions]) {
+        NSArray*allData=[NSJSONSerialization JSONObjectWithData:[caseToOpen.parameters dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
         
         
         NSMutableArray *allDataM=[allData mutableCopy];
-
+        
         
         int j=0;
         //        int tableheight=0;
@@ -406,10 +402,10 @@
     else
     {
         [tableParameters setFrame:CGRectMake(tableParameters.frame.origin.x, tableParameters.frame.origin.y, tableParameters.frame.size.width, 0)];
-       
+        
     }
     [parametersScrollView setFrame:CGRectMake(parametersScrollView.frame.origin.x, parametersScrollView.frame.origin.y, parametersScrollView.frame.size.width, y)];
-
+    
     if (allDataCount>0) {
         [parametersContainer setFrame:CGRectMake(parametersContainer.frame.origin.x, lblTitle.frame.origin.y+lblTitle.frame.size.height+40, parametersContainer.frame.size.width, tableParameters.frame.size.height)];
     }else
@@ -443,7 +439,7 @@
     gallery = [[FIGalleryController alloc] init];
     gallery.parent = self;
     gallery.type = 1;
-    [gallery createGalleryWithImages:imgs andVideos:vidArr forScrollView:scrollViewImages andScrollHeight:scrollViewImagesHeight];
+    [gallery createGalleryWithImages:imgs andVideos:vidArr forScrollView:scrollViewImages andScrollHeight:scrollViewImagesHeight  fromCase:caseToOpen];
     
 }
 
@@ -453,37 +449,63 @@
         [parent openDisclaimer];
     } else
     {
-        [parentBookmarks openDisclaimer];
+        [favoriteParent openDisclaimer];
     }
-    
 }
 
 - (IBAction)removeBookmark:(id)sender {
     FIFlowController *flow = [FIFlowController sharedInstance];
     if (flow.lastIndex == 3)
     {
-        [btnBookmark setHidden:NO];
+        if ([ConnectionHelper connectedToInternet]) {
+            [btnBookmark setHidden:NO];
+        } else {
+            [btnBookmark setHidden:YES];
+        }
     }
     [btnRemoveBookmark setHidden:YES];
     
-    [FDB removeBookmarkedCase:caseToOpen];
+    [HelperBookmark removeBookmarkedCase:caseToOpen];
 }
 
 - (IBAction)addBookmark:(id)sender {
-    if ([APP_DELEGATE wifiOnlyConnection]) {
+    if ([ConnectionHelper getWifiOnlyConnection]) {
         [self bookmarkCase];
     } else {
         UIActionSheet *av = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"CHECKWIFIONLY", nil)] delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"OK",@"Cancel", NSLocalizedString(@"CHECKWIFIONLYBTN", nil),nil];
         [av showInView:self.view];
     }
-
 }
+
 
 - (void) refreshBookmarkBtn  {
-    [btnBookmark setHidden:YES];
-    [btnRemoveBookmark setHidden:NO];
-    
+    BOOL bookmarked = [FDB checkIfBookmarkedForDocumentID:[caseToOpen caseID] andType:BOOKMARKCASE];
+    if (bookmarked || [caseToOpen.coverflow intValue] == 1){
+        [btnBookmark setHidden:YES];
+        [btnRemoveBookmark setHidden:NO];
+    } else {
+        if ([ConnectionHelper connectedToInternet]) {
+            [btnBookmark setHidden:NO];
+        } else {
+            [btnBookmark setHidden:YES];
+        }
+        [btnRemoveBookmark setHidden:YES];
+    }
 }
+
+- (IBAction)addToFavorite:(id)sender {
+    [FDB addTooFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE];
+    [btnRemoveFavorite setHidden:NO];
+    [btnAddFavorite setHidden:YES];
+}
+
+- (IBAction)removeFavorite:(id)sender {
+    [FDB removeFromFavoritesItem:[[caseToOpen caseID] intValue] ofType:BOOKMARKCASE];
+    [btnRemoveFavorite setHidden:YES];
+    [btnAddFavorite setHidden:NO];
+}
+
+
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex > -1) {
@@ -492,186 +514,33 @@
             [self bookmarkCase];
         }
         if ([buttonTitle isEqualToString:NSLocalizedString(@"CHECKWIFIONLYBTN", nil)]) {
-            [APP_DELEGATE setWifiOnlyConnection:TRUE];
+            [ConnectionHelper setWifiOnlyConnection:TRUE];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"wifiOnly"];
-            //            [ wifiSwitch setOn:YES animated:YES];
             [self bookmarkCase];
         }
     }
-    
 }
 
 -(void) bookmarkCase{
-    
-    if([APP_DELEGATE connectedToInternet] || [[caseToOpen coverflow] boolValue]){
-        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Item bookmarking" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    if([ConnectionHelper connectedToInternet] || [[caseToOpen coverflow] boolValue]){
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"BOOKMARKING", nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
         
     } else {
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTIONBOOKMARK", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
     }
-    
-    
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([alertView.message isEqualToString:@"Item bookmarking"]) {
-        [HelperBookmark bookmarkCase:caseToOpen forCategory:0];
+    if ([alertView.message isEqualToString:NSLocalizedString(@"BOOKMARKING", nil)]) {
+        [HelperBookmark bookmarkCase:caseToOpen];
         [APP_DELEGATE setBookmarkAll:YES];
         [[FDownloadManager shared] prepareForDownloadingFiles];
     }
 }
 
-#pragma mark - BUBBLES :D
-
--(void)showBubbles
-{
-    FIFlowController *flow = [FIFlowController sharedInstance];
-    // You should check before this, if any of bubbles needs to be displayed
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
-    NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-    if(![usersarray containsObject:usr]){
-        
-        if(bubbleC == nil)
-        {
-            bubbleC = [[BubbleControler alloc] initWithFrame:CGRectMake(0, 0, flow.tabControler.view.frame.size.width, flow.tabControler.view.frame.size.height)];
-            
-            // [bubbleC setBlockUserInteraction:NO];
-            //[bubbleC setBackgroundTint:[UIColor clearColor]];
-            b1 = [[Bubble alloc] init];
-        
-            int orientation = 0;
-            if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
-                orientation = -1;
-            }
-            // Calculate point of caret
-            CGPoint loc = btnBookmark.frame.origin;
-            CGRect newFrame = btnBookmark.frame;
-            if (state<1) {
-                if (!btnRemoveBookmark.isHidden) {
-                    newFrame= btnRemoveBookmark.frame;
-                    loc = btnRemoveBookmark.frame.origin;
-                    loc.x =  [flow tabControler].view.frame.size.width - btnRemoveBookmark.frame.size.width + 25 ; // Center
-                    loc.y += 65 +  btnRemoveBookmark.frame.size.height + (orientation * 32); // Bottom
-                } else{
-                    loc.x =  [flow tabControler].view.frame.size.width - btnBookmark.frame.size.width + 25; // Center
-                    loc.y += 65 +  btnBookmark.frame.size.height + (orientation * 32); // Bottom
-                }
-                
-                
-                // Set if highlight is desired
-                
-                newFrame.origin.y += 65;
-
-                [b1 setCornerRadius:10];
-                [b1 setSize:CGSizeMake(200, 130)];
-                newFrame =btnBookmark.frame;
-                if (!btnRemoveBookmark.isHidden) {
-                    newFrame= btnRemoveBookmark.frame;
-                    newFrame.origin.y = 62 + btnRemoveBookmark.frame.origin.y + (orientation * 32);
-                    newFrame.origin.x =  [flow tabControler].view.frame.size.width - btnRemoveBookmark.frame.size.width - 25;
-                } else{
-                    newFrame.origin.y = 62 + btnBookmark.frame.origin.y + (orientation * 32);
-                    newFrame.origin.x =  [flow tabControler].view.frame.size.width - btnBookmark.frame.size.width - 25;
-                }
-                
-                newFrame.size.height += 1;
-                [b1 setHighlight:newFrame];
-
-                [b1 setHighlight:newFrame];
-                [b1 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-                [b1 setFontColor:[UIColor whiteColor]];
-                // Set buble size and position (first size, then position!!)
-                [b1 setSize:CGSizeMake(200, 130)];
-                [b1 setCornerRadius:5];
-                [b1 setPositionOfCaret:loc withCaretFrom:TOP_RIGHT];
-                [b1 setCaretSize:15]; // Because tablet, we want a bigger bubble caret
-                // Set font, paddings and text
-                [b1 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
-                [b1 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLECASE1", nil)]];
-                [b1 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]]; // Default font is helvetica-neue, size 12
-                
-                // Add bubble to controler
-                [bubbleC addBubble:b1];
-                [b1 setDelegate:self];
-            }
-            if (state<2) {
-                b2 = [[Bubble alloc] init];
-                FIFlowController *flow = [FIFlowController sharedInstance];
-                loc =[[[[[flow tabControler] tabBar] subviews] objectAtIndex:4] frame].origin;
-                loc.x =[flow tabControler].view.frame.size.width -  [[[[[flow tabControler] tabBar] subviews] objectAtIndex:4]frame].size.width/2;
-                loc.y = [flow tabControler].view.frame.size.height - [[flow tabControler] tabBar].frame.size.height;
-                [b2 setCornerRadius:10];
-                [b2 setSize:CGSizeMake(200, 130)];
-                CGRect newFrame =[ [[[[flow tabControler] tabBar] subviews] objectAtIndex:4] frame];
-                newFrame.origin.y = [flow tabControler].view.frame.size.height - [[flow tabControler] tabBar].frame.size.height;
-                newFrame.origin.x =  [flow tabControler].view.frame.size.width -  [[[[[flow tabControler] tabBar] subviews] objectAtIndex:4]frame].size.width;
-                newFrame.size.height += 1;
-                [b2 setHighlight:newFrame];
-                
-                [b2 setPositionOfCaret:loc withCaretFrom:BOTTOM_RIGHT];
-                [b2 setText:[NSString stringWithFormat:NSLocalizedString(@"BUBBLECASE2", nil)]];
-                [b2 setTint:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-                [b2 setFontColor:[UIColor whiteColor]];
-                [b2 setTextContentInset: UIEdgeInsetsMake(16,16,16,16)]; // Set paddings
-                [b2 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]];
-                
-                [bubbleC addBubble:b2];
-                [b2 setDelegate:self];
-            }
-            UIWindow *window = [[UIApplication sharedApplication] keyWindow];
-            [window addSubview:bubbleC];
-        }
-    }
-    
-}
-
-- (void)bubbleRequestedExit:(Bubble*)bubbleObject
-{
-    
-    state++;
-    [bubbleC displayNextBubble];
-    [bubbleObject removeFromSuperview];
-    [self.view setUserInteractionEnabled:YES];
-    [scrollViewMain setScrollEnabled:YES];
-    if (state>1) {
-        NSMutableArray *helperArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"casebookHelper"]];
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
-        [helperArray addObject:usr];
-        [[NSUserDefaults standardUserDefaults] setObject:helperArray forKey:@"casebookHelper"];
-        state = 0;
-        [bubbleC removeFromSuperview];
-        bubbleC = nil;
-
-    }
-    
-    
-}
-
--(void) reloadBubbles
-{
-    if(bubbleC != nil)
-    {
-        [bubbleC removeFromSuperview];
-        bubbleC = nil;
-         [self showBubbles];
-    }
-}
-
-
-
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    [self reloadBubbles];
-}
 
 
 @end

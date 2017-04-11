@@ -7,7 +7,6 @@
 //
 
 #import "FMainViewController.h"
-#import "FAppDelegate.h"
 #import "FSetDefaults.h"
 #import "FLogin.h"
 #import "MBProgressHUD.h"
@@ -61,6 +60,21 @@ int forgotenBottom = 0;
     
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.mainControler = self;
+//    
+//    [textFieldUser setText:@"radovanovic"];
+//    [textFieldPass setText:@"n3cuqaKU"];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"] isEqualToString:@"guest"]) {
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
+            [textFieldUser setText:[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginPassword"]) {
+            [textFieldPass setText:[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginPassword"]];
+        }
+    }
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -68,8 +82,10 @@ int forgotenBottom = 0;
     login =[[FLogin alloc] init];
     [login setDefaultParent:nil andiPhone:self];
     
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginEnabled"]) {
         [login autoLogin];
+        
+        
     }else
     {
         [self showLoginForm];
@@ -146,7 +162,7 @@ int forgotenBottom = 0;
 - (IBAction)pressedRegister:(id)sender
 {
     FRegistrationViewController *registrationView = [[FRegistrationViewController alloc] init];
-    registrationView.urlString = @"http://www.fotona.com/en/support/register/";
+    registrationView.urlString = @"http://www.fotona.com/en/#registration";  //@"http://www.fotona.com/en/support/register/";
     registrationView.fromSettings = false;
     [[self  navigationController] pushViewController:registrationView animated:true];
 }
@@ -154,7 +170,7 @@ int forgotenBottom = 0;
 - (IBAction)pressedForgoten:(id)sender
 {
     FRegistrationViewController *registrationView = [[FRegistrationViewController alloc] init];
-    registrationView.urlString = @"http://www.fotona.com/en/support/passreset/";
+    registrationView.urlString = @"http://www.fotona.com/en/#lost-password"; //@"http://www.fotona.com/en/support/passreset/"
     registrationView.fromSettings = false;
     [[self  navigationController] pushViewController:registrationView animated:true];
 }
@@ -178,13 +194,10 @@ int forgotenBottom = 0;
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [super viewDidLoad];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"disclaimerShown"]];
     if(![usersarray containsObject:usr]){
-        
+        //show disclaimer
         DisclaimerViewController *disclaimer=[[DisclaimerViewController alloc] init];
         disclaimer.parentiPhone = self;
         [self.navigationController pushViewController:disclaimer animated:YES];
@@ -194,10 +207,8 @@ int forgotenBottom = 0;
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil];
         FITabbarController *vc = [storyboard instantiateViewControllerWithIdentifier:@"tabbar"];
         
-       // [self.navigationController pushViewController:vc animated:YES];
         [self.navigationController presentViewController:vc animated:true completion:nil];
     }
-    
 }
 
 //adding tabs to tabcontroler

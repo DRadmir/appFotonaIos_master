@@ -10,7 +10,6 @@
 #import "FMDatabase.h"
 #import "FNews.h"
 #import "FEvent.h"
-#import "FAppDelegate.h"
 #import "NSString+HTML.h"
 #import "FDLabelView.h"
 #import "FCase.h"
@@ -31,7 +30,8 @@
 #import "HelperBookmark.h"
 #import "HelperDate.h"
 #import "FDB.h"
-
+#import "FGoogleAnalytics.h"
+#import "UIColor+Hex.h"
 
 
 @interface FFeaturedViewController_iPad ()
@@ -39,7 +39,10 @@
     BOOL wrap;
     int status;
     FSettingsViewController *settingsController;
-     UILabel *disclaimerLbl;
+    UILabel *disclaimerLbl;
+    
+    long selectedCowerflowIndexIpad;
+    NSTimer *animationRotationTimerIpad;
 }
 
 @end
@@ -56,16 +59,20 @@
 @synthesize aboutScrollView;
 @synthesize aboutTitle;
 @synthesize aboutView;
+//@synthesize openEvent;
+
+
 
 
 #define OPENVIEW 1000
 #define CLOSEVIEW 0
 #define SETTINGSVIEW 2000;
 
-int cellNumber =12;
+int cellNumber =5;
 int e=0;
 
 int disclamerRotation = 1;
+int tutorialRotation = 1;
 
 FNewsView *newsViewController;
 
@@ -83,20 +90,19 @@ FNewsView *newsViewController;
     self = [super init];
     if (self) {
         // Custom initialization
-        [self setTitle:@"Featured"];
+        [self setTitle:NSLocalizedString(@"FEATUREDTABTITLE", nil)];
         [self.tabBarItem setImage:[UIImage imageNamed:@"homepage_red.png"]];
         status = 0;
         
     }
     return self;
-    
 }
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
     newsViewController = [[FNewsView alloc] init];
     [APP_DELEGATE setClosedNews:NO];
-    [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
     firstRun=YES;
@@ -105,21 +111,24 @@ FNewsView *newsViewController;
     //feedback
     [feedbackBtn addTarget:APP_DELEGATE action:@selector(sendFeedback:) forControlEvents:UIControlEventTouchUpInside];
     
-    //feedback
-    // [settingsBtn addTarget:APP_DELEGATE action:@selector(:) forControlEvents:UIControlEventTouchUpInside];
-    
     //search
     FSearchViewController *searchVC=[[FSearchViewController alloc] init];
     [searchVC setParent:self];
     popover=[[UIPopoverController alloc] initWithContentViewController:searchVC];
     
     
-    cellNumber =12;
+    cellNumber =5;
     [self.collectionView registerNib:[UINib nibWithNibName:@"FCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"FCollectionViewCell"];
     [self.collectionView registerNib:[UINib nibWithNibName:@"NewsViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"NewsViewCell"];
     
-    //swipe closing news
+    if([[FCommon getUser] isEqualToString:@"guest"]){
+        cellNumber = 5;
+    }
+    else{
+        cellNumber = 5;
+    }
     
+    //swipe closing news
     UISwipeGestureRecognizer *swipeRecognizerAbout = [[UISwipeGestureRecognizer alloc]
                                                       initWithTarget:self action:@selector(closeNews:)];
     [aboutView addGestureRecognizer:swipeRecognizerAbout];
@@ -134,16 +143,13 @@ FNewsView *newsViewController;
                                              selector:@selector(closeOnTabNews:)
                                                  name:@"CloseOnTabNews"
                                                object:nil];
-    //disclaimerScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.parentViewController.view.frame.size.width, self.parentViewController.view.frame.size.height - 63)];
-   // disclaimerLbl = [[UILabel alloc] initWithFrame:CGRectMake(20.0f, 20.0f, disclaimerScrollView.frame.size.width-40, 460.0f)];
-
-  
+    
+   
     
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-   
-    
+    [super viewWillAppear:animated];
     [self setUp];
     carousel.type = iCarouselTypeLinear;
     [carousel reloadData];
@@ -154,7 +160,7 @@ FNewsView *newsViewController;
         cellNumber = 12;
         [self.collectionView setContentOffset:CGPointZero animated:YES];
         if ([APP_DELEGATE closedEvents]) {
-            self.eventsArray = [FDB getEventsFromDB];//[[self getEventsFromDB];
+            self.eventsArray = [[FDB getEventsFromDB] mutableCopy];
             [APP_DELEGATE setClosedEvents:NO];
         }
         
@@ -202,8 +208,9 @@ FNewsView *newsViewController;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [FGoogleAnalytics writeGAForItem:nil andType:GAFEATUREDTABINT];
     if (firstRun || [APP_DELEGATE newNews]){
-        self.eventsArray = [FDB getEventsFromDB];//[self getEventsFromDB];
+        self.eventsArray = [[FDB getEventsFromDB] mutableCopy];
         //[self getNewsFromDB];
         newsArray = [FDB getNewsSortedDateFromDB];
         if (newsArray.count>=1) {
@@ -223,8 +230,9 @@ FNewsView *newsViewController;
     }
 }
 
--(void)viewDidDisappear:(BOOL)animated
-{
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [self stopRotationAnimationIpad];
     [self.tabBarItem setImage:[UIImage imageNamed:@"homepage_grey.png"]];
 }
 
@@ -269,7 +277,7 @@ FNewsView *newsViewController;
     if ([[[APP_DELEGATE currentLogedInUser] userType]intValue] == 0 || [[[APP_DELEGATE currentLogedInUser] userType] intValue] == 3){
         if (indexPath.row == 0) {
             FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-            [cell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+            [cell setBackgroundColor:[UIColor lightBackgroundColor]];
             [cell setTag:ABOUT_CELL_VIEW_START_TAG];
             [cell.eventCell setHidden:YES];
             [cell.aboutCell setHidden:NO];
@@ -289,11 +297,11 @@ FNewsView *newsViewController;
             return cell;
         } else {
             
-            if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+            if ([FCommon isOrientationLandscape]) {
                 status = 1; //guest landscape
                 if (indexPath.row==2) {
                     FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-                    [cell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+                    [cell setBackgroundColor:[UIColor lightBackgroundColor]];
                     [cell.eventCell setHidden:NO];
                     [cell.aboutCell setHidden:YES];
                     [cell setTag:EVENT_CELL_VIEW_START_TAG];
@@ -317,7 +325,7 @@ FNewsView *newsViewController;
                 status = 2; //guest portrait
                 if (indexPath.row==1) {
                     FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-                    [cell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+                    [cell setBackgroundColor:[UIColor lightBackgroundColor]];
                     [cell.aboutCell setHidden:YES];
                     [cell.eventCell setHidden:NO];
                     cell.events = eventsArray;
@@ -332,11 +340,11 @@ FNewsView *newsViewController;
             }
         }
     }else {
-        if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+        if ([FCommon isOrientationLandscape]) {
             status = 3; //usr landscape
             if (indexPath.row==2) {
                 FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-                [cell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+                [cell setBackgroundColor:[UIColor lightBackgroundColor]];
                 [cell.aboutCell setHidden:YES];
                 [cell.eventCell setHidden:NO];
                 cell.events = eventsArray;
@@ -357,7 +365,7 @@ FNewsView *newsViewController;
             status = 4; //usr portrait
             if (indexPath.row==1) {
                 FCollectionViewCell *cell = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-                [cell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+                [cell setBackgroundColor:[UIColor lightBackgroundColor]];
                 [cell.aboutCell setHidden:YES];
                 [cell.eventCell setHidden:NO];
                 cell.events = eventsArray;
@@ -379,43 +387,51 @@ FNewsView *newsViewController;
 
 - (NewsViewCell *) fillNewsCell:(NewsViewCell *) cell2 withIndex:(int) index{
     NewsViewCell *tempCell = cell2;
-    [tempCell setBackgroundColor:[UIColor colorWithRed:247.0/255.0 green:246.0/255.0 blue:246.0/255.0 alpha:1.0]];
+    [tempCell setBackgroundColor:[UIColor lightBackgroundColor]];
     tempCell.newsNew.hidden = YES;
     [tempCell setTag:NEWS_CELL_VIEW_START_TAG];
     tempCell.newsTitle.text = [[newsArray objectAtIndex:index] title];
     tempCell.newsDate.text = [HelperDate formatedDate: [[newsArray objectAtIndex:index] nDate]];
-    if (index>=cellNumber) {
-        MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:mainScroll];
-        [mainScroll addSubview:hud];
-        hud.labelText = @"Loading...";
-        //        [[MBProgressHUD showHUDAddedTo:self.view animated:YES]  setLabelText:@"Loading"];
-        [hud show:YES];
+    if (index>=cellNumber && [ConnectionHelper connectedToInternet]) {
         CGPoint offset = collectionView.contentOffset;
         offset.y-=30;
-        collectionView.scrollEnabled =NO;
         [collectionView setContentOffset:offset animated:NO];
         int l = 4;
-        cellNumber+=l;
-        if (cellNumber>newsArray.count) {
-            l =newsArray.count+l-cellNumber;
-            cellNumber = newsArray.count;
+        if (cellNumber + l > newsArray.count) {
+            l = newsArray.count - cellNumber;
         }
+        cellNumber+=l;
         dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
         dispatch_async(queue, ^{
-             newsArray = [FNews getImages:newsArray fromStart:index forNumber:l];
+            newsArray = [FNews getImages:newsArray fromStart:index forNumber:l];
             dispatch_async(dispatch_get_main_queue(), ^{
-                collectionView.scrollEnabled = YES;
-                [collectionView reloadData ];
-                [MBProgressHUD hideAllHUDsForView:mainScroll animated:YES];
+
+                int g = 1;
+                if ([FCommon isGuest]) {
+                    g = 2;
+                }
+        
+                NSMutableArray *rowsToReload =[[NSMutableArray alloc] init];
+                
+                for (int i = 0; i < l; i++){
+                    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:index+i+g inSection:0];
+                    [rowsToReload addObject:indexPath];
+                }
+                
+                [collectionView reloadItemsAtIndexPaths:rowsToReload];
                 
             });
         });
         
     }
     
+    [tempCell setNews:[newsArray objectAtIndex:index]];
+    [tempCell fillCell];
     tempCell.newsImage.image =[[[newsArray objectAtIndex:index] images] objectAtIndex:0];
     [tempCell.newsImage setContentMode:UIViewContentModeScaleAspectFill];
     [tempCell.newsImage setClipsToBounds:YES];
+    
+    
     
     if (![[newsArray objectAtIndex:index] isReaded] && index<8) {
         tempCell.newsNew.hidden = NO;
@@ -493,10 +509,10 @@ FNewsView *newsViewController;
 
 
 
-
+//Size of collection cells
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
+    if([FCommon isOrientationLandscape]){
         return CGSizeMake(312, 321);
     }
     else
@@ -532,10 +548,7 @@ FNewsView *newsViewController;
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSString * newsIDtemp=[NSString stringWithFormat:@"%ld",[news newsID]];
     [database executeUpdate:@"INSERT INTO NewsRead (newsID, userName) VALUES (?,?)",newsIDtemp,usr];
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -551,6 +564,51 @@ FNewsView *newsViewController;
     
 }
 
+//-(void)openEvent:(FEvent *) event {
+//    openEvent = event;
+//    [newsViewController.view removeFromSuperview];
+//    for (FNews *n in newsArray) {
+//        if (n.newsID==event.eventID) {
+//            event=n;
+//            break;
+//        }
+//    }
+//    if (event.isReaded == NO) {
+//        event.isReaded = YES;
+//    }
+//    [popupCloseBtn setHidden:NO];
+//    newsViewController.newsArray = newsArray;
+//    newsViewController.news = event;
+//    [mainScroll setHidden:YES];
+//    [aboutView setHidden:YES];
+//    
+//    [self.view addSubview:newsViewController.view];
+//    if (![event isReaded]){
+//        NSString *t = [NSString stringWithFormat:@"%ld",(long)[event eventID]];
+//        [self setNewsReaded:t];
+//        event.isReaded = YES;
+//    }
+//    [APP_DELEGATE setEventTemp:nil];
+//    
+//    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
+//    [database open];
+//    
+//    NSString *usr = [FCommon getUser];
+//    NSString * eventIDtemp=[NSString stringWithFormat:@"%ld",(long)[event eventID]];
+//    [database executeUpdate:@"INSERT INTO NewsRead (newsID, userName) VALUES (?,?)",eventIDtemp,usr];
+//    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+//    [database close];
+//    
+//    eventViewController.view.tag = OPENVIEW;
+//    mainScroll.tag=CLOSEVIEW;
+//    aboutView.tag = CLOSEVIEW;
+//    
+//    UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc]
+//                                                 initWithTarget:self action:@selector(closeNews:)];
+//    [eventViewController.view addGestureRecognizer:swipeRecognizer];
+//    
+//}
+
 
 -(IBAction)closePopupNewsView:(id)sender
 {
@@ -565,7 +623,7 @@ FNewsView *newsViewController;
     [popupCloseBtn setHidden:NO];
     
     
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         settingsView=[[UIView alloc] initWithFrame:CGRectMake(0,65, self.view.frame.size.width, 654)];
         [settingsController.view setFrame:CGRectMake(0,0, self.view.frame.size.width, 654)];
     }else
@@ -612,14 +670,14 @@ FNewsView *newsViewController;
 }
 
 
-#pragma mark iCarousel methods
+#pragma mark - iCarousel methods
 
 - (void)setUp
 {
     //set up data
     wrap = YES;
     
-    self.items = [FDB getCasesForCarouselFromDB];//self.getCasesForCarouselFromDB;
+    self.items = [FDB getCasesForCarouselFromDB];
     //random mixing carousel
     for (int x = 0; x < [items count]; x++) {
         int randInt = (arc4random() % ([items count] - x)) + x;
@@ -647,7 +705,7 @@ FNewsView *newsViewController;
     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 2), ^{
         //code to be executed in the background
         NSLog(@"author id %@",[(FCase *)items[index] authorID]);
-       // NSData *imgData=[FDB getAuthorImage:[(FCase *)items[index] authorID]];//[self getAuthorImage:[(FCase *)items[index] authorID]];
+        // NSData *imgData=[FDB getAuthorImage:[(FCase *)items[index] authorID]];//[self getAuthorImage:[(FCase *)items[index] authorID]];
         dispatch_async(dispatch_get_main_queue(), ^{
             //code to be executed on the main thread when background task is finished
             //[imageView setImage:[UIImage imageWithData:imgData]];
@@ -659,7 +717,7 @@ FNewsView *newsViewController;
         });
     });
     view = card.view;
-    
+     [self resetRotationAnimationIpad];
     return view;
 }
 
@@ -680,7 +738,7 @@ FNewsView *newsViewController;
         //this `if (view == nil) {...}` statement because the view will be
         //recycled and used with other index values later
         view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 440.0, 193.0)];
-        ((UIImageView *)view).image = [UIImage imageNamed:[NSString stringWithFormat:@"card%u.png",index%3+1]];
+        ((UIImageView *)view).image = [UIImage imageNamed:[NSString stringWithFormat:@"card%lu.png",index%3+1]];
         view.contentMode = UIViewContentModeCenter;
         
         label = [[UILabel alloc] initWithFrame:CGRectMake(30, 20, 210, 30)];
@@ -745,7 +803,7 @@ FNewsView *newsViewController;
 }
 
 
-#pragma mark iCarousel taps
+#pragma mark - iCarousel taps
 
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
 {
@@ -760,7 +818,7 @@ FNewsView *newsViewController;
 }
 
 
-#pragma mark Search
+#pragma mark - Search
 
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
     NSLog(@"Text: %@",searchText);
@@ -804,33 +862,12 @@ FNewsView *newsViewController;
     [database open];
     FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and caseID=%@ limit 1",caseID]];
     while([results next]) {
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
+        f = [[FCase alloc] initWithDictionaryFromDB:[results resultDictionary]];
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     
-    if ([APP_DELEGATE checkGuest]) {
-        if ([f.allowedForGuests isEqualToString:@"1"]) {
-            return f;
-        }
-    } else {
+    if ([FCommon userPermission:[f userPermissions]]) {
         return f;
     }
     return nil;
@@ -876,7 +913,7 @@ FNewsView *newsViewController;
     [APP_DELEGATE rotatePopupSearchedNewsInView:self.view];
 }
 
-#pragma mark closeviews
+#pragma mark - closeviews
 
 -(IBAction)closeNews:(UISwipeGestureRecognizer *)recognizer {
     
@@ -975,7 +1012,7 @@ FNewsView *newsViewController;
     
 }
 
-#pragma mark openingAbout
+#pragma mark - openingAbout
 
 -(void)openAbout{
     [aboutTitle setText:@"About fotona"];
@@ -989,7 +1026,7 @@ FNewsView *newsViewController;
     UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:17];
     NSDictionary *attrsDictionary = @{ NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
     aboutDescription.attributedText = [[NSAttributedString alloc] initWithString:attrStr.string attributes:attrsDictionary];
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation))
+    if ([FCommon isOrientationLandscape])
         [aboutView setFrame:CGRectMake(0,65, 1024, 650)];
     else
         [aboutView setFrame:CGRectMake(0,65, 768, 909)];
@@ -1004,15 +1041,9 @@ FNewsView *newsViewController;
 }
 
 
-
-
-
 - (IBAction)btnAcceptClick:(id)sender {
     NSMutableArray *disclaimerArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"disclaimerShown"]];
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     [disclaimerArray addObject:usr];
     [[NSUserDefaults standardUserDefaults] setObject:disclaimerArray forKey:@"disclaimerShown"];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -1074,9 +1105,35 @@ FNewsView *newsViewController;
     disclaimerScrollView.contentSize = CGSizeMake(disclaimerScrollView.contentSize.width, disclaimerLbl.frame.size.height+15);
     [self.parentViewController.view addSubview:disclaimerView];
     disclamerRotation = [APP_DELEGATE currentOrientation];
-
+    
 }
 
+
+#pragma mark: - Rotating cases
+
+- (void) startRotationAnimationIpad {
+    animationRotationTimerIpad = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(moveTo) userInfo:nil repeats:NO];
+}
+
+- (void) stopRotationAnimationIpad {
+    [animationRotationTimerIpad invalidate];
+    animationRotationTimerIpad = nil;
+}
+
+- (void) resetRotationAnimationIpad {
+    [self stopRotationAnimationIpad];
+    [self startRotationAnimationIpad];
+}
+
+- (void) moveTo
+{
+    [UIView animateWithDuration:5.0 delay:0 options:UIViewAnimationOptionTransitionNone
+                     animations:^{
+                         selectedCowerflowIndexIpad = [carousel currentItemIndex] + 1;
+                         [carousel scrollToItemAtIndex:selectedCowerflowIndexIpad animated:true];
+                     }
+                     completion:nil];
+}
 
 
 @end

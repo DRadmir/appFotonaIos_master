@@ -9,7 +9,6 @@
 #import "FIFeaturedEventTableViewCell.h"
 #import "FEvent.h"
 #import "HelperDate.h"
-#import "FAppDelegate.h"
 #import "FIFeaturedSingleEventViewController.h"
 #import "FDB.h"
 
@@ -34,21 +33,79 @@ BOOL wrap;
     eventsCarousel.dataSource = self;
     
 }
+-(void)buttonTouchedGreen:(id)sender
+{
+        [self allButtonsRed];
+        [[self btnGreen] setImage:[UIImage imageNamed:@"event_surgery_red.pdf"] forState:UIControlStateNormal];
+        [sender setSelected:NO];
+    }
+-(void)buttonTouchedBlue:(id)sender
+{
+        [self allButtonsRed];
+        [[self btnBlue] setImage:[UIImage imageNamed:@"event_dental_red.pdf"] forState:UIControlStateNormal];
+        [sender setSelected:NO];
+     }
+
+
+-(void)buttonTouchedPink:(id)sender
+{
+        [self allButtonsRed];
+        [[self btnPink] setImage:[UIImage imageNamed:@"event_gyno_red.pdf"] forState:UIControlStateNormal];
+        [sender setSelected:NO];
+    
+}
+
+-(void)buttonTouchedOrange:(id)sender
+{
+        [self allButtonsRed];
+        [[self btnOrange] setImage:[UIImage imageNamed:@"event_aesthetics_red.pdf"] forState:UIControlStateNormal];
+        [sender setSelected:NO];
+    
+}
+
+-(void)buttonTouchedGrey:(id)sender
+{
+    
+        [self allButtonsRed];
+        [[self btnGrey] setImage:[UIImage imageNamed:@"event_all_red.pdf"] forState:UIControlStateNormal];
+        [sender setSelected:NO];
+    }
+
+-(void)allButtonsRed{
+    
+    [[self btnGreen] setImage:[UIImage imageNamed:@"event_surgery_gray.pdf"] forState:UIControlStateSelected];
+    [[self btnGreen] setSelected:YES];
+    
+    [[self btnBlue] setImage:[UIImage imageNamed:@"event_dental_gray.pdf"] forState:UIControlStateSelected];
+    [[self btnBlue] setSelected:YES];
+    
+    [[self btnPink] setImage:[UIImage imageNamed:@"event_gyno_gray.pdf"] forState:UIControlStateSelected];
+    [[self btnPink] setSelected:YES];
+    
+    [[self btnOrange] setImage:[UIImage imageNamed:@"event_aesthetics_gray.pdf"] forState:UIControlStateSelected];
+    [[self btnOrange]  setSelected:YES];
+    
+    [[self btnGrey] setImage:[UIImage imageNamed:@"event_all_gray.pdf"] forState:UIControlStateSelected];
+    [[self btnGrey]  setSelected:YES];
+    
+}
 
 - (IBAction)selectCategory:(id)sender {
+    
     if ([self btnGreen].touchInside) {
-        category = 4;
+        category = 4;[self buttonTouchedGreen:_btnGreen];
     } else if ([self btnBlue].touchInside) {
-        category = 1;
+        category = 1;[self buttonTouchedBlue:_btnBlue];
     } else if ([self btnPink].touchInside) {
-        category = 3;
+        category = 3;[self buttonTouchedPink:_btnPink];
     } else if ([self btnOrange].touchInside) {
-        category = 2;
+        category = 2;[self buttonTouchedOrange:_btnOrange];
     } else {
-        category = 0;
+        category = 0;[self buttonTouchedGrey:_btnGrey];
     }
     [self fillDataiPhone];
 
+    
 }
 
 - (IBAction)showMoreEvents:(id)sender {
@@ -68,9 +125,9 @@ BOOL wrap;
 - (void)setUp
 {
     //set up data
-    wrap = YES;
+    wrap = NO;
     
-    self.items = [FDB fillEventsWithCategory:category andType:0 andMobile:true];//[FDB fillArrayWithCategory:category andType:0];//self.getCasesForCarouselFromDB;
+    self.items = [FDB fillEventsWithCategory:category andType:0 andMobile:true];
 }
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
@@ -130,7 +187,7 @@ BOOL wrap;
     //views outside of the `if (view == nil) {...}` check otherwise
     //you'll get weird issues with carousel item content appearing
     //in the wrong place in the carousel
-    label.text = (index == 0)? @"[": @"]";
+    
     
     return view;
 }
@@ -172,6 +229,8 @@ BOOL wrap;
         }
     }
 }
+
+
 
 
 #pragma mark iCarousel taps

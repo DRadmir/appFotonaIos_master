@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 4egenus. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 
 @interface FAuthor : NSObject
 @property (nonatomic, retain) NSString *authorID;

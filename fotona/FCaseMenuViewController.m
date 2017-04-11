@@ -11,14 +11,15 @@
 #import "FMDatabase.h"
 #import "FCase.h"
 #import "FAuthor.h"
-#import "FAppDelegate.h"
 #import "FCasebookViewController.h"
 #import "IIViewDeckController.h"
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FDB.h"
+#import "FHelperRequest.h"
+#import "FGoogleAnalytics.h"
 
 @interface FCaseMenuViewController ()
 
@@ -34,7 +35,7 @@
 @synthesize casesInMenu;
 @synthesize selectedIcon;
 @synthesize titleMenu;
-
+BOOL enabled;
 
 
 NSString* category =@"";
@@ -57,9 +58,9 @@ NSString *count = @"";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    menuTable.contentInset = UIEdgeInsetsMake(-75, 0, -75, 0);
-    
+
+   // menuTable.contentInset = UIEdgeInsetsMake(-75, 0, -75, 0);
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
     if (!allItems) {
         [back setHidden:YES];
@@ -94,7 +95,7 @@ NSString *count = @"";
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+     [super viewWillAppear:animated];
     count=menuTitle.text;
     titleMenu = menuTitle.text;
     for (UIView *v in self.navigationController.navigationBar.subviews) {
@@ -105,6 +106,11 @@ NSString *count = @"";
     [[self.navigationController navigationBar] addSubview:menuTitle];
     updateCounter=0;
     success=0;
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [FGoogleAnalytics writeGAForItem:[self title] andType:GACASEMENUINT];
 }
 
 -(void)backBtn:(id)sender
@@ -125,6 +131,13 @@ NSString *count = @"";
     return 1;
 }
 
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 24;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return CGFLOAT_MIN;
+}
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
@@ -149,6 +162,7 @@ NSString *count = @"";
     return 0;
 }
 
+//creating menu
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -212,9 +226,11 @@ NSString *count = @"";
         
         if ([[menuItems objectAtIndex:indexPath.row] isKindOfClass:[FCase class]])
         {
-            UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
-            [img setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@red",imageName]]];
+            UIImageView *img = [FCommon imageCutWithRect:CGRectMake(5, 5, 30, 30)];
+            UIImage *temp = [FDB getAuthorImage:[[menuItems objectAtIndex:indexPath.row] authorID]];
+            [img setImage:temp];
             [cell addSubview:img];
+            
             UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(40, 10, 220, 20)];
             [name setText:[(FCase *)[menuItems objectAtIndex:indexPath.row] name]];
             [name setFont:[UIFont fontWithName:@"HelveticaNeue" size:12.5]];
@@ -235,6 +251,13 @@ NSString *count = @"";
             [caseLbl setNumberOfLines:2];
             [cell addSubview:caseLbl];
             
+            if ([[(FCase *)[menuItems objectAtIndex:indexPath.row] bookmark] isEqualToString:@"0"] && [[(FCase *)[menuItems objectAtIndex:indexPath.row] coverflow] isEqualToString:@"0"] && ![ConnectionHelper connectedToInternet]) {
+                enabled = false;
+                [caseLbl setTextColor:[[UIColor grayColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
+                [name setTextColor:[[UIColor blackColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
+                img.alpha = DISABLEDCOLORALPHA;
+            }
+
             
         }else
         {
@@ -244,19 +267,14 @@ NSString *count = @"";
                 UIImage *image = [UIImage imageNamed:@"related_news_clear"];
 
                 [cell.imageView setImage:image];
-                
                 image = [UIImage imageWithContentsOfFile:[[menuItems objectAtIndex:indexPath.row] imageLocal]];
                 NSLog(@"%@",[[menuItems objectAtIndex:indexPath.row] imageLocal]);
-                UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 45, 45)];
-                img.layer.cornerRadius = img.frame.size.height /2;
-                img.layer.masksToBounds = YES;
-                img.layer.borderWidth = 0;
-                [img setContentMode:UIViewContentModeScaleAspectFill];
+                UIImageView *img=[FCommon imageCutWithRect:CGRectMake(15, 5, 45, 45)];
                 //img.backgroundColor = [UIColor whiteColor];
                 img.image = image;
                 
                 [cell.contentView addSubview:img];
-
+                
                 
             }else{
                 [cell.textLabel setText:[[menuItems objectAtIndex:indexPath.row] title]];
@@ -272,7 +290,7 @@ NSString *count = @"";
                 
             }
             
-            
+
             
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         }
@@ -282,6 +300,8 @@ NSString *count = @"";
     return cell;
 }
 
+
+//detect touch on row
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section==1) {
@@ -290,14 +310,13 @@ NSString *count = @"";
                 temp = [[NSMutableArray alloc] init];
                 switch (casesType) {
                     case -1:
-                        temp=[self getCasesWithAuthorID:category];
+                        temp=[FDB getCasesWithAuthorID:category];
                         break;
                     case 1:
-                        temp=[self getCases:category];
+                        temp=[FDB getCasesWithCategoryID:category];
                         break;
                         
                     default:
-//                        temp=[self getAlphabeticalCases];
                         break;
                 }
                 casesInMenu = temp;
@@ -310,10 +329,7 @@ NSString *count = @"";
            // [(FCasebookViewController*)self.viewDeckController.centerController setPrevCase:[(FCasebookViewController*)self.viewDeckController.centerController currentCase]];
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
-            NSString *usr = [APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-            if (usr == nil) {
-                usr =@"guest";
-            }
+            NSString *usr = [FCommon getUser];
             
             FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKCASE, [[casesInMenu objectAtIndex:indexPath.row] caseID]]];
             BOOL flag=NO;
@@ -329,35 +345,14 @@ NSString *count = @"";
                 [(FCasebookViewController*)self.viewDeckController.centerController setCurrentCase:[casesInMenu objectAtIndex:indexPath.row]];
                 [(FCasebookViewController*)self.viewDeckController.centerController openCase];
             } else{
-                if([APP_DELEGATE connectedToInternet]){
-                    MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:[(FCasebookViewController*)self.viewDeckController.centerController view]];
-                    [[(FCasebookViewController*)self.viewDeckController.centerController view] addSubview:hud];
-                    hud.labelText = @"Opening case";
-                    [hud show:YES];
-                    NSString *requestData;
+                if([ConnectionHelper connectedToInternet]){
                     
-                    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"caseID\":\"%@\",\"access_token\":\"%@\",\"dateUpdated\":\"%@\"}",langID,[[menuItems objectAtIndex:indexPath.row] caseID]  ,globalAccessToken,@"01.01.2000 10:36:20"];
-                    //
-                    
-                    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@GetCaseById",webService]];
-                    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-                    
-                    [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
-                    [request setHTTPMethod:@"POST"];
-                    [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-                    
+                     NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[[menuItems objectAtIndex:indexPath.row] caseID] onView:[(FCasebookViewController*)self.viewDeckController.centerController view]];
                     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
                     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                         // I get response as XML here and parse it in a function
                         
-                        NSError *jsonError;
-                        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-                        NSString *c = [dic objectForKey:@"d"];
-                        NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                        FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
-                                                                                                         options:NSJSONReadingMutableContainers
-                                                                                                           error:&jsonError]];
-                        NSLog(@"%@",[jsonError localizedDescription]);
+                        FCase *caseObj=[FCase parseCaseFromServer:[operation responseData]];
                         
                         updateCounter++;
                         success++;
@@ -394,14 +389,13 @@ NSString *count = @"";
                 temp = [[NSMutableArray alloc] init];
                 switch (casesType) {
                     case -1:
-                        temp=[self getCasesWithAuthorID:category];
+                        temp=[FDB getCasesWithAuthorID:category];
                         break;
                     case 1:
-                        temp=[self getCases:category];
+                        temp=[FDB getCasesWithCategoryID:category];
                         break;
                         
                     default:
-                        //temp=[self getAlphabeticalCases];
                         break;
                 }
                 menuItems = temp;
@@ -410,15 +404,10 @@ NSString *count = @"";
             
             [self.viewDeckController toggleLeftViewAnimated:YES];
             UINavigationController *tempC = self.viewDeckController.centerController;
-            //                [(FCasebookViewController *)[tempC visibleViewController] setCurrentCase:item];
-            //                [(FCasebookViewController *)[tempC visibleViewController] setFlagCarousel:YES];
             [(FCasebookViewController *)[tempC visibleViewController]  setPrevCase:[(FCasebookViewController*)[tempC visibleViewController] currentCase]];
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
-            NSString *usr = [APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-            if (usr == nil) {
-                usr =@"guest";
-            }
+            NSString *usr = [FCommon getUser];
             
             FMResultSet *resultsBookmarked = [database executeQuery:@"SELECT * FROM UserBookmark where username=? and typeID=? and documentID=?" withArgumentsInArray:@[usr, BOOKMARKCASE, [[menuItems objectAtIndex:indexPath.row] caseID]]];
             BOOL flag=NO;
@@ -433,48 +422,11 @@ NSString *count = @"";
                 [(FCasebookViewController*)[tempC visibleViewController] setCurrentCase:[menuItems objectAtIndex:indexPath.row]];
                 [(FCasebookViewController*)[tempC visibleViewController]  openCase];
             } else{
-                if([APP_DELEGATE connectedToInternet]){
-                    MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:[(FCasebookViewController*)self.viewDeckController.centerController view]];
-                    [[(FCasebookViewController*)self.viewDeckController.centerController view] addSubview:hud];
-                    hud.labelText = @"Opening case";
-                    [hud show:YES];
-                    NSString *requestData;
-                    
-                    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"caseID\":\"%@\",\"access_token\":\"%@\",\"dateUpdated\":\"%@\"}",langID,[[menuItems objectAtIndex:indexPath.row] caseID]  ,globalAccessToken,@"01.01.2000 10:36:20"];
-                    //
-                    
-                    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@GetCaseById",webService]];
-                    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-                    
-                    [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
-                    [request setHTTPMethod:@"POST"];
-                    [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-                    
+                if([ConnectionHelper connectedToInternet]){
+                    NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[[menuItems objectAtIndex:indexPath.row] caseID] onView:[(FCasebookViewController*)self.viewDeckController.centerController view]];
                     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-                    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                        // I get response as XML here and parse it in a function
-                        
-                        NSError *jsonError;
-                        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-                        NSString *c = [dic objectForKey:@"d"];
-                        NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                        FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
-                                                                                                         options:NSJSONReadingMutableContainers
-                                                                                                           error:&jsonError]];
-                        NSMutableArray *imgs = [[NSMutableArray alloc] init];
-                        for (NSDictionary *imgLink in [caseObj images]) {
-                            FImage * img = [[FImage alloc] initWithDictionary:imgLink];
-                            
-                            [imgs addObject:img];
-                        }
-                        [caseObj setImages:imgs];
-                        NSMutableArray *videos = [[NSMutableArray alloc] init];
-                        for (NSDictionary *videoLink in [caseObj video]) {
-                            FVideo * videoTemp = [[FVideo alloc] initWithDictionary:videoLink];
-                            
-                            [videos addObject:videoTemp];
-                        }
-                        [caseObj setVideo:videos];
+                    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {                        
+                       FCase *caseObj=[FCase parseCaseFromServer:[operation responseData]];
                         updateCounter++;
                         success++;
                         [self removeHud];
@@ -501,13 +453,14 @@ NSString *count = @"";
             
         }else if ([[menuItems objectAtIndex:indexPath.row] isKindOfClass:[FAuthor class]]) {
             casesType = 0;
-            NSMutableArray *newItems=[self getCasesWithAuthorID:[[menuItems objectAtIndex:indexPath.row] authorID]];
+            NSMutableArray *newItems=[FDB getCasesWithAuthorID:[[menuItems objectAtIndex:indexPath.row] authorID]];
             NSLog(@"case author");
             if (newItems.count>0) {
                 FCaseMenuViewController *subMenu=[[FCaseMenuViewController alloc] init];
                 if (selectedIcon) {
                     subMenu.selectedIcon=selectedIcon;
-                }else{
+                }
+                 else{
                     subMenu.selectedIcon=[menuIcons objectAtIndex:indexPath.row];
                 }
                 [subMenu  setMenuTitles:[NSMutableArray arrayWithObject:[[menuItems objectAtIndex:indexPath.row] name]]];
@@ -554,7 +507,7 @@ NSString *count = @"";
                 NSMutableArray *newItems=[FDB getCaseCategoryWithPrev:[[menuItems objectAtIndex:indexPath.row] categoryID]];
                 if (newItems.count==0)
                 {
-                    newItems=[self getCases:[[menuItems objectAtIndex:indexPath.row] categoryID]];
+                    newItems=[FDB getCasesWithCategoryID:[[menuItems objectAtIndex:indexPath.row] categoryID]];
                     if (newItems.count==0)
                     {
                         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"EMPTYCASECATEGORY", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -584,9 +537,10 @@ NSString *count = @"";
                     } else
                     {
                         subMenu.selectedIcon=[menuIcons objectAtIndex:indexPath.row];
-                    }                    [subMenu  setMenuTitles:[NSMutableArray arrayWithObject:[[menuItems objectAtIndex:indexPath.row] title]]];
+                    }
+                    [subMenu  setMenuTitles:[NSMutableArray arrayWithObject:[[menuItems objectAtIndex:indexPath.row] title]]];
                     [subMenu  setAllItems:[NSMutableArray arrayWithObject:newItems]];
-                    casesInMenu=[self getCases:[[menuItems objectAtIndex:indexPath.row] categoryID]];
+                    casesInMenu=[FDB getCasesWithCategoryID:[[menuItems objectAtIndex:indexPath.row] categoryID]]; 
                     category =[[menuItems objectAtIndex:indexPath.row] categoryID];
                     [subMenu setCasesInMenu:casesInMenu];
                     [self.navigationController pushViewController:subMenu animated:YES];
@@ -604,88 +558,6 @@ NSString *count = @"";
 #pragma mark DB
 
 
--(NSMutableArray *)getCasesWithAuthorID:(NSString *)authorID{
-    NSMutableArray *cases=[[NSMutableArray alloc] init];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Cases where active=1 and authorID=%@",authorID]];
-    while([results next]) {
-        casesType = -1;
-        category = authorID;
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        //[cases addObject:f];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [cases addObject:f];
-            }
-        } else {
-            [cases addObject:f];
-        }
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return cases;
-}
--(NSMutableArray *)getCases:(NSString *)catID{
-    NSMutableArray *cases=[[NSMutableArray alloc] init];
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT c.* FROM Cases as c,CasesInCategories as cic where cic.categorieID=%@ and cic.caseID=c.caseID and c.active=1",catID]];
-    while([results next]) {
-        casesType = 1;
-        category = catID;
-        FCase *f=[[FCase alloc] init];
-        [f setCaseID:[results stringForColumn:@"caseID"]];
-        [f setTitle:[results stringForColumn:@"title"]];
-        [f setCoverTypeID:[results stringForColumn:@"coverTypeID"]];
-        [f setName:[results stringForColumn:@"name"]];
-        [f setImage:[results stringForColumn:@"image"]];
-        [f setIntroduction:[results stringForColumn:@"introduction"]];
-        [f setProcedure:[results stringForColumn:@"procedure"]];
-        [f setResults:[results stringForColumn:@"results"]];
-        [f setReferences:[results stringForColumn:@"references"]];
-        [f setParametars:[results stringForColumn:@"parameters"]];
-        [f setDate:[results stringForColumn:@"date"]];
-        [f setGalleryID:[results stringForColumn:@"galleryID"]];
-        [f setVideoGalleryID:[results stringForColumn:@"videoGalleryID"]];
-        [f setActive:[results stringForColumn:@"active"]];
-        [f setAllowedForGuests:[results stringForColumn:@"allowedForGuests"]];
-        [f setAuthorID:[results stringForColumn:@"authorID"]];
-        [f setBookmark:[results stringForColumn:@"isBookmark"]];
-        [f setCoverflow:[results stringForColumn:@"alloweInCoverFlow"]];
-        //[cases addObject:f];
-        if ([APP_DELEGATE checkGuest]) {
-            if ([f.allowedForGuests isEqualToString:@"1"]) {
-                [cases addObject:f];
-            }
-        } else {
-            [cases addObject:f];
-        }
-    }
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-    return cases;
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -695,17 +567,16 @@ NSString *count = @"";
 - (void) resetViewAnime:(BOOL) anime{
     
     [self.navigationController popToRootViewControllerAnimated:anime];
-    
-    
 }
+
+
 -(void)removeHud
 {
     NSLog(@"remove");
     [APP_DELEGATE setUpdateInProgress:NO];
     [MBProgressHUD hideAllHUDsForView:[(FCasebookViewController*)self.viewDeckController.centerController view] animated:YES];
     if (success<updateCounter) {
-        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Problem with content update!" delegate:(FCasebookViewController*)self.viewDeckController.centerController cancelButtonTitle:@"Cancel" otherButtonTitles:@"Try again", nil]
-        ;
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:(FCasebookViewController*)self.viewDeckController.centerController cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [av setTag:0];
         [av show];
     }
@@ -736,4 +607,4 @@ NSString *count = @"";
 
 
 
-@end
+ @end

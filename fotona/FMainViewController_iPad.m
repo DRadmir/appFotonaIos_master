@@ -7,10 +7,8 @@
 //
 
 #import "FMainViewController_iPad.h"
-#import "FAppDelegate.h"
 #import "FFeaturedViewController_iPad.h"
-#import "FBookmarkViewController.h"
-#import "FBookmarkMenuViewController.h"
+#import "FFavoriteViewController.h"
 #import "FCasebookViewController.h"
 #import "FCaseMenuViewController.h"
 #import "FEventViewController.h"
@@ -34,11 +32,11 @@
 @implementation FMainViewController_iPad
 @synthesize letToLogin;
 @synthesize caseMenuNav;
-@synthesize bookMenuNav;
 @synthesize username;
 @synthesize password;
 @synthesize loginBtn;
 @synthesize loginGuestBtn;
+
 
 int logintype = -1;
 FLogin * login;
@@ -85,13 +83,23 @@ UIButton *tmp;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [APP_DELEGATE setLoginShown:true];
+     [super viewWillAppear:animated];
     if (self.view.frame.size.width>900) {
         [APP_DELEGATE setCurrentOrientation:1];
     }else
     {
         [APP_DELEGATE setCurrentOrientation:0];
     }
+    if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"] isEqualToString:@"guest"]) {
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
+            [username setText:[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]];
+        }
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginPassword"]) {
+            [password setText:[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginPassword"]];
+        }
+    }
+
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -99,8 +107,13 @@ UIButton *tmp;
     login =[[FLogin alloc] init];
     [login setDefaultParent:self andiPhone:nil];
     
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"]) {
-        [login autoLogin];
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"autoLoginEnabled"]) {
+        
+        NSString *usrName=[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
+        if (![usrName isEqualToString:@""])
+        {
+            [login autoLogin];
+        }
     }else
     {
         [self showLoginForm];
@@ -143,7 +156,7 @@ UIButton *tmp;
 -(void)forgetPass:(id)sender
 {
     FRegistrationViewController *registrationView = [[FRegistrationViewController alloc] init];
-    registrationView.urlString = @"http://www.fotona.com/en/support/passreset/";
+    registrationView.urlString = @"http://www.fotona.com/en/#lost-password"; //@"http://www.fotona.com/en/support/passreset/"
     registrationView.fromSettings = false;
     [[self  navigationController] pushViewController:registrationView animated:true];
 
@@ -152,7 +165,7 @@ UIButton *tmp;
 -(void)registerNewUser:(id)sender
 {
     FRegistrationViewController *registrationView = [[FRegistrationViewController alloc] init];
-    registrationView.urlString = @"http://www.fotona.com/en/support/register/";
+    registrationView.urlString = @"http://www.fotona.com/en/#registration"; //@"http://www.fotona.com/en/support/register/";
     registrationView.fromSettings = false;
     [[self  navigationController] pushViewController:registrationView animated:true];
 }
@@ -187,7 +200,7 @@ UIButton *tmp;
 - (IBAction)existing:(id)sender
 {
     if (loginView.isHidden) {
-        if (UIDeviceOrientationIsLandscape(self.interfaceOrientation))
+        if ([FCommon isOrientationLandscape])
         {
             [scrollView setContentOffset:CGPointMake(0, 50) animated:YES];
         }
@@ -213,7 +226,7 @@ UIButton *tmp;
             loginView.hidden = YES;
             forgotView.hidden = YES;
         }];
-        if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)){
+        if ([FCommon isOrientationLandscape]){
             [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
         }
     }
@@ -228,13 +241,13 @@ UIButton *tmp;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [scrollView setContentOffset:CGPointMake(0, 352) animated:YES];
     }
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
-    if (UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
+    if ([FCommon isOrientationLandscape]) {
         [scrollView setContentOffset:CGPointMake(0, 50) animated:YES];
     }
 }
@@ -246,22 +259,32 @@ UIButton *tmp;
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [super viewDidLoad];
     
-    NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-    if (usr == nil) {
-        usr =@"guest";
-    }
+    NSString *usr = [FCommon getUser];
     NSMutableArray *usersarray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"disclaimerShown"]];
     if(![usersarray containsObject:usr]){
-        
+        //show disclaimer
         DisclaimerViewController *disclaimer=[[DisclaimerViewController alloc] init];
         disclaimer.parentiPad = self;
         [self.navigationController pushViewController:disclaimer animated:YES];
     } else
     {
         [self prepareTabBarController];
-        [self.navigationController pushViewController:[APP_DELEGATE tabBar] animated:YES];
+        
+        //check if tabbar is already on stack else add
+        //TODO: če bo čas se pregleda zakaj se 2 pokliče ta del po 2 istem loginu, mogoče ker kje primerja lastupadte in updated in nista enaka
+        
+        BOOL addTabbar = YES;
+        for (UIView *child in [[self navigationController] childViewControllers]) {
+            if ([child isKindOfClass:[UITabBarController class]]) {
+                addTabbar = NO;
+                break;
+            }
+        }
+        
+        if (addTabbar) {
+            [self.navigationController pushViewController:[APP_DELEGATE tabBar] animated:YES];
+        }
     }
-
 }
 
 //adding tabs to tabcontroler
@@ -288,16 +311,11 @@ UIButton *tmp;
     [[navigationForEvent navigationBar] setTintColor:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
     
     //bookmark tab
-    FBookmarkViewController *bookmarkVC=[[FBookmarkViewController alloc] init];
-    self.bookMenu=[[FBookmarkMenuViewController alloc] init];
-    bookMenuNav=[[UINavigationController alloc] initWithRootViewController:self.bookMenu];
-    [self.bookMenu setParent:bookmarkVC];
-    [[bookMenuNav navigationBar] setTintColor:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
-    IIViewDeckController *bookDeck=[[IIViewDeckController alloc] initWithCenterViewController:bookmarkVC leftViewController:bookMenuNav];
-    [bookDeck setLeftSize:[APP_DELEGATE window].frame.size.width-320];
-    
-    
-    
+    FFavoriteViewController *favoriteVC=[[FFavoriteViewController alloc] init];
+    UINavigationController *favDeck=[[UINavigationController alloc] initWithRootViewController:favoriteVC];
+    [favDeck.navigationBar setHidden:YES];
+    [[favDeck navigationBar] setTintColor:[UIColor colorWithRed:0.929 green:0.11 blue:0.141 alpha:1]];
+
     
     //fotona tab
     FFotonaViewController *fotonaVC=[APP_DELEGATE fotonaController];
@@ -311,11 +329,11 @@ UIButton *tmp;
     [fotonaDeckController setLeftSize:[APP_DELEGATE window].frame.size.width-320];
     
     //tabbar
-    [[APP_DELEGATE tabBar] setViewControllers:@[featuredVC,eventVC,fotonaDeckController,caseDeckController,bookDeck]];
+    [[APP_DELEGATE tabBar] setViewControllers:@[featuredVC,eventVC,fotonaDeckController,caseDeckController,favoriteVC]];
     [[[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:1] tabBarItem] setImage:[UIImage imageNamed:@"events.png"]];
     [[[[[APP_DELEGATE tabBar]viewControllers] objectAtIndex:2] tabBarItem] setImage:[UIImage imageNamed:@"fotona_red.png"]];
     [[[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:3] tabBarItem] setImage:[UIImage imageNamed:@"casebook_grey.png"]];
-    [[[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:4] tabBarItem] setImage:[UIImage imageNamed:@"bookmarks.png"]];
+    [[[[[APP_DELEGATE tabBar] viewControllers] objectAtIndex:4] tabBarItem] setImage:[UIImage imageNamed:@"favorites_grey.png"]];
     [[APP_DELEGATE tabBar] setSelectedIndex:[APP_DELEGATE indexToSelect]];
     
 }

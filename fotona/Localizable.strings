@@ -17,24 +17,55 @@
 "FILEDOWNLOAD" = "File download in process. Try again in a minute.";
 "EMPTYCATEGORY" = "The category is empty";
 "EMPTYCASECATEGORY" = "The category is empty";
-"REMOVEBOOKMARKS" = "Item removed from Bookmarks.";
-"ADDBOOKMARKS" = "Items added to Bookmarks.";
+"REMOVEBOOKMARKS" = "Item removed from Downloads.";
+"ADDBOOKMARKS" = "Items added to Downloads.";
 "NOCONNECTION" = "No internet connection. Please check you internet connection.";
-"NOCONNECTIONBOOKMARK" = "No internet connection. Please check you internet connection before Bookmarking items.";
+"NOCONNECTIONBOOKMARK" = "No internet connection. Please check your internet connection before Downloading items.";
 "LOADINGWEBPAGE" = "Loading web page";
 "LOADINGWEBPAGEERROR" = "An error has occurred while opening the web page";
 "DOWNLOADPROGRESS" = "You can check download progress in settings";
-"CHECKUNBOOKMARK" = "Are you sure you want to remove all bookmarks?";
+"CHECKUNBOOKMARK" = "Are you sure you want to remove all downloads?";
 "CHECKWIFIONLY" = "Wi-Fi only option.";
 "CHECKWIFIONLYBTN" = "Enable \"Wi-Fi only\" option";
 
-"REMOVEDBULKBOOKMARKS" = "All bookmarks removed";
+"REMOVEDBULKBOOKMARKS" = "All downloads removed";
 
 "STARTDISCLAIMER" = "<h>Fotona disclaimer:</h></br></br><p6>Purpose and Contents</p6></br></br> <p>The intent of the Fotona app is to facilitate an exchange of information, research results, and clinical experiences with Fotona lasers within the medical laser community. The contents of the Fotona app casebook, videos, lectures and other practitioner presentations are the sole responsibility of the authors and may not in any circumstances be regarded as official product information by Fotona.</p></br><p6>Terms of Use and Legal Liability</p6> </br></br><p>Any person seeking to apply or consult the Fotona app’s guidance must first consult the relevant Fotona laser system’s Applications and Operator manuals, and also use their independent clinical judgment and skills in the context of individual circumstances, or seek the supervision of a qualified clinical specialist. The Fotona app is provided “as is” with no warranties whatsoever. Fotona makes no representation or warranties of any kind whatsoever regarding the content or use of the Fotona app and disclaims any responsibility for the application or its use in any way. Fotona may, in its sole discretion and to the maximum extent permitted, modify, discontinue or suspend your ability to use any version of the Fotona app that is already accessed or installed without any notice to you for the repair, improvement, and/or upgrade of the underlying technology or for any other justifiable reason.</p> </br><p6>IMPORTANT: Check for Local Regulatory Approval</p6> </br></br><p>Please check with your local Fotona distributor or your national regulatory body to find out whether a specific product or application has been approved or cleared to be marketed and sold in your country. All Fotona medical lasers are CE marked and approved to be sold in the EU. For indications that have been cleared in the EU, see the Fotona website (www.fotona.com/en) and the applicable Fotona laser system’s manuals. For countries where specific national approvals are required (for example, 510(k) clearance by the FDA in the United States), some of the products and/or applications may not have been approved or cleared yet. Fotona refers to Fotona d.o.o., a Slovenian (EU) company, the owner of the “Fotona” application. Fotona app refers to the Fotona application for the iOS and Android. </p>";
 
 "STARTDISCLAIMERCLOSE" = "Fotona app will now close.";
 
 //videogallery cell
-"BTNBOOKMARKADD" = "Add to Bookmarks";
+"BTNBOOKMARKADD" = "Add to Downloads";
 "BTNBOOKMARKPROCESSING" = "Geting content from web";
-"BTNBOOKMARKREMOVE" = "Remove from Bookmarks";
+"BTNBOOKMARKREMOVE" = "Remove from Downloads";
+"BOOKMARKING" = "Item downloading";
+
+//errors
+"ERRORCONTENTFETCH" = "There was a problem with acquiring data, please try again";
+
+//tab titles
+"FAVORITESTABTITLE" = "Favorites";
+"CASEBOOOKTABTITLE" = "Casebook";
+"FOTONATABTITLE" = "Fotona";
+"EVENTSTABTITLE" = "Events";
+"FEATUREDTABTITLE" = "Featured";
+
+//update
+"UPDATING" = "Updating content";
+
+//login
+"MISSINGDATA" = "Please enter username and password";
+"FIRSTLOGIN" = "For first login you need to be connected to internet.";
+"WRONGLOGIN" = "Wrong username or password!";
+"DATAMISSING" = "Some data might be missing";
+
+//tutorial
+"ADDTOFAVORITES" = "Add to favorites – By adding content to favorites, you will be able to access it more quickly from the Favorites. Intended for content that you access more frequently. ";
+"REMOVEFROMFAVORITES" = "Remove from favorites – By clicking this icon again, you will remove previously added content from the Favorites.                                       
+                      ";
+"ADDTODOWNLOAD" = "Download – By clicking this icon you will download content to your mobile device for offline access. 
+                ";
+"REMOVEFROMDOWNLOAD" = "Delete – By clicking this icon again, you will completely remove downloaded content from your mobile device. This means that you will again need to use mobile data the next time you access the content, since it won’t be stored locally on your device. ";
+
+
+

@@ -21,11 +21,15 @@
 @property (nonatomic, retain) NSString *searchTxtIPhone;
 @property (nonatomic, retain) IBOutlet UITableView *tableSearchIPhone;
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBarIPhone;
+@property (nonatomic) BOOL characterLimit;
 
 
 @property (nonatomic, retain) NSMutableArray *newsSearchResIPhone;
 @property (nonatomic, retain) NSMutableArray *casesSearchResIPhone;
 @property (nonatomic, retain) NSMutableArray *videosSearchResIPhone;
+@property (nonatomic, retain) NSMutableArray *pdfsSearcResIPhone;
+@property (nonatomic, retain) NSMutableArray *fotonaSearcResIPhone;
+@property (nonatomic, retain) NSMutableArray *eventsSearcResIPhone;
 
 
 -(void)searchIPhone;

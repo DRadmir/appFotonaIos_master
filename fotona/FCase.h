@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Dejan Krstevski. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 
 @interface FCase : NSObject
 @property (nonatomic, retain) NSString *caseID;
@@ -19,26 +18,32 @@
 @property (nonatomic, retain) NSString *procedure;
 @property (nonatomic, retain) NSString *results;
 @property (nonatomic, retain) NSString *references;
-@property (nonatomic, retain) NSString *parametars;
+@property (nonatomic, retain) NSString *parameters;
 @property (nonatomic, retain) NSString *date;
-@property (nonatomic, retain) NSString *galleryID;
-@property (nonatomic, retain) NSString *videoGalleryID;
 @property (nonatomic, retain) NSMutableArray *images;
 @property (nonatomic, retain) NSMutableArray *video;
 @property (nonatomic, retain) NSString *active;
-@property (nonatomic, retain) NSString *allowedForGuests;
 @property (nonatomic, retain) NSMutableArray *categories;
 @property (nonatomic, retain) NSString *authorID;
 @property (nonatomic, retain) NSString *bookmark;
 @property (nonatomic, retain) NSString *coverflow;
 
--(id)initWithDictionary:(NSDictionary *)dic;
--(id)initWithDictionaryDB:(NSDictionary *)dic;
+@property (nonatomic, retain) NSString *deleted;
+@property (nonatomic, retain) NSString *download;
+@property (nonatomic, retain) NSString *userPermissions;
+@property (nonatomic, retain) NSString *galleryItemVideoIDs;
+@property (nonatomic, retain) NSString *galleryItemImagesIDs;
+
+-(id)initWithDictionaryFromServer:(NSDictionary *)dic;
+-(id)initWithDictionaryFromDB:(NSDictionary *)dic;
 
 -(NSMutableArray *)getImages;
 -(NSMutableArray *)getVideos;
--(NSMutableArray *)parseImages;
--(NSMutableArray *)parseVideos;
+-(NSMutableArray *)parseImagesFromServer: (BOOL)fromServer;
+-(NSMutableArray *)parseVideosFromServer: (BOOL)fromServer;
 -(NSString *)getAuthorName;
+
++(void) openCase:(FCase *)caseToOpen;
++(FCase *) parseCaseFromServer:(NSData *)data;
 
 @end

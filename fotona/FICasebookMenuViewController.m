@@ -12,12 +12,13 @@
 #import "FCase.h"
 #import "FDB.h"
 #import "FIFlowController.h"
-#import "FAppDelegate.h"
 #import "MBProgressHUD.h"
 #import "AFNetworking.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "UIColor+Hex.h"
+#import "FHelperRequest.h"
+#import "FGoogleAnalytics.h"
 
 @interface FICasebookMenuViewController ()
 {
@@ -26,6 +27,7 @@
     int updateCounter;
     int success;
     FCase *caseToReturn;
+    BOOL enabled;
 }
 
 @end
@@ -45,7 +47,6 @@
     [super viewDidLoad];
     casesInMenu = false;
     
-    
     UIBarButtonItem *btnMenu = [[UIBarButtonItem alloc] initWithTitle:@"Close"
                                                                 style:UIBarButtonItemStylePlain
                                                                target:self
@@ -55,6 +56,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear: animated];
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.caseMenu = self;
     
@@ -63,7 +65,7 @@
         menuIcons = [[NSMutableArray alloc] initWithObjects:@"medical_",@"tissue_type_",@"laser_system_type_",@"laser_wavelenght_",@"case_author_",@"disclaimer_", nil];
         
         allItems = [FDB getCasebookMenu];//[self getMenu];
-
+        
         FCaseCategory *caseAuthor=[[FCaseCategory alloc] init];
         [caseAuthor setTitle:@"Case Author"];
         [caseAuthor setCategoryID:@""];
@@ -93,14 +95,14 @@
         {
             if (type == 1)
             {
-               allItems = [FDB getCasesWithCategoryID:previousCategoryID];
+                allItems = [FDB getCasesWithCategoryID:previousCategoryID];
             } else
             {
                 allItems = [FDB getCasesWithAuthorID:previousCategoryID];
             }
         }
     }
- 
+    
     while ([flow.caseMenuArray lastObject] != self)
     {
         [flow.caseMenuArray removeLastObject];
@@ -108,7 +110,13 @@
     
     NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
     [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
-   
+    
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    enabled = true;
+    [FGoogleAnalytics writeGAForItem:[self title] andType:GACASEMENUINT];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -119,7 +127,6 @@
 
 - (IBAction)closeMenu:(id)sender
 {
-   // [self.navigationController dismissViewControllerAnimated:true completion:nil];
     [self.navigationController popToRootViewControllerAnimated:true];
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.showMenu = false;
@@ -134,7 +141,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  
+    
     if (type > 0) {
         return 100;
     }
@@ -167,14 +174,13 @@
             } else
             {
                 if ([[clicked title] isEqualToString:@"Disclaimer"]) {
-                   // [self.navigationController dismissViewControllerAnimated:true completion:nil];
                     [self.navigationController popToRootViewControllerAnimated:true];
-                   [parent openDisclaimer];
+                    [parent openDisclaimer];
                 } else
                 {
-                   subMenu.type = 0;
-                 [self.navigationController pushViewController:subMenu animated:YES];
-                     [flow.caseMenuArray addObject:subMenu];
+                    subMenu.type = 0;
+                    [self.navigationController pushViewController:subMenu animated:YES];
+                    [flow.caseMenuArray addObject:subMenu];
                 }
             }
         } else {
@@ -185,36 +191,36 @@
                 if (menuArray.count >0) {
                     subMenu.type = 2;
                     [self.navigationController pushViewController:subMenu animated:YES];
-                     [flow.caseMenuArray addObject:subMenu];
+                    [flow.caseMenuArray addObject:subMenu];
                 } else
                 {
                     UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"EMPTYCATEGORY", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     [av show];
                 }
-
+                
             } else
             {
                 
                 NSArray *menuArray = [FDB getCaseCategoryWithPrev:[clicked categoryID]];
-            
+                
                 if (menuArray.count >0) {
                     subMenu.type = 0;
                     [self.navigationController pushViewController:subMenu animated:YES];
-                     [flow.caseMenuArray addObject:subMenu];
+                    [flow.caseMenuArray addObject:subMenu];
                 } else
                 {
                     menuArray = [FDB getCasesWithCategoryID:[clicked categoryID]];
                     if (menuArray.count >0) {
                         subMenu.type = 1;
                         [self.navigationController pushViewController:subMenu animated:YES];
-                         [flow.caseMenuArray addObject:subMenu];
+                        [flow.caseMenuArray addObject:subMenu];
                     } else
                     {
                         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"EMPTYCATEGORY", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                         [av show];
                     }
                 }
-               
+                
             }
             
         }
@@ -223,56 +229,25 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+    
+    enabled = true;
+    
     UITableViewCell *cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"casebookMenuCell"];
     
     if (type > 0)
     {
-        CGRect screenRect = [[UIScreen mainScreen] bounds];
-        CGFloat screenWidth = screenRect.size.width;
-        
-        UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
-        [img setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@red",previousIcon]]];
-        [cell addSubview:img];
-        UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(40, 10, screenWidth-100, 20)];
-        [name setText:[(FCase *)[allItems objectAtIndex:indexPath.row] name]];
-        [name setFont:[UIFont fontWithName:@"HelveticaNeue" size:12.5]];
-        [name setClipsToBounds:NO];
-        [cell addSubview:name];
-        UIImageView *indicator=[[UIImageView alloc] initWithFrame:CGRectMake(screenWidth-20, 13.5, 8, 12.5)];
-        [indicator setImage:[UIImage imageNamed:@"menu_arrow"]];
-        [cell addSubview:indicator];
-        UIView *line=[[UIView alloc] initWithFrame:CGRectMake(40, 37, screenWidth-20, 1)];
-        [line setBackgroundColor:[UIColor lightGrayColor]];
-        [cell addSubview:line];
-        UILabel *caseLbl=[[UILabel alloc] initWithFrame:CGRectMake(40, 49, screenWidth-100, 40)];
-        [caseLbl setText:[(FCase *)[allItems objectAtIndex:indexPath.row] title]];
-        [caseLbl setLineBreakMode:NSLineBreakByTruncatingTail];
-        [caseLbl setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
-        [caseLbl setClipsToBounds:NO];
-        [caseLbl setTextColor:[UIColor grayColor]];
-        [caseLbl setNumberOfLines:2];
-        [cell addSubview:caseLbl];
-        
+        [self setUnhilightedCellStyle:cell withIndex:indexPath];
     }else
     {
         if (type == -1)
         {
             [cell.textLabel setText:[[allItems objectAtIndex:indexPath.row] title]];
             UIImage *image = [UIImage imageNamed:@"case_author_red"];
-            
             [cell.imageView setImage:image];
-            
             image = [UIImage imageWithContentsOfFile:[[authors objectAtIndex:indexPath.row] imageLocal]];
-            NSLog(@"%@",[[authors objectAtIndex:indexPath.row] imageLocal]);
-            UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(13, 5, 45, 45)];
-            img.layer.cornerRadius = img.frame.size.height /2;
-            img.layer.masksToBounds = YES;
-            img.layer.borderWidth = 0;
-            [img setContentMode:UIViewContentModeScaleAspectFill];
+            UIImageView *img=[FCommon imageCutWithRect:CGRectMake(13, 5, 45, 45)];
             //img.backgroundColor = [UIColor whiteColor];
             img.image = image;
-            
             [cell.contentView addSubview:img];
         }else{
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
@@ -282,36 +257,37 @@
             } else{
                 [cell.imageView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@red",previousIcon]]];
             }
-            
-           
         }
         
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     }
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-
+    
+    //Disabeling cell for unbookmarked cases without connection
+    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     // Add your Colour.
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    [self setCellColor:[UIColor colorFromHex:@"ED1C24"] ForCell:cell];  //highlight colour
+    [self setCellColor:[UIColor colorFromHex:FOTONARED] ForCell:cell];  //highlight colour
     
-
+    
     if (type > 0)
     {
+        for (UIView *subView in cell.subviews) {
+            [subView removeFromSuperview];
+        }
         CGRect screenRect = [[UIScreen mainScreen] bounds];
         CGFloat screenWidth = screenRect.size.width;
+        
       
-        UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
-        [img setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@white",previousIcon]]];
-        [cell addSubview:img];
         
         UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(40, 10, screenWidth-100, 20)];
         [name setText:[(FCase *)[allItems objectAtIndex:indexPath.row] name]];
         [name setFont:[UIFont fontWithName:@"HelveticaNeue" size:12.5]];
-         name.textColor = [UIColor whiteColor];
+        name.textColor = [UIColor whiteColor];
         [name setClipsToBounds:NO];
         [cell addSubview:name];
         UIImageView *indicator=[[UIImageView alloc] initWithFrame:CGRectMake(screenWidth-20, 13.5, 8, 12.5)];
@@ -328,6 +304,12 @@
         [caseLbl setTextColor:[UIColor grayColor]];
         [caseLbl setNumberOfLines:2];
         [cell addSubview:caseLbl];
+        
+        UIImageView *img = [FCommon imageCutWithRect:CGRectMake(5, 5, 30, 30)];
+        
+        UIImage *temp = [FDB getAuthorImage:[[allItems objectAtIndex:indexPath.row] authorID]];
+        [img setImage:temp];
+        [cell addSubview:img];
     }else
     {
         if (!previousCategory) {
@@ -338,16 +320,14 @@
         }
     }
     
-    
-    
-    
-    
     cell.textLabel.textColor = [UIColor whiteColor];
 }
+
 - (void)setCellColor:(UIColor *)color ForCell:(UITableViewCell *)cell {
     cell.contentView.backgroundColor = color;
     cell.backgroundColor = color;
 }
+
 
 - (void)tableView:(UITableView *)tableView didUnhighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -355,40 +335,8 @@
     
     if (type > 0)
     {
-        CGRect screenRect = [[UIScreen mainScreen] bounds];
-        CGFloat screenWidth = screenRect.size.width;
-        for (UIView *v in cell.subviews) {
-            v.removeFromSuperview;
-        }
-        UIImageView *img=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
-        [img setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@red",previousIcon]]];
-        [cell addSubview:img];
-        UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(40, 10, screenWidth-100, 20)];
-        [name setText:[(FCase *)[allItems objectAtIndex:indexPath.row] name]];
-        [name setFont:[UIFont fontWithName:@"HelveticaNeue" size:12.5]];
-        [name setClipsToBounds:NO];
-        name.textColor = [UIColor blackColor];
-
-        [cell addSubview:name];
-        UIImageView *indicator=[[UIImageView alloc] initWithFrame:CGRectMake(screenWidth-20, 13.5, 8, 12.5)];
-        [indicator setImage:[UIImage imageNamed:@"menu_arrow"]];
-        [cell addSubview:indicator];
-        UIView *line=[[UIView alloc] initWithFrame:CGRectMake(40, 37, screenWidth-20, 1)];
-        [line setBackgroundColor:[UIColor lightGrayColor]];
-        [cell addSubview:line];
-        UILabel *caseLbl=[[UILabel alloc] initWithFrame:CGRectMake(40, 49, screenWidth-100, 40)];
-        [caseLbl setText:[(FCase *)[allItems objectAtIndex:indexPath.row] title]];
-        [caseLbl setLineBreakMode:NSLineBreakByTruncatingTail];
-        [caseLbl setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
-        [caseLbl setClipsToBounds:NO];
-        [caseLbl setTextColor:[UIColor grayColor]];
-        [caseLbl setNumberOfLines:2];
-        [cell addSubview:caseLbl];
-        
-        
-    }else
-    {
-        
+        [self setUnhilightedCellStyle:cell withIndex:indexPath];
+    }else {
         if (!previousCategory) {
             [cell.imageView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@red",[menuIcons objectAtIndex:indexPath.row]]]];
         } else{
@@ -397,6 +345,51 @@
         }
     }
     cell.textLabel.textColor = [UIColor blackColor];
+}
+
+- (void) setUnhilightedCellStyle: (UITableViewCell *) cell withIndex:(NSIndexPath *) indexPath{
+    for (UIView *subView in cell.subviews) {
+        [subView removeFromSuperview];
+    }
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    
+    
+    UILabel *name=[[UILabel alloc] initWithFrame:CGRectMake(40, 10, screenWidth-100, 20)];
+    [name setText:[(FCase *)[allItems objectAtIndex:indexPath.row] name]];
+    [name setFont:[UIFont fontWithName:@"HelveticaNeue" size:12.5]];
+    [name setClipsToBounds:NO];
+    [name setTextColor:[UIColor blackColor]];
+    [cell addSubview:name];
+    UIImageView *indicator=[[UIImageView alloc] initWithFrame:CGRectMake(screenWidth-20, 13.5, 8, 12.5)];
+    [indicator setImage:[UIImage imageNamed:@"menu_arrow"]];
+    [cell addSubview:indicator];
+    UIView *line=[[UIView alloc] initWithFrame:CGRectMake(40, 37, screenWidth-20, 1)];
+    [line setBackgroundColor:[UIColor colorFromHex:@"EEEEEE"]];
+    [cell addSubview:line];
+    UILabel *caseLbl=[[UILabel alloc] initWithFrame:CGRectMake(40, 49, screenWidth-100, 40)];
+    [caseLbl setText:[(FCase *)[allItems objectAtIndex:indexPath.row] title]];
+    [caseLbl setLineBreakMode:NSLineBreakByTruncatingTail];
+    [caseLbl setFont:[UIFont fontWithName:@"HelveticaNeue" size:17]];
+    [caseLbl setClipsToBounds:NO];
+    [caseLbl setTextColor:[UIColor grayColor]];
+    [caseLbl setNumberOfLines:2];
+    [cell addSubview:caseLbl];
+    
+    UIImageView *img = [FCommon imageCutWithRect:CGRectMake(5, 5, 30, 30)];
+    
+    UIImage *temp = [FDB getAuthorImage:[[allItems objectAtIndex:indexPath.row] authorID]];
+    [img setImage:temp];
+
+    
+    if ([[(FCase *)[allItems objectAtIndex:indexPath.row] bookmark] isEqualToString:@"0"] && [[(FCase *)[allItems objectAtIndex:indexPath.row] coverflow] isEqualToString:@"0"] && ![ConnectionHelper connectedToInternet]) {
+        enabled = false;
+        [caseLbl setTextColor:[[UIColor grayColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
+        [name setTextColor:[[UIColor blackColor] colorWithAlphaComponent:DISABLEDCOLORALPHA]];
+        img.alpha = DISABLEDCOLORALPHA;
+    }
+    
+    [cell addSubview:img];
 }
 
 
@@ -425,55 +418,17 @@
         caseToReturn = caseTemp;
         [self openCase];
     } else{
-        if([APP_DELEGATE connectedToInternet]){
-            MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view addSubview:hud];
-            hud.labelText = @"Opening case";
-            [hud show:YES];
-            NSString *requestData;
-            
-            requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"caseID\":\"%@\",\"access_token\":\"%@\",\"dateUpdated\":\"%@\"}",langID,[caseTemp caseID]  ,globalAccessToken,@"01.01.2000 10:36:20"];
-            //
-            
-            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@GetCaseById",webService]];
-            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-            
-            [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
-            [request setHTTPMethod:@"POST"];
-            [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-            
+        if([ConnectionHelper connectedToInternet]){
+
+            NSMutableURLRequest *request = [FHelperRequest requestToGetCaseByID:[caseTemp caseID] onView:self.view];
             AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
             [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                // I get response as XML here and parse it in a function
-                
-                NSError *jsonError;
-                NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-                NSString *c = [dic objectForKey:@"d"];
-                NSData *data = [c dataUsingEncoding:NSUTF8StringEncoding];
-                FCase *caseObj=[[FCase alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data
-                                                                                                 options:NSJSONReadingMutableContainers
-                                                                                                   error:&jsonError]];
-                NSMutableArray *imgs = [[NSMutableArray alloc] init];
-                for (NSDictionary *imgLink in [caseObj images]) {
-                    FImage * img = [[FImage alloc] initWithDictionary:imgLink];
-                    
-                    [imgs addObject:img];
-                }
-                [caseObj setImages:imgs];
-                NSMutableArray *videos = [[NSMutableArray alloc] init];
-                for (NSDictionary *videoLink in [caseObj video]) {
-                    FVideo * videoTemp = [[FVideo alloc] initWithDictionary:videoLink];
-                    
-                    [videos addObject:videoTemp];
-                }
-                [caseObj setVideo:videos];
+               FCase *caseObj=[FCase parseCaseFromServer:[operation responseData]];
                 updateCounter++;
                 success++;
                 [self removeHud];
                 caseToReturn = caseObj;
-                 [self openCase];
-        
-                
+                [self openCase];
             }
                                              failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                  NSLog(@"Cases failed %@",error.localizedDescription);
@@ -497,8 +452,8 @@
     [APP_DELEGATE setUpdateInProgress:NO];
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     if (success<updateCounter) {
-        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:@"Problem with content update!" delegate:(FCasebookViewController*)self.viewDeckController.centerController cancelButtonTitle:@"Cancel" otherButtonTitles:@"Try again", nil]
-        ;
+      
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"NOCONNECTION", nil)] delegate:(FCasebookViewController*)self.viewDeckController.centerController cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av setTag:0];
         [av show];
     }
@@ -510,11 +465,11 @@
 {
     FIFlowController *flow = [FIFlowController sharedInstance];
     flow.showMenu = false;
-    //[self.navigationController dismissViewControllerAnimated:true completion:nil];
     [self.navigationController popToRootViewControllerAnimated:true];
     parent.caseToOpen = caseToReturn;
     [parent openCase];
 }
+
 
 
 @end

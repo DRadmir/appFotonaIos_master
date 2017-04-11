@@ -4,18 +4,19 @@
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
 #import "AFNetworking.h"
-#import "FAppDelegate.h"
 #import "FNews.h"
 #import "FCaseCategory.h"
 #import "FCase.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FAuthor.h"
 #import "FDocument.h"
 #import "MBProgressHUD.h"
 #import "FFotonaMenu.h"
 #import "FDownloadManager.h"
 #import "Logger.h"
+#import "FDB.h"
+#import "FMediaManager.h"
 
 @implementation FUpdateContent
 
@@ -44,6 +45,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [self updateDocuments];
     [self updateFotonaTab];
     [self updateCases];
+    [[FDownloadManager shared] prepareForDownloadingFiles];
     
 }
 
@@ -54,7 +56,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 -(void)updateNews
 {
     NSString *lastUpdate=[[NSUserDefaults standardUserDefaults] objectForKey:@"newsLastUpdate"];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",webService2]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",FOTONAWEBSERVICE]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     NSString *postString;
     if ([lastUpdate isEqualToString:@""]) {
@@ -64,7 +66,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
                                                            withString:@"%3A"];
         lastUpdate = [lastUpdate stringByReplacingOccurrencesOfString:@" "
                                                            withString:@"+"];
-        postString = [NSString stringWithFormat:@"cmd=nws&d=%@",lastUpdate];
+        postString = [NSString stringWithFormat:@"cmd=nws&d=%@", lastUpdate];
     }
     
     
@@ -101,6 +103,14 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 -(void)parseNews:(NSDictionary *)dicNews
 {
     
+    int newsCount = 5;
+    
+    if([FCommon isGuest]){
+        newsCount = 5;
+    }
+    else{
+        newsCount = 5;
+    }
     NSMutableArray *newsArray=[[NSMutableArray alloc] init];
     NSDateFormatter *df=[[NSDateFormatter alloc] init];
     [df setDateFormat:@"dd.MM.yyyy"];
@@ -125,7 +135,8 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
                             
                             if (([difference day]>=0)&& ([difference day]<=endDate)) {
                                 FNews *news;
-                                if(newsArray.count < 12){
+                                
+                                if(newsArray.count < newsCount){
                                     news=[[FNews alloc] initWithDictionaryDB:n WithRest:@"0" andBookmarked:@"0"];
                                 }
                                 else{
@@ -224,18 +235,18 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [database open];
     for (FNews *fNews in news) {
         
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM News where newsID=%d;", fNews.newsID]];
+        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM News where newsID=%d;", (int)fNews.newsID]];
         BOOL flag=NO;
         while([results next]) {
             flag=YES;
         }
         
         if (!flag) {
-            [database executeUpdate:@"INSERT INTO News (newsID,title,langID,description,text,active,date,isReaded,headerImage,headerImageLink,images,imagesLinks,categories,rest,isBookmark) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[NSString stringWithFormat:@"%d", fNews.newsID],fNews.title,langID,fNews.description,fNews.text, fNews.activeDB,fNews.nDate,@"0",fNews.headerImageDB, fNews.headerImageLink,fNews.imagesDB,fNews.imagesLinksDB,fNews.categoriesDB,fNews.rest, fNews.bookmark];
+            [database executeUpdate:@"INSERT INTO News (newsID,title,langID,description,text,active,date,isReaded,headerImage,headerImageLink,images,imagesLinks,categories,rest,isBookmark) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[NSString stringWithFormat:@"%d", (int)fNews.newsID],fNews.title,langID,fNews.description,fNews.text, fNews.activeDB,fNews.nDate,@"0",fNews.headerImageDB, fNews.headerImageLink,fNews.imagesDB,fNews.imagesLinksDB,fNews.categoriesDB,fNews.rest, fNews.bookmark];
             
         }else
         {
-            [database executeUpdate:@"UPDATE News set title=?,langID=?,description=?,text=?,active=?,date=?,headerImage=?, headerImageLink=?,images=?,imagesLinks=?,categories=?,rest=?,isBookmark=? where newsID=?",fNews.title,langID,fNews.description,fNews.text,fNews.activeDB,fNews.nDate,fNews.headerImageDB,fNews.headerImageLink,fNews.imagesDB, fNews.imagesLinksDB,fNews.categoriesDB,fNews.rest,fNews.bookmark,[NSString stringWithFormat:@"%d", fNews.newsID]];
+            [database executeUpdate:@"UPDATE News set title=?,langID=?,description=?,text=?,active=?,date=?,headerImage=?, headerImageLink=?,images=?,imagesLinks=?,categories=?,rest=?,isBookmark=? where newsID=?",fNews.title,langID,fNews.description,fNews.text,fNews.activeDB,fNews.nDate,fNews.headerImageDB,fNews.headerImageLink,fNews.imagesDB, fNews.imagesLinksDB,fNews.categoriesDB,fNews.rest,fNews.bookmark,[NSString stringWithFormat:@"%d", (int)fNews.newsID]];
             
             [self deleteNewsForUserTypes:[[NSNumber numberWithLong:fNews.newsID]stringValue]];
         }
@@ -305,10 +316,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
     for (FNews *f in delete) {
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         
         [database executeUpdate:@"delete from News where newsID=?",[[NSNumber numberWithLong:f.newsID]stringValue]];
         FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@ AND userName=%@",[[NSNumber numberWithLong:f.newsID]stringValue],BOOKMARKNEWS,usr]];
@@ -331,7 +339,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     
     NSString *lastUpdate=[[NSUserDefaults standardUserDefaults] objectForKey:@"eventsLastUpdate"];
     //@"28.03.2015 08:29:02";//
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:webService2]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:FOTONAWEBSERVICE]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     NSString *postString;
     if (![[NSUserDefaults standardUserDefaults] objectForKey:@"eventsLastUpdate"]) {
@@ -399,7 +407,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
         
         NSString *lastUpdate=[[NSUserDefaults standardUserDefaults] objectForKey:@"eventsLastUpdate"];
         
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:webService2]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:FOTONAWEBSERVICE]];
         NSMutableURLRequest *request2 = [NSMutableURLRequest requestWithURL:url];
         NSString *postString2;
         if (![[NSUserDefaults standardUserDefaults] objectForKey:@"eventsLastUpdate"]) {
@@ -513,18 +521,18 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [database open];
     for (FEvent *fEvent in events) {
         
-        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Events where eventID=%d;", fEvent.eventID]];
+        FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Events where eventID=%d;", (int)fEvent.eventID]];
         BOOL flag=NO;
         while([results next]) {
             flag=YES;
         }
         
         if (!flag) {
-            [database executeUpdate:@"INSERT INTO Events (eventID,title,description,date,text,type,categories,images,dateTo, mobileFeatured) VALUES (?,?,?,?,?,?,?,?,?,?)",[NSString stringWithFormat:@"%d", fEvent.eventID],fEvent.title,fEvent.eventplace,fEvent.eventdate, fEvent.text,[NSString stringWithFormat:@"%d", fEvent.typeE],fEvent.eventcategoriesDB,fEvent.eventImagesDB, fEvent.eventdateTo, fEvent.mobileFeaturedDB];
+            [database executeUpdate:@"INSERT INTO Events (eventID,title,description,date,text,type,categories,images,dateTo, mobileFeatured) VALUES (?,?,?,?,?,?,?,?,?,?)",[NSString stringWithFormat:@"%d", (int)fEvent.eventID],fEvent.title,fEvent.eventplace,fEvent.eventdate, fEvent.text,[NSString stringWithFormat:@"%d", (int)fEvent.typeE],fEvent.eventcategoriesDB,fEvent.eventImagesDB, fEvent.eventdateTo, fEvent.mobileFeaturedDB];
             
         }else
         {
-            [database executeUpdate:@"UPDATE Events set title=?,description=?,date=?,text=?,type=?,categories=?,images=?,dateTo=?, mobileFeatured=?  where eventID=?",fEvent.title,fEvent.eventplace,fEvent.eventdate,fEvent.text,[NSString stringWithFormat:@"%d", fEvent.typeE],fEvent.eventcategoriesDB,fEvent.eventImagesDB,fEvent.eventdateTo, fEvent.mobileFeaturedDB,[NSString stringWithFormat:@"%d", fEvent.eventID]];
+            [database executeUpdate:@"UPDATE Events set title=?,description=?,date=?,text=?,type=?,categories=?,images=?,dateTo=?, mobileFeatured=?  where eventID=?",fEvent.title,fEvent.eventplace,fEvent.eventdate,fEvent.text,[NSString stringWithFormat:@"%d", (int)fEvent.typeE],fEvent.eventcategoriesDB,fEvent.eventImagesDB,fEvent.eventdateTo, fEvent.mobileFeaturedDB,[NSString stringWithFormat:@"%d", (int)fEvent.eventID]];
         }
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -575,10 +583,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     
     for (FEvent *f in delete) {
-        NSString *usr =[APP_DELEGATE currentLogedInUser].username;//[[NSUserDefaults standardUserDefaults] valueForKey:@"autoLogin"];
-        if (usr == nil) {
-            usr =@"guest";
-        }
+        NSString *usr = [FCommon getUser];
         
         [database executeUpdate:@"delete from Events where eventID=?",[[NSNumber numberWithLong:f.eventID]stringValue]];
         FMResultSet *results = [database executeQuery:@"SELECT * FROM UserBookmark where documentID=? AND typeID=? AND username=?" withArgumentsInArray:[NSArray arrayWithObjects:@"100",BOOKMARKEVENTS,@"guest", nil]];//[database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark where documentID=%@ AND typeID=%@ AND username=%@",[[NSNumber numberWithLong:f.eventID]stringValue],BOOKMARKEVENTS,usr]];
@@ -605,17 +610,17 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 {
     NSString *requestData;
     
-    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"access_token\":\"%@\",\"dateUpdated\":\"%@\"}",langID,globalAccessToken,[[NSUserDefaults standardUserDefaults] objectForKey:@"caseCategoriesLastUpdate"]];
+    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"dateUpdated\":\"%@\"}",langID,[[NSUserDefaults standardUserDefaults] objectForKey:@"caseCategoriesLastUpdate"]];
     //
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@GetAllCaseCategories",webService] ];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, LINKCASECATEGORY] ];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
     [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
     [request setHTTPMethod:@"POST"];
-    [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:globalAccessToken forHTTPHeaderField:@"access_key"];
     [request setTimeoutInterval:timeOutInterval];
-    NSLog(@"%f",request.timeoutInterval);
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         // I get response as XML here and parse it in a function
@@ -645,9 +650,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 -(void)parseCaseCategories:(NSDictionary *)dicCC
 {
     NSMutableArray *ccArray=[[NSMutableArray alloc] init];
-    NSString *ccString=[dicCC objectForKey:@"d"];
-    NSArray *allCC=[NSJSONSerialization JSONObjectWithData:[ccString dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
-    //    NSLog(@"count %lu",(unsigned long)allNews.count);
+    NSArray *allCC=[dicCC objectForKey:@"d"];
     for (NSDictionary *c in allCC) {
         FCaseCategory *cc=[[FCaseCategory alloc] initWithDictionary:c];
         [ccArray addObject:cc];
@@ -698,16 +701,17 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 {
     NSString *requestData;
     
-    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"access_token\":\"%@\",\"dateUpdated\":\"%@\"}",langID,globalAccessToken,[[NSUserDefaults standardUserDefaults] objectForKey:@"casesLastUpdate"]];
+    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"dateUpdated\":\"%@\"}",langID,[[NSUserDefaults standardUserDefaults] objectForKey:@"casesLastUpdate"]];
     
     //
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@GetAllCases",webService]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, LINKCASES]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
     [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
     [request setHTTPMethod:@"POST"];
-    [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:globalAccessToken forHTTPHeaderField:@"access_key"];
     [request setTimeoutInterval:timeOutInterval];
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -734,10 +738,9 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 -(void)parseCases:(NSDictionary *)dicCases
 {
     NSMutableArray *casesArray=[[NSMutableArray alloc] init];
-    NSString *casesString=[dicCases objectForKey:@"d"];
-    NSArray *allCaces=[NSJSONSerialization JSONObjectWithData:[casesString dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+    NSArray *allCaces=[dicCases objectForKey:@"d"];
     for (NSDictionary *c in allCaces) {
-        FCase *caseObj=[[FCase alloc] initWithDictionaryDB:c];
+        FCase *caseObj=[[FCase alloc] initWithDictionaryFromServer:c];
         [casesArray addObject:caseObj];
     }
     [APP_DELEGATE setCaseArray:casesArray];
@@ -757,7 +760,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [database open];
     for (FCase *c in caseArray) {
         if ([c active] ) {
-            FMResultSet *resultsBookmarked = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark WHERE documentID=%@ AND typeID=0", c.caseID]];
+            FMResultSet *resultsBookmarked = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM UserBookmark WHERE documentID=%@ AND typeID=%@", c.caseID, BOOKMARKCASE]];
             NSString *bookmarked=@"0";
             while([resultsBookmarked next]) {
                 bookmarked=@"1";
@@ -767,43 +770,44 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             while([results next]) {
                 flag=YES;
             }
+            BOOL download = NO;
+            if ([bookmarked isEqualToString:@"1"] || [[c coverflow] isEqualToString:@"1"]) {
+                download = YES;
+            }
+            
+            [FDB updateMedia:[c parseImagesFromServer:YES] andType:MEDIAIMAGE  andDownload:download forCase:c.caseID];
+            [FDB updateMedia:[c parseVideosFromServer:YES] andType:MEDIAVIDEO  andDownload:download forCase:c.caseID];
             if ([c.coverflow boolValue] || [bookmarked boolValue]) {
                 if (!flag) {
-                    [database executeUpdate:@"INSERT INTO Cases (caseID,title,langID,coverTypeID,name,image,introduction,procedure,results,'references',parameters,date,galleryID,videoGalleryID,active,allowedForGuests,authorID,isBookmark,alloweInCoverFlow) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parametars,c.date,c.galleryID,c.videoGalleryID,c.active,c.allowedForGuests,c.authorID,bookmarked,c.coverflow];
-                    //insertMedia TODO
-                    [self addMedia:[c parseImages] withType:0];
-                    [self addMedia:[c parseVideos] withType:1];
+                    [database executeUpdate:@"INSERT INTO Cases (caseID,title,langID,coverTypeID,name,image,introduction,procedure,results,'references',parameters,date,active,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissions, galleryItemVideoIDs, galleryItemImagesIDs) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.authorID,bookmarked,c.coverflow, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs];
                     [self setCase:c.caseID InCategories:c.categories];
                 }else
                 {
-                    [database executeUpdate:@"UPDATE Cases set title=?,langID=?,coverTypeID=?,name=?,image=?,introduction=?,procedure=?,results=?,'references'=?,parameters=?,date=?,galleryID=?,videoGalleryID=?,active=?,allowedForGuests=?,authorID=?,alloweInCoverFlow=? where caseID=?",c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parametars,c.date,c.galleryID,c.videoGalleryID,c.active,c.allowedForGuests,c.authorID,c.coverflow,c.caseID];
-                    
-                    NSMutableArray *imgs = [c parseImages];
-                    NSMutableArray *videos = [c parseVideos];
-                    
-                    [self deleteMediaForCaseGalleryID:c.galleryID withArray:imgs andType:0];
-                    [self deleteMediaForCaseGalleryID:c.videoGalleryID withArray:videos andType:1];
-                    [self addMedia:imgs withType:0];
-                    [self addMedia:videos withType:1];
-                    
                     [self deleteCasesFromCategories:c.caseID];
-                    [self setCase:c.caseID InCategories:c.categories];
+                    if ([c.deleted isEqualToString:@"1"]) {
+                        [FDB removeCaseWithID:c.caseID];
+                    } else {
+                        
+                        [database executeUpdate:@"UPDATE Cases set title=?,langID=?,coverTypeID=?,name=?,image=?,introduction=?,procedure=?,results=?,'references'=?,parameters=?,date=?,active=?,authorID=?,alloweInCoverFlow=?,isBookmark=?, deleted=?, download=?, userPermissions=?, galleryItemVideoIDs=?, galleryItemImagesIDs=? where caseID=?",c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.authorID,c.coverflow,bookmarked, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs, c.caseID];
+                        [self setCase:c.caseID InCategories:c.categories];
+                    }
                 }
             } else {
                 if (!flag) {
-                    [database executeUpdate:@"INSERT INTO Cases (caseID,title, coverTypeID,name,image,active,authorID,isBookmark,alloweInCoverFlow,galleryID,videoGalleryID,allowedForGuests) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,c.coverTypeID,c.name,c.image,c.active,c.authorID,bookmarked,c.coverflow, c.galleryID,c.videoGalleryID,c.allowedForGuests];
-                    [self addMediaWhithout:[c parseImages] withType:0];
-                    [self addMediaWhithout:[c parseVideos] withType:1];
+                    [database executeUpdate:@"INSERT INTO Cases (caseID,title,langID,coverTypeID,name,image,introduction,procedure,results,'references',parameters,date,active,authorID,isBookmark,alloweInCoverFlow, deleted, download, userPermissions, galleryItemVideoIDs, galleryItemImagesIDs) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",c.caseID,c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.authorID,bookmarked,c.coverflow, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs];
+
                     [self setCase:c.caseID InCategories:c.categories];
                 }else
                 {
-                    [database executeUpdate:@"UPDATE Cases set title=?,coverTypeID=?,name=?,image=?,active=?,authorID=?,alloweInCoverFlow=?,galleryID=?,videoGalleryID=?,allowedForGuests=? where caseID=?",c.title,c.coverTypeID,c.name,c.image,c.active,c.authorID,c.coverflow, c.galleryID,c.videoGalleryID,c.allowedForGuests,c.caseID];
-                    [self updateMedia:[c parseImages] withType:0 idArray:[NSMutableArray new]];
-                    [self updateMedia:[c parseVideos] withType:1  idArray:[NSMutableArray new]];
                     [self deleteCasesFromCategories:c.caseID];
-                    [self setCase:c.caseID InCategories:c.categories];
+                    if ([c.deleted isEqualToString:@"1"]) {
+                        [FDB removeCaseWithID:c.caseID];
+                    } else {
+                        [database executeUpdate:@"UPDATE Cases set title=?,langID=?,coverTypeID=?,name=?,image=?,introduction=?,procedure=?,results=?,'references'=?,parameters=?,date=?,active=?,authorID=?,alloweInCoverFlow=?,isBookmark=?, deleted=?, download=?, userPermissions=?, galleryItemVideoIDs=?, galleryItemImagesIDs=? where caseID=?",c.title,langID,c.coverTypeID,c.name,c.image,c.introduction,c.procedure,c.results,c.references,c.parameters,c.date,c.active,c.authorID,c.coverflow,bookmarked, c.deleted, c.download, c.userPermissions, c.galleryItemVideoIDs, c.galleryItemImagesIDs, c.caseID];
+                        [self setCase:c.caseID InCategories:c.categories];
+
+                    }
                 }
-                
             }
         }
     }
@@ -832,31 +836,6 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 }
 
 
--(void)deleteMediaForCaseGalleryID:(NSString *)gID withArray:(NSMutableArray *)array andType:(int)t
-{
-    if (t==0) {
-        for (FImage *img in array) {
-            NSArray *pathComp=[img.path pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error;
-            [fileManager removeItemAtPath:pathTmp error:&error];
-        }
-    } else if (t==1){
-        for (FVideo *vid in array) {
-            NSArray *pathComp=[vid.path pathComponents];
-            NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error;
-            [fileManager removeItemAtPath:pathTmp error:&error];
-        }
-    }
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    [database executeUpdate:@"delete from Media where galleryID=?",gID];
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
 -(void)addMedia:(NSMutableArray *)m withType:(int)type{
     if (m.count>0) {
         if (type==0) {
@@ -865,8 +844,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             for (FImage *img in m) {
                 NSArray *pathComp=[img.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-                [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,sort) VALUES (?,?,?,?,?,?,?,?,?)",img.itemID,img.galleryID,img.title,img.path,pathTmp,img.description,@"0",@"0",img.sort];
-                //                [img downloadFile:img.path inFolder:@"/.Cases"];
+                [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,sort, deleted, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?)",img.itemID,img.title,img.path,pathTmp,img.description,@"0",@"0",img.sort, img.deleted, img.fileSize];
                 
                 [[APP_DELEGATE imagesToDownload] addObject:img.path];
                 
@@ -876,11 +854,11 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
         }else if(type==1){
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
-            for (FVideo *vid in m) {
+            for (FMedia *vid in m) {
                 NSArray *pathComp=[vid.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,time,videoImage,sort,userType,userSubType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.videoGalleryID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.videoImage,vid.sort,vid.userType,vid.userSubType];
-                //                [vid downloadFile:vid.path inFolder:@"/.Cases"];
+                [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,time,mediaImage,sort, active, deleted, download, fileSize, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.title,vid.path,pathTmp,vid.description,@"1",@"1",vid.time,vid.mediaImage,vid.sort, vid.active, vid.deleted, vid.download, vid.filesize, vid.userPermissions];
+
                 [[APP_DELEGATE videosToDownload] addObject:vid.path];
             }
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -890,15 +868,14 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     }
 }
 //adding images and videos without downloading them
--(void)addMediaWhithout:(NSMutableArray *)m withType:(int)type{
+-(void)addMediaWhithout:(NSMutableArray *)m withType:(int)type andDatabase:(FMDatabase *)database{
     if (m.count>0) {
         if (type==0) {
-            FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-            [database open];
+            
             for (FImage *img in m) {
                 NSArray *pathComp=[img.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@/%@",@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-                [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,sort) VALUES (?,?,?,?,?,?,?,?,?)",img.itemID,img.galleryID,img.title,img.path,pathTmp,img.description,@"0",@"0",img.sort];
+                [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,sort, deleted, fileSize) VALUES (?,?,?,?,?,?,?,?,?,?)",img.itemID,img.title,img.path,pathTmp,img.description,@"0",@"0",img.sort, img.deleted, img.fileSize];
                 //                [img downloadFile:img.path inFolder:@"/.Cases"];
             }
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
@@ -906,14 +883,14 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
         }else if(type==1){
             FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
             [database open];
-            for (FVideo *vid in m) {
+            for (FMedia *vid in m) {
                 NSArray *pathComp=[vid.path pathComponents];
                 NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,time,videoImage,sort,userType,userSubType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.videoGalleryID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.videoImage,vid.sort,vid.userType,vid.userSubType];
+                [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,time,mediaImage,sort, active, deleted, download, fileSize, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.mediaImage,vid.sort, vid.active, vid.deleted, vid.download, vid.filesize, vid.userPermissions];
                 //                [vid downloadFile:vid.path inFolder:@"/.Cases"];
             }
             [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-            [database close];
+            
         }
         
     }
@@ -924,87 +901,86 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     if (m.count>0) {
         FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
         [database open];
-        //        if (type==0) {
-        //            for (FImage *img in m) {
-        //
-        //                FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@;",img.itemID]];
-        //                BOOL flag=NO;
-        //                while([results next]) {
-        //                    flag=YES;
-        //                    bookmark = [results objectForColumnName:@"isBookmark"];
-        //                }
-        //                if (!flag) {
-        //                    NSArray *pathComp=[img.path pathComponents];
-        //                    NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-        //                    [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark) VALUES (?,?,?,?,?,?,?,?)",img.itemID,img.galleryID,img.title,img.path,pathTmp,img.description,@"0",@"0"];
-        //
-        //                } else {
-        //                    NSString *pathTmp = [results objectForColumnName:@"localPath"];
-        //                    if ([bookmark boolValue]) {
-        //
-        //                        NSFileManager *fileManager = [NSFileManager defaultManager];
-        //                        NSError *error;
-        //                        [fileManager removeItemAtPath:[results objectForColumnName:@"localPath"] error:&error];
-        //                        NSArray *pathComp=[img.path pathComponents];
-        //                        pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
-        //                        [[APP_DELEGATE videosToDownload] addObject:pathTmp];
-        //                    }
-        //                    [database executeUpdate:@"UPDATE Media set galleryID=?,title=?,path=?,localPath=?,description=?,mediaType=? where mediaID=?",img.galleryID,img.title,img.path,pathTmp,img.description,@"0",img.itemID];
-        //
-        //            }
-        //            }
-        //        }else
-        if(type==1){
-            
-            for (FVideo *vid in m) {
-                NSString *pathTmp = @"";
-                NSArray *pathComp;
-                FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@",vid.itemID]];
-                BOOL flag=NO;
-                while([results next]) {
-                    flag=YES;
-                    bookmark = [results objectForColumnName:@"isBookmark"];
-                    pathComp=[[results objectForColumnName:@"path"] pathComponents];
-                    pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                    
-                }
-                if (!flag) {
-                    pathComp=[vid.path pathComponents];
-                    pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                    [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark,time,videoImage, sort,userType,userSubType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.videoGalleryID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.videoImage,vid.sort,vid.userType,vid.userSubType];
-                    
-                    
-                    if ([arrayID containsObject:vid.itemID ])
-                    {
-                        NSFileManager *fileManager = [NSFileManager defaultManager];
-                        NSError *error;
-                        [fileManager removeItemAtPath:pathTmp error:&error];
-                        NSArray *pathComp=[vid.path pathComponents];
+        if (type==0) {
+            //            for (FImage *img in m) {
+            //
+            //                FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@;",img.itemID]];
+            //                BOOL flag=NO;
+            //                while([results next]) {
+            //                    flag=YES;
+            //                    bookmark = [results objectForColumnName:@"isBookmark"];
+            //                }
+            //                if (!flag) {
+            //                    NSArray *pathComp=[img.path pathComponents];
+            //                    NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
+            //                    [database executeUpdate:@"INSERT INTO Media (mediaID,galleryID,title,path,localPath,description,mediaType,isBookmark) VALUES (?,?,?,?,?,?,?,?)",img.itemID,img.galleryID,img.title,img.path,pathTmp,img.description,@"0",@"0"];
+            //
+            //                } else {
+            //                    NSString *pathTmp = [results objectForColumnName:@"localPath"];
+            //                    if ([bookmark boolValue]) {
+            //
+            //                        NSFileManager *fileManager = [NSFileManager defaultManager];
+            //                        NSError *error;
+            //                        [fileManager removeItemAtPath:[results objectForColumnName:@"localPath"] error:&error];
+            //                        NSArray *pathComp=[img.path pathComponents];
+            //                        pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[img.path lastPathComponent]];
+            //                        [[APP_DELEGATE videosToDownload] addObject:pathTmp];
+            //                    }
+            //                    [database executeUpdate:@"UPDATE Media set galleryID=?,title=?,path=?,localPath=?,description=?,mediaType=? where mediaID=?",img.galleryID,img.title,img.path,pathTmp,img.description,@"0",img.itemID];
+            //
+            //            }
+            //            }
+        }else{
+            if(type==1){
+                
+                for (FMedia *vid in m) {
+                    NSString *pathTmp = @"";
+                    NSArray *pathComp;
+                    FMResultSet *results = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where mediaID=%@",vid.itemID]];
+                    BOOL flag=NO;
+                    while([results next]) {
+                        flag=YES;
+                        bookmark = [results objectForColumnName:@"isBookmark"];
+                        pathComp=[[results objectForColumnName:@"path"] pathComponents];
                         pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                        [[APP_DELEGATE videosToDownload] addObject:vid.path];
-                        [[APP_DELEGATE imagesToDownload] addObject:vid.videoImage];
-                        [arrayID removeObject:vid.itemID];
-                        [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=?",@"1",vid.itemID];
-                    }
-                    
-                } else {
-                    
-                    if ([bookmark boolValue]) {
                         
-                        NSFileManager *fileManager = [NSFileManager defaultManager];
-                        NSError *error;
-                        [fileManager removeItemAtPath:pathTmp error:&error];
-                        NSArray *pathComp=[vid.path pathComponents];
-                        pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
-                        [[APP_DELEGATE videosToDownload] addObject:vid.path];
-                        [[APP_DELEGATE imagesToDownload] addObject:vid.videoImage];
                     }
-                    
-                    [database executeUpdate:@"UPDATE Media set galleryID=?,title=?,path=?,localPath=?,description=?,mediaType=?,time=?,videoImage=?,sort=?, userType=?, userSubType=? where mediaID=?",vid.videoGalleryID,vid.title,vid.path,pathTmp,vid.description,@"1",vid.time,vid.videoImage,vid.sort,vid.userType,vid.userSubType,vid.itemID];
-                    
+                    if (!flag) {
+                        pathComp=[vid.path pathComponents];
+                        pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
+                        
+                        [database executeUpdate:@"INSERT INTO Media (mediaID,title,path,localPath,description,mediaType,isBookmark,time,mediaImage,sort, active, deleted, download, fileSize, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",vid.itemID,vid.title,vid.path,pathTmp,vid.description,@"1",@"0",vid.time,vid.mediaImage,vid.sort, vid.active, vid.deleted, vid.download, vid.filesize, vid.userPermissions];
+                        
+                        if ([arrayID containsObject:vid.itemID ])
+                        {
+                            NSFileManager *fileManager = [NSFileManager defaultManager];
+                            NSError *error;
+                            [fileManager removeItemAtPath:pathTmp error:&error];
+                            NSArray *pathComp=[vid.path pathComponents];
+                            pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
+                            [[APP_DELEGATE videosToDownload] addObject:vid.path];
+                            [[APP_DELEGATE imagesToDownload] addObject:vid.mediaImage];
+                            [arrayID removeObject:vid.itemID];
+                            [database executeUpdate:@"UPDATE Media set isBookmark=? where mediaID=?",@"1",vid.itemID];
+                        }
+                        
+                    } else {
+                        
+                        if ([bookmark boolValue]) {
+                            
+                            NSFileManager *fileManager = [NSFileManager defaultManager];
+                            NSError *error;
+                            [fileManager removeItemAtPath:pathTmp error:&error];
+                            NSArray *pathComp=[vid.path pathComponents];
+                            pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[vid.path lastPathComponent]];
+                            [[APP_DELEGATE videosToDownload] addObject:vid.path];
+                            [[APP_DELEGATE imagesToDownload] addObject:vid.mediaImage];
+                        }
+                        [database executeUpdate:@"UPDATE Media set title=?,path=?,localPath=?,description=?,mediaType=?,time=?,mediaImage=?,sort=?, userPermissions=?, active=?, deleted=?, download=?, fileSize=? where mediaID=?",vid.title,vid.path,pathTmp,vid.description,@"1",vid.time,vid.mediaImage,vid.sort, vid.userPermissions, vid.active, vid.deleted, vid.download, vid.filesize, vid.itemID];
+                    }
                 }
+                
             }
-            
         }
         [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
         [database close];
@@ -1017,23 +993,22 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 {
     NSString *requestData;
     
-    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"access_token\":\"%@\",\"dateUpdated\":\"%@\"}",langID,globalAccessToken,[[NSUserDefaults standardUserDefaults] objectForKey:@"authorsLastUpdate"]];
+    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"dateUpdated\":\"%@\"}",langID,[[NSUserDefaults standardUserDefaults] objectForKey:@"authorsLastUpdate"]];
     
-    //
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@GetAllAuthors",webService]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", WEBSERVICE, LINKAUTHORS]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
     [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
     [request setHTTPMethod:@"POST"];
-    [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:globalAccessToken forHTTPHeaderField:@"access_key"];
     [request setTimeoutInterval:timeOutInterval];
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         // I get response as XML here and parse it in a function
         //        NSLog(@"Authors %@",[operation responseString]);
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-        NSArray *allAutors=[NSJSONSerialization JSONObjectWithData:[[dic valueForKey:@"d"] dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+        NSArray *allAutors=[dic valueForKey:@"d"];
         NSMutableArray *authors=[[NSMutableArray alloc] init];
         for (NSDictionary *d in allAutors) {
             FAuthor *author=[[FAuthor alloc] initWithDictionary:d];
@@ -1091,7 +1066,6 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             NSFileManager *fileManager = [NSFileManager defaultManager];
             NSError *error;
             [fileManager removeItemAtPath:downloadFilename error:&error];
-            
             [database executeUpdate:@"UPDATE Author set name=?,langID=?,image=?,imageLocal=?,cv=?,active=? where authorID=?",a.name,langID,a.image,a.imageLocal,a.cv,a.active,a.authorID];
             
             [[APP_DELEGATE authorsImageToDownload] addObject:[a.image stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
@@ -1110,16 +1084,17 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 {
     NSString *requestData;
     
-    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"access_token\":\"%@\",\"dateUpdated\":\"%@\"}",langID,globalAccessToken,[[NSUserDefaults standardUserDefaults] objectForKey:@"documentsLastUpdate"]];
+    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"dateUpdated\":\"%@\"}",langID,[[NSUserDefaults standardUserDefaults] objectForKey:@"documentsLastUpdate"]];
     
     //
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@GetAllDocuments",webService]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, LINKDOCUMENTS]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
     [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
     [request setHTTPMethod:@"POST"];
-    [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:globalAccessToken forHTTPHeaderField:@"access_key"];
     [request setTimeoutInterval:timeOutInterval];
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -1147,8 +1122,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 -(void)parseDoc:(NSDictionary *)dicDoc
 {
     NSMutableArray *docArray=[[NSMutableArray alloc] init];
-    NSString *docString=[dicDoc objectForKey:@"d"];
-    NSArray *allDoc=[NSJSONSerialization JSONObjectWithData:[docString dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+    NSArray *allDoc=[dicDoc objectForKey:@"d"];
     //    NSLog(@"count %lu",(unsigned long)allNews.count);
     for (NSDictionary *d in allDoc) {
         FDocument *docObj=[[FDocument alloc] initWithDictionary:d];
@@ -1179,62 +1153,17 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
         }
         
         if (!flag) {
-            [database executeUpdate:@"INSERT INTO Documents (documentID,title,langID,iconType,description,isLink,link,src,active) VALUES (?,?,?,?,?,?,?,?,?)",d.documentID,d.title,langID,d.iconType,d.description,d.isLink,d.link,d.src,d.active];
-            for (NSString *type in d.allowedUserTypes) {
-                [self addDoc:d.documentID inUserType:type];
-            }
-            for (NSString *subtype in d.allowedUserSubTypes) {
-                [self addDoc:d.documentID inUserSubType:subtype];
-            }
+            [database executeUpdate:@"INSERT INTO Documents (documentID,title,langID,iconType,description,isLink,link,src,active, bookmark, userPermissions) VALUES (?,?,?,?,?,?,?,?,?,?,?)",d.documentID,d.title,langID,d.iconType,d.description,d.isLink,d.link,d.src,d.active, d.bookmark, d.userPermissions];
+
         }else{
-            [database executeUpdate:@"UPDATE Documents set title=?,langID=?,iconType=?,description=?,isLink=?,link=?,src=?,active=? where documentID=?",d.title,langID,d.iconType,d.description,d.isLink,d.link,d.src,d.active,d.documentID];
-            
-            [self deleteDocForUserTypes:d.documentID];
-            
-            for (NSString *type in d.allowedUserTypes) {
-                [self addDoc:d.documentID inUserType:type];
-            }
-            for (NSString *subtype in d.allowedUserSubTypes) {
-                [self addDoc:d.documentID inUserSubType:subtype];
-            }
+            [database executeUpdate:@"UPDATE Documents set title=?,langID=?,iconType=?,description=?,isLink=?,link=?,src=?,active=?, userPermission=? where documentID=?",d.title,langID,d.iconType,d.description,d.isLink,d.link,d.src,d.active, d.userPermissions,d.documentID];
         }
     }
     [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
     [database close];
 }
 
--(void)deleteDocForUserTypes:(NSString *)docID
-{
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    [database executeUpdate:@"delete from DocumentsForUserType where documentID=?",docID];
-    [database executeUpdate:@"delete from DocumentsForUserSubType where documentID=?",docID];
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-    
-}
 
--(void)addDoc:(NSString *)dId inUserType:(NSString *)t
-{
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    
-    [database executeUpdate:@"INSERT INTO DocumentsForUserType (documentID,userType) VALUES (?,?)",dId,t];
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    
-    [database close];
-}
-
--(void)addDoc:(NSString *)dId inUserSubType:(NSString *)st
-{
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    
-    [database executeUpdate:@"INSERT INTO DocumentsForUserSubType (documentID,userSubType) VALUES (?,?)",dId,st];
-    
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
 
 
 #pragma mark FotonaTab
@@ -1243,35 +1172,27 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 {
     NSString *requestData;
     
-    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"access_token\":\"%@\",\"dateUpdated\":\"%@\"}",langID,globalAccessToken,
-                  [[NSUserDefaults standardUserDefaults] objectForKey:@"fotonaLastUpdate"]];
-    //
+    requestData =[NSString stringWithFormat:@"{\"langID\":\"%@\",\"dateUpdated\":\"%@\"}", langID, [[NSUserDefaults standardUserDefaults] objectForKey:@"fotonaLastUpdate"]];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@GetFotonaTab",webService]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WEBSERVICE, LINKFOTONATAB]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
     [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
     [request setHTTPMethod:@"POST"];
-    [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:globalAccessToken forHTTPHeaderField:@"access_key"];
     [request setTimeoutInterval:timeOutInterval];
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         // I get response as XML here and parse it in a function
         //        NSLog(@"Fotona1: %@",[operation responseString]);
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:[operation responseData] options:NSJSONReadingMutableLeaves error:nil];
-        NSArray *allAutors=[NSJSONSerialization JSONObjectWithData:[[dic valueForKey:@"d"] dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:nil];
+        NSArray *allAutors=[dic valueForKey:@"d"];
         NSMutableArray *fMenu=[[NSMutableArray alloc] init];
         for (NSDictionary *d in allAutors) {
-            FFotonaMenu *menu=[[FFotonaMenu alloc] initWithDictionary:d];
+            FFotonaMenu *menu=[[FFotonaMenu alloc] initWithDictionaryFromServer:d];
             [fMenu addObject:menu];
-            //            NSLog(@"%@", menu.title);
-            //            for (NSNumber *type in menu.allowedUserSubTypes) {
-            //                NSLog(@"Subtype: %@", type);
-            //            }
-            //            for (NSNumber *type in menu.allowedUserTypes) {
-            //                NSLog(@"Type: %@", type);
-            //            }
-        }
+                    }
         if (fMenu.count>0) {
             
             NSString *today=[self currentTimeInLjubljana];
@@ -1279,7 +1200,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             [[NSUserDefaults standardUserDefaults] setObject:today forKey:@"fotonaLastUpdate"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
-            [self addForonaMenuInDB:fMenu];
+            [self addFotonaMenuInDB:fMenu];
         }
         updateCounter++;
         success++;
@@ -1300,9 +1221,8 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [operation start];
 }
 
--(void)addForonaMenuInDB:(NSMutableArray *)menuArr
+-(void)addFotonaMenuInDB:(NSMutableArray *)menuArr
 {
-    NSString *bookmark=@"0";
     FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
     [database open];
     for (FFotonaMenu *m in menuArr) {
@@ -1310,82 +1230,19 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
         BOOL flag=NO;
         while([results next]) {
             flag=YES;
-            bookmark = [results objectForColumnName:@"isBookmark"];
         }
         
-        if (!flag) {
-            
-            [database executeUpdate:@"INSERT INTO FotonaMenu (categoryID,categoryIDPrev,langID,title,fotonaCategoryType,description,text,caseID,pdfSrc,externalLink,videoGalleryID,videos,active,sort,icon,isBookmark) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",m.categoryID,m.categoryIDPrev,langID,m.title,m.fotonaCategoryType,m.description,m.text,m.caseID,m.pdfSrc,m.externalLink,m.videoGalleryID,m.videosDicArr,m.active,m.sort,m.iconName,@"0"];
-            
-            [m updateVideos];
-            if (m.videos.count>0) {
-                [self addMediaWhithout:m.videos withType:1];
-            }
-            
-            for (NSString *type in m.allowedUserTypes) {
-                [self addFotona:m.categoryID inUserType:type];
-            }
-            for (NSString *subtype in m.allowedUserSubTypes) {
-                [self addFotona:m.categoryID inUserSubType:subtype];
-            }
-            
-        }else{
-            [database executeUpdate:@"UPDATE FotonaMenu set categoryIDPrev=?,langID=?,title=?,fotonaCategoryType=?,description=?,text=?,caseID=?,pdfSrc=?,externalLink=?,videoGalleryID=?,videos=?,active=?,sort=?,icon=? where categoryID=?",m.categoryIDPrev,langID,m.title,m.fotonaCategoryType,m.description,m.text,m.caseID,m.pdfSrc,m.externalLink,m.videoGalleryID,m.videos,m.active,m.sort,m.iconName,m.categoryID];
-            
-            
-            if ([m.fotonaCategoryType intValue]==6) {
-                if ([bookmark isEqualToString:@"1"]) {
-                    NSFileManager *fileManager = [NSFileManager defaultManager];
-                    NSError *error;
-                    [fileManager removeItemAtPath:m.pdfSrc error:&error];
-                    [[APP_DELEGATE pdfToDownload] addObject:m.pdfSrc];
-                    
-                }
-            }
-            else {
-                NSMutableArray *tempVideos = [NSMutableArray new];
-                NSString *videoBookmarked = @"";
-                FMResultSet *resultsVideos = [database executeQuery:[NSString stringWithFormat:@"SELECT * FROM Media where galleryID=%@ AND isBookmark=1",m.videoGalleryID]];
-                while([resultsVideos next]) {
-                        [tempVideos addObject:[resultsVideos objectForColumnName:@"mediaID"]];
-                    NSString *downloadFilename = [resultsVideos stringForColumn:@"localPath"];//[[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[results2 stringForColumn:@"localPath"]];
-                    
-                    NSFileManager *fileManager = [NSFileManager defaultManager];
-                    NSError *error;
-                    [fileManager removeItemAtPath:downloadFilename error:&error];
-                    
-                    //                            downloadFilename = [[NSString stringWithFormat:@"%@%@",docDir,folder] stringByAppendingPathComponent:[results2 stringForColumn:@"videoImage"]];
-                    NSArray *pathComp=[[resultsVideos stringForColumn:@"videoImage"] pathComponents];
-                    NSString *pathTmp = [[NSString stringWithFormat:@"%@%@/%@",docDir,@".Cases",[pathComp objectAtIndex:pathComp.count-2]] stringByAppendingPathComponent:[[resultsVideos stringForColumn:@"videoImage"] lastPathComponent]];
-                    [fileManager removeItemAtPath:pathTmp error:&error];
+        [FDB updateMedia:m.pdfArray andType:MEDIAPDF andDownload:NO forCase:nil];
+        [FDB updateMedia:m.videoArray andType:MEDIAVIDEO andDownload:NO forCase:nil];
 
-                }
-                [database executeUpdate:@"DELETE FROM Media WHERE galleryID=? ",m.videoGalleryID,nil];
-                
-                [m updateVideos];
-                if (m.videos.count>0) {
-                    [self updateMedia:m.videos withType:1 idArray:tempVideos];
-                }
-                
-                NSString *currentUsr =[APP_DELEGATE currentLogedInUser].username;
-                if (currentUsr == nil) {
-                    currentUsr =@"guest";
-                }
-                
-                if (tempVideos.count > 0) {
-                    for (NSString *vid in tempVideos) {
-                        [database executeUpdate:@"DELETE FROM UserBookmark WHERE documentID=? and username=? and typeID=?",vid,currentUsr,BOOKMARKVIDEO];
-                    }
-                }
-                
-            }
-            
-            [self deleteFotonaForUserTypes:m.categoryID];
-            for (NSString *type in m.allowedUserTypes) {
-                [self addFotona:m.categoryID inUserType:type];
-            }
-            for (NSString *subtype in m.allowedUserSubTypes) {
-                [self addFotona:m.categoryID inUserSubType:subtype];
+        if (!flag) {
+
+            [database executeUpdate:@"INSERT INTO FotonaMenu (categoryID,categoryIDPrev,langID,title,fotonaCategoryType,description,text,caseID,externalLink,active,sort,icon,isBookmark, userPermissions, galleryItemIDs, deleted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",m.categoryID,m.categoryIDPrev,langID,m.title,m.fotonaCategoryType,m.description,m.text,m.caseID,m.externalLink,m.active,m.sort,m.iconName,@"0", m.userPermissions,m.galleryItemIDs,m.deleted];
+        }else{
+            if ([m.deleted isEqualToString:@"1"]) {
+                [FDB removeFotonaMenuWithID:m.categoryID];
+            } else {
+                [database executeUpdate:@"UPDATE FotonaMenu set categoryIDPrev=?,langID=?,title=?,fotonaCategoryType=?,description=?,text=?,caseID=?,externalLink=?,active=?,sort=?,icon=?, userPermissions=?, galleryItemIDs=?, deleted=? WHERE categoryID=?",m.categoryIDPrev,langID,m.title,m.fotonaCategoryType,m.description,m.text,m.caseID,m.externalLink,m.active,m.sort,m.iconName,m.userPermissions,m.galleryItemIDs,m.deleted,m.categoryID];
             }
         }
     }
@@ -1393,38 +1250,6 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
     [database close];
 }
 
--(void)deleteFotonaForUserTypes:(NSString *)fID
-{
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    [database executeUpdate:@"delete from FotonaMenuForUserType where fotonaID=?",fID];
-    [database executeUpdate:@"delete from FotonaMenuForUserSubType where fotonaID=?",fID];
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
-
-
--(void)addFotona:(NSString *)fId inUserType:(NSString *)t
-{
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    
-    [database executeUpdate:@"INSERT INTO FotonaMenuForUserType (fotonaID,userType) VALUES (?,?)",fId,t];
-    
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
-
--(void)addFotona:(NSString *)fId inUserSubType:(NSString *)st
-{
-    FMDatabase *database = [FMDatabase databaseWithPath:DB_PATH];
-    [database open];
-    
-    [database executeUpdate:@"INSERT INTO FotonaMenuForUserSubType (fotonaID,userSubType) VALUES (?,?)",fId,st];
-    
-    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
-    [database close];
-}
 
 -(void)downloadFile:(NSString *)fileUrl inFolder:(NSString *)folder
 {
@@ -1457,15 +1282,13 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
 }
 
 - (void) updateDisclaimer {
-    NSString *requestData;
     
-    requestData =[NSString stringWithFormat:@"{\"access_token\":\"%@\"}",globalAccessToken];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@Disclaimer",webService]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", WEBSERVICE, LINKDISCLAIMER]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
-    [request setHTTPBody:[requestData dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setHTTPMethod:@"POST"];
-    [request addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"GET"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:globalAccessToken forHTTPHeaderField:@"access_key"];
     [request setTimeoutInterval:timeOutInterval];
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {

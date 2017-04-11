@@ -31,7 +31,9 @@
     lblDate.text = [[HelperDate formatedDate:[event eventdate]] stringByAppendingString:[NSString stringWithFormat:@" - %@",  [HelperDate formatedDate:[event eventdateTo]]]];
     lblLocation.text = event.eventplace;
     if (category==0) {
-        [imageDot setImage:[UIImage imageNamed:[event getDot]]];
+        UIImage *test = [UIImage imageNamed:[event getDot]];
+        [imageDot setContentMode:UIViewContentModeScaleAspectFit];
+        [imageDot setImage:test];//[UIImage imageNamed:[event getDot]]];
     } else{
         [imageDot setImage:[UIImage imageNamed:[event getDot:category]]];
     }

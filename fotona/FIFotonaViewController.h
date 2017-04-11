@@ -10,19 +10,17 @@
 #import "FIBaseView.h"
 #import "FFotonaMenu.h"
 #import <QuickLook/QuickLook.h>
-#import "Bubble.h"
 
-@interface FIFotonaViewController : FIBaseView <QLPreviewControllerDelegate,QLPreviewControllerDataSource, BubbleDelegate>
+
+@interface FIFotonaViewController : FIBaseView
 
 @property (strong, nonatomic) IBOutlet UIView *continerViewFotona;
 @property(nonatomic) NSMutableDictionary *bookmarkMenu;
 
 
-
--(void) openGalleryFromSearch:(NSString *) galleryID andReplace:(BOOL) replace;
+-(void) openGallery:(NSString *) galleryItems andReplace:(BOOL) replace andType:(NSString *)mediaType;
+-(void) openGalleryFromSearch:(NSString *) galleryItems andReplace:(BOOL) replace andType:(NSString *)mediaType;
 -(void) openCategory: (FFotonaMenu *) fotonaCategory;
--(void)refreshMenu:(NSString *)link;
-
 -(void) clearViews;
 - (IBAction)showMenu:(id)sender;
 

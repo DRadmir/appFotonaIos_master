@@ -7,12 +7,11 @@
 //
 
 #import "FINewsViewController.h"
-#import "FAppDelegate.h"
 #import "HelperString.h"
 #import "FIFeaturedNewsTableViewCell.h"
 #import "FDB.h"
 #import "FImage.h"
-#import "FVideo.h"
+#import "FMedia.h"
 #import "FIGalleryController.h"
 #import "HelperDate.h"
 
@@ -50,6 +49,7 @@ int bottomHeight;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+     [super viewWillAppear:animated];
     if ([APP_DELEGATE newsTemp] != nil  ) {
         [self reloadView];
     }
@@ -111,7 +111,7 @@ int bottomHeight;
                     UIImage *img;
                     if ([n headerImage] == nil ) {
                         NSString * header = n.headerImageLink;
-                        if (header == nil || [header isEqualToString:@""]|| (![APP_DELEGATE connectedToInternet])) {
+                        if (header == nil || [header isEqualToString:@""]|| (![ConnectionHelper connectedToInternet])) {
                             img = [UIImage imageNamed:@"related_news"];
                         } else {
                             NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",  header];

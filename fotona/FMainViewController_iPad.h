@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "FCaseMenuViewController.h"
-#import "FBookmarkMenuViewController.h"
 #import "FFotonaMenuViewController.h"
 
 @import Security;
@@ -33,7 +32,6 @@
 @property (assign) int letToLogin;
 @property (nonatomic, strong) FCaseMenuViewController *caseMenu;
 @property (nonatomic, strong) FFotonaMenuViewController *fotonaMenu;
-@property (nonatomic, strong) FBookmarkMenuViewController *bookMenu;
 
 @property (nonatomic, strong) UINavigationController *caseMenuNav;
 @property (nonatomic, strong) UINavigationController *bookMenuNav;
