@@ -644,6 +644,14 @@
     [database close];
 }
 
++(void)removeFotonaMenuDeleted {
+    FMDatabase * database = [FMDatabase databaseWithPath: DB_PATH];
+    [database open];
+    [database executeUpdate:@"DELETE FROM FotonaMenu WHERE deleted = 1 "];
+    [APP_DELEGATE addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:DB_PATH]];
+    [database close];
+}
+
 
 
 #pragma mark - Check if bookmarked

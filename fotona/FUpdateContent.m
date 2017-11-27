@@ -1202,6 +1202,7 @@ int removeHudNumber = 8;//how many downloads need to finish - 8
             
             [self addFotonaMenuInDB:fMenu];
         }
+        [FDB removeFotonaMenuDeleted];
         updateCounter++;
         success++;
         if (updateCounter==removeHudNumber) {

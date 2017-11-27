@@ -66,6 +66,7 @@
 +(NSMutableArray *)getFotonaMenu:(NSString *)catID;
 +(NSMutableArray *)getPDFForSearchFromDB:(NSString *) searchTxt withDatabase:(FMDatabase *) database userPermissions:(NSString *) userP;
 +(void)removeFotonaMenuWithID:(NSString *)fotonaID;
++(void)removeFotonaMenuDeleted;
 
 +(void) addTooFavoritesItem:(int) documentID ofType:(NSString *) typeID;
 +(void) removeFromFavoritesItem:(int) documentID ofType:(NSString *) typeID;
