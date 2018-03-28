@@ -12,9 +12,10 @@
 @implementation ConnectionHelper
 
 static BOOL wifiOnlyConnection;
+static BOOL mobileDataConnection;
 
 + (BOOL)connectedToInternet{
-    if (wifiOnlyConnection) {
+    if (wifiOnlyConnection && mobileDataConnection) {
         return self.connectedToWifi;
     } else {
         return self.connectedToBoth;
@@ -38,12 +39,30 @@ static BOOL wifiOnlyConnection;
     return !(networkStatus == NotReachable);
 }
 
++(BOOL)connectedToMobileData
+{
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [reachability currentReachabilityStatus];
+    if ([[Reachability reachabilityForLocalWiFi] currentReachabilityStatus] != ReachableViaWWAN) {
+        return NO;
+    }
+    return !(networkStatus == NotReachable);
+}
+
 +(void)setWifiOnlyConnection:(BOOL)status{
     wifiOnlyConnection = status;
 }
 
 +(BOOL)getWifiOnlyConnection{
     return wifiOnlyConnection;
+}
+
++(void)setMobileDataConnection:(BOOL)status {
+    mobileDataConnection = status;
+}
+
++(BOOL)getMobileDataConnection:(BOOL)status {
+    return mobileDataConnection;
 }
 
 @end

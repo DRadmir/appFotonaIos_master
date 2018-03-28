@@ -227,6 +227,7 @@
         }
         
         [self setHeaderImageDB:news.localImage];
+        
         for (int i =0; i<[news.localImages count]; i++) {
             if (i>0) {
                 temp=[temp stringByAppendingString:@","];
@@ -256,7 +257,7 @@
             } else {
                 NSString * header =[[newsArray objectAtIndex:startIndex+c] headerImageLink];
                 if (header == nil || [header isEqualToString:@""] || (![ConnectionHelper connectedToInternet])) {
-                    img = [UIImage imageNamed:@"related_news"]; 
+                    img = [UIImage imageNamed:@"related_news"];
                 } else {
                     NSString *url_Img_FULL = [NSString stringWithFormat:@"%@",  header];
                     img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url_Img_FULL]]];

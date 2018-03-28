@@ -78,12 +78,13 @@ int bottomHeight;
     
     [self createGallery];
     
+    self.tabelViewRelated.scrollEnabled = false;
+    [self.tabelViewRelated reloadData];
+    
     bottomCostraint.constant = 10;
     [self.scrollViewMain setContentSize:CGSizeMake(self.scrollViewMain.contentSize.width, self.scrollViewMain.contentSize.width-bottomHeight+10)];
     [self.scrollViewMain setNeedsLayout];
     [self.scrollViewMain layoutIfNeeded];
-    self.tabelViewRelated.scrollEnabled = false;
-    [self.tabelViewRelated reloadData];
     [self.scrollViewMain setContentOffset:CGPointMake(0, 0) animated:true];
     
 }
@@ -146,6 +147,7 @@ int bottomHeight;
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FIFeaturedNewsTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"FIFeaturedNewsTableViewCell" owner:self options:nil] objectAtIndex:0];
+    //printf("!!!!!!!!!!!!!!! index: %d count: %d\n", (long) indexPath.row, (long) [relatedArray count]);
     cell.news = [relatedArray objectAtIndex:indexPath.row];
     cell.related = true;
     [cell fillCell];

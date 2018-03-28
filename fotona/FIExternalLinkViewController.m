@@ -30,7 +30,9 @@
         [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:btnMenu, nil] animated:false];
 
     }
+
     previousUrl = @"";
+
     
 }
 
@@ -62,7 +64,6 @@
    
 }
 
-
 #pragma mark WebView
 -(void)webViewDidStartLoad:(UIWebView *)webView{
     MBProgressHUD *hud=[[MBProgressHUD alloc] initWithView:self.view];
@@ -70,17 +71,23 @@
     hud.labelText = NSLocalizedString(@"LOADINGWEBPAGE", nil);
     [hud show:YES];
 }
+
 -(void)webViewDidFinishLoad:(UIWebView *)webView{
     [MBProgressHUD hideAllHUDsForView:webView animated:YES];
 }
+
+/**
+ * The didFailLoadWithError is called everytime the web view failed to load, which happens when you try to load another page before the current page is finished loading.
+ **/
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     NSLog(@"Page: \n%@", urlString);
     NSLog(@"Error: %@ %@", error, [error userInfo]);
-    [MBProgressHUD hideAllHUDsForView:webView animated:YES];
-    UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"LOADINGWEBPAGEERROR", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [av show];
-    
+
+//        [MBProgressHUD hideAllHUDsForView:webView animated:YES];
+//        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithFormat:NSLocalizedString(@"LOADINGWEBPAGEERROR", nil)] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//        [av show];
+//
     }
 
 #pragma mark - Close Menu
@@ -89,8 +96,6 @@
 {
     [self.navigationController dismissViewControllerAnimated:true completion:nil];
 }
-
-
 
 
 @end
