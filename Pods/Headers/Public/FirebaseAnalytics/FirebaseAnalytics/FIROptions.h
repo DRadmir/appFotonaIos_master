@@ -1,1 +1,5 @@
+XSym
+0100
+5b898ef4fc65de3b6c66840fc5506706
 ../../../../FirebaseAnalytics/Frameworks/frameworks/FirebaseAnalytics.framework/Headers/FIROptions.h
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           

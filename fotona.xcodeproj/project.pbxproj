@@ -183,6 +183,7 @@
 		3B20B62E1DF5D01500EF71EE /* FTutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B20B62C1DF5D01500EF71EE /* FTutorialViewController.m */; };
 		3B20B62F1DF5D01500EF71EE /* FTutorialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B20B62D1DF5D01500EF71EE /* FTutorialViewController.xib */; };
 		42CA64766B061A3AC4D66B64 /* libPods-fotona.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B7801B1E3B5D5AF08045FD8 /* libPods-fotona.a */; };
+		B0204EF7206BA43E00F1FB6E /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0204EF6206BA43E00F1FB6E /* Launch Screen.storyboard */; };
 		C9277265190F602F00E9D4FA /* ipad_camera_roll.png in Resources */ = {isa = PBXBuildFile; fileRef = C9277264190F602F00E9D4FA /* ipad_camera_roll.png */; };
 		C927726919105DFA00E9D4FA /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C927726819105DFA00E9D4FA /* AssetsLibrary.framework */; };
 		C927726F191488A800E9D4FA /* ASDepthModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C927726C191488A800E9D4FA /* ASDepthModalViewController.m */; };
@@ -309,7 +310,6 @@
 		C9A3D1FD18F27918007A0E49 /* settings_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D1F718F27918007A0E49 /* settings_grey@2x.png */; };
 		C9A3D1FE18F27918007A0E49 /* showroom_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D1F818F27918007A0E49 /* showroom_grey@2x.png */; };
 		C9A3D20518F27D0E007A0E49 /* casebook_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D1FF18F27D0E007A0E49 /* casebook_red@2x.png */; };
-		C9A3D20618F27D0E007A0E49 /* fotona_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D20018F27D0E007A0E49 /* fotona_red@2x.png */; };
 		C9A3D20718F27D0E007A0E49 /* homepage_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D20118F27D0E007A0E49 /* homepage_red@2x.png */; };
 		C9A3D20818F27D0E007A0E49 /* patients_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D20218F27D0E007A0E49 /* patients_red@2x.png */; };
 		C9A3D20918F27D0E007A0E49 /* settings_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D20318F27D0E007A0E49 /* settings_red@2x.png */; };
@@ -644,6 +644,7 @@
 		7EFE5850B5D11C103CD42AA5 /* Pods-fotonaTests.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotonaTests.distribution.xcconfig"; path = "Pods/Target Support Files/Pods-fotonaTests/Pods-fotonaTests.distribution.xcconfig"; sourceTree = "<group>"; };
 		7F0BEAD65D0DCF118D0F97E0 /* Pods-fotona.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotona.release.xcconfig"; path = "Pods/Target Support Files/Pods-fotona/Pods-fotona.release.xcconfig"; sourceTree = "<group>"; };
 		9672549751941F02CDC50D31 /* Pods-fotona.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotona.debug.xcconfig"; path = "Pods/Target Support Files/Pods-fotona/Pods-fotona.debug.xcconfig"; sourceTree = "<group>"; };
+		B0204EF6206BA43E00F1FB6E /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		BA275CFADC74C1720F6B3F20 /* Pods-fotonaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fotonaTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-fotonaTests/Pods-fotonaTests.release.xcconfig"; sourceTree = "<group>"; };
 		C9277264190F602F00E9D4FA /* ipad_camera_roll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ipad_camera_roll.png; path = ../ipad_camera_roll.png; sourceTree = "<group>"; };
 		C927726819105DFA00E9D4FA /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
@@ -1397,6 +1398,7 @@
 				1BD0E70B1C244B62004D4908 /* Extensions */,
 				1BF2A9401DAF748200A20DC1 /* GoogleAnalytics */,
 				C9A3D08818ED1845007A0E49 /* Supporting Files */,
+				B0204EF6206BA43E00F1FB6E /* Launch Screen.storyboard */,
 			);
 			path = fotona;
 			sourceTree = "<group>";
@@ -2134,6 +2136,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = C9A3D07518ED1845007A0E49;
@@ -2184,7 +2187,6 @@
 				1B82655C1BB532B600D854AD /* gynecology_products_red@2x.png in Resources */,
 				1B8265581BB532B600D854AD /* disclaimer_white@2x.png in Resources */,
 				C9A3D16418ED1898007A0E49 /* patients_grey.png in Resources */,
-				C9A3D20618F27D0E007A0E49 /* fotona_red@2x.png in Resources */,
 				1BF442091DAE28EB005B9A38 /* GoogleService-Info.plist in Resources */,
 				C9A3D20518F27D0E007A0E49 /* casebook_red@2x.png in Resources */,
 				1B8265541BB532B600D854AD /* aesthetics_and_surgery_products@2x.png in Resources */,
@@ -2341,6 +2343,7 @@
 				C9F9C8161901031D0031FEEB /* card3@2x.png in Resources */,
 				C9A3D17B18ED1898007A0E49 /* laser_wavelenght_red@2x.png in Resources */,
 				C9A3D1FA18F27918007A0E49 /* fotona_grey@2x.png in Resources */,
+				B0204EF7206BA43E00F1FB6E /* Launch Screen.storyboard in Resources */,
 				C9A3D16E18ED1898007A0E49 /* app_08.png in Resources */,
 				C9C35F1A1928040E000AE3BD /* spotlight.png in Resources */,
 				16F0EE701A975E1C0073EED6 /* video_red@2x.png in Resources */,
@@ -2742,7 +2745,6 @@
 			baseConfigurationReference = 9672549751941F02CDC50D31 /* Pods-fotona.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = fotona/fotona.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2764,7 +2766,6 @@
 			baseConfigurationReference = 7F0BEAD65D0DCF118D0F97E0 /* Pods-fotona.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = fotona/fotona.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2872,7 +2873,6 @@
 			baseConfigurationReference = 31FA2060B74BA98D9AF8E373 /* Pods-fotona.distribution.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = fotona/fotona.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
