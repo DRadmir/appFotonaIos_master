@@ -16,8 +16,12 @@
 #import "FTabBarController.h"
 #import "FSettingsViewController.h"
 #import "FMainViewController.h"
-#import <Google/Analytics.h>
+//#import <GoogleAnalytics.h>
 #import "FFavoriteViewController.h"
+
+#import <GoogleAnalytics/GAI.h>
+#import <GoogleAnalytics/GAIDictionaryBuilder.h>
+#import <GoogleAnalytics/GAIFields.h>
 
 #define APP_DELEGATE (FAppDelegate *)[[UIApplication sharedApplication] delegate]
 #define langID  @"1"

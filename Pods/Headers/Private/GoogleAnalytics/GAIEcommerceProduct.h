@@ -1,5 +1,1 @@
-XSym
-0061
-e5f4224af9b50014543bc5e594cc1dd9
-../../../GoogleAnalytics/Headers/Public/GAIEcommerceProduct.h
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+../../../GoogleAnalytics/Sources/GAIEcommerceProduct.h

@@ -387,20 +387,20 @@ NSString *notificationUrl = @"";
 //registering notificationa
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 #if !TARGET_IPHONE_SIMULATOR
-    
+
     //    NSLog(@"Did register for remote notifications: %@", devToken);
     // Get Bundle Info for Remote Registration (handy if you have more than one app)
     NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
     NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-    
+
     // Check what Notifications the user has turned on.  We registered for all three, but they may have manually disabled some or all of them.
     NSUInteger rntypes = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
-    
+
     // Set the defaults to disabled unless we find otherwise...
     NSString *pushBadge = @"enabled";
     NSString *pushAlert = @"enabled";
     NSString *pushSound = @"enabled";
-    
+
     // Check what Registered Types are turned on. This is a bit tricky since if two are enabled, and one is off, it will return a number 2... not telling you which
     // one is actually disabled. So we are literally checking to see if rnTypes matches what is turned on, instead of by number. The "tricky" part is that the
     // single notification types will only match if they are the ONLY one enabled.  Likewise, when we are checking for a pair of notifications, it will only be
@@ -431,7 +431,7 @@ NSString *notificationUrl = @"";
         pushAlert = @"enabled";
         pushSound = @"enabled";
     }
-    
+
     // Get the users Device Model, Display Name, Unique ID, Token & Version Number
     UIDevice *dev = [UIDevice currentDevice];
     NSString *deviceUuid;
@@ -459,15 +459,15 @@ NSString *notificationUrl = @"";
                                stringByReplacingOccurrencesOfString:@"<"withString:@""]
                               stringByReplacingOccurrencesOfString:@">" withString:@""]
                              stringByReplacingOccurrencesOfString: @" " withString: @""];
-    
+
     NSString *requestData =[NSString stringWithFormat:@"{\"deviceID\":null,\"appname\":\"%@\",\"appversion\":\"%@\",\"deviceuid\":\"%@\",\"devicetoken\":\"%@\",\"devicename\":\"%@\",\"devicemodel\":\"%@\",\"deviceversion\":\"%@\",\"pushbadge\":true,\"pushalert\":true,\"pushsound\":true",appName,appVersion,deviceUuid,devToken,deviceName,deviceModel,deviceSystemVersion];
-    
+
     NSString *active = [FNotificationManager getActiveNotification];
     if ([active  isEqual: @""])
     {
         [FNotificationManager setActiveNotificationa:@"1"];
     }
-    
+
     [FHelperRequest setDeviceData:requestData];
 #endif
 }
@@ -480,27 +480,27 @@ NSString *notificationUrl = @"";
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
 #if !TARGET_IPHONE_SIMULATOR
-    
+
     NSLog(@"remote notification: %@",[userInfo description]);
     NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
-    
+
     NSString *alert = [apsInfo objectForKey:@"alert"];
     NSLog(@"Received Push Alert: %@", alert);
-    
+
     NSString *sound = [apsInfo objectForKey:@"sound"];
     NSLog(@"Received Push Sound: %@", sound);
     //AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-    
+
     NSString *badge = [apsInfo objectForKey:@"badge"];
     NSLog(@"Received Push Badge: %@", badge);
     application.applicationIconBadgeNumber = [[apsInfo objectForKey:@"badge"] integerValue];
-    
+
     notificationUrl = [userInfo objectForKey:@"url"];
     notificationType = [[userInfo objectForKey:@"notificationType"] intValue];
 
-    
+
     [[FUpdateContent shared] updateContent:[self.window rootViewController]];
-    
+
     if (application.applicationState == UIApplicationStateActive) {
         NSLog(@"app is active");
         UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"New notification!" message:@"" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"View", nil];
@@ -510,7 +510,7 @@ NSString *notificationUrl = @"";
     {
 
         [FNotificationManager openNotification:notificationUrl ofType:notificationType];
-        
+
     }
 
 
@@ -736,7 +736,7 @@ NSString *notificationUrl = @"";
 - (void) prepareGA{
     // Configure tracker from GoogleService-Info.plist.
     NSError *configureError;
-    [[GGLContext sharedInstance] configureWithError:&configureError];
+//    [[EAGLContext sharedInstance] configureWithError:&configureError];
     NSAssert(!configureError, @"Error configuring Google services: %@", configureError);
     
     // Optional: configure GAI options.

@@ -25,7 +25,6 @@
 		16A3F5391A9476D8005739A3 /* settings2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A3F5381A9476D8005739A3 /* settings2x.png */; };
 		16A3F53E1A95E076005739A3 /* bookmarks_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A3F53A1A95E076005739A3 /* bookmarks_red@2x.png */; };
 		16A3F53F1A95E076005739A3 /* bookmarks@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A3F53B1A95E076005739A3 /* bookmarks@2x.png */; };
-		16A3F5401A95E076005739A3 /* events_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A3F53C1A95E076005739A3 /* events_red@2x.png */; };
 		16A3F5411A95E076005739A3 /* events@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A3F53D1A95E076005739A3 /* events@2x.png */; };
 		16A3F5461A95E14A005739A3 /* blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A3F5421A95E14A005739A3 /* blue@2x.png */; };
 		16A3F5471A95E14A005739A3 /* green@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 16A3F5431A95E14A005739A3 /* green@2x.png */; };
@@ -309,7 +308,6 @@
 		C9A3D1FC18F27918007A0E49 /* patients_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D1F618F27918007A0E49 /* patients_grey@2x.png */; };
 		C9A3D1FD18F27918007A0E49 /* settings_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D1F718F27918007A0E49 /* settings_grey@2x.png */; };
 		C9A3D1FE18F27918007A0E49 /* showroom_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D1F818F27918007A0E49 /* showroom_grey@2x.png */; };
-		C9A3D20518F27D0E007A0E49 /* casebook_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D1FF18F27D0E007A0E49 /* casebook_red@2x.png */; };
 		C9A3D20718F27D0E007A0E49 /* homepage_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D20118F27D0E007A0E49 /* homepage_red@2x.png */; };
 		C9A3D20818F27D0E007A0E49 /* patients_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D20218F27D0E007A0E49 /* patients_red@2x.png */; };
 		C9A3D20918F27D0E007A0E49 /* settings_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9A3D20318F27D0E007A0E49 /* settings_red@2x.png */; };
@@ -2064,8 +2062,6 @@
 				C9A3D07A18ED1845007A0E49 /* Sources */,
 				C9A3D07B18ED1845007A0E49 /* Frameworks */,
 				C9A3D07C18ED1845007A0E49 /* Resources */,
-				A4B2865F25DB212CEAF71921 /* [CP] Embed Pods Frameworks */,
-				530E278E51C439F34620D2E5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2084,8 +2080,6 @@
 				C9A3D09518ED1845007A0E49 /* Sources */,
 				C9A3D09618ED1845007A0E49 /* Frameworks */,
 				C9A3D09718ED1845007A0E49 /* Resources */,
-				127793AA7A4F33263272A9C3 /* [CP] Embed Pods Frameworks */,
-				17612AD39DF9895AA5322FB0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2188,7 +2182,6 @@
 				1B8265581BB532B600D854AD /* disclaimer_white@2x.png in Resources */,
 				C9A3D16418ED1898007A0E49 /* patients_grey.png in Resources */,
 				1BF442091DAE28EB005B9A38 /* GoogleService-Info.plist in Resources */,
-				C9A3D20518F27D0E007A0E49 /* casebook_red@2x.png in Resources */,
 				1B8265541BB532B600D854AD /* aesthetics_and_surgery_products@2x.png in Resources */,
 				C9A3D18218ED1898007A0E49 /* menu_arrow@2x.png in Resources */,
 				C9A3D15E18ED1898007A0E49 /* casebook_grey.png in Resources */,
@@ -2232,7 +2225,6 @@
 				1B8265571BB532B600D854AD /* disclaimer_red@2x.png in Resources */,
 				C9A3D16D18ED1898007A0E49 /* app_06.png in Resources */,
 				C9A3D15D18ED1898007A0E49 /* feedback@2x.png in Resources */,
-				16A3F5401A95E076005739A3 /* events_red@2x.png in Resources */,
 				C9A3D20818F27D0E007A0E49 /* patients_red@2x.png in Resources */,
 				16D6D9311A8A063500E646CE /* FCaseMenuViewController.xib in Resources */,
 				1BF431501DDA1A3B003D85B0 /* FGalleryCollectionViewCell.xib in Resources */,
@@ -2369,79 +2361,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		127793AA7A4F33263272A9C3 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-fotonaTests/Pods-fotonaTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		17612AD39DF9895AA5322FB0 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-fotonaTests/Pods-fotonaTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		4B132AA229F9BA06E310C6D6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-fotona-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		530E278E51C439F34620D2E5 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-fotona/Pods-fotona-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A4B2865F25DB212CEAF71921 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-fotona/Pods-fotona-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A845A093E7888D1DB3000BCB /* [CP] Check Pods Manifest.lock */ = {
@@ -2450,13 +2385,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-fotonaTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
