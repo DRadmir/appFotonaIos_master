@@ -222,7 +222,7 @@
         [self.tableViewFeatured setContentOffset:offset animated:NO];
         int l = 4;
         if (newsCount + l > newsArray.count) {
-            l = newsArray.count - newsCount;
+            l = (int)newsArray.count - newsCount;
         }
         newsCount+=l;
     }

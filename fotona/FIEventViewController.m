@@ -131,7 +131,7 @@
 #pragma mark - SegmenControl
 
 - (IBAction)typeSelected:(id)sender {
-    ti = self.typeSelector.selectedSegmentIndex;
+    ti = (int)self.typeSelector.selectedSegmentIndex;
     [self reloadData];
     
 }
