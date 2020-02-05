@@ -557,7 +557,7 @@ int bookmarkedCount;
                         BOOL videoComplete = true;
                         for (int i = 0; i < [[APP_DELEGATE downloadList] count]; i++) {
                             FItemBookmark * temp = [[APP_DELEGATE downloadList] objectAtIndex:i];
-                            NSArray * tempArray = [APP_DELEGATE downloadList];
+//                            NSArray * tempArray = [APP_DELEGATE downloadList];
                             if (([[[[APP_DELEGATE downloadList] objectAtIndex:i] itemID] isEqualToString:[item itemID]])&& (![[[[APP_DELEGATE downloadList] objectAtIndex:i] link] isEqualToString:[item link]]) &&([temp.type intValue] == [[item type] intValue]) ) {
                                 videoComplete = false;
                                 [[APP_DELEGATE downloadList] removeObject:item];

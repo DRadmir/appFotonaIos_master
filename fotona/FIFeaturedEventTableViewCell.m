@@ -22,7 +22,7 @@ static int category = 0;
 BOOL wrap;
 
 - (void)awakeFromNib {
-    
+    [super awakeFromNib];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

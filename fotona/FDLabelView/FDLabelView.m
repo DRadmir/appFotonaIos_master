@@ -83,7 +83,7 @@ debugSentences;
 }
 
 -(void)enumerateWord:(NSInteger)index{
-    _enumerateIndex = index;
+    _enumerateIndex = (int)index;
 }
 
 -(void)drawTextInRect:(CGRect)rect{

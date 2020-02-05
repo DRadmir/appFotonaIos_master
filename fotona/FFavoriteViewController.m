@@ -1115,7 +1115,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
                 image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
                 
             }else{
-                image = [UIImage imageWithData:[NSData dataWithContentsOfFile:[NSURL fileURLWithPath:pathTmp]]];
+                image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL fileURLWithPath:pathTmp]]];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 //code to be executed on the main thread when background task is finished
@@ -1193,7 +1193,7 @@ attributedCaptionForPhotoAtIndex:(NSInteger)index
 {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        FImage *photo = [imagesList objectAtIndex:index];
+//        FImage *photo = [imagesList objectAtIndex:index];
     });
 }
 

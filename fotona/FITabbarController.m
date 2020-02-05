@@ -51,7 +51,7 @@
 
 -(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item{
     
-    int t = [tabBar.items indexOfObject:item];
+    int t = (int)[tabBar.items indexOfObject:item];
     FIFlowController *flow = [FIFlowController sharedInstance];
     if (t == flow.lastIndex) {
         switch (t) {

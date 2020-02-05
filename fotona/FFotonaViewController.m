@@ -385,7 +385,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
     [contentsVideoModeCollectionView reloadData];
     
     //preload movie images
-    numberOfImages = [menuMediaArray count];
+    numberOfImages = (int)[menuMediaArray count];
     
     for (UIView *v in containerView.subviews) {
         [v removeFromSuperview];

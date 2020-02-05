@@ -285,7 +285,7 @@ NSString *count = @"";
                 [bck setBackgroundColor:[UIColor redColor]];
                 [cell setSelectedBackgroundView:bck];
                 
-                [cell setSelectedTextColor:[UIColor whiteColor]];
+                [cell setTintColor:[UIColor whiteColor]];
                 [cell setSelectedImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@white",imageName]]];
                 
             }
@@ -495,6 +495,7 @@ NSString *count = @"";
                     if ([[[menuItems objectAtIndex:indexPath.row] title] isEqualToString:@"Disclaimer"])
                     {
                         [self.viewDeckController toggleLeftViewAnimated:YES];
+                        
                         UINavigationController *tempC = self.viewDeckController.centerController;
                         [(FCasebookViewController*)[tempC visibleViewController]  openDisclaimer];
                         

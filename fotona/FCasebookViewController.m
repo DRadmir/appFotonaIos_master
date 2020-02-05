@@ -482,7 +482,7 @@
 -(void)openCase
 {
     [contentModeView removeFromSuperview];
-    NSString *usr = [FCommon getUser];
+//    NSString *usr = [FCommon getUser];
     
     [caseScroll removeGestureRecognizer:swipeRecognizerB];
     
@@ -820,7 +820,7 @@
                     image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
                     
                 }else{
-                    image = [UIImage imageWithData:[NSData dataWithContentsOfFile:[NSURL URLWithString:pathTmp]]];
+                    image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:pathTmp]]];
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     //code to be executed on the main thread when background task is finished
@@ -1646,7 +1646,8 @@ attributedCaptionForPhotoAtIndex:(NSInteger)index
         } else{
             imgs = [currentCase images];
         }
-        FImage *photo = imgs[index];//[currentCase getImages][index];
+//        FImage *photo = imgs[index];
+        //[currentCase getImages][index];
         
         
         //        handler(@[photo.description]);

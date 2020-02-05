@@ -252,9 +252,9 @@ FNewsView *newsViewController;
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     
-    e = newsArray.count;
+    e = (int)newsArray.count;
     if (cellNumber>newsArray.count && e>0) {
-        cellNumber = newsArray.count;
+        cellNumber = (int)newsArray.count;
     }
     if (newsArray !=nil){
         if ([[[APP_DELEGATE currentLogedInUser] userType] intValue] == 0 || [[[APP_DELEGATE currentLogedInUser] userType] intValue] == 3)
@@ -313,9 +313,9 @@ FNewsView *newsViewController;
                 } else {
                     NewsViewCell *cell2 = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier2 forIndexPath:indexPath];
                     if (indexPath.row==1) {
-                        cell2 = [self fillNewsCell:cell2 withIndex:indexPath.row-1];
+                        cell2 = [self fillNewsCell:cell2 withIndex:(int)indexPath.row-1];
                     } else {
-                        cell2 = [self fillNewsCell:cell2 withIndex:indexPath.row-2];
+                        cell2 = [self fillNewsCell:cell2 withIndex:(int)indexPath.row-2];
                     }
                     return cell2;
                 }
@@ -334,7 +334,7 @@ FNewsView *newsViewController;
                     return cell;
                 } else {
                     NewsViewCell *cell2 = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier2 forIndexPath:indexPath];
-                    cell2 = [self fillNewsCell:cell2 withIndex:indexPath.row-2];
+                    cell2 = [self fillNewsCell:cell2 withIndex:(int)indexPath.row-2];
                     return cell2;
                 }
             }
@@ -354,9 +354,9 @@ FNewsView *newsViewController;
             } else {
                 NewsViewCell *cell2 = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier2 forIndexPath:indexPath];;
                 if (indexPath.row<2) {
-                    cell2 = [self fillNewsCell:cell2 withIndex:indexPath.row];
+                    cell2 = [self fillNewsCell:cell2 withIndex:(int)indexPath.row];
                 } else {
-                    cell2 = [self fillNewsCell:cell2 withIndex:indexPath.row-1];
+                    cell2 = [self fillNewsCell:cell2 withIndex:(int)indexPath.row-1];
                 }
                 return cell2;
             }
@@ -375,9 +375,9 @@ FNewsView *newsViewController;
             } else {
                 NewsViewCell *cell2 = [collectionView2 dequeueReusableCellWithReuseIdentifier:identifier2 forIndexPath:indexPath];
                 if (indexPath.row==0) {
-                    cell2 = [self fillNewsCell:cell2 withIndex:indexPath.row];
+                    cell2 = [self fillNewsCell:cell2 withIndex:(int)indexPath.row];
                 } else {
-                    cell2 = [self fillNewsCell:cell2 withIndex:indexPath.row-1];
+                    cell2 = [self fillNewsCell:cell2 withIndex:(int)indexPath.row-1];
                 }
                 return cell2;
             }
@@ -398,7 +398,7 @@ FNewsView *newsViewController;
         [collectionView setContentOffset:offset animated:NO];
         int l = 4;
         if (cellNumber + l > newsArray.count) {
-            l = newsArray.count - cellNumber;
+            l = (int)newsArray.count - cellNumber;
         }
         cellNumber+=l;
         dispatch_queue_t queue = dispatch_queue_create("com.4egenus.fotona", NULL);
@@ -450,25 +450,25 @@ FNewsView *newsViewController;
             if (indexPath.row == 1) {
                 index = 0;
             } else {
-                index = indexPath.row - 2;
+                index = (int)indexPath.row - 2;
             }
             break;
         case 2:
-            index = indexPath.row -2;
+            index = (int)indexPath.row -2;
             break;
         case 3:
-            if (indexPath.row < 2) {
-                index = indexPath.row;
+            if ((int)indexPath.row < 2) {
+                index = (int)indexPath.row;
             } else {
-                index = indexPath.row-1;
+                index = (int)indexPath.row-1;
             }
             break;
             
         default:
-            if (indexPath.row == 0) {
-                index = indexPath.row;
+            if ((int)indexPath.row == 0) {
+                index = (int)indexPath.row;
             } else {
-                index = indexPath.row-1;
+                index = (int)indexPath.row-1;
             }
             break;
     }

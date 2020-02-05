@@ -19,6 +19,7 @@
 @synthesize lblLocation;
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     // Initialization code
 }
 

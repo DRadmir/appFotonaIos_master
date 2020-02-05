@@ -20,6 +20,7 @@
 @synthesize news;
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     // Initialization code
 }
 

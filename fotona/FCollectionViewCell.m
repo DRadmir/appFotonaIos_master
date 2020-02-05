@@ -35,6 +35,7 @@
 static int category = 0;
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     // Initialization code
     category = 0;
 }

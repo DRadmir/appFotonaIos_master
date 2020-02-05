@@ -98,7 +98,7 @@
         [self setTypeE:[[dic valueForKey:@"type"] integerValue]];
         [self setEventdate:[dic valueForKey:@"date"]];
         NSString *temp = @"";
-        NSMutableArray * download = [NSMutableArray new];
+//        NSMutableArray * download = [NSMutableArray new];
         for (int i =0; i<[[dic valueForKey:@"images"] count]; i++) {
             if (i>0) {
                 temp=[temp stringByAppendingString:@","];
@@ -151,7 +151,7 @@
 
 - (NSString *)getDot{
     
-    int c = [[[self eventcategories] objectAtIndex:0] integerValue];
+    int c = (int)[[[self eventcategories] objectAtIndex:0] integerValue];
     switch (c) {
         case 1:
             return @"event_dental_red.pdf";

@@ -47,7 +47,7 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
 }
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
-    CGPoint location = [recognizer locationInView:self];
+//    CGPoint location = [recognizer locationInView:self];
     
 //    if(CGRectContainsPoint(self.bubble, location))
 //    {

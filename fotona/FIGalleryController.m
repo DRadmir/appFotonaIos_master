@@ -302,7 +302,7 @@
                     image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:img.path]]];
                     
                 }else{
-                    image = [UIImage imageWithData:[NSData dataWithContentsOfFile:[NSURL fileURLWithPath:pathTmp]]];
+                    image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL fileURLWithPath:pathTmp]]];
                 }
             } else{
                 if (type == 2) {

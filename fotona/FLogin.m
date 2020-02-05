@@ -553,10 +553,12 @@ BOOL showFeatured = YES;
     }
     if(parentiPad != nil)
     {
-        [parentiPad dismissModalViewControllerAnimated:YES];
+//        [parentiPad dismissModalViewControllerAnimated:YES];
+        [[parentiPad presentingViewController] dismissViewControllerAnimated:YES completion:nil];
     } else
     {
-        [parentiPhone dismissModalViewControllerAnimated:YES];
+//        [parentiPhone dismissModalViewControllerAnimated:YES];
+        [[parentiPhone presentingViewController] dismissViewControllerAnimated:YES completion:nil];
     }
     
 }
@@ -588,10 +590,12 @@ BOOL showFeatured = YES;
     [picker setMessageBody:emailBody isHTML:NO];
     if(parentiPad != nil)
     {
-        [parentiPad presentModalViewController:picker animated:YES];
+//        [parentiPad presentModalViewController:picker animated:YES];
+        [[parentiPad presentingViewController] dismissViewControllerAnimated:YES completion:nil];
     } else
     {
-        [parentiPhone presentModalViewController:picker animated:YES];
+//        [parentiPhone presentModalViewController:picker animated:YES];
+        [[parentiPhone presentingViewController] dismissViewControllerAnimated:YES completion:nil];
     }
 }
 

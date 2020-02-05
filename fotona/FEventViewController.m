@@ -249,8 +249,8 @@
 //filtering needed events from all
 
 - (IBAction)categorySelect:(id)sender {
-    ti=[type selectedSegmentIndex];
-    ci=[category selectedSegmentIndex];
+    ti=(int)[type selectedSegmentIndex];
+    ci=(int)[category selectedSegmentIndex];
     tableData = [FDB fillEventsWithCategory:ci andType:ti andMobile:false];
     [tableView setContentOffset: CGPointZero animated:YES];
     [tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
@@ -447,7 +447,7 @@ attributedCaptionForPhotoAtIndex:(NSInteger)index
 {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        FImage *photo = [UIImage imageWithContentsOfFile:[openEvent eventImages][index]];
+//        FImage *photo = [UIImage imageWithContentsOfFile:[openEvent eventImages][index]];
         
         
         //        handler(@[photo.description]);

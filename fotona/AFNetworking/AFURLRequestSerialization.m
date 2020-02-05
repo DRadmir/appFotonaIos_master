@@ -719,9 +719,12 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 
 #pragma mark -
 
+@interface NSStream ()
+@property (readwrite) NSStreamStatus streamStatus;
+@property (readwrite, copy) NSError *streamError;
+@end
+
 @interface AFMultipartBodyStream () <NSCopying>
-@property (readwrite, nonatomic, assign) NSStreamStatus streamStatus;
-@property (readwrite, nonatomic, strong) NSError *streamError;
 @property (readwrite, nonatomic, assign) NSStringEncoding stringEncoding;
 @property (readwrite, nonatomic, strong) NSMutableArray *HTTPBodyParts;
 @property (readwrite, nonatomic, strong) NSEnumerator *HTTPBodyPartEnumerator;

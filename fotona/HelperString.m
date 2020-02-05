@@ -41,7 +41,7 @@
 +(NSAttributedString *)toAttributedNews:(NSString *)text
 {
     NSString * temp =@"<p>&nbsp;</p>";
-    int startPosition = text.length;
+    int startPosition = (int)text.length;
     
     NSUInteger length = [text length];
     NSRange range = NSMakeRange(0, length);
@@ -50,7 +50,7 @@
         range = [text rangeOfString: temp options:0 range:range];
         if(range.location != NSNotFound)
         {
-            startPosition = range.location;
+            startPosition = (int)range.location;
             range = NSMakeRange(range.location + range.length, length - (range.location + range.length));
         }
     }
@@ -86,7 +86,7 @@
 +(NSAttributedString *)toAttributedCase:(NSString *)text
 {
     NSString * temp =@"<p>&nbsp;</p>";
-    int startPosition = text.length;
+    int startPosition = (int)text.length;
     
     NSUInteger length = [text length];
     NSRange range = NSMakeRange(0, length);
@@ -95,7 +95,7 @@
         range = [text rangeOfString: temp options:0 range:range];
         if(range.location != NSNotFound)
         {
-            startPosition = range.location;
+            startPosition = (int)range.location;
             range = NSMakeRange(range.location + range.length, length - (range.location + range.length));
         }
     }

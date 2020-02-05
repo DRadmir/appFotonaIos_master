@@ -287,7 +287,7 @@ attributedCaptionForPhotoAtIndex:(NSInteger)index
 {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        FImage *photo = [[self news] images][index];
+//        FImage *photo = [[self news] images][index];
         
         
         //        handler(@[photo.description]);

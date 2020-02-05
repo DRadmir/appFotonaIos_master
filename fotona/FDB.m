@@ -399,7 +399,7 @@
         BOOL addc = YES;
         if (ti>0){
             addt = NO;
-            int temp =[[eventsTable objectAtIndex:i] typeE];
+            int temp =(int)[[eventsTable objectAtIndex:i] typeE];
             if((temp/2) == ti)
                 addt = YES;
         }
