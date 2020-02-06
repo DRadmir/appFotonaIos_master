@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
-    <device id="ipad9_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="ipad9_7" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="HelveticaNeueLights.ttc">
-            <string>HelveticaNeue-LightItalic</string>
-        </array>
-    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FEventViewController">
             <connections>
@@ -46,7 +38,7 @@
                     <rect key="frame" x="0.0" y="66" width="768" height="958"/>
                     <subviews>
                         <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="tJw-O1-sKS">
-                            <rect key="frame" x="53" y="142" width="662" height="29"/>
+                            <rect key="frame" x="53" y="145" width="662" height="32"/>
                             <segments>
                                 <segment title="All"/>
                                 <segment title="Dentistry"/>
@@ -60,14 +52,14 @@
                             </connections>
                         </segmentedControl>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="L42-Mk-VlR">
-                            <rect key="frame" x="53" y="202" width="662" height="706"/>
+                            <rect key="frame" x="53" y="208" width="662" height="700"/>
                             <connections>
                                 <outlet property="dataSource" destination="-1" id="VkL-HE-Izd"/>
                                 <outlet property="delegate" destination="-1" id="UAx-sq-LsW"/>
                             </connections>
                         </tableView>
                         <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Fdc-P7-Jhz">
-                            <rect key="frame" x="53" y="86" width="662" height="29"/>
+                            <rect key="frame" x="53" y="86" width="662" height="32"/>
                             <segments>
                                 <segment title="All events"/>
                                 <segment title="Exhibitions &amp; Conferences"/>
@@ -189,7 +181,7 @@
                 <constraint firstItem="1YW-ds-2MC" firstAttribute="leading" secondItem="d0n-Vd-ZVP" secondAttribute="leading" id="wBo-h9-Toz"/>
                 <constraint firstAttribute="trailing" secondItem="1YW-ds-2MC" secondAttribute="trailing" id="xCs-tD-WKf"/>
             </constraints>
-            <point key="canvasLocation" x="531" y="336"/>
+            <point key="canvasLocation" x="414.84375" y="196.875"/>
         </view>
         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" id="S2b-OG-vQ6">
             <rect key="frame" x="0.0" y="0.0" width="768" height="909"/>
@@ -229,7 +221,7 @@
                     </constraints>
                     <dataDetectorType key="dataDetectorTypes"/>
                 </webView>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C02-Li-ZIj">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" ambiguous="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C02-Li-ZIj">
                     <rect key="frame" x="27" y="145" width="714" height="180"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="180" id="797-lK-I1l"/>
@@ -255,12 +247,12 @@
                 <constraint firstItem="8HO-Re-Yse" firstAttribute="leading" secondItem="S2b-OG-vQ6" secondAttribute="leading" id="xO5-uj-vZD"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-302" y="288"/>
+            <point key="canvasLocation" x="-235.9375" y="168.75"/>
         </scrollView>
     </objects>
     <resources>
-        <image name="arrow.png" width="62" height="24"/>
-        <image name="feedback.png" width="36" height="28"/>
+        <image name="arrow.png" width="62.5" height="24"/>
+        <image name="feedback.png" width="36" height="28.5"/>
         <image name="settings2x.png" width="72" height="57"/>
     </resources>
 </document>

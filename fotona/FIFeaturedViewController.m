@@ -161,7 +161,7 @@
             }
             
             if (indexPath.section == count) {
-                newsSelected = indexPath.row;
+                newsSelected = (int)indexPath.row;
                 FIFeaturedNewsTableViewCell *cell = [self.tableViewFeatured cellForRowAtIndexPath:indexPath];
                 cell.signNewNewsCell.hidden = true;
                 [APP_DELEGATE setNewsArray:newsArray];

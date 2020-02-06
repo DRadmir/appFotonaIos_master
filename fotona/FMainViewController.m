@@ -200,13 +200,14 @@ int forgotenBottom = 0;
         //show disclaimer
         DisclaimerViewController *disclaimer=[[DisclaimerViewController alloc] init];
         disclaimer.parentiPhone = self;
+        disclaimer.modalPresentationStyle = UIModalPresentationFullScreen;
         [self.navigationController pushViewController:disclaimer animated:YES];
     } else
     {
         //[self prepareTabBarController];
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil];
         FITabbarController *vc = [storyboard instantiateViewControllerWithIdentifier:@"tabbar"];
-        
+        vc.modalPresentationStyle = UIModalPresentationFullScreen;
         [self.navigationController presentViewController:vc animated:true completion:nil];
     }
 }

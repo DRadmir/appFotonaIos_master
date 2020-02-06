@@ -122,12 +122,16 @@ static UIImage *defaultVideoImage;
             if (img!=nil) {
                 UIGraphicsEndImageContext();
                 [preloadGalleryMoviesImages setValue:img forKey:videoKey];
-                NSMutableDictionary *temp;
-                if ([APP_DELEGATE videoImages]==nil) {
-                    temp =  [[NSMutableDictionary alloc] init];
-                } else{
-                    temp =  [APP_DELEGATE videoImages];
-                }
+                
+                dispatch_async(dispatch_get_main_queue(), ^ {
+                    NSMutableDictionary *temp;
+                    if ([APP_DELEGATE videoImages]==nil) {
+                        temp =  [[NSMutableDictionary alloc] init];
+                    } else{
+                        temp =  [APP_DELEGATE videoImages];
+                    }
+                });
+                
                 [temp setValue:img forKey:videoKey];
                 [APP_DELEGATE setVideoImages:temp];
                 imageToLoad = img;

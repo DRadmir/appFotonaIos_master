@@ -340,7 +340,7 @@ NSString *count = @"";
             [database close];
             
             if (( [[[casesInMenu objectAtIndex:indexPath.row] bookmark] boolValue] && flag)|| [[[casesInMenu objectAtIndex:indexPath.row] coverflow] boolValue]) {
-                UINavigationController *tempC = self.viewDeckController.centerController;
+//                UINavigationController *tempC = self.viewDeckController.centerController;
 
                 [(FCasebookViewController*)self.viewDeckController.centerController setCurrentCase:[casesInMenu objectAtIndex:indexPath.row]];
                 [(FCasebookViewController*)self.viewDeckController.centerController openCase];
@@ -358,7 +358,7 @@ NSString *count = @"";
                         success++;
                         
                         [self removeHud];
-                        UINavigationController *tempC = self.viewDeckController.centerController;
+//                        UINavigationController *tempC = self.viewDeckController.centerController;
                         //                [(FCasebookViewController *)[tempC visibleViewController] setCurrentCase:item];
                         //                [(FCasebookViewController *)[tempC visibleViewController] setFlagCarousel:YES];
                         [(FCasebookViewController*)[tempC visibleViewController] setCurrentCase:caseObj];

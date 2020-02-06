@@ -58,6 +58,7 @@
 {
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"IPhoneStoryboard" bundle:nil];
     UINavigationController *menu = [sb instantiateViewControllerWithIdentifier:@"optionsNavigation"];
+    menu.modalPresentationStyle = UIModalPresentationFullScreen;
     [self  presentViewController:menu animated:true completion:nil];
 }
 
