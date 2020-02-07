@@ -223,6 +223,7 @@ NSMutableArray *relatedNews;
     //    [self  presentViewController:previewController animated:YES completion:nil];
     
     EBPhotoPagesController *photoPagesController = [[EBPhotoPagesController alloc] initWithDataSource:self delegate:self photoAtIndex:[sender tag]];
+    photoPagesController.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:photoPagesController animated:YES completion:nil];
     
 }

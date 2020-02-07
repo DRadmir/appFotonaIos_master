@@ -201,6 +201,7 @@ int bottomHeight;
     gallery = [[FIGalleryController alloc] init];
     gallery.parent = self;
     gallery.type = 2;
+    
     [gallery createGalleryWithImagesForNews:self.news forScrollView:scroolViewImages andScrollHeight:scrollViewHeight andBottomHeight:scrollViewBottom];
 }
 

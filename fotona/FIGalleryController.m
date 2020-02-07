@@ -267,6 +267,7 @@
 -(IBAction)openGallery:(id)sender
 {
     EBPhotoPagesController *photoPagesController = [[EBPhotoPagesController alloc] initWithDataSource:self delegate:self photoAtIndex:[sender tag]];
+    photoPagesController.modalPresentationStyle = UIModalPresentationFullScreen;
     [parent presentViewController:photoPagesController animated:YES completion:nil];
     
 }

@@ -1081,6 +1081,7 @@ static NSString * const reuseIdentifier = @"FGalleryCollectionViewCell";
 -(IBAction)openGallery:(id)sender
 {
     EBPhotoPagesController *photoPagesController = [[EBPhotoPagesController alloc] initWithDataSource:self delegate:self photoAtIndex:[sender tag]];
+    photoPagesController.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:photoPagesController animated:YES completion:nil];
     
 }
