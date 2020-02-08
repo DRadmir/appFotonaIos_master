@@ -39,6 +39,7 @@
 {
     [super viewDidLoad];
     
+    [self getVersionApp];
     
     UIBarButtonItem *btnMenu = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                 style:UIBarButtonItemStylePlain
@@ -59,6 +60,13 @@
     self.categoryTable.delegate = self;
     self.categoryTable.dataSource = self;
     
+}
+
+-(void)getVersionApp
+{
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+//    NSString *build = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey];
+    versionLabel.text = [NSString stringWithFormat:@"Version: %@", version];
 }
 
 

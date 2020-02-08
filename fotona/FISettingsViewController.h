@@ -20,6 +20,7 @@
     IBOutlet UISwitch *wifiSwitch;
     IBOutlet UISwitch *notifSwitch;
     
+    IBOutlet UILabel *versionLabel;
     
     IBOutlet NSLayoutConstraint *tableviewHeight;
     IBOutlet UIButton *btnBookmark;
